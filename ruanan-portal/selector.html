@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>软安科技 | 智能选型助手</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif}
+body{background:linear-gradient(135deg,#f0f4f8 0%,#e8edf2 100%);min-height:100vh}
+:root{
+  --blue:#1D4699;--blue-light:#E8EEF8;--blue-dark:#15357a;
+  --red:#C00000;--red-light:#FEF2F2;
+  --green:#00B050;--green-dark:#20A675;--green-light:#D3F4E6;
+  --teal:#007983;--purple:#A850B6;
+  --text:#7E7E7E;--text-dark:#505050;--text-darker:#252525;
+  --bg:#FFFFFF;--bg-card:#F8FAFC;--border:#E2E8F0;
+  --shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-lg:0 10px 40px rgba(0,0,0,0.1);
+  --radius:14px;
+}
+
+/* Topbar */
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;color:var(--blue);text-decoration:none}
+.logo-icon{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#1D4699,#00B050);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:16px}
+.btn{padding:8px 20px;border-radius:10px;font-weight:600;font-size:14px;cursor:pointer;border:none;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.btn-primary{background:linear-gradient(135deg,#1D4699,#15357a);color:#fff;box-shadow:0 2px 8px rgba(29,70,153,0.25)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(29,70,153,0.35)}
+.btn-outline{background:#fff;color:var(--text-dark);border:1px solid var(--border)}
+.btn-outline:hover{background:var(--bg-card)}
+.btn-green{background:linear-gradient(135deg,#00B050,#20A675);color:#fff;box-shadow:0 2px 8px rgba(0,176,80,0.25)}
+.btn-red{background:var(--red);color:#fff}
+.btn-lg{padding:12px 32px;font-size:16px;border-radius:12px}
+.btn-sm{padding:5px 14px;font-size:13px;border-radius:8px}
+.btn:disabled{opacity:0.45;cursor:not-allowed;pointer-events:none}
+
+/* Layout */
+.container{max-width:960px;margin:0 auto;padding:28px 20px}
+
+/* Steps bar */
+.steps-bar{display:flex;align-items:center;justify-content:center;margin-bottom:32px;gap:0}
+.step-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);font-weight:500;white-space:nowrap}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--border);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;transition:all 0.3s}
+.step-num.active{background:var(--blue);box-shadow:0 0 0 4px var(--blue-light)}
+.step-num.done{background:var(--green);box-shadow:none}
+.step-arrow{color:var(--border);margin:0 8px;font-size:16px;transition:all 0.3s}
+.step-arrow.done{color:var(--green)}
+
+/* Card */
+.card{background:#fff;border-radius:16px;padding:32px;box-shadow:var(--shadow);margin-bottom:20px;animation:slideUp 0.35s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.sec-title{font-size:22px;font-weight:800;color:var(--text-darker);margin-bottom:4px}
+.sec-sub{font-size:14px;color:var(--text);margin-bottom:24px;line-height:1.6}
+.sec-label{font-size:12px;color:var(--text);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-weight:600}
+
+/* Industry grid */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ind-card{border:2px solid var(--border);border-radius:var(--radius);padding:18px 14px;cursor:pointer;text-align:center;transition:all 0.25s;background:#fff}
+.ind-card:hover{border-color:var(--blue);box-shadow:0 4px 16px rgba(29,70,153,0.1);transform:translateY(-2px)}
+.ind-card.selected{border-color:var(--blue);background:var(--blue-light);box-shadow:0 0 0 4px rgba(29,70,153,0.08)}
+.ind-icon{font-size:34px;margin-bottom:6px}
+.ind-name{font-weight:700;font-size:14px;color:var(--text-darker)}
+.ind-reg{font-size:11px;color:var(--text);margin-top:4px;line-height:1.3}
+
+/* Scenario tags */
+.scene-group{margin-bottom:20px}
+.scene-group-title{font-size:15px;font-weight:700;color:var(--text-darker);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.scene-group-title .icon{font-size:20px}
+.scene-tags{display:flex;flex-wrap:wrap;gap:8px}
+.scene-tag{border:2px solid var(--border);border-radius:10px;padding:10px 16px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text-dark);transition:all 0.2s;background:#fff;display:flex;align-items:center;gap:6px}
+.scene-tag:hover{border-color:var(--green);background:#f8fdf9}
+.scene-tag.selected{border-color:var(--green);background:var(--green-light);color:var(--green-dark);font-weight:600}
+.scene-tag .dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:all 0.2s}
+.scene-tag.selected .dot{background:var(--green)}
+.scene-tag .desc{font-size:11px;color:var(--text);font-weight:400;margin-top:2px}
+.scene-tag .price-tag{font-size:11px;color:var(--blue);font-weight:700;margin-top:2px}
+
+/* Budget range */
+.budget-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.budget-card{border:2px solid var(--border);border-radius:var(--radius);padding:20px 14px;cursor:pointer;text-align:center;transition:all 0.25s;background:#fff}
+.budget-card:hover{border-color:var(--blue)}
+.budget-card.selected{border-color:var(--blue);background:var(--blue-light);box-shadow:0 0 0 4px rgba(29,70,153,0.08)}
+.budget-range{font-size:20px;font-weight:800;color:var(--blue);margin-bottom:4px}
+.budget-label{font-size:12px;color:var(--text)}
+.budget-desc{font-size:11px;color:var(--text);margin-top:6px}
+
+/* Pain points */
+.pain-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+.pain-card{border:2px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:all 0.25s;background:#fff;text-align:left}
+.pain-card:hover{border-color:var(--red)}
+.pain-card.selected{border-color:var(--red);background:var(--red-light)}
+.pain-card .pain-icon{font-size:24px;margin-bottom:6px}
+.pain-card .pain-title{font-weight:600;font-size:14px;color:var(--text-darker);margin-bottom:4px}
+.pain-card .pain-desc{font-size:12px;color:var(--text);line-height:1.5}
+
+/* Result */
+.result-header{text-align:center;padding:16px 0 24px}
+.result-title{font-size:24px;font-weight:800;color:var(--text-darker)}
+.result-sub{font-size:14px;color:var(--text);margin-top:4px}
+.rec-product{border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:12px;background:var(--bg-card)}
+.rec-product .rec-name{font-weight:700;font-size:17px;color:var(--text-darker);margin-bottom:4px}
+.rec-product .rec-brand{font-size:13px;color:var(--blue);font-weight:600;margin-bottom:8px}
+.rec-product .rec-features{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.rec-feature{font-size:11px;padding:3px 10px;background:var(--green-light);color:var(--green-dark);border-radius:6px;font-weight:500}
+.rec-product .rec-scene{font-size:12px;color:var(--teal);margin-top:8px}
+.rec-price-box{text-align:right;flex-shrink:0}
+.rec-price{font-size:22px;font-weight:900;color:var(--blue)}
+.rec-price-label{font-size:12px;color:var(--text)}
+
+/* Quote summary */
+.quote-card{background:linear-gradient(135deg,#1D4699,#1a3f8a);color:#fff;border-radius:16px;padding:28px 32px;margin-bottom:20px}
+.quote-card .total{font-size:44px;font-weight:900;line-height:1;margin:8px 0}
+.quote-card .total-label{font-size:14px;opacity:0.8}
+.quote-note{background:var(--bg-card);border-radius:12px;padding:16px 20px;font-size:13px;color:var(--text-dark);line-height:1.8}
+
+/* Form */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:13px;font-weight:600;color:var(--text-darker);margin-bottom:5px}
+.form-group input,.form-group select,.form-group textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:14px;outline:none;transition:all 0.2s;background:#fff}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,70,153,0.08)}
+.form-group textarea{resize:vertical;min-height:80px}
+
+/* Toast */
+.toast{position:fixed;top:24px;right:24px;padding:14px 24px;border-radius:12px;color:#fff;font-weight:500;font-size:14px;z-index:999;animation:slideIn 0.3s ease;box-shadow:0 8px 24px rgba(0,0,0,0.15)}
+.toast.success{background:var(--green)}
+.toast.error{background:var(--red)}
+@keyframes slideIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+
+/* progress */
+.progress-bar{height:4px;background:var(--border);border-radius:2px;margin-bottom:28px;transition:all 0.3s}
+.progress-fill{height:100%;background:linear-gradient(90deg,#1D4699,#00B050);border-radius:2px;transition:all 0.4s ease}
+
+@media(max-width:768px){
+  .grid3,.grid4{grid-template-columns:repeat(2,1fr)}
+  .grid2,.form-row{grid-template-columns:1fr}
+  .budget-grid{grid-template-columns:repeat(2,1fr)}
+  .pain-cards{grid-template-columns:1fr}
+  .card{padding:20px}
+  .steps-bar{flex-wrap:wrap;gap:4px}
+  .step-arrow{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="logo" href="#"><div class="logo-icon">软</div>软安科技 · 智能选型</a>
+  <button class="btn btn-outline btn-sm" data-action="resetAll">🔄 重新开始</button>
+</header>
+
+<div class="container">
+  <div class="progress-bar"><div class="progress-fill" id="progressBar" style="width:20%"></div></div>
+  <div class="steps-bar">
+    <div class="step-item"><div class="step-num" id="stepNum0">0</div>信息登记</div><span class="step-arrow" id="stepArr0">›</span><div class="step-item"><div class="step-num" id="stepNum1">1</div>选择行业</div>
+    <span class="step-arrow" id="stepArr1">›</span>
+    <div class="step-item"><div class="step-num" id="stepNum2">2</div>需求场景</div>
+    <span class="step-arrow" id="stepArr2">›</span>
+    <div class="step-item"><div class="step-num" id="stepNum3">3</div>预算范围</div>
+    <span class="step-arrow" id="stepArr3">›</span>
+    <div class="step-item"><div class="step-num" id="stepNum4">4</div>痛点描述</div>
+    <span class="step-arrow" id="stepArr4">›</span>
+    <div class="step-item"><div class="step-num" id="stepNum5">5</div>方案推荐</div>
+  </div>
+  <div id="mainContent"></div>
+</div>
+
+<script>
+// ===== 产品库 =====
+const PRODUCTS = {
+  SAST:{id:'SAST',name:'SAST 静态代码分析',brand:'静兮',icon:'🔍',category:'代码安全',desc:'基于AI引擎的新一代静态应用安全测试工具，AI SAST产品的核心底座',price:50,
+    features:['30+语言支持','AI去误报引擎','MISRA/CERT/GJB合规','CI/CD集成','增量秒级扫描','IDE实时检测','中文合规报告','涉密离线部署'],
+    scenes:['SAST'],tags:['代码审计','静态分析','安全左移','DevSecOps']},
+  SCA:{id:'SCA',name:'SCA 软件成分分析',brand:'源兮',icon:'📦',category:'供应链安全',desc:'软件物料清单自动生成与开源风险管理平台',price:50,
+    features:['SBOM自动生成','CNVD/CNNVD/CVE多源漏洞','许可证合规检测','依赖图谱分析','供应链投毒检测','断网离线同步','SPDX/CycloneDX'],
+    scenes:['SCA'],tags:['开源治理','SBOM','供应链安全','组件安全']},
+  FIRMWARE:{id:'FIRMWARE',name:'固件安全测试',brand:'侦兮',icon:'🔐',category:'固件安全',desc:'芯片级固件安全分析与漏洞挖掘平台',price:50,
+    features:['100+芯片平台解包','安全启动链验证','BootROM审计','TEE安全分析','AI Fuzz框架','RISC-V支持','通信协议分析','涉密离线'],
+    scenes:['FIRMWARE'],tags:['固件分析','芯片安全','IoT安全','嵌入式']},
+  LLM:{id:'LLM',name:'大模型安全测试',brand:'元安',icon:'🤖',category:'AI安全',desc:'AI大模型全生命周期安全测试与合规评估',price:50,
+    features:['提示注入检测','越狱红队测试','数据泄露评估','模型鲁棒性测试','RAG安全检测','偏见与公平性','合规自评估报告','持续安全监控'],
+    scenes:['LLM'],tags:['AI安全','大模型','提示注入','对齐评估']},
+  AI_SAST:{id:'AI_SAST',name:'AI SAST 智能代码分析',brand:'灵析',icon:'✨',category:'代码安全',desc:'以静兮(SAST)为底座，通过大模型直接对代码进行智能化静态测试和自动修复',price:0.8,priceUnit:'用户',priceModel:'按用户付费',
+    features:['SAST底座+大模型引擎','智能化静态测试','自然语言查询','AI自动修复建议','跨文件漏洞检测','数十亿参数代码模型','安全编码助手','私有化部署','按用户数弹性扩展'],
+    scenes:['AI_SAST'],tags:['AI审计','遗留代码','自动修复','代码理解']},
+};
+
+// ===== 行业数据 =====
+const INDUSTRIES = {
+  汽车:{icon:'🚗',reg:'UN R155/R156 · ISO/SAE 21434 · GB/T 44495 · ISO 26262 功能安全',pain:'整车厂商（OEM）严格审计Tier 1/2软件供应商，要求交付代码必须附带安全审计报告和SBOM。单辆高端车代码量超1亿行，需满足R155法规要求的全链路软件安全审计和OTA更新安全管理。ISO 26262对安全关键代码有功能安全验证强制要求。',rec:['SAST','SCA','FIRMWARE','AI_SAST']},
+  芯片半导体:{icon:'🔲',reg:'密评 · GB/T 18336 · NIST FIPS 140',pain:'安全启动链验证链路长，RISC-V生态工具不成熟，芯片流片前需完成BootROM安全审计以避免不可修复的硬件漏洞。',rec:['FIRMWARE','SAST','SCA']},
+  消费电子:{icon:'📱',reg:'等保2.0 · 个人信息保护法 · CCC认证 · EU CRA',pain:'产品迭代周期短（2-4周），安全测试常被压缩。智能设备大量使用开源组件和第三方SDK，供应链透明度低，用户隐私泄露风险高。欧盟CRA要求提供SBOM和软件安全自评估，出口产品需满足CRA合规。',rec:['SAST','SCA','FIRMWARE']},
+  金融:{icon:'🏦',reg:'等保2.0三级 · JR/T 0071 · PCI DSS',pain:'监管对软件供应链安全要求持续收紧，开源组件漏洞（如Log4j）需72小时内完成应急响应。AI大模型应用激增，大模型安全成为新兴监管重点。',rec:['SAST','SCA','LLM']},
+  军工:{icon:'🛡️',reg:'GJB 8114/5369 · 涉密信息系统安全保密规定',pain:'必须完全离线部署，无法使用联网工具。大量90年代至今的遗留C/C++/汇编代码缺乏文档和测试，人工审计效率极低。国产化替代要求所有工具来自国内供应商。',rec:['SAST','FIRMWARE','AI_SAST']},
+  政府:{icon:'🏛️',reg:'等保2.0 · 关基保护条例 · 信创目录 · 供应链安全审查 · 大模型备案',pain:'信创环境安全工具匮乏，关基软件供应链需自主可控。政务系统大量依赖外包开发，需源码级安全审计。开源软件需满足供应链安全审查要求，AI大模型应用需完成安全评估和备案。',rec:['SAST','SCA','LLM']},
+  医疗设备:{icon:'🏥',reg:'医疗器械网络安全注册审查 · IEC 62304 · FDA 510(k)/PMA · 个人信息保护法',pain:'医疗器械软件（SaMD）注册需提供安全审计报告，固件涉及患者安全。FDA强制要求上市前提交软件安全验证证据，NMPA注册同样要求代码安全审查。开源组件（DICOM库、通信栈）使用普遍需合规管理。',rec:['SAST','SCA','FIRMWARE']},
+  教育:{icon:'🎓',reg:'等保2.0 · 教育App备案管理办法',pain:'安全投入预算有限，但涉及大量学生个人信息。开源学习管理系统（Moodle等）部署广泛，需要高性价比的安全方案。',rec:['SAST','SCA']},
+  电子通信:{icon:'📡',reg:'3GPP SECAM · 关基保护条例 · 商用密码应用',pain:'5G网络设备软件化趋势下，基站和核心网设备固件/软件安全审计需求激增。通信设备供应链涉及全球数百家供应商，需满足运营商准入要求。',rec:['FIRMWARE','SAST','SCA']},
+  信创软件:{icon:'🇨🇳',reg:'信创目录 · 等保2.0 · 关基保护条例 · 密码法',pain:'国产化替代要求全链路自主可控，信创环境（国产CPU+OS）安全工具匮乏。需满足密码法和关基合规审计，大量迁移代码需要安全评估。',rec:['SAST','SCA','AI_SAST']},
+  具身智能:{icon:'🦾',reg:'EU CRA · 等保2.0 · 生成式AI管理办法 · ISO 26262 功能安全',pain:'具身智能设备集成了大模型推理、多模态感知、运动控制等，软硬件栈复杂。需满足欧盟CRA（网络韧性法案）网络安全要求，功能安全（如ISO 26262导出的SOTIF）对AI决策安全有严格标准。AI模型安全和嵌入式固件安全风险并存。',rec:['FIRMWARE','LLM','SAST']},
+  低空经济:{icon:'🛩️',reg:'民航适航审定 · DO-178C · UN R155 · 等保2.0',pain:'无人机和eVTOL等低空飞行器涉及飞行控制、通信导航、避障系统等安全关键软件，需满足适航软件安全标准。固件和通讯协议安全要求极高。',rec:['SAST','FIRMWARE','SCA']},
+  能源:{icon:'⚡',reg:'等保2.0 · 关基保护条例 · 电力监控系统安全防护 · NERC CIP',pain:'电力、石油、新能源等能源关键基础设施面临高级威胁，SCADA/ICS系统安全漏洞频发。电力监控系统需满足16号令要求，新能源电站软件供应链缺乏统一安全标准。',rec:['SAST','SCA','FIRMWARE']},
+  游戏互联网:{icon:'🎮',reg:'等保2.0 · 个人信息保护法 · 未成年人网络保护 · EU CRA · GDPR',pain:'游戏引擎和客户端代码量大、迭代快、外挂和逆向分析风险高。服务端涉及大量用户数据和支付信息，第三方SDK和开源组件使用广泛。欧盟CRA要求出口游戏/应用提供SBOM和软件安全声明，安全合规压力大。',rec:['SAST','SCA']},
+  智能硬件:{icon:'🔀',reg:'等保2.0 · CCC认证 · EU CRA · 商用密码应用',pain:'充电宝、交换机、安防摄像头、路由器和各类智能终端固件安全参差不齐。物联网设备量大面广，供应链组件复用度高，单个漏洞可影响海量设备。欧盟CRA要求物联网/智能硬件出口需提供完整SBOM和网络安全声明，固件级安全审计成为准入门槛。',rec:['FIRMWARE','SAST','SCA']},
+};
+
+// ===== 场景库 =====
+const SCENARIOS = {
+  compliance:[
+    {id:'c1',title:'法规合规审计',desc:'出具满足特定法规要求的安全审计报告',tags:['R155','等保','GJB','ISO 21434']},
+    {id:'c2',title:'供应链安全合规',desc:'管理供应商软件的SBOM和开源合规',tags:['SBOM','许可证','供应链']},
+    {id:'c3',title:'信创国产化替代',desc:'在信创环境中部署国产安全工具',tags:['信创','国产化','自主可控']},
+    {id:'c4',title:'涉密环境安全检测',desc:'在完全离线涉密环境中进行代码安全审计',tags:['离线','涉密','军工']},
+    {id:'c5',title:'行业认证准备',desc:'为ISO/ASPICE/功能安全等认证提供安全证据',tags:['ISO 26262','ASPICE','IEC 62304']},
+    {id:'c6',title:'行业客户合规审计',desc:'应客户要求出具第三方安全检测报告',tags:['第三方审计','客户准入','安全评估']},
+    {id:'c7',title:'开源许可合规审计',desc:'扫描开源许可证冲突、传染性风险，确保合规使用',tags:['GPL合规','许可证冲突','开源治理']},
+    {id:'c8',title:'软件出海合规审计',desc:'满足欧盟CRA、GDPR等出海法规要求',tags:['CRA','GDPR','SBOM','出海合规']},
+  ],
+  tool:[
+    {id:'t1',title:'代码安全扫描',desc:'需要自动化的代码漏洞和合规检测工具',tags:['SAST','漏洞检测','编码规范']},
+    {id:'t2',title:'开源组件管理',desc:'需要管理第三方和开源组件的安全风险',tags:['SCA','组件安全','漏洞追踪']},
+    {id:'t3',title:'固件安全分析',desc:'需要对嵌入式/IoT/ECU固件进行安全审计',tags:['固件解包','启动验证','Fuzz']},
+    {id:'t4',title:'AI大模型安全',desc:'需要对部署的大模型进行安全测试和合规评估',tags:['提示注入','越狱检测','隐私评估']},{id:'t5',title:'大模型安全测试',desc:'需要对大模型应用进行提示注入、越狱、数据泄露等安全检测',tags:['AI安全','提示注入','越狱检测']},{id:'t7',title:'DevSecOps工具链采购',desc:'搭建DevSecOps安全工具链，将安全检测嵌入CI/CD流水线',tags:['DevSecOps','CI/CD','安全左移']},{id:'t6',title:'AI SAST 智能代码扫描',desc:'以SAST为底座+大模型驱动的智能化静态代码安全测试，按用户付费',tags:['AI代码审计','LLM','自动修复']},
+  ],
+  service:[
+    {id:'s1',title:'代码安全审计服务',desc:'专家深度审计 · ≤10GB源码 · 含复测',tags:['专家审计','深度分析','审计报告','含复测']},
+    {id:'s2',title:'固件安全测试服务',desc:'芯片/设备固件专业安全测试 · ≤20GB',tags:['芯片测试','漏洞挖掘','安全评估']},
+    {id:'s3',title:'开源合规审计服务',desc:'开源组件许可证+漏洞合规审计 · ≤20GB源码',tags:['SBOM','许可证','合规审计','组件清查']},
+    {id:'s4',title:'渗透测试服务',desc:'对应用系统进行黑盒/白盒渗透测试',tags:['渗透测试','红队','攻击模拟']},
+    {id:'s5',title:'合规咨询服务',desc:'法规合规差距分析和整改方案咨询',tags:['R155','等保','GJB','合规咨询']},
+    {id:'s6',title:'安全培训服务',desc:'为开发团队提供安全编码和工具使用培训',tags:['安全培训','SDL','赋能']},
+    {id:'s7',title:'驻场安全支持',desc:'安全专家驻场协助安全检测和漏洞修复',tags:['驻场','应急响应','持续支持']},
+  ],
+};
+
+// ===== 预算区间 =====
+const BUDGET_RANGES = [
+  {id:'b1',range:'20万以下',desc:'适合小型团队<br>或单产品试用',factor:0.3,maxProducts:1},
+  {id:'b2',range:'20-50万',desc:'适合中型团队<br>1-2个产品模块',factor:0.6,maxProducts:2},
+  {id:'b3',range:'50-100万',desc:'适合大型团队<br>2-3个产品组合',factor:1.0,maxProducts:3},
+  {id:'b4',range:'100万以上',desc:'适合企业级<br>全栈安全方案',factor:1.5,maxProducts:99},
+];
+
+// ===== State =====
+let state = {step:0,userInfo:{company:'',address:'',contact:'',title:'',email:'',phone:''},industry:null,scenes:[],budget:null,pains:[],customPain:'',products:[],deploy:'local'};
+
+// ===== Render Engine =====
+function render(){
+  const app = document.getElementById('mainContent');
+  const {step} = state;
+  updateUI();
+  if(step===0) app.innerHTML = rStep0();
+  else if(step===1) app.innerHTML = rStep1();
+  else if(step===2) app.innerHTML = rStep2();
+  else if(step===3) app.innerHTML = rStep3();
+  else if(step===4) app.innerHTML = rStep4();
+  else if(step===5) app.innerHTML = rStep5();
+}
+
+function updateUI(){
+  // progress
+  document.getElementById('progressBar').style.width = (state.step*16.7)+'%';
+  // step nums
+  for(let i=0;i<=5;i++){
+    const el=document.getElementById('stepNum'+i); if(!el) continue;
+    el.className='step-num'+(i===state.step?' active':i<state.step?' done':'');
+    if(i<5){ const arr=document.getElementById('stepArr'+i); if(arr) arr.className='step-arrow'+(i<state.step?' done':''); };
+  }
+}
+
+// ===== Step 0: 信息登记 =====
+function rStep0(){
+  const u = state.userInfo;
+  let html='<div class="card"><div class="sec-label">STEP 0 · 信息登记</div><h2 class="sec-title">欢迎使用软安科技智能选型</h2><p class="sec-sub">请先登记您的信息，以便我们生成个性化方案和报价</p>';
+  html+='<div class="form-row"><div class="form-group"><label>企业名称 *</label><input id="uCompany" value="'+(u.company||'')+'" placeholder="请输入企业全称"></div><div class="form-group"><label>企业地址</label><input id="uAddress" value="'+(u.address||'')+'" placeholder="省/市/区"></div></div>';
+  html+='<div class="form-row"><div class="form-group"><label>联系人 *</label><input id="uContact" value="'+(u.contact||'')+'" placeholder="请输入联系人姓名"></div><div class="form-group"><label>职位 *</label><input id="uTitle" value="'+(u.title||'')+'" placeholder="如：信息安全总监"></div></div>';
+  html+='<div class="form-row"><div class="form-group"><label>邮箱 *</label><input id="uEmail" type="email" value="'+(u.email||'')+'" placeholder="请输入邮箱"></div><div class="form-group"><label>电话 *</label><input id="uPhone" type="tel" value="'+(u.phone||'')+'" placeholder="请输入手机号"></div></div>';
+  html+='</div>';
+  html+='<div style="text-align:center;margin-top:16px"><button class="btn btn-primary btn-lg" data-action="saveUserInfo">下一步：选择行业 →</button></div>';
+  return html;
+}
+
+// ===== Step 1: 行业 =====
+function rStep1(){
+  let h=`<div class="card"><div class="sec-label">STEP 1 · 选择行业</div><h2 class="sec-title">选择客户所属行业</h2><p class="sec-sub">系统将根据行业自动匹配对应的法规要求和产品推荐策略</p><div class="grid3">`;
+  for(const [key,ind] of Object.entries(INDUSTRIES)){
+    h+=`<div class="ind-card${state.industry===key?' selected':''}" data-action="selectIndustry" data-param="${key}">
+      <div class="ind-icon">${ind.icon}</div>
+      <div class="ind-name">${key}</div>
+      <div class="ind-reg">${ind.reg}</div>
+    </div>`;
+  }
+  h+=`</div></div>`;
+  if(state.industry){
+    const ind=INDUSTRIES[state.industry];
+    h+=`<div class="card" style="border-left:4px solid var(--blue)"><div style="font-weight:700;color:var(--text-darker);margin-bottom:6px">📋 ${state.industry}行业 · 合规要求</div><div style="font-size:13px;color:var(--text);line-height:1.8">${ind.reg}</div></div>`;
+    h+=`<div style="text-align:center;margin-top:16px"><button class="btn btn-primary btn-lg" data-action="goStep" data-param="2">下一步：选择需求场景 →</button></div>`;
+  }
+  return h;
+}
+
+// ===== Step 2: 场景 =====
+function rStep2(){
+  const ind = INDUSTRIES[state.industry];
+  let h=`<div class="card"><div class="sec-label">STEP 2 · 需求场景</div><h2 class="sec-title">选择需求场景 <span style="font-size:14px;color:var(--text);font-weight:400">（多选）</span></h2><p class="sec-sub">${ind.icon} ${state.industry}行业 · ${ind.pain}</p>`;
+
+  // 合规场景
+  h+=`<div class="scene-group"><div class="scene-group-title"><span class="icon">📋</span>合规与认证</div><div class="scene-tags">`;
+  for(const s of SCENARIOS.compliance){
+    h+=`<div class="scene-tag${state.scenes.includes(s.id)?' selected':''}" data-action="toggleScene" data-param="${s.id}"><div class="dot"></div><div><div>${s.title}</div><div class="desc">${s.desc}</div></div></div>`;
+  }
+  h+=`</div></div>`;
+
+  // 工具需求
+  h+=`<div class="scene-group"><div class="scene-group-title"><span class="icon">🔧</span>工具需求</div><div class="scene-tags">`;
+  for(const s of SCENARIOS.tool){
+    h+=`<div class="scene-tag${state.scenes.includes(s.id)?' selected':''}" data-action="toggleScene" data-param="${s.id}"><div class="dot"></div><div><div>${s.title}</div><div class="desc">${s.desc}</div></div></div>`;
+  }
+  h+=`</div></div>`;
+
+  // 测试服务
+  h+=`<div class="scene-group"><div class="scene-group-title"><span class="icon">🛠️</span>测试与服务</div><div class="scene-tags">`;
+  for(const s of SCENARIOS.service){
+    h+=`<div class="scene-tag${state.scenes.includes(s.id)?' selected':''}" data-action="toggleScene" data-param="${s.id}"><div class="dot"></div><div><div>${s.title}</div><div class="desc">${s.desc}</div></div></div>`;
+  }
+  h+=`</div></div>`;
+
+  h+=`</div>`;
+  h+=`<div style="display:flex;gap:12px;justify-content:center">
+    <button class="btn btn-outline btn-lg" data-action="goStep" data-param="1">← 重新选择行业</button>
+    <button class="btn btn-primary btn-lg" data-action="goStep" data-param="3" ${state.scenes.length===0?'disabled':''}>下一步：填写项目信息 →</button>
+  </div>`;
+  if(state.scenes.length===0) h+=`<p style="text-align:center;color:var(--red);font-size:13px;margin-top:8px">⚠️ 请至少选择一个需求场景</p>`;
+  return h;
+}
+
+// ===== Step 3: 项目信息 =====
+function rStep3(){
+  const info = state.projectInfo || {};
+  let html='<div class="card"><div class="sec-label">STEP 3 · 项目信息</div><h2 class="sec-title">填写项目关键信息</h2><p class="sec-sub">以下信息将帮助我们为您精准匹配产品和报价方案</p>';
+  html+='<div class="form-row"><div class="form-group"><label>整体预算（万元/年）*</label><input id="pBudget" type="number" value="'+(info.budget||'')+'" placeholder="如：80" min="0"></div><div class="form-group"><label>企业研发人数与安全人数规模 *</label><input id="pTeamSize" value="'+(info.teamSize||'')+'" placeholder="如：研发200人，安全5人"></div></div>';
+  html+='<div class="form-row"><div class="form-group"><label>主要开发语言 *</label><input id="pLanguages" value="'+(info.languages||'')+'" placeholder="如：C/C++, Java, Python, JavaScript"></div><div class="form-group"><label>预计采购时间点 *</label><input id="pTimeline" value="'+(info.timeline||'')+'" placeholder="如：2025Q3、3个月内、正在招标"></div></div>';
+  html+='</div>';
+  html+='<div style="display:flex;gap:12px;justify-content:center">';
+  html+='<button class="btn btn-outline btn-lg" data-action="goStep" data-param="2">← 重新选择场景</button>';
+  html+='<button class="btn btn-primary btn-lg" data-action="saveProjectInfo">下一步：描述安全痛点 →</button>';
+  html+='</div>';
+  return html;
+}
+
+// ===== Step 4: 痛点 =====// ===== Step 4: 痛点 =====
+function rStep4(){
+  const ind = INDUSTRIES[state.industry];
+  const painOptions = [
+    {id:'p1',icon:'🐛',title:'代码漏洞频发',desc:'线上漏洞频发，缺乏系统化的代码安全检测手段'},
+    {id:'p2',icon:'⏰',title:'安全测试滞后',desc:'安全测试在发版前临时做，CI/CD中缺少自动化安全卡点'},
+    {id:'p3',icon:'📦',title:'开源组件不可见',desc:'不清楚用了哪些开源组件，出了Log4j这种漏洞无从排查'},
+    {id:'p4',icon:'📋',title:'合规压力大',desc:'客户或监管要求出具安全审计报告，但缺少系统化审计工具'},
+    {id:'p5',icon:'🏭',title:'供应商代码质量差',desc:'供应商交付的代码缺乏安全管控，质量参差不齐'},
+    {id:'p6',icon:'🔐',title:'固件/芯片安全盲区',desc:'嵌入式设备和芯片固件缺乏有效的安全检测手段'},
+    {id:'p7',icon:'🤖',title:'AI应用安全风险',desc:'部署了大模型应用，担心提示注入和数据泄露'},
+    {id:'p8',icon:'📜',title:'遗留代码无人懂',desc:'大量遗留代码缺乏文档和维护，存在未知安全风险'},
+  ];
+  let h=`<div class="card"><div class="sec-label">STEP 4 · 安全痛点</div><h2 class="sec-title">描述代码安全痛点 <span style="font-size:14px;color:var(--text);font-weight:400">（多选）</span></h2><p class="sec-sub">${ind.icon} ${state.industry}行业典型痛点：${ind.pain}</p>`;
+  h+=`<div class="pain-cards">`;
+  for(const p of painOptions){
+    h+=`<div class="pain-card${state.pains.includes(p.id)?' selected':''}" data-action="togglePain" data-param="${p.id}">
+      <div class="pain-icon">${p.icon}</div>
+      <div class="pain-title">${p.title}</div>
+      <div class="pain-desc">${p.desc}</div>
+    </div>`;
+  }
+  h+=`</div>`;
+  h+=`<div class="form-group"><label>补充描述（可选）</label><textarea id="customPain" placeholder="请补充具体的安全痛点、历史安全事件、已有的安全工具或流程...">${state.customPain||''}</textarea></div>`;
+  h+=`</div>`;
+  h+=`<div style="display:flex;gap:12px;justify-content:center">
+    <button class="btn btn-outline btn-lg" data-action="goStep" data-param="3" data-savepain="true">← 重新选择预算</button>
+    <button class="btn btn-primary btn-lg" data-action="goStep" data-param="5">下一步：查看推荐方案 →</button>
+  </div>`;
+  return h;
+}
+
+// ===== Step 5: 结果 =====
+function rStep5(){
+  state.customPain = document.getElementById('customPain')?.value||'';
+
+  // 智能推荐产品
+  const ind = INDUSTRIES[state.industry];
+  const budget = BUDGET_RANGES.find(b=>b.id===state.budget);
+  const maxProducts = budget?budget.maxProducts:1;
+
+  // 基于行业推荐 + 场景匹配加权
+  let scores = {};
+  for(const pid of ind.rec){ scores[pid]=(scores[pid]||0)+3; } // 行业推荐+3
+
+  // 场景加分
+  for(const sid of state.scenes){
+    if(sid==='c1'||sid==='c4'||sid==='c5'){ scores['SAST']=(scores['SAST']||0)+2; scores['FIRMWARE']=(scores['FIRMWARE']||0)+1; }
+    if(sid==='c2'){ scores['SCA']=(scores['SCA']||0)+3; }
+    if(sid==='c3'){ scores['SAST']=(scores['SAST']||0)+2; scores['SCA']=(scores['SCA']||0)+1; }
+    if(sid==='t1'){ scores['SAST']=(scores['SAST']||0)+3; }
+    if(sid==='t2'){ scores['SCA']=(scores['SCA']||0)+3; }
+    if(sid==='t3'){ scores['FIRMWARE']=(scores['FIRMWARE']||0)+3; }
+    if(sid==='t4'){ scores['LLM']=(scores['LLM']||0)+3; } if(sid==='t5'){ scores['LLM']=(scores['LLM']||0)+3; } if(sid==='t7'){ scores['SAST']=(scores['SAST']||0)+2; scores['SCA']=(scores['SCA']||0)+1; } if(sid==='t6'){ scores['AI_SAST']=(scores['AI_SAST']||0)+3; }
+    
+    
+    if(sid==='s1'||sid==='s6'){ scores['SAST']=(scores['SAST']||0)+1; }
+    if(sid==='s2'){ scores['FIRMWARE']=(scores['FIRMWARE']||0)+2; }
+    if(sid==='s3'){ scores['SAST']=(scores['SAST']||0)+1; }
+    if(sid==='s4'){ scores['SAST']=(scores['SAST']||0)+1; scores['SCA']=(scores['SCA']||0)+1; }
+    if(sid==='s5'){ scores['SAST']=(scores['SAST']||0)+1; }
+  }
+
+  // 痛点加分
+  const painMap = {p1:'SAST',p2:'SAST',p3:'SCA',p4:'SAST',p5:'SCA',p6:'FIRMWARE',p7:'LLM',p8:'AI_SAST'};
+  for(const pid of state.pains){ const prod=painMap[pid]; if(prod) scores[prod]=(scores[prod]||0)+2; }
+
+  // 排序取top
+  const ranked = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const recommended = ranked.slice(0, maxProducts).map(([k])=>k);
+
+  // 计算报价
+  const productCount = recommended.length;
+  const unitPrice = 50; const aiSastPrice = 0.8; // 万/年/产品
+  const bundleDiscount = productCount>=3?0.85:productCount>=2?0.9:1.0;
+  const rawTotal = productCount * unitPrice;
+  const discountedTotal = Math.round(rawTotal * bundleDiscount); const aiSastUsers = 20;
+  const budgetFactor = budget?budget.factor:1.0;
+
+  // 推荐产品卡片
+  let h=`<div class="card"><div class="sec-label">STEP 5 · 推荐方案</div><h2 class="sec-title">${ind.icon} ${state.industry}行业 · 推荐方案</h2><p class="sec-sub">基于行业「${state.industry}」、${state.scenes.length}个需求场景、预算「${budget?budget.range:''}」，智能推荐以下产品组合</p>`;
+
+  for(const pid of recommended){
+    const p=PRODUCTS[pid]; if(!p) continue;
+    h+=`<div class="rec-product"><div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div style="flex:1"><div class="rec-name">${p.icon} ${p.name}</div><div class="rec-brand">${p.brand} · ${p.category}</div>
+      <div style="font-size:13px;color:var(--text);line-height:1.6;margin-bottom:8px">${p.desc}</div>
+      <div class="rec-features">${p.features.map(f=>`<span class="rec-feature">${f}</span>`).join('')}</div></div>
+      <div class="rec-price-box"><div class="rec-price">${pid==='AI_SAST'?aiSastPrice+'万':unitPrice+'万'}</div><div class="rec-price-label">/${pid==='AI_SAST'?'用户/月':'年/套'}</div></div>
+    </div></div>`;
+  }
+
+  // 服务报价
+  let serviceTotal = 0;
+  const serviceItems = [];
+  const servicePriceMap = {s1:{name:'代码安全审计服务',price:2,cond:'≤10GB源码'},s2:{name:'固件安全测试服务',price:1,cond:'≤20GB固件'},s3:{name:'开源合规审计服务',price:5,cond:'≤20GB源码'}};
+  for(const sid of state.scenes){
+    const sp = servicePriceMap[sid];
+    if(sp){ serviceItems.push(sp); serviceTotal += sp.price; }
+  }
+
+  // 报价汇总
+  const priceLabel = productCount>=3?'3产品组合85折':productCount>=2?'2产品组合9折':'标准价';
+  const grandTotal = discountedTotal + serviceTotal;
+  h+=`<div class="quote-card">
+    <div class="total-label">💰 参考报价（${priceLabel}）</div>
+    <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><div class="total">${grandTotal}万</div><div style="font-size:14px;opacity:0.8">/年</div></div>
+    <div class="total-label">${productCount}个产品（每产品5用户1并发·全功能）${serviceTotal>0?' + '+serviceItems.length+'项测试服务':''}</div>
+  </div>`;
+
+  // 明细
+  h+=`<div class="quote-note"><b>📌 报价明细：</b><br>`;
+  h+=`<b>【产品许可】</b><br>`;
+  h+=`· 每产品标准价 50万/年（含5用户1并发，全功能模块）<br>`;
+  h+=`· 组合优惠：${priceLabel}，产品合计 ${discountedTotal}万/年<br>`;
+  if(serviceItems.length>0){
+    h+=`<br><b>【测试服务】（按次收费）</b><br>`;
+    for(const si of serviceItems) h+=`· ${si.name}：${si.price}万/次（${si.cond}，含复测）<br>`;
+    h+=`· 服务合计：${serviceTotal}万/次<br>`;
+    h+=`<br>· ⚠️ 超出限制范围需人工介入评估<br>`;
+  }
+  h+=`· 以上为参考报价，正式报价需根据具体需求定制</div>`;
+
+  // 说明
+  h+=`<div class="quote-note">
+    <b>📌 报价说明：</b><br>
+    · 每款产品标准价 <b>50万/年</b>（含5用户1并发，全功能模块）<br>
+    · 组合优惠：${priceLabel}<br>
+    · 如含测试服务，服务费根据项目范围另行报价<br>
+    · 以上为参考报价，正式报价需根据具体规模和需求定制<br>
+    ${budgetFactor!==1?`· ⚠️ 推荐方案总价与您的预算「${budget?.range}」${discountedTotal*10000>parseInt(budget?.range||'0')*10000?'有一定差距，建议调整产品组合或预算':'基本匹配'}`:''}
+  </div>`;
+
+  // 场景匹配说明
+  if(state.scenes.length>0 || state.pains.length>0){
+    h+=`<div class="card card-sm"><div style="font-weight:700;color:var(--text-darker);margin-bottom:10px">📋 需求匹配说明</div><div style="font-size:13px;color:var(--text);line-height:1.8">`;
+    const sceneNames = [...SCENARIOS.compliance,...SCENARIOS.tool,...SCENARIOS.service];
+    h+=`<b>已选场景：</b>${state.scenes.map(sid=>{const s=sceneNames.find(x=>x.id===sid);return s?s.title:sid}).join('、')}<br>`;
+    if(state.pains.length>0) h+=`<b>痛点关注：</b>${state.pains.map(pid=>{const p=document.querySelector(`.pain-card[onclick*="${pid}"]`);return p?p.querySelector('.pain-title').textContent:pid}).join('、')}<br>`;
+    h+=`<b>推荐逻辑：</b>基于行业匹配度(权重3)+场景需求匹配(权重2-3)+痛点匹配(权重2)，综合评分后推荐Top ${maxProducts}产品。</div></div>`;
+  }
+
+  h+=`</div>`;
+
+  // 行动选项
+  const optCardStyle = 'border:2px solid var(--border);border-radius:14px;padding:20px 24px;cursor:pointer;transition:all 0.25s;background:#fff;text-align:center;flex:1;min-width:200px';
+  const optHover = 'onmouseover="this.style.borderColor=this.dataset.color;this.style.background=this.dataset.bg" onmouseout="this.style.borderColor=this.dataset.defaultBorder;this.style.background=this.dataset.defaultBg"';
+  h+=`<div class="card"><h2 class="sec-title">📋 下一步选择</h2><p class="sec-sub">根据推荐方案，选择你需要的后续服务</p>`;
+  h+=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">`;
+  h+=`<div ${optHover} data-color="var(--blue)" data-bg="var(--blue-light)" data-default-border="var(--border)" data-default-bg="#fff" style="${optCardStyle}" data-action="selectOption" data-param="quote"><div style="font-size:32px;margin-bottom:8px">📋</div><div style="font-weight:700;color:var(--text-darker);margin-bottom:4px">生成报价与方案</div><div style="font-size:12px;color:var(--text)">生成正式报价单<br>和解决方案文档</div></div>`;
+  h+=`<div ${optHover} data-color="var(--green)" data-bg="var(--green-light)" data-default-border="var(--border)" data-default-bg="#fff" style="${optCardStyle}" data-action="selectOption" data-param="contact"><div style="font-size:32px;margin-bottom:8px">📞</div><div style="font-weight:700;color:var(--text-darker);margin-bottom:4px">联系销售</div><div style="font-size:12px;color:var(--text)">直接与我们的<br>商务经理对接</div></div>`;
+  h+=`<div ${optHover} data-color="var(--purple)" data-bg="#F8F4FC" data-default-border="var(--border)" data-default-bg="#fff" style="${optCardStyle}" data-action="selectOption" data-param="communicate"><div style="font-size:32px;margin-bottom:8px">💬</div><div style="font-weight:700;color:var(--text-darker);margin-bottom:4px">进一步交流</div><div style="font-size:12px;color:var(--text)">留下需求和联系<br>方式，深入沟通</div></div>`;
+  h+=`<div ${optHover} data-color="var(--teal)" data-bg="#E8F6F7" data-default-border="var(--border)" data-default-bg="#fff" style="${optCardStyle}" data-action="selectOption" data-param="poc"><div style="font-size:32px;margin-bottom:8px">🔬</div><div style="font-weight:700;color:var(--text-darker);margin-bottom:4px">申请POC测试</div><div style="font-size:12px;color:var(--text)">申请产品试用<br>概念验证测试</div></div>`;
+  h+=`</div></div>`;
+
+  // 表单区 - 默认隐藏，选择后展开
+  h+=`<div id="optionForm" style="display:none"><div class="card" id="optionFormContent"></div></div>`;
+
+  h+=`<div style="display:flex;gap:12px;justify-content:center;margin-top:16px">
+    <button class="btn btn-outline" data-action="goStep" data-param="4">← 调整痛点</button>
+    <button class="btn btn-outline" data-action="resetAll">🔄 重新选型</button>
+  </div>`;
+  return h;
+}
+
+// ===== Actions =====
+function saveUserInfo(){ var u=state.userInfo; u.company=document.getElementById('uCompany')?.value.trim()||''; u.address=document.getElementById('uAddress')?.value.trim()||''; u.contact=document.getElementById('uContact')?.value.trim()||''; u.title=document.getElementById('uTitle')?.value.trim()||''; u.email=document.getElementById('uEmail')?.value.trim()||''; u.phone=document.getElementById('uPhone')?.value.trim()||''; if(!u.company||!u.contact||!u.title||!u.email||!u.phone){ toast('请填写所有必填项','error'); return; } state.step=1; render(); window.scrollTo(0,0); }
+function selectIndustry(key){ state.industry=key; state.scenes=[]; state.products=[]; state.budget=null; state.pains=[]; state.customPain=""; render(); }
+function saveProjectInfo(){ var info=state.projectInfo||{}; info.budget=document.getElementById('pBudget')?.value.trim()||''; info.teamSize=document.getElementById('pTeamSize')?.value.trim()||''; info.languages=document.getElementById('pLanguages')?.value.trim()||''; info.timeline=document.getElementById('pTimeline')?.value.trim()||''; if(!info.budget||!info.teamSize||!info.languages||!info.timeline){ toast('请填写所有必填项','error'); return; } state.projectInfo=info; state.step=4; render(); window.scrollTo(0,0); }
+function selectBudget(bid){ state.budget=bid; render(); }
+function selectOption(opt){
+  const formEl = document.getElementById('optionForm');
+  const contentEl = document.getElementById('optionFormContent');
+  const ind = INDUSTRIES[state.industry];
+  const sceneNames = [...SCENARIOS.compliance,...SCENARIOS.tool,...SCENARIOS.service];
+  const sceneList = state.scenes.map(sid=>{const s=sceneNames.find(x=>x.id===sid);return s?s.title:sid}).join('、');
+
+  let title='', body='', btnText='', btnAction='';
+
+  if(opt==='quote'){
+    title='📋 生成报价与解决方案';
+    btnText='📩 生成正式报价方案';
+    btnAction='submitAction';
+    body=`<p class="sec-sub">我们将根据以下需求生成正式报价单和解决方案文档，请确认并补充联系方式</p>
+    <div class="quote-note"><b>需求摘要：</b><br>· 行业：${ind.icon} ${state.industry}<br>· 需求场景：${sceneList}<br>· 预算：${BUDGET_RANGES.find(b=>b.id===state.budget)?.range||'未选'}<br>· 痛点：${state.pains.join('、')||'未选'}</div>
+    <div class="form-row"><div class="form-group"><label>公司名称 *</label><input id="optCompany" placeholder="请输入公司全称"></div><div class="form-group"><label>联系人 *</label><input id="optName" placeholder="请输入联系人姓名"></div></div>
+    <div class="form-row"><div class="form-group"><label>手机号 *</label><input id="optPhone" type="tel" placeholder="请输入手机号"></div><div class="form-group"><label>邮箱</label><input id="optEmail" type="email" placeholder="请输入邮箱"></div></div>
+    <div class="form-group"><label>补充说明</label><textarea id="optNote" placeholder="项目背景、特殊需求、时间要求...">${state.customPain||''}</textarea></div>`;
+  }else if(opt==='contact'){
+    title='📞 联系销售';
+    btnText='📞 提交联系请求';
+    btnAction='submitAction';
+    body=`<p class="sec-sub">我们的商务经理将尽快与您联系，请留下联系方式</p>
+    <div class="form-row"><div class="form-group"><label>公司名称 *</label><input id="optCompany" placeholder="请输入公司全称"></div><div class="form-group"><label>联系人 *</label><input id="optName" placeholder="请输入联系人姓名"></div></div>
+    <div class="form-row"><div class="form-group"><label>手机号 *</label><input id="optPhone" type="tel" placeholder="请输入手机号"></div><div class="form-group"><label>邮箱</label><input id="optEmail" type="email" placeholder="请输入邮箱"></div></div>
+    <div class="form-group"><label>感兴趣的产品/服务</label><textarea id="optNote" placeholder="请简述你关注的产品或服务...">${sceneList}</textarea></div>`;
+  }else if(opt==='communicate'){
+    title='💬 进一步交流';
+    btnText='💬 提交需求信息';
+    btnAction='submitAction';
+    body=`<p class="sec-sub">请留下详细需求和联系方式，我们将安排资深技术专家与您深入沟通</p>
+    <div class="form-row"><div class="form-group"><label>公司名称 *</label><input id="optCompany" placeholder="请输入公司全称"></div><div class="form-group"><label>联系人 *</label><input id="optName" placeholder="请输入联系人姓名"></div></div>
+    <div class="form-row"><div class="form-group"><label>手机号 *</label><input id="optPhone" type="tel" placeholder="请输入手机号"></div><div class="form-group"><label>邮箱</label><input id="optEmail" type="email" placeholder="请输入邮箱"></div></div>
+    <div class="form-group"><label>期望交流的内容 *</label><textarea id="optNote" placeholder="请描述你希望了解的技术细节、关注的场景、现有的安全体系..."></textarea></div>
+    <div class="form-group"><label>方便沟通的时间</label><select id="optTime"><option value="">请选择</option><option>工作日 9:00-12:00</option><option>工作日 14:00-18:00</option><option>随时均可</option></select></div>`;
+  }else if(opt==='poc'){
+    title='🔬 申请POC测试';
+    btnText='🔬 提交POC申请';
+    btnAction='submitAction';
+    body=`<p class="sec-sub">申请产品试用和概念验证测试，我们将根据您的需求安排POC环境</p>
+    <div class="form-row"><div class="form-group"><label>公司名称 *</label><input id="optCompany" placeholder="请输入公司全称"></div><div class="form-group"><label>联系人 *</label><input id="optName" placeholder="请输入联系人姓名"></div></div>
+    <div class="form-row"><div class="form-group"><label>手机号 *</label><input id="optPhone" type="tel" placeholder="请输入手机号"></div><div class="form-group"><label>邮箱</label><input id="optEmail" type="email" placeholder="请输入邮箱"></div></div>
+    <div class="form-row"><div class="form-group"><label>期望测试产品</label><select id="optProduct" multiple style="min-height:100px"><option>SAST 静态代码分析</option><option>SCA 软件成分分析</option><option>固件安全测试</option><option>大模型安全测试</option><option>AI SAST 智能代码分析</option></select></div><div class="form-group"><label>部署方式</label><select id="optDeploy"><option value="">请选择</option><option>本地部署</option><option>私有云</option><option>涉密离线环境</option><option>SaaS试用</option></select></div></div>
+    <div class="form-group"><label>测试场景说明</label><textarea id="optNote" placeholder="请描述期望测试的代码类型、语言、规模等..."></textarea></div>
+    <div class="form-group"><label>期望测试时间</label><input id="optTestDate" type="date"></div>`;
+  }
+
+  contentEl.innerHTML = `<h2 class="sec-title">${title}</h2>${body}
+    <button class="btn btn-green btn-lg" data-action="${btnAction}" data-param="${opt}" style="width:100%;justify-content:center;margin-top:8px">${btnText}</button>`;
+  formEl.style.display = 'block';
+  formEl.scrollIntoView({behavior:'smooth'});
+}
+function submitActionForm(opt){
+  const c = document.getElementById('optCompany')?.value.trim();
+  const n = document.getElementById('optName')?.value.trim();
+  const p = document.getElementById('optPhone')?.value.trim();
+  if(!c||!n||!p){ toast('请填写公司名称、联系人和手机号','error'); return; }
+  const data = {
+    type: opt, company:c, name:n, phone:p,
+    email: document.getElementById('optEmail')?.value||'',
+    note: document.getElementById('optNote')?.value||'',
+    industry: state.industry, scenes: state.scenes, budget: state.budget, pains: state.pains,
+    time: new Date().toLocaleString('zh-CN')
+  };
+  const leads=JSON.parse(localStorage.getItem('ruanan_leads')||'[]'); leads.push(data);
+  localStorage.setItem('ruanan_leads',JSON.stringify(leads));
+  const labels = {quote:'报价方案',contact:'销售联系',communicate:'需求交流',poc:'POC申请'};
+  toast('✅ '+labels[opt]+'请求已提交！我们将尽快联系您');
+  console.log('提交:', data);
+  setTimeout(()=>resetAll(),2000);
+}
+function goStep(n){
+  if(n===5) state.step=5;
+  else if(n===4){ state.step=4; }
+  else state.step=n;
+  state.products=[]; render(); window.scrollTo(0,0);
+}
+function toggleScene(id){
+  const idx=state.scenes.indexOf(id);
+  if(idx>=0) state.scenes.splice(idx,1); else state.scenes.push(id);
+  render();
+}
+function togglePain(id){
+  const idx=state.pains.indexOf(id);
+  if(idx>=0) state.pains.splice(idx,1); else state.pains.push(id);
+  render();
+}
+function resetAll(){ state={step:0,userInfo:{company:'',address:'',contact:'',title:'',email:'',phone:''},industry:null,scenes:[],budget:null,pains:[],customPain:'',products:[],deploy:'local'}; render(); }
+
+function toast(msg,t){let d=document.createElement('div');d.className='toast '+(t||'success');d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),3000);}
+
+// ===== Event delegation =====
+document.addEventListener('click', function(e){
+  const el = e.target.closest('[data-action]');
+  if (!el) return;
+  const action = el.getAttribute('data-action');
+  const param = el.getAttribute('data-param');
+  const savePain = el.getAttribute('data-savepain');
+  if (action === 'saveUserInfo') saveUserInfo();
+  else if (action === 'saveProjectInfo') saveProjectInfo();
+  else if (action === 'selectIndustry') selectIndustry(param);
+  else if (action === 'selectBudget') selectBudget(param);
+  else if (action === 'toggleScene') toggleScene(param);
+  else if (action === 'togglePain') togglePain(param);
+  else if (action === 'goStep') {
+    if (savePain === 'true') state.customPain = document.getElementById('customPain')?.value || '';
+    goStep(parseInt(param));
+  }
+  else if (action === 'resetAll') resetAll();
+  else if (action === 'submitQuote') submitQuote();
+  else if (action === 'selectOption') selectOption(param);
+  else if (action === 'submitAction') submitActionForm(param);
+});
+
+function submitQuote(){
+  const c=document.getElementById('fCompany')?.value.trim();
+  const n=document.getElementById('fName')?.value.trim();
+  const p=document.getElementById('fPhone')?.value.trim();
+  if(!c||!n||!p){toast('请填写公司名称、联系人和手机号','error');return}
+  const servicePriceMap={s1:'代码审计2万/次',s2:'固件测试1万/次',s3:'开源合规5万/次'};
+  const svcs=state.scenes.filter(s=>servicePriceMap[s]).map(s=>servicePriceMap[s]);
+  const data={company:c,name:n,phone:p,email:document.getElementById('fEmail')?.value.trim()||'',note:document.getElementById('fNote')?.value.trim()||'',industry:state.industry,scenes:state.scenes,services:svcs,budget:state.budget,pains:state.pains,customPain:state.customPain,deploy:state.deploy,time:new Date().toLocaleString('zh-CN')};
+  const leads=JSON.parse(localStorage.getItem('ruanan_leads')||'[]');leads.push(data);localStorage.setItem('ruanan_leads',JSON.stringify(leads));
+  console.log('选型提交:',data);
+  toast('✅ 方案已提交！商务经理将在1个工作日内联系您');
+  setTimeout(()=>resetAll(),2000);
+}
+
+render();
+</script>
+</body>
+</html>

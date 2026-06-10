@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>软安科技 | 华南区合作伙伴支持门户</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif}
+body{background:#f1f5f9;min-height:100vh}
+:root{--brand:#2563eb;--brand-light:#eff6ff;--slate-50:#f8fafc;--slate-100:#f1f5f9;--slate-200:#e2e8f0;--slate-300:#cbd5e1;--slate-400:#94a3b8;--slate-500:#64748b;--slate-600:#475569;--slate-700:#334155;--slate-800:#1e293b;--slate-900:#0f172a;--red-50:#fef2f2;--red-500:#ef4444;--red-700:#b91c1c;--green-50:#f0fdf4;--green-600:#16a34a;--amber-50:#fffbeb;--amber-700:#b45309;--purple-500:#a855f7}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:linear-gradient(180deg,#0f172a 0%,#1e3a8a 100%);color:#fff;z-index:100;display:none;flex-direction:column}
+.sidebar.show{display:flex}
+.sidebar-logo{padding:20px;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:10px}
+.sidebar-logo .icon{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#2563eb,#06b6d4);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px}
+.sidebar-nav{flex:1;padding:12px;overflow-y:auto}
+.sidebar-nav a{display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:10px;color:#94a3b8;text-decoration:none;font-size:14px;margin-bottom:4px;cursor:pointer;transition:all 0.2s}
+.sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(59,130,246,0.25);color:#60a5fa;font-weight:600}
+.sidebar-footer{padding:16px;border-top:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:10px}
+.sidebar-footer .avatar{width:36px;height:36px;border-radius:50%;background:var(--brand);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+.main{margin-left:240px;min-height:100vh}
+.main.full{margin-left:0}
+.page{display:none}
+.page.active{display:block;animation:fadeIn 0.3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.card{background:#fff;border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:24px}
+.card-hover{cursor:pointer;transition:all 0.25s}
+.card-hover:hover{box-shadow:0 10px 25px rgba(0,0,0,0.08);transform:translateY(-2px)}
+.btn{padding:8px 20px;border-radius:10px;font-weight:600;font-size:14px;cursor:pointer;border:none;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;box-shadow:0 4px 12px rgba(37,99,235,0.3)}
+.btn-primary:hover{opacity:0.9}
+.btn-outline{background:#fff;color:var(--slate-700);border:1px solid var(--slate-200)}
+.btn-outline:hover{background:var(--slate-50)}
+.btn-sm{padding:5px 14px;font-size:13px;border-radius:8px}
+.input,select,textarea{width:100%;border:1px solid var(--slate-200);border-radius:10px;padding:10px 14px;font-size:14px;transition:all 0.2s;outline:none;background:#fff}
+.input:focus,select:focus,textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(37,99,235,0.1)}
+label{display:block;font-size:14px;font-weight:500;color:var(--slate-700);margin-bottom:6px}
+.badge{display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:500}
+.badge-pending{background:#fef3c7;color:#92400e}
+.badge-approved{background:#d1fae5;color:#065f46}
+.badge-rejected{background:#fee2e2;color:#991b1b}
+.badge-blue{background:var(--brand-light);color:var(--brand)}
+.stat-card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.06);border-left:4px solid var(--brand)}
+.stat-value{font-size:32px;font-weight:900;color:var(--slate-900)}
+.stat-label{font-size:13px;color:var(--slate-500);margin-top:4px}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:12px 16px;font-size:13px;font-weight:600;color:var(--slate-600);background:var(--slate-50);border-bottom:1px solid var(--slate-200)}
+td{padding:12px 16px;font-size:14px;color:var(--slate-700);border-bottom:1px solid var(--slate-100)}
+tr:hover td{background:var(--slate-50)}
+.toast{position:fixed;top:20px;right:20px;padding:14px 24px;border-radius:12px;color:#fff;font-weight:500;font-size:14px;z-index:9999;animation:slideIn 0.3s ease;box-shadow:0 10px 30px rgba(0,0,0,0.2)}
+.toast.success{background:#059669}
+.toast.error{background:#dc2626}
+@keyframes slideIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+.form-group{margin-bottom:16px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.section-title{font-size:20px;font-weight:800;color:var(--slate-900);margin-bottom:4px}
+.section-sub{font-size:14px;color:var(--slate-500);margin-bottom:24px}
+.alert{padding:14px 18px;border-radius:12px;font-size:13px;margin-bottom:20px;display:flex;align-items:flex-start;gap:10px}
+.alert-info{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
+.alert-warn{background:#fffbeb;border:1px solid #fde68a;color:#92400e}
+.flex{display:flex}.gap-2{gap:8px}.gap-3{gap:12px}.gap-4{gap:16px}.items-center{align-items:center}.justify-between{justify-content:space-between}.flex-wrap{flex-wrap:wrap}
+.mb-2{margin-bottom:8px}.mb-3{margin-bottom:12px}.mb-4{margin-bottom:16px}.mb-6{margin-bottom:24px}.mb-8{margin-bottom:32px}.mt-2{margin-top:8px}.mt-4{margin-top:16px}
+.p-4{padding:16px}.p-6{padding:24px}.p-8{padding:32px}.text-center{text-align:center}.text-sm{font-size:13px}.text-xs{font-size:12px}
+.text-slate-400{color:var(--slate-400)}.text-slate-500{color:var(--slate-500)}.font-bold{font-weight:700}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.w-full{width:100%}.max-w-md{max-width:448px}.max-w-lg{max-width:512px}.max-w-3xl{max-width:768px}.mx-auto{margin-left:auto;margin-right:auto}
+.rounded-xl{border-radius:12px}.rounded-2xl{border-radius:16px}
+.chip{padding:6px 14px;border-radius:999px;border:1px solid var(--slate-200);font-size:13px;cursor:pointer;transition:all 0.2s;background:#fff;color:var(--slate-600)}
+.chip:hover,.chip.selected{border-color:var(--brand);color:var(--brand);background:var(--brand-light)}
+.pill{padding:4px 10px;border-radius:999px;background:var(--brand-light);color:var(--brand);font-size:12px;font-weight:500}
+.hidden{display:none}.overflow-x{overflow-x:auto}
+.announcement-card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;border-left:4px solid var(--brand);box-shadow:0 1px 3px rgba(0,0,0,0.05);transition:all 0.2s}
+.announcement-card:hover{box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+.announcement-card .ann-title{font-weight:700;color:var(--slate-900);font-size:15px;margin-bottom:6px}
+.announcement-card .ann-date{font-size:12px;color:var(--slate-400);margin-bottom:8px}
+.announcement-card .ann-body{font-size:14px;color:var(--slate-600);line-height:1.6}
+.announcement-pin{display:inline-block;background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;margin-left:8px}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.2s ease}
+.modal-box{background:#fff;border-radius:16px;padding:32px;width:90%;max-width:560px;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+.modal-box h2{font-size:20px;font-weight:800;color:var(--slate-900);margin-bottom:20px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
+@media(max-width:768px){.sidebar{width:100%;position:relative;height:auto}.sidebar .sidebar-nav{display:flex;flex-wrap:wrap}.main{margin-left:0}.form-row,.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo"><div class="icon">软</div><div><div style="font-weight:700;font-size:14px">软安科技</div><div style="font-size:11px;color:#93c5fd">华南区伙伴门户</div></div></div>
+  <nav class="sidebar-nav">
+    <a data-page="dashboard" onclick="goPage('dashboard')" class="active">📊 工作台</a>
+    <a data-page="customer-register" onclick="goPage('customer-register')">📝 客户报备</a>
+    <a data-page="test-apply" onclick="goPage('test-apply')">🔬 测试申请</a>
+    <a data-page="my-records" onclick="goPage('my-records')">📋 申请记录</a>
+	    <a data-page="announcements" onclick="goPage('announcements')">📢 公告栏</a>
+    <a data-page="products" onclick="goPage('products')">📚 产品资料</a>
+    <a data-page="special-price" onclick="goPage('special-price')">💰 特价申请</a>
+	    <a href="https://changle-841202.github.io/ruanan-partner-portal/selector" target="_blank">🤖 智能选型助手</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="avatar" id="sidebarAvatar">P</div>
+    <div style="flex:1"><div style="font-size:13px;font-weight:500" id="sidebarName">--</div><div style="font-size:11px;color:#94a3b8" id="sidebarCompany">--</div></div>
+    <button onclick="logout()" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:18px" title="退出">⏻</button>
+  </div>
+</aside>
+
+<main class="main full" id="mainContent">
+
+<div class="page active" id="page-login" style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px">
+  <div class="card max-w-md mx-auto" style="width:100%;padding:40px">
+    <div class="text-center mb-6">
+      <div style="width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,#2563eb,#1d4ed8);display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;color:#fff;box-shadow:0 8px 24px rgba(37,99,235,0.3);margin-bottom:16px">软</div>
+      <h1 style="font-size:22px;font-weight:800;color:var(--slate-900)">软安科技华南区</h1>
+      <p style="font-size:14px;color:var(--slate-500);margin-top:4px">合作伙伴支持门户</p>
+    </div>
+    <form onsubmit="login(event)">
+      <div class="form-group"><label>伙伴邮箱</label><input type="email" id="loginEmail" class="input" required placeholder="partner@company.com"></div>
+      <div class="form-group"><label>密码</label><input type="password" id="loginPwd" class="input" required placeholder="请输入密码"></div>
+      <button type="submit" class="btn btn-primary w-full" style="padding:12px;justify-content:center;font-size:16px">登 录</button>
+    </form>
+    <p class="text-center text-sm text-slate-400 mt-4">还没有账号？<a href="#" onclick="showRegister()" style="color:var(--brand);font-weight:600;text-decoration:none">注册成为合作伙伴</a></p>
+	    <p class="text-center text-sm mt-2"><a href="#" onclick="showForgotPwd()" style="color:var(--slate-500);font-size:13px;text-decoration:none">忘记密码？</a></p>
+    <p class="text-center text-xs text-slate-400 mt-3" style="color:var(--slate-400)">演示账号: demo@partner.com / demo123 | 管理员: 右下角⚙</p>
+  </div>
+</div>
+
+<div class="page" id="page-register" style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px">
+  <div class="card max-w-lg mx-auto" style="width:100%;padding:40px">
+    <div class="text-center mb-6">
+      <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#2563eb,#1d4ed8);display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:#fff;margin-bottom:12px">软</div>
+      <h1 style="font-size:20px;font-weight:800;color:var(--slate-900)">注册成为合作伙伴</h1>
+    </div>
+    <form onsubmit="register(event)">
+      <div class="form-row"><div class="form-group"><label>公司名称 *</label><input type="text" id="regCompany" class="input" required></div><div class="form-group"><label>联系人 *</label><input type="text" id="regName" class="input" required></div></div>
+      <div class="form-row"><div class="form-group"><label>邮箱 *</label><input type="email" id="regEmail" class="input" required></div><div class="form-group"><label>手机号 *</label><input type="tel" id="regPhone" class="input" required></div></div>
+      <div class="form-group"><label>密码 *</label><input type="password" id="regPwd" class="input" required minlength="6" placeholder="至少6位"></div>
+      <div class="form-group"><label>合作类型 *</label><select id="regPartnerType" class="input" required onchange="togglePartnerFields()"><option value="">请选择</option><option value="city">城市代理商</option><option value="industry">行业代理商</option><option value="ecosystem">生态合作伙伴</option><option value="project">项目授权代理商</option></select></div>
+      <div class="form-group hidden" id="regCityGroup"><label>代理城市 *</label><input type="text" id="regCity" class="input" placeholder="请输入城市名称，如：深圳、广州"></div>
+      <div class="form-group hidden" id="regIndustryGroup"><label>专注行业 *</label><select id="regIndustry2" class="input"><option value="">请选择</option><option>汽车</option><option>芯片半导体</option><option>消费电子</option><option>军工</option><option>电子通信</option><option>金融</option><option>医疗</option><option>教育</option><option>政府</option><option>综合/其他</option></select></div>
+      <div class="form-group"><label>备注</label><textarea id="regNote" class="input" rows="2" placeholder="简要介绍贵司业务方向..."></textarea></div>
+      <button type="submit" class="btn btn-primary w-full" style="padding:12px;justify-content:center">提交注册申请</button>
+    </form>
+    <p class="text-center text-sm text-slate-400 mt-4">已有账号？<a href="#" onclick="showLogin()" style="color:var(--brand);font-weight:600;text-decoration:none">立即登录</a></p>
+  </div>
+</div>
+
+
+<div class="page" id="page-forgot-pwd" style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px">
+  <div class="card max-w-md mx-auto" style="width:100%;padding:40px">
+    <div class="text-center mb-6">
+      <div style="font-size:36px;margin-bottom:12px">🔑</div>
+      <h1 style="font-size:20px;font-weight:800;color:var(--slate-900)">找回密码</h1>
+      <p style="font-size:14px;color:var(--slate-500);margin-top:4px">输入注册邮箱，管理员将为您重置密码</p>
+    </div>
+    <form onsubmit="submitForgotPwd(event)">
+      <div class="form-group"><label>注册邮箱</label><input type="email" id="forgotEmail" class="input" required placeholder="请输入您的注册邮箱"></div>
+      <button type="submit" class="btn btn-primary w-full" style="padding:12px;justify-content:center;font-size:16px">提交重置申请</button>
+    </form>
+    <p class="text-center text-sm text-slate-400 mt-4"><a href="#" onclick="showLogin()" style="color:var(--brand);font-weight:600;text-decoration:none">← 返回登录</a></p>
+  </div>
+</div>
+
+<div class="page" id="page-dashboard">
+  <div class="p-6" style="max-width:1200px;margin:0 auto">
+    <div class="mb-8"><h1 class="section-title">工作台</h1><p class="section-sub">欢迎回来，<span id="dashName">--</span></p></div>
+    <div class="grid4 mb-8" id="statsRow"></div>
+    <h3 style="font-size:17px;font-weight:700;color:var(--slate-900);margin-bottom:16px">快捷操作</h3>
+    <div class="grid3 mb-8">
+      <div class="card card-hover" onclick="goPage('customer-register')"><div style="font-size:28px;margin-bottom:12px">📝</div><div style="font-weight:700;color:var(--slate-900);margin-bottom:4px">客户报备</div><div style="font-size:13px;color:var(--slate-500)">报备潜在客户，锁定项目机会</div></div>
+      <div class="card card-hover" onclick="goPage('test-apply')"><div style="font-size:28px;margin-bottom:12px">🔬</div><div style="font-weight:700;color:var(--slate-900);margin-bottom:4px">申请产品测试</div><div style="font-size:13px;color:var(--slate-500)">为客户申请软安产品试用License</div></div>
+      <div class="card card-hover" onclick="goPage('special-price')"><div style="font-size:28px;margin-bottom:12px">💰</div><div style="font-weight:700;color:var(--slate-900);margin-bottom:4px">特价申请</div><div style="font-size:13px;color:var(--slate-500)">项目特价/批量折扣在线申请</div></div>
+      <div class="card card-hover" onclick="goPage('products')"><div style="font-size:28px;margin-bottom:12px">📚</div><div style="font-weight:700;color:var(--slate-900);margin-bottom:4px">产品资料</div><div style="font-size:13px;color:var(--slate-500)">产品白皮书、方案手册、竞品对比</div></div>
+      <div class="card card-hover" onclick="goPage('my-records')"><div style="font-size:28px;margin-bottom:12px">📊</div><div style="font-weight:700;color:var(--slate-900);margin-bottom:4px">查看记录</div><div style="font-size:13px;color:var(--slate-500)">追踪报备和申请的审批状态</div></div>
+    </div>
+    <h3 style="font-size:17px;font-weight:700;color:var(--slate-900);margin-bottom:12px">📢 最新公告</h3>
+	    <div id="dashAnnouncements" style="margin-bottom:24px"><div class="text-center text-sm text-slate-400" style="padding:16px">暂无公告</div></div>
+	    <h3 style="font-size:17px;font-weight:700;color:var(--slate-900);margin-bottom:16px">最近提交</h3>
+    <div class="card overflow-x"><table><thead><tr><th>类型</th><th>客户/项目</th><th>产品</th><th>状态</th><th>日期</th></tr></thead><tbody id="recentRecords"><tr><td colspan="5" class="text-center" style="padding:32px;color:var(--slate-400)">暂无记录</td></tr></tbody></table></div>
+  </div>
+</div>
+
+<div class="page" id="page-customer-register">
+  <div class="p-6" style="max-width:768px;margin:0 auto">
+    <div class="mb-8"><h1 class="section-title">客户报备</h1><p class="section-sub">提交潜在客户信息，锁定项目归属</p><div class="alert alert-warn"><span>⚠️</span><div><strong>报备规则：</strong>同一客户以最先提交的报备为准，7个工作日内反馈审批结果。报备成功后可申请测试License。</div></div></div>
+    <div class="card">
+      <form onsubmit="submitCustomer(event)">
+        <div class="form-row"><div class="form-group"><label>客户公司全称 * <button type="button" onclick="checkCustomerDedup()" class="btn btn-outline btn-sm" style="margin-left:8px;color:var(--brand);border-color:var(--brand)">🔍 飞书查重</button><span id="dedupResult" style="font-size:12px;margin-left:8px"></span></label><input type="text" id="custCompany" class="input" required></div><div class="form-group"><label>客户所属行业 *</label><select id="custIndustry" class="input" required><option value="">请选择</option><option>汽车</option><option>芯片半导体</option><option>消费电子</option><option>军工</option><option>电子通信</option><option>金融</option><option>医疗</option><option>教育</option><option>政府</option><option>其他</option></select></div></div>
+        <div class="form-row"><div class="form-group"><label>客户联系人</label><input type="text" id="custContact" class="input"></div><div class="form-group"><label>客户职位</label><input type="text" id="custTitle" class="input" placeholder="如：信息安全总监"></div></div>
+        <div class="form-row"><div class="form-group"><label>客户邮箱</label><input type="email" id="custEmail" class="input"></div><div class="form-group"><label>客户电话</label><input type="tel" id="custPhone" class="input"></div></div>
+        <div class="form-group"><label>预计项目金额（万元）</label><input type="number" id="custAmount" class="input" placeholder="请填写预估金额"></div>
+        <div class="form-group"><label>客户需求简述 *</label><textarea id="custNeed" class="input" rows="3" required placeholder="请描述客户的安全测试需求、关注的合规标准等..."></textarea></div>
+        <div class="form-group"><label>感兴趣产品（可多选）</label><div class="flex flex-wrap gap-2" id="custProducts"><label class="chip"><input type="checkbox" value="SAST" style="accent-color:var(--brand);margin-right:4px">SAST</label><label class="chip"><input type="checkbox" value="SCA" style="accent-color:var(--brand);margin-right:4px">SCA</label><label class="chip"><input type="checkbox" value="固件安全" style="accent-color:var(--brand);margin-right:4px">固件安全</label><label class="chip"><input type="checkbox" value="大模型安全" style="accent-color:var(--brand);margin-right:4px">大模型安全</label><label class="chip"><input type="checkbox" value="AI SAST" style="accent-color:var(--brand);margin-right:4px">AI SAST</label></div></div>
+        <button type="submit" class="btn btn-primary w-full" style="padding:12px;justify-content:center">提交报备</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-test-apply">
+  <div class="p-6" style="max-width:768px;margin:0 auto">
+    <div class="mb-8"><h1 class="section-title">测试申请</h1><p class="section-sub">为已报备客户申请产品测试License</p><div class="alert alert-info"><span>💡</span><div><strong>提示：</strong>请先在"客户报备"中完成报备并获得审批通过后，再进行测试申请。测试License有效期30天。</div></div></div>
+    <div class="card">
+      <form onsubmit="submitTest(event)">
+        <div class="form-group"><label>关联报备客户 *</label><select id="testCustomer" class="input" required><option value="">请选择已报备客户</option></select></div>
+        <div class="form-group"><label>申请产品 *</label><select id="testProduct" class="input" required><option value="">请选择</option><option>SAST 静态代码分析</option><option>SCA 软件成分分析</option><option>固件安全测试</option><option>大模型安全测试</option><option>AI SAST</option><option>综合方案（多产品）</option></select></div>
+        <div class="form-row"><div class="form-group"><label>部署方式 *</label><select id="testDeploy" class="input" required><option value="">请选择</option><option>本地部署</option><option>私有云</option><option>涉密离线环境</option><option>SaaS试用</option></select></div><div class="form-group"><label>主要编程语言</label><input type="text" id="testLang" class="input" placeholder="如：C/C++, Java, Python"></div></div>
+        <div class="form-row"><div class="form-group"><label>预计试用人数</label><input type="number" id="testUsers" class="input" placeholder="如：5"></div><div class="form-group"><label>期望开始日期</label><input type="date" id="testDate" class="input"></div></div>
+        <div class="form-group"><label>测试场景说明</label><textarea id="testNote" class="input" rows="3" placeholder="请描述客户的测试场景、关注的检测维度等..."></textarea></div>
+        <button type="submit" class="btn btn-primary w-full" style="padding:12px;justify-content:center">提交测试申请</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-my-records">
+  <div class="p-6" style="max-width:1200px;margin:0 auto">
+    <div class="mb-8"><h1 class="section-title">申请记录</h1><p class="section-sub">追踪所有报备和测试申请的处理状态</p></div>
+    <div class="flex gap-2 mb-6"><button class="btn btn-outline btn-sm" id="tab-customers-btn" onclick="showTab('customers')" style="background:var(--slate-100)">客户报备</button><button class="btn btn-outline btn-sm" id="tab-tests-btn" onclick="showTab('tests')">测试申请</button></div>
+    <div id="tab-customers" class="card overflow-x"><table><thead><tr><th>客户名称</th><th>行业</th><th>产品</th><th>金额(万)</th><th>状态</th><th>日期</th></tr></thead><tbody id="recordCustomers"><tr><td colspan="6" class="text-center" style="padding:32px;color:var(--slate-400)">暂无报备记录</td></tr></tbody></table></div>
+    <div id="tab-tests" class="card overflow-x hidden"><table><thead><tr><th>客户</th><th>产品</th><th>部署方式</th><th>人数</th><th>状态</th><th>日期</th></tr></thead><tbody id="recordTests"><tr><td colspan="6" class="text-center" style="padding:32px;color:var(--slate-400)">暂无测试记录</td></tr></tbody></table></div>
+  </div>
+</div>
+
+<div class="page" id="page-products">
+  <div class="p-6" style="max-width:1200px;margin:0 auto">
+    <div class="mb-8"><h1 class="section-title">产品资料库</h1><p class="section-sub">软安科技全系产品资料、解决方案与竞争对比</p></div>
+    <div class="flex gap-2 mb-6" style="flex-wrap:wrap"><button class="btn btn-outline btn-sm" onclick="filterProducts('all')" id="prod-filter-all" style="background:var(--slate-100)">全部</button><button class="btn btn-outline btn-sm" onclick="filterProducts('SAST')" id="prod-filter-SAST">SAST</button><button class="btn btn-outline btn-sm" onclick="filterProducts('SCA')" id="prod-filter-SCA">SCA</button><button class="btn btn-outline btn-sm" onclick="filterProducts('固件安全')" id="prod-filter-固件安全">固件安全</button><button class="btn btn-outline btn-sm" onclick="filterProducts('大模型安全')" id="prod-filter-大模型安全">大模型安全</button><button class="btn btn-outline btn-sm" onclick="filterProducts('AI SAST')" id="prod-filter-AI SAST">AI SAST</button><button class="btn btn-outline btn-sm" onclick="filterProducts('方案')" id="prod-filter-方案">行业方案</button></div>
+    <div class="grid3 mb-8" id="productMaterialGrid"></div>
+    <h3 style="font-size:17px;font-weight:700;color:var(--slate-900);margin-bottom:16px">解决方案手册</h3>
+    <div class="grid2" id="solutionMaterialGrid"></div>
+  </div>
+</div>
+
+<div class="page" id="page-announcements">
+	  <div class="p-6" style="max-width:900px;margin:0 auto">
+	    <div class="mb-8"><h1 class="section-title">📢 公告栏</h1><p class="section-sub">软安科技华南区最新通知与动态</p></div>
+	    <div id="announcementList"><div class="text-center text-slate-400" style="padding:40px">暂无公告</div></div>
+	  </div>
+	</div>
+	
+	<div class="page" id="page-special-price">
+  <div class="p-6" style="max-width:768px;margin:0 auto">
+    <div class="mb-8"><h1 class="section-title">特价申请</h1><p class="section-sub">为重大项目申请特殊折扣或批量优惠</p><div class="alert alert-warn"><span>⚠️</span><div><strong>申请规则：</strong>特价申请需关联已报备客户，审批通过后方可享受特殊折扣。折扣幅度根据项目金额、客户体量和竞争态势综合评估。</div></div></div>
+    <div class="card">
+      <form onsubmit="submitSpecialPrice(event)">
+        <div class="form-group"><label>关联报备客户 *</label><select id="spCustomer" class="input" required><option value="">请选择已报备客户</option></select></div>
+        <div class="form-row"><div class="form-group"><label>申请产品 *</label><select id="spProduct" class="input" required><option value="">请选择</option><option>SAST 静态代码分析</option><option>SCA 软件成分分析</option><option>固件安全测试</option><option>大模型安全测试</option><option>AI SAST</option><option>综合方案（多产品）</option></select></div><div class="form-group"><label>标准报价（万元）</label><input type="number" id="spStdPrice" class="input" placeholder="标准目录价格"></div></div>
+        <div class="form-row"><div class="form-group"><label>申请折扣 *</label><select id="spDiscount" class="input" required><option value="">请选择</option><option>9折</option><option>8折</option><option>7折</option><option>6折</option><option>5折</option><option>其他（备注说明）</option></select></div><div class="form-group"><label>申请特价（万元）</label><input type="number" id="spPrice" class="input" placeholder="期望成交价格"></div></div>
+        <div class="form-group"><label>竞争情况 *</label><select id="spCompetitor" class="input" required><option value="">请选择</option><option>独家/无竞争</option><option>与Coverity竞争</option><option>与Blackduck竞争</option><option>与Cybellum竞争</option><option>与Fortify竞争</option><option>多家竞争</option><option>价格敏感型客户</option></select></div>
+        <div class="form-group"><label>申请理由 *</label><textarea id="spReason" class="input" rows="3" required placeholder="请详细说明申请特价的原因：客户预算限制、竞争对手报价、战略意义、预期后续订单等..."></textarea></div>
+        <button type="submit" class="btn btn-primary w-full" style="padding:12px;justify-content:center">提交特价申请</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-admin">
+  <div class="p-6" style="max-width:1200px;margin:0 auto">
+    <div class="flex items-center justify-between mb-8"><div><h1 class="section-title">🔧 管理员后台</h1><p class="section-sub">合作伙伴审核 · 报备审批 · 测试审批</p></div><button onclick="logoutAdmin()" class="btn btn-outline btn-sm">退出管理</button></div>
+    <div class="flex gap-2 mb-6" style="flex-wrap:wrap"><button class="btn btn-outline btn-sm" id="admin-tab-partners" onclick="showAdminTab('partners')" style="background:var(--slate-100)">伙伴审核</button><button class="btn btn-outline btn-sm" id="admin-tab-customers" onclick="showAdminTab('customers')">报备审批</button><button class="btn btn-outline btn-sm" id="admin-tab-tests" onclick="showAdminTab('tests')">测试审批</button><button class="btn btn-outline btn-sm" id="admin-tab-special" onclick="showAdminTab('special')">特价审批</button><button class="btn btn-outline btn-sm" id="admin-tab-members" onclick="showAdminTab('members')">成员管理</button><button class="btn btn-outline btn-sm" id="admin-tab-announce" onclick="showAdminTab('announce')">公告管理</button><button class="btn btn-outline btn-sm" id="admin-tab-config" onclick="showAdminTab('config')">系统配置</button></div>
+    <div id="admin-partners" class="card overflow-x"><table><thead><tr><th>公司</th><th>联系人</th><th>邮箱</th><th>合作类型</th><th>城市/行业</th><th>状态</th><th>操作</th></tr></thead><tbody id="adminPartnerList"></tbody></table></div>
+    <div id="admin-customers" class="card overflow-x hidden"><table><thead><tr><th>伙伴</th><th>客户</th><th>行业</th><th>金额(万)</th><th>状态</th><th>操作</th></tr></thead><tbody id="adminCustomerList"></tbody></table></div>
+    <div id="admin-tests-div" class="card overflow-x hidden"><table><thead><tr><th>伙伴</th><th>客户</th><th>产品</th><th>部署</th><th>状态</th><th>操作</th></tr></thead><tbody id="adminTestList"></tbody></table></div>
+    <div id="admin-special" class="card overflow-x hidden"><table><thead><tr><th>伙伴</th><th>客户</th><th>产品</th><th>标准价</th><th>申请价</th><th>折扣</th><th>状态</th><th>操作</th></tr></thead><tbody id="adminSpecialList"></tbody></table></div>
+    <div id="admin-resets" class="card overflow-x hidden">
+      <div class="flex items-center justify-between mb-4"><h3 style="font-weight:700;color:var(--slate-900)">密码重置请求</h3><span class="text-sm text-slate-400">共 <b id="resetCount">0</b> 个待处理</span></div>
+      <table><thead><tr><th>邮箱</th><th>申请时间</th><th>状态</th><th>操作</th></tr></thead><tbody id="adminResetList"></tbody></table>
+    </div>
+    <div id="admin-members" class="card overflow-x hidden">
+	    <div class="flex items-center justify-between mb-4"><h3 style="font-weight:700;color:var(--slate-900)">成员管理</h3><span class="text-sm text-slate-400">共 <b id="memberCount">0</b> 个成员</span></div>
+	    <table><thead><tr><th>公司</th><th>联系人</th><th>邮箱</th><th>手机</th><th>合作类型</th><th>状态</th><th>操作</th></tr></thead><tbody id="adminMemberList"></tbody></table>
+	  </div>
+	  <div id="admin-announce" class="card hidden">
+	    <div class="flex items-center justify-between mb-4"><h3 style="font-weight:700;color:var(--slate-900)">公告管理</h3><button class="btn btn-primary btn-sm" onclick="showAnnounceEditor()">+ 发布新公告</button></div>
+	    <div id="adminAnnounceList"></div>
+	    <div id="announceEditor" class="hidden p-4" style="background:var(--slate-50);border-radius:12px;margin-top:16px">
+	      <h4 style="font-weight:600;color:var(--slate-900);margin-bottom:12px" id="announceEditorTitle">发布新公告</h4>
+	      <input type="hidden" id="annEditId">
+	      <div class="form-group"><label>公告标题 *</label><input type="text" id="annEditTitle" class="input" required></div>
+	      <div class="form-group"><label>公告内容 *</label><textarea id="annEditContent" class="input" rows="4" required></textarea></div>
+	      <div class="form-row"><div class="form-group"><label>状态</label><select id="annEditStatus" class="input"><option value="published">发布</option><option value="draft">草稿</option></select></div><div class="form-group"><label>置顶</label><select id="annEditPinned" class="input"><option value="0">否</option><option value="1">是</option></select></div></div>
+	      <div class="flex gap-2"><button class="btn btn-primary btn-sm" onclick="saveAnnouncement()">保存</button><button class="btn btn-outline btn-sm" onclick="document.getElementById('announceEditor').classList.add('hidden')">取消</button></div>
+	    </div>
+	  </div>
+	  <div id="admin-config" class="hidden">
+      <div class="card mb-6"><h3 style="font-weight:700;color:var(--slate-900);margin-bottom:16px">基础设置</h3>
+        <div class="form-row"><div class="form-group"><label>管理员密码</label><input type="text" id="cfgAdminPwd" class="input" placeholder="admin888"></div><div class="form-group"><label>飞书 Webhook 地址</label><input type="url" id="cfgWebhook" class="input" placeholder="https://open.feishu.cn/open-apis/bot/v2/hook/..."></div></div>
+        <div class="form-row"><div class="form-group"><label>门户标题</label><input type="text" id="cfgTitle" class="input" placeholder="软安科技华南区合作伙伴支持门户"></div><div class="form-group"><label>演示账号邮箱</label><input type="text" id="cfgDemoEmail" class="input" placeholder="demo@partner.com"></div></div>
+        <button class="btn btn-primary" onclick="saveBaseConfig()">保存基础设置</button>
+      </div>
+      <div class="card mb-6"><div class="flex items-center justify-between mb-4"><h3 style="font-weight:700;color:var(--slate-900)">产品资料管理</h3><button class="btn btn-primary btn-sm" onclick="showProductEditor()">+ 新增资料</button></div>
+        <div class="overflow-x"><table><thead><tr><th>图标</th><th>标题</th><th>分类</th><th>类型</th><th>描述</th><th>操作</th></tr></thead><tbody id="cfgProductList"></tbody></table></div>
+        <div id="cfgProductEditor" class="hidden p-4" style="background:var(--slate-50);border-radius:12px;margin-top:16px">
+          <h4 style="font-weight:600;color:var(--slate-900);margin-bottom:12px" id="cfgProductEditorTitle">新增产品资料</h4>
+          <input type="hidden" id="cfgProdId"><input type="hidden" id="cfgProdAttach" value="">
+          <div class="form-row"><div class="form-group"><label>标题 *</label><input type="text" id="cfgProdTitle" class="input"></div><div class="form-group"><label>图标 (emoji)</label><input type="text" id="cfgProdIcon" class="input" placeholder="📄"></div></div>
+          <div class="form-row"><div class="form-group"><label>产品分类 *</label><select id="cfgProdProduct" class="input"><option value="SAST">SAST</option><option value="SCA">SCA</option><option value="固件安全">固件安全</option><option value="大模型安全">大模型安全</option><option value="AI SAST">AI SAST</option><option value="方案">方案</option></select></div><div class="form-group"><label>资料类型</label><select id="cfgProdType" class="input"><option>白皮书</option><option>产品手册</option><option>竞品分析</option><option>选型指南</option><option>解决方案</option><option>技术文档</option><option>行业方案</option></select></div></div>
+          <div class="form-group"><label>描述</label><textarea id="cfgProdDesc" class="input" rows="2"></textarea></div>
+          <div class="form-group"><label>附件 <span style="font-size:11px;color:var(--slate-400)">(PDF/图片, ≤2MB)</span></label><input type="file" id="cfgProdFile" class="input" onchange="previewCfgAttachment()" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.ppt,.pptx" style="padding:8px"><div id="cfgAttachBar" class="hidden" style="margin-top:8px;padding:8px 12px;background:#f0fdf4;border-radius:8px;font-size:12px;display:flex;align-items:center;gap:8px"><span>📎</span><span id="cfgAttachName"></span><span style="color:var(--slate-400)" id="cfgAttachSize"></span><button type="button" class="btn btn-outline btn-sm" onclick="clearCfgAttachment()" style="color:var(--red-500);border-color:var(--red-500)">移除</button></div></div>
+          <div class="flex gap-2"><button type="button" class="btn btn-primary btn-sm" onclick="saveProduct()">保存</button><button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('cfgProductEditor').classList.add('hidden')">取消</button></div>
+        </div>
+      </div>
+      <div class="card mb-6"><h3 style="font-weight:700;color:var(--slate-900);margin-bottom:16px">行业选项管理</h3>
+        <div class="flex gap-2 mb-4 flex-wrap" id="cfgIndustryChips"></div>
+        <div class="flex gap-2"><input type="text" id="cfgNewIndustry" class="input" placeholder="新行业名称" style="max-width:200px"><button class="btn btn-primary btn-sm" onclick="addIndustry()">添加</button><button class="btn btn-outline btn-sm" onclick="resetIndustries()">恢复默认</button></div>
+      </div>
+      <div class="card"><h3 style="font-weight:700;color:var(--slate-900);margin-bottom:16px">数据管理</h3>
+        <div class="flex gap-2"><button class="btn btn-outline btn-sm" onclick="exportAllData()">导出全部数据 (JSON)</button><button class="btn btn-outline btn-sm" onclick="document.getElementById('importFileInput').click()" style="color:var(--amber-700)">导入数据</button><button class="btn btn-outline btn-sm" onclick="if(confirm('确定清空所有数据？此操作不可恢复！')){clearAllData()}" style="color:var(--red-500);border-color:var(--red-500)">清空所有数据</button></div>
+        <input type="file" id="importFileInput" class="hidden" onchange="importAllData(event)" accept=".json">
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<div style="position:fixed;bottom:16px;right:16px;z-index:999">
+  <button onclick="showAdminLogin()" style="background:#fff;border:1px solid var(--slate-200);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;box-shadow:0 2px 8px rgba(0,0,0,0.08)" title="管理员入口">⚙</button>
+</div>
+
+<script>
+const PK='ruanan_partners',CK='ruanan_customers',TK='ruanan_tests',UK='ruanan_user',SK='ruanan_special_prices';
+var defaultProductMaterials=[{id:'p1',title:'SAST 产品白皮书',product:'SAST',type:'白皮书',desc:'静态代码分析技术详解、AI引擎架构、30+语言支持矩阵、MISRA/CERT合规规则集',icon:'📄'},{id:'p2',title:'SAST vs Coverity 竞品对比',product:'SAST',type:'竞品分析',desc:'检出率、语言覆盖、合规规则、本地服务、部署灵活性全面对比',icon:'⚔️'},{id:'p3',title:'SCA 产品手册',product:'SCA',type:'产品手册',desc:'SBOM自动生成、开源漏洞追踪、许可证合规、供应链依赖分析功能概览',icon:'📘'},{id:'p4',title:'SCA vs Blackduck 选型指南',product:'SCA',type:'选型指南',desc:'从功能覆盖、中国生态、本地服务、价格模式四维度对比分析',icon:'📊'},{id:'p5',title:'固件安全测试技术白皮书',product:'固件安全',type:'白皮书',desc:'固件解包引擎、安全启动链验证、BootROM分析、IoT/汽车/通信设备场景',icon:'🔐'},{id:'p6',title:'固件安全 vs Cybellum 对比',product:'固件安全',type:'竞品分析',desc:'芯片级安全启动验证、RISC-V支持、中国合规生态深度对比',icon:'⚔️'},{id:'p7',title:'大模型安全测试方案',product:'大模型安全',type:'解决方案',desc:'提示注入检测、数据泄露评估、模型对抗鲁棒性、AI供应链安全',icon:'🤖'},{id:'p8',title:'AI SAST 技术概述',product:'AI SAST',type:'技术文档',desc:'LLM辅助漏洞分析、自然语言代码查询、遗留代码批量审计、自动修复建议',icon:'✨'},{id:'p9',title:'汽车软件安全解决方案',product:'方案',type:'行业方案',desc:'R155/R156合规、供应商SBOM审计、ECU固件安全、GB/T 44495-44496',icon:'🚗'},{id:'p10',title:'军工软件安全保障方案',product:'方案',type:'行业方案',desc:'GJB 8114/5369合规、涉密离线部署、AI辅助遗留代码审计、全中文支持',icon:'🛡️'},{id:'p11',title:'5G通信设备安全方案',product:'方案',type:'行业方案',desc:'3GPP SECAM审计、NFV安全、MEC安全、基站固件安全、等保2.0',icon:'📡'},{id:'p12',title:'芯片半导体安全方案',product:'方案',type:'行业方案',desc:'BootROM审计、安全启动链验证、密评合规、NPU固件安全、RISC-V支持',icon:'🔲'}];
+var AK='ruanan_announcements';var defaultIndustries=['汽车','芯片半导体','消费电子','军工','电子通信','金融','医疗','教育','政府','其他'];
+var productMaterials=defaultProductMaterials;
+function g(k){try{return JSON.parse(localStorage.getItem(k))||[]}catch(e){return[]}}
+function s(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+function now(){return new Date().toLocaleString('zh-CN')}
+function toast(msg,t){var d=document.createElement('div');d.className='toast '+(t||'success');d.textContent=msg;document.body.appendChild(d);setTimeout(function(){d.remove()},3000)}
+
+function goPage(name){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');p.style.display='none'});
+  var target=document.getElementById('page-'+name);
+  if(target){target.classList.add('active');target.style.display=name==='login'||name==='register'?'flex':''}
+  document.querySelectorAll('.sidebar-nav a').forEach(function(a){a.classList.remove('active')});
+  var nav=document.querySelector('[data-page="'+name+'"]');
+  if(nav)nav.classList.add('active');
+  if(name==='dashboard'||name==='my-records'){refreshDashboard();renderAnnouncements();}
+  if(name==='test-apply'||name==='special-price')refreshTestCustomerSelect();
+  if(name==='admin')refreshAdmin();
+  if(name==='announcements')renderAnnouncements();
+  if(name==='products')renderProducts();
+}
+
+function showLogin(){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');p.style.display='none'});
+  document.getElementById('page-login').classList.add('active');document.getElementById('page-login').style.display='flex';
+  document.getElementById('sidebar').classList.remove('show');document.getElementById('mainContent').classList.add('full');
+}
+function showRegister(){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');p.style.display='none'});
+  document.getElementById('page-register').classList.add('active');document.getElementById('page-register').style.display='flex';
+}
+
+function register(e){
+  e.preventDefault();
+  var pt=document.getElementById('regPartnerType').value;
+  var city=pt==='city'?document.getElementById('regCity').value.trim():'';
+  var industry=pt==='industry'?document.getElementById('regIndustry2').value:(pt==='ecosystem'||pt==='project'?'':document.getElementById('regIndustry2').value);
+  var p={id:uid(),company:document.getElementById('regCompany').value.trim(),name:document.getElementById('regName').value.trim(),email:document.getElementById('regEmail').value.trim(),phone:document.getElementById('regPhone').value.trim(),password:document.getElementById('regPwd').value.trim(),partnerType:pt,city:city,industry:industry,note:document.getElementById('regNote').value.trim(),status:'pending',createdAt:now()};
+  var partners=g(PK);
+  if(partners.find(function(x){return x.email===p.email})){toast('该邮箱已注册','error');return}
+  partners.push(p);s(PK,partners);
+  sendFeishu('🆕 新合作伙伴注册',[{l:'公司',v:p.company},{l:'联系人',v:p.name},{l:'邮箱',v:p.email},{l:'电话',v:p.phone},{l:'类型',v:pt==='city'?'城市代理商('+city+')':pt==='industry'?'行业代理商('+industry+')':pt==='ecosystem'?'生态合作伙伴':'项目授权代理商'}]);
+  toast('注册申请已提交！审核通过后即可登录');showLogin();
+}
+
+function togglePartnerFields(){
+  var v=document.getElementById('regPartnerType').value;
+  document.getElementById('regCityGroup').classList.toggle('hidden',v!=='city');
+  document.getElementById('regIndustryGroup').classList.toggle('hidden',v!=='industry');
+}
+
+function login(e){
+  e.preventDefault();
+  var email=document.getElementById('loginEmail').value.trim(),pwd=document.getElementById('loginPwd').value.trim();
+  var partners=g(PK),p=partners.find(function(x){return x.email===email&&x.password===pwd});
+  if(!p){toast('邮箱或密码错误','error');return}
+  if(p.status==='pending'){toast('账号审核中，请联系管理员','error');return}
+  if(p.status==='rejected'){toast('账号已被拒绝','error');return}
+  localStorage.setItem(UK,JSON.stringify(p));
+  document.getElementById('sidebar').classList.add('show');document.getElementById('mainContent').classList.remove('full');
+  document.getElementById('sidebarName').textContent=p.name;document.getElementById('sidebarCompany').textContent=p.company;
+  document.getElementById('sidebarAvatar').textContent=p.name.charAt(0);document.getElementById('dashName').textContent=p.name;
+  refreshDashboard();goPage('dashboard');
+}
+
+function logout(){
+  localStorage.removeItem(UK);
+  document.getElementById('sidebar').classList.remove('show');document.getElementById('mainContent').classList.add('full');
+  showLogin();
+}
+
+function refreshDashboard(){
+  var user=JSON.parse(localStorage.getItem(UK));if(!user)return;
+  var customers=g(CK).filter(function(c){return c.partnerId===user.id});
+  var tests=g(TK).filter(function(t){return t.partnerId===user.id});
+  document.getElementById('statsRow').innerHTML=[
+    {v:customers.length,l:'本月报备客户',c:'var(--brand)'},
+    {v:tests.length,l:'测试申请数',c:'var(--green-600)'},
+    {v:customers.filter(function(c){return c.status==='pending'}).length+tests.filter(function(t){return t.status==='pending'}).length,l:'待审批',c:'var(--amber-700)'},
+    {v:customers.filter(function(c){return c.status==='approved'}).length,l:'已通过报备',c:'var(--purple-500)'}
+  ].map(function(s){return '<div class="stat-card" style="border-left-color:'+s.c+'"><div class="stat-value">'+s.v+'</div><div class="stat-label">'+s.l+'</div></div>'}).join('');
+  var all=[].concat(customers.map(function(c){return{type:'客户报备',name:c.company,product:c.products||'--',status:c.status,date:c.createdAt}}),tests.map(function(t){return{type:'测试申请',name:t.customerName,product:t.product,status:t.status,date:t.createdAt}})).sort(function(a,b){return b.date.localeCompare(a.date)}).slice(0,5);
+  var sm={pending:'待审批',approved:'已通过',rejected:'已退回'},sc={pending:'badge-pending',approved:'badge-approved',rejected:'badge-rejected'};
+  document.getElementById('recentRecords').innerHTML=all.length?all.map(function(r){return '<tr><td><span class="badge badge-blue">'+r.type+'</span></td><td style="font-weight:500">'+r.name+'</td><td>'+r.product+'</td><td><span class="badge '+sc[r.status]+'">'+sm[r.status]+'</span></td><td style="color:var(--slate-400)">'+r.date.slice(0,10)+'</td></tr>'}).join(''):'<tr><td colspan="5" class="text-center" style="padding:32px;color:var(--slate-400)">暂无记录</td></tr>';
+  renderRecords();
+}
+
+function renderProducts(){
+  var f=window._prodFilter||'all',pm=getProductMaterials();
+  var filtered=f==='all'?pm:pm.filter(function(p){return p.product===f});
+  document.getElementById('productMaterialGrid').innerHTML=filtered.map(function(p){return '<div class="card card-hover"><div style="font-size:28px;margin-bottom:8px">'+p.icon+'</div><span class="badge badge-blue" style="margin-bottom:8px">'+p.type+'</span><div style="font-weight:700;color:var(--slate-900);margin-bottom:6px;margin-top:4px">'+p.title+'</div><div style="font-size:13px;color:var(--slate-500);line-height:1.5;margin-bottom:8px">'+p.desc+'</div>'+(p.attachment?'<a href="javascript:void 0" onclick="downloadAttachment(\''+p.id+'\')" class="btn btn-outline btn-sm" style="color:var(--brand);border-color:var(--brand)">📥 下载附件 ('+p.attachment.name+')</a>':'')+'</div>'}).join('')||'<div class="text-center text-slate-400" style="padding:40px">该分类暂无资料</div>';
+  document.getElementById('solutionMaterialGrid').innerHTML=pm.filter(function(p){return p.product==='方案'}).map(function(p){return '<div class="card card-hover" style="display:flex;align-items:flex-start;gap:16px"><div style="font-size:32px">'+p.icon+'</div><div><span class="badge badge-blue" style="margin-bottom:6px">'+p.type+'</span><div style="font-weight:700;color:var(--slate-900);margin:6px 0">'+p.title+'</div><div style="font-size:13px;color:var(--slate-500);margin-bottom:8px">'+p.desc+'</div>'+(p.attachment?'<a href="javascript:void 0" onclick="downloadAttachment(\''+p.id+'\')" class="btn btn-outline btn-sm" style="color:var(--brand);border-color:var(--brand)">📥 下载附件 ('+p.attachment.name+')</a>':'')+'</div></div>'}).join('');
+}
+function filterProducts(t){
+  window._prodFilter=t;
+  ['all','SAST','SCA','固件安全','大模型安全','AI SAST','方案'].forEach(function(x){var b=document.getElementById('prod-filter-'+x);if(b)b.style.background=x===t?'var(--slate-100)':'#fff'});
+  renderProducts();
+}
+renderProducts();
+
+function submitSpecialPrice(e){
+  e.preventDefault();
+  var user=JSON.parse(localStorage.getItem(UK));if(!user){toast('请先登录','error');return}
+  var custId=document.getElementById('spCustomer').value;if(!custId){toast('请选择客户','error');return}
+  var cust=g(CK).find(function(c){return c.id===custId});
+  var r={id:uid(),partnerId:user.id,partnerCompany:user.company,partnerName:user.name,customerId:custId,customerName:cust.company,product:document.getElementById('spProduct').value,stdPrice:document.getElementById('spStdPrice').value,discount:document.getElementById('spDiscount').value,spPrice:document.getElementById('spPrice').value,competitor:document.getElementById('spCompetitor').value,reason:document.getElementById('spReason').value.trim(),status:'pending',createdAt:now()};
+  var specials=g(SK);specials.push(r);s(SK,specials);
+  sendFeishu('💰 新特价申请 - '+cust.company,[{l:'伙伴',v:user.company+' / '+user.name},{l:'客户',v:cust.company},{l:'产品',v:r.product},{l:'标准价',v:(r.stdPrice||'--')+'万'},{l:'折扣',v:r.discount},{l:'特价',v:(r.spPrice||'--')+'万'},{l:'竞争',v:r.competitor},{l:'理由',v:r.reason}]);
+  toast('特价申请已提交！');e.target.reset();refreshDashboard();
+}
+
+function checkCustomerDedup(){
+  var company=document.getElementById('custCompany').value.trim();
+  if(!company){toast('请先输入客户公司名称','error');return}
+  var local=g(CK).filter(function(c){return c.company.indexOf(company)>=0});
+  if(local.length>0){
+    document.getElementById('dedupResult').innerHTML='<span style="color:var(--red-500)">⚠ 本地发现'+local.length+'条相似记录：'+local.map(function(c){return c.company+'('+c.status+')'}).join(',')+'</span>';
+  }else{
+    document.getElementById('dedupResult').innerHTML='<span style="color:var(--green-600)">✅ 本地无重复</span>';
+  }
+  var webhook=localStorage.getItem('feishu_webhook');if(!webhook)return;
+  document.getElementById('dedupResult').innerHTML+='<span style="color:var(--slate-400);font-size:11px"> | 飞书查重已发送通知</span>';
+  sendFeishu('🔍 客户查重请求',[{l:'伙伴',v:(JSON.parse(localStorage.getItem(UK))||{}).name||'--'},{l:'查询客户',v:company},{l:'时间',v:now()}]);
+}
+
+function refreshTestCustomerSelect(){
+  var user=JSON.parse(localStorage.getItem(UK));if(!user)return;
+  var approved=g(CK).filter(function(c){return c.partnerId===user.id&&c.status==='approved'});
+  var opt=approved.map(function(c){return '<option value="'+c.id+'">'+c.company+' - '+c.industry+'</option>'}).join('');
+  var sel1=document.getElementById('testCustomer');if(sel1)sel1.innerHTML='<option value="">请选择已报备客户</option>'+opt;
+  var sel2=document.getElementById('spCustomer');if(sel2)sel2.innerHTML='<option value="">请选择已报备客户</option>'+opt;
+}
+
+function submitCustomer(e){
+  e.preventDefault();
+  var user=JSON.parse(localStorage.getItem(UK));if(!user){toast('请先登录','error');return}
+  var products=[];document.querySelectorAll('#custProducts input:checked').forEach(function(x){products.push(x.value)});
+  var r={id:uid(),partnerId:user.id,partnerCompany:user.company,partnerName:user.name,company:document.getElementById('custCompany').value.trim(),industry:document.getElementById('custIndustry').value,contact:document.getElementById('custContact').value.trim(),title:document.getElementById('custTitle').value.trim(),email:document.getElementById('custEmail').value.trim(),phone:document.getElementById('custPhone').value.trim(),amount:document.getElementById('custAmount').value,need:document.getElementById('custNeed').value.trim(),products:products.join('、')||'未选择',status:'pending',createdAt:now()};
+  var customers=g(CK);
+  if(customers.find(function(c){return c.company===r.company&&c.partnerId===user.id&&c.status!=='rejected'})){toast('该客户已报备','error');return}
+  customers.push(r);s(CK,customers);
+  sendFeishu('📝 新客户报备 - '+r.company,[{l:'伙伴',v:user.company+' / '+user.name},{l:'客户',v:r.company},{l:'行业',v:r.industry},{l:'金额',v:(r.amount||'--')+'万元'},{l:'产品',v:r.products},{l:'需求',v:r.need}]);
+  toast('客户报备已提交！');e.target.reset();refreshDashboard();
+}
+
+function submitTest(e){
+  e.preventDefault();
+  var user=JSON.parse(localStorage.getItem(UK));if(!user){toast('请先登录','error');return}
+  var custId=document.getElementById('testCustomer').value;if(!custId){toast('请选择客户','error');return}
+  var cust=g(CK).find(function(c){return c.id===custId});
+  var r={id:uid(),partnerId:user.id,partnerCompany:user.company,partnerName:user.name,customerId:custId,customerName:cust.company,product:document.getElementById('testProduct').value,deploy:document.getElementById('testDeploy').value,languages:document.getElementById('testLang').value.trim(),users:document.getElementById('testUsers').value,startDate:document.getElementById('testDate').value,note:document.getElementById('testNote').value.trim(),status:'pending',createdAt:now()};
+  var tests=g(TK);tests.push(r);s(TK,tests);
+  sendFeishu('🔬 新测试申请 - '+cust.company,[{l:'伙伴',v:user.company+' / '+user.name},{l:'客户',v:cust.company},{l:'产品',v:r.product},{l:'部署',v:r.deploy},{l:'人数',v:r.users||'--'},{l:'日期',v:r.startDate||'--'},{l:'说明',v:r.note||'--'}]);
+  toast('测试申请已提交！');e.target.reset();refreshDashboard();
+}
+
+function showTab(t){
+  document.getElementById('tab-customers').classList.toggle('hidden',t!=='customers');
+  document.getElementById('tab-tests').classList.toggle('hidden',t!=='tests');
+  document.getElementById('tab-customers-btn').style.background=t==='customers'?'var(--slate-100)':'#fff';
+  document.getElementById('tab-tests-btn').style.background=t==='tests'?'var(--slate-100)':'#fff';
+}
+function renderRecords(){
+  var user=JSON.parse(localStorage.getItem(UK));if(!user)return;
+  var customers=g(CK).filter(function(c){return c.partnerId===user.id});
+  var tests=g(TK).filter(function(t){return t.partnerId===user.id});
+  var sm={pending:'待审批',approved:'已通过',rejected:'已退回'},sc={pending:'badge-pending',approved:'badge-approved',rejected:'badge-rejected'};
+  document.getElementById('recordCustomers').innerHTML=customers.length?customers.map(function(c){return '<tr><td style="font-weight:500">'+c.company+'</td><td>'+c.industry+'</td><td>'+c.products+'</td><td>'+c.amount+'</td><td><span class="badge '+sc[c.status]+'">'+sm[c.status]+'</span></td><td style="color:var(--slate-400)">'+c.createdAt.slice(0,10)+'</td></tr>'}).join(''):'<tr><td colspan="6" class="text-center" style="padding:32px;color:var(--slate-400)">暂无报备记录</td></tr>';
+  document.getElementById('recordTests').innerHTML=tests.length?tests.map(function(t){return '<tr><td style="font-weight:500">'+t.customerName+'</td><td>'+t.product+'</td><td>'+t.deploy+'</td><td>'+t.users+'</td><td><span class="badge '+sc[t.status]+'">'+sm[t.status]+'</span></td><td style="color:var(--slate-400)">'+t.createdAt.slice(0,10)+'</td></tr>'}).join(''):'<tr><td colspan="6" class="text-center" style="padding:32px;color:var(--slate-400)">暂无测试记录</td></tr>';
+}
+
+function showAdminLogin(){var pwd=prompt('请输入管理员密码：');var ap=localStorage.getItem('admin_pwd')||'admin888';if(pwd===ap){goPage('admin');refreshAdmin();document.getElementById('sidebar').classList.remove('show');document.getElementById('mainContent').classList.add('full')}else if(pwd)toast('密码错误','error')}
+function logoutAdmin(){showLogin()}
+
+
+function showForgotPwd(){
+  hideAllPages();
+  document.getElementById('page-forgot-pwd').classList.add('active');
+  document.getElementById('page-forgot-pwd').style.display='flex';
+}
+function submitForgotPwd(e){
+  e.preventDefault();
+  var email=document.getElementById('forgotEmail').value.trim();
+  var partners=g(PK);
+  var p=partners.find(function(x){return x.email===email});
+  if(!p){toast('该邮箱未注册，请先注册','error');return}
+  if(p.status!=='approved'){toast('该账号尚未通过审核','error');return}
+  var RK='ruanan_reset_requests';
+  var requests=g(RK);
+  var existing=requests.find(function(x){return x.email===email&&x.status==='pending'});
+  if(existing){toast('您已有待处理的密码重置请求，请联系管理员','error');return}
+  requests.push({id:uid(),email:email,partnerId:p.id,company:p.company,name:p.name,status:'pending',createdAt:now()});
+  s(RK,requests);
+  toast('密码重置申请已提交！管理员审核后将为您重置密码，默认密码为 ruanan123');
+  showLogin();
+}
+function renderResetRequests(){
+  var RK='ruanan_reset_requests';
+  var requests=g(RK);
+  document.getElementById('resetCount').textContent=requests.filter(function(x){return x.status==='pending'}).length;
+  document.getElementById('adminResetList').innerHTML=requests.sort(function(a,b){return b.createdAt.localeCompare(a.createdAt)}).map(function(r){
+    var statusBadge=r.status==='pending'?'<span class="badge badge-pending">待处理</span>':r.status==='done'?'<span class="badge badge-approved">已重置</span>':'<span class="badge badge-rejected">已拒绝</span>';
+    return '<tr><td><b>'+esc(r.email)+'</b><br><span class="text-xs text-slate-400">'+esc(r.company)+' / '+esc(r.name)+'</span></td><td>'+r.createdAt.slice(0,16).replace('T',' ')+'</td><td>'+statusBadge+'</td><td>'+(r.status==='pending'?'<button class="btn btn-primary btn-sm" onclick="handleResetRequest(''+r.id+'','approve')">重置密码</button> <button class="btn btn-outline btn-sm" onclick="handleResetRequest(''+r.id+'','reject')" style="color:var(--red-500);border-color:var(--red-500)">拒绝</button>':'<span class="text-xs text-slate-400">已处理</span>')+'</td></tr>';
+  }).join('');
+}
+function handleResetRequest(id,action){
+  var RK='ruanan_reset_requests';
+  var requests=g(RK);
+  var i=requests.findIndex(function(x){return x.id===id});if(i<0)return;
+  if(action==='approve'){
+    var partners=g(PK);
+    var pi=partners.findIndex(function(x){return x.email===requests[i].email});
+    if(pi>=0){partners[pi].password='ruanan123';s(PK,partners)}
+    requests[i].status='done';
+    s(RK,requests);
+    toast('密码已重置为 ruanan123，请通知用户');
+  }else{
+    requests[i].status='rejected';
+    s(RK,requests);
+    toast('已拒绝该重置请求');
+  }
+  renderResetRequests();
+}
+
+function refreshAdmin(){
+  var partners=g(PK),customers=g(CK),tests=g(TK),sm={pending:'待审批',approved:'已通过',rejected:'已退回'},sc={pending:'badge-pending',approved:'badge-approved',rejected:'badge-rejected'};
+  var ptMap={city:'城市代理商',industry:'行业代理商',ecosystem:'生态合作伙伴',project:'项目授权代理商'};
+  document.getElementById('adminPartnerList').innerHTML=partners.map(function(p){var ci=p.partnerType==='city'?p.city||'--':p.partnerType==='industry'?p.industry||'--':'--';return '<tr><td style="font-weight:500">'+p.company+'</td><td>'+p.name+'</td><td>'+p.email+'</td><td>'+(ptMap[p.partnerType]||p.industry||'--')+'</td><td>'+ci+'</td><td><span class="badge '+sc[p.status]+'">'+sm[p.status]+'</span></td><td><div class="flex gap-2">'+(p.status==='pending'?'<button class="btn btn-primary btn-sm" onclick="approvePartner(\''+p.id+'\')">通过</button><button class="btn btn-outline btn-sm" onclick="rejectPartner(\''+p.id+'\')" style="color:var(--red-500);border-color:var(--red-500)">拒绝</button>':'<span class="text-sm text-slate-400">--</span>')+'</div></td></tr>'}).join('');
+  document.getElementById('adminCustomerList').innerHTML=customers.map(function(c){return '<tr><td style="font-size:12px;color:var(--slate-500)">'+c.partnerCompany+'</td><td style="font-weight:500">'+c.company+'</td><td>'+c.industry+'</td><td>'+c.amount+'</td><td><span class="badge '+sc[c.status]+'">'+sm[c.status]+'</span></td><td><div class="flex gap-2">'+(c.status==='pending'?'<button class="btn btn-primary btn-sm" onclick="approveCustomer(\''+c.id+'\')">通过</button><button class="btn btn-outline btn-sm" onclick="rejectCustomer(\''+c.id+'\')" style="color:var(--red-500);border-color:var(--red-500)">拒绝</button>':'<span class="text-sm text-slate-400">--</span>')+'</div></td></tr>'}).join('');
+  document.getElementById('adminTestList').innerHTML=tests.map(function(t){return '<tr><td style="font-size:12px;color:var(--slate-500)">'+t.partnerCompany+'</td><td style="font-weight:500">'+t.customerName+'</td><td>'+t.product+'</td><td>'+t.deploy+'</td><td><span class="badge '+sc[t.status]+'">'+sm[t.status]+'</span></td><td><div class="flex gap-2">'+(t.status==='pending'?'<button class="btn btn-primary btn-sm" onclick="approveTest(\''+t.id+'\')">通过</button><button class="btn btn-outline btn-sm" onclick="rejectTest(\''+t.id+'\')" style="color:var(--red-500);border-color:var(--red-500)">拒绝</button>':'<span class="text-sm text-slate-400">--</span>')+'</div></td></tr>'}).join('');
+  var specials=g(SK);
+  document.getElementById('adminSpecialList').innerHTML=specials.map(function(s){return '<tr><td style="font-size:12px;color:var(--slate-500)">'+s.partnerCompany+'</td><td style="font-weight:500">'+s.customerName+'</td><td>'+s.product+'</td><td>'+(s.stdPrice||'--')+'万</td><td>'+(s.spPrice||'--')+'万</td><td>'+s.discount+'</td><td><span class="badge '+sc[s.status]+'">'+sm[s.status]+'</span></td><td><div class="flex gap-2">'+(s.status==='pending'?'<button class="btn btn-primary btn-sm" onclick="approveSpecial(\''+s.id+'\')">通过</button><button class="btn btn-outline btn-sm" onclick="rejectSpecial(\''+s.id+'\')" style="color:var(--red-500);border-color:var(--red-500)">拒绝</button>':'<span class="text-sm text-slate-400">--</span>')+'</div></td></tr>'}).join('');
+}
+
+function showAdminTab(t){
+  document.getElementById('admin-partners').classList.toggle('hidden',t!=='partners');
+  document.getElementById('admin-customers').classList.toggle('hidden',t!=='customers');
+  document.getElementById('admin-tests-div').classList.toggle('hidden',t!=='tests');
+  document.getElementById('admin-special').classList.toggle('hidden',t!=='special');document.getElementById('admin-resets').classList.toggle('hidden',t!=='resets');
+  document.getElementById('admin-members').classList.toggle('hidden',t!=='members');
+  document.getElementById('admin-announce').classList.toggle('hidden',t!=='announce');
+  document.getElementById('admin-config').classList.toggle('hidden',t!=='config');
+  ['partners','customers','tests','special','resets','members','announce','config'].forEach(function(x){var el=document.getElementById('admin-tab-'+x);if(el)el.style.background=x===t?'var(--slate-100)':'#fff'});
+  if(t==='members')renderMemberManagement();renderResetRequests();
+  if(t==='announce')renderAdminAnnouncements();
+  if(t==='config')renderConfig();
+}
+
+function approvePartner(id){var p=g(PK),i=p.findIndex(function(x){return x.id===id});if(i>=0){p[i].status='approved';s(PK,p);toast('已通过');refreshAdmin()}}
+function rejectPartner(id){var p=g(PK),i=p.findIndex(function(x){return x.id===id});if(i>=0){p[i].status='rejected';s(PK,p);toast('已拒绝','error');refreshAdmin()}}
+function approveCustomer(id){var c=g(CK),i=c.findIndex(function(x){return x.id===id});if(i>=0){c[i].status='approved';s(CK,c);toast('报备已通过');refreshAdmin();refreshDashboard()}}
+function rejectCustomer(id){var c=g(CK),i=c.findIndex(function(x){return x.id===id});if(i>=0){c[i].status='rejected';s(CK,c);toast('报备已拒绝','error');refreshAdmin();refreshDashboard()}}
+function approveTest(id){var t=g(TK),i=t.findIndex(function(x){return x.id===id});if(i>=0){t[i].status='approved';s(TK,t);toast('测试已通过');refreshAdmin();refreshDashboard()}}
+function rejectTest(id){var t=g(TK),i=t.findIndex(function(x){return x.id===id});if(i>=0){t[i].status='rejected';s(TK,t);toast('测试已拒绝','error');refreshAdmin();refreshDashboard()}}
+function approveSpecial(id){var sp=g(SK),i=sp.findIndex(function(x){return x.id===id});if(i>=0){sp[i].status='approved';s(SK,sp);toast('特价已通过');refreshAdmin()}}
+function rejectSpecial(id){var sp=g(SK),i=sp.findIndex(function(x){return x.id===id});if(i>=0){sp[i].status='rejected';s(SK,sp);toast('特价已拒绝','error');refreshAdmin()}}
+
+function getProductMaterials(){try{var v=localStorage.getItem('cfg_products');var d=v?JSON.parse(v):null;return(d&&d.length)?d:defaultProductMaterials.slice()}catch(e){return defaultProductMaterials.slice()}}
+function getIndustries(){try{var v=localStorage.getItem('cfg_industries');var d=v?JSON.parse(v):null;return(d&&d.length)?d:defaultIndustries.slice()}catch(e){return defaultIndustries.slice()}}
+
+function renderConfig(){
+  document.getElementById('cfgAdminPwd').value=localStorage.getItem('admin_pwd')||'admin888';
+  document.getElementById('cfgWebhook').value=localStorage.getItem('feishu_webhook')||'';
+  document.getElementById('cfgTitle').value=localStorage.getItem('portal_title')||'';
+  document.getElementById('cfgDemoEmail').value=localStorage.getItem('demo_email')||'';
+  var prods=getProductMaterials();
+  document.getElementById('cfgProductList').innerHTML=prods.map(function(p){return '<tr><td style="font-size:20px">'+p.icon+'</td><td style="font-weight:500">'+p.title+(p.attachment?' <span style="font-size:11px;color:var(--green-600)">📎</span>':'')+'</td><td><span class="pill">'+p.product+'</span></td><td>'+p.type+'</td><td style="font-size:12px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+p.desc+'</td><td><div class="flex gap-2">'+(p.attachment?'<button class="btn btn-outline btn-sm" onclick="downloadAttachment(\''+p.id+'\')" style="color:var(--brand);border-color:var(--brand)">下载</button>':'')+'<button class="btn btn-outline btn-sm" onclick="editProduct(\''+p.id+'\')">编辑</button><button class="btn btn-outline btn-sm" onclick="deleteProduct(\''+p.id+'\')" style="color:var(--red-500);border-color:var(--red-500)">删除</button></div></td></tr>'}).join('');
+  var inds=getIndustries();
+  document.getElementById('cfgIndustryChips').innerHTML=inds.map(function(x){return '<span class="chip" style="display:inline-flex;align-items:center;gap:6px">'+x+' <a href="javascript:void 0" onclick="removeIndustry(\''+x+'\')" style="color:var(--red-500);text-decoration:none;font-weight:700">×</a></span>'}).join('');
+}
+
+function saveBaseConfig(){
+  localStorage.setItem('admin_pwd',document.getElementById('cfgAdminPwd').value.trim()||'admin888');
+  localStorage.setItem('feishu_webhook',document.getElementById('cfgWebhook').value.trim());
+  localStorage.setItem('portal_title',document.getElementById('cfgTitle').value.trim());
+  localStorage.setItem('demo_email',document.getElementById('cfgDemoEmail').value.trim());
+  toast('基础设置已保存');
+}
+
+function showProductEditor(id){
+  document.getElementById('cfgProductEditor').classList.remove('hidden');
+  clearCfgAttachment();
+  if(!id){document.getElementById('cfgProdId').value='';document.getElementById('cfgProdTitle').value='';document.getElementById('cfgProdIcon').value='';document.getElementById('cfgProdProduct').value='SAST';document.getElementById('cfgProdType').value='白皮书';document.getElementById('cfgProdDesc').value='';document.getElementById('cfgProductEditorTitle').textContent='新增产品资料';return}
+  var p=getProductMaterials().find(function(x){return x.id===id});if(!p)return;
+  document.getElementById('cfgProdId').value=p.id;document.getElementById('cfgProdTitle').value=p.title;document.getElementById('cfgProdIcon').value=p.icon;document.getElementById('cfgProdProduct').value=p.product;document.getElementById('cfgProdType').value=p.type;document.getElementById('cfgProdDesc').value=p.desc;
+  if(p.attachment){_cfgAttachData=p.attachment.data;document.getElementById('cfgAttachName').textContent=p.attachment.name;document.getElementById('cfgAttachSize').textContent=p.attachment.size;document.getElementById('cfgAttachBar').classList.remove('hidden')}
+  document.getElementById('cfgProductEditorTitle').textContent='编辑产品资料';
+}
+
+function editProduct(id){showProductEditor(id)}
+
+
+var _cfgAttachData=null;
+function previewCfgAttachment(){var f=document.getElementById("cfgProdFile").files[0];if(!f)return;if(f.size>2*1024*1024){toast("文件不能超过2MB","error");return}var r=new FileReader();r.onload=function(e){_cfgAttachData=e.target.result;document.getElementById("cfgAttachName").textContent=f.name;document.getElementById("cfgAttachSize").textContent=(f.size/1024).toFixed(0)+"KB";document.getElementById("cfgAttachBar").classList.remove("hidden")};r.readAsDataURL(f)}
+function clearCfgAttachment(){_cfgAttachData=null;document.getElementById("cfgProdFile").value="";document.getElementById("cfgAttachBar").classList.add("hidden")}
+function downloadAttachment(id){var p=getProductMaterials().find(function(x){return x.id===id});if(!p||!p.attachment){toast('附件不存在','error');return}var a=document.createElement('a');a.href=p.attachment.data;a.download=p.attachment.name;document.body.appendChild(a);a.click();document.body.removeChild(a)}
+function cancelProductEdit(){clearCfgAttachment();document.getElementById("cfgProductEditor").classList.add("hidden")}
+function saveProduct(){
+  var prods=getProductMaterials(),id=document.getElementById('cfgProdId').value;
+  var attach=_cfgAttachData?{name:document.getElementById('cfgAttachName').textContent,size:document.getElementById('cfgAttachSize').textContent,data:_cfgAttachData}:null;
+  var obj={id:id||uid(),title:document.getElementById('cfgProdTitle').value.trim(),product:document.getElementById('cfgProdProduct').value,type:document.getElementById('cfgProdType').value,desc:document.getElementById('cfgProdDesc').value.trim(),icon:document.getElementById('cfgProdIcon').value.trim()||'📄',attachment:attach};
+  if(!obj.title){toast('请输入标题','error');return}
+  if(id){var i=prods.findIndex(function(x){return x.id===id});if(i>=0)prods[i]=obj}else{prods.push(obj)}
+  s('cfg_products',prods);document.getElementById('cfgProductEditor').classList.add('hidden');renderConfig();renderProducts();toast('产品资料已保存');
+}
+
+function deleteProduct(id){
+  if(!confirm('确定删除该产品资料？'))return;
+  var prods=getProductMaterials().filter(function(x){return x.id!==id});s('cfg_products',prods);renderConfig();renderProducts();toast('已删除');
+}
+
+function addIndustry(){
+  var v=document.getElementById('cfgNewIndustry').value.trim();if(!v){toast('请输入行业名称','error');return}
+  var inds=getIndustries();if(inds.indexOf(v)>=0){toast('该行业已存在','error');return}
+  inds.push(v);s('cfg_industries',inds);document.getElementById('cfgNewIndustry').value='';renderConfig();updateIndustrySelects();toast('行业已添加');
+}
+
+function removeIndustry(name){
+  var inds=getIndustries().filter(function(x){return x!==name});s('cfg_industries',inds);renderConfig();updateIndustrySelects();toast('已移除: '+name);
+}
+
+function resetIndustries(){s('cfg_industries',defaultIndustries.slice());renderConfig();updateIndustrySelects();toast('行业选项已恢复默认');}
+
+function updateIndustrySelects(){
+  var inds=getIndustries(),opt=inds.map(function(x){return '<option>'+x+'</option>'}).join('');
+  document.querySelectorAll('#custIndustry, #regIndustry2').forEach(function(sel){var v=sel.value;sel.innerHTML='<option value="">请选择</option>'+opt;sel.value=inds.indexOf(v)>=0?v:''});
+}
+
+function exportAllData(){
+  var data={partners:g(PK),customers:g(CK),tests:g(TK),specialPrices:g(SK),products:getProductMaterials(),industries:getIndustries(),config:{adminPwd:localStorage.getItem('admin_pwd'),webhook:localStorage.getItem('feishu_webhook'),title:localStorage.getItem('portal_title'),demoEmail:localStorage.getItem('demo_email')}};
+  var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ruanan-portal-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('数据已导出');
+}
+
+function importAllData(e){
+  var file=e.target.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(ev){try{var data=JSON.parse(ev.target.result);if(data.partners)s(PK,data.partners);if(data.customers)s(CK,data.customers);if(data.tests)s(TK,data.tests);if(data.specialPrices)s(SK,data.specialPrices);if(data.products)s('cfg_products',data.products);if(data.industries)s('cfg_industries',data.industries);if(data.config){if(data.config.adminPwd)localStorage.setItem('admin_pwd',data.config.adminPwd);if(data.config.webhook!==undefined)localStorage.setItem('feishu_webhook',data.config.webhook);if(data.config.title!==undefined)localStorage.setItem('portal_title',data.config.title);if(data.config.demoEmail!==undefined)localStorage.setItem('demo_email',data.config.demoEmail)}toast('数据导入成功！请刷新页面');setTimeout(function(){location.reload()},1500)}catch(ex){toast('导入失败：文件格式错误','error')}};
+  reader.readAsText(file);e.target.value='';
+}
+
+function clearAllData(){
+  [PK,CK,TK,SK,'cfg_products','cfg_industries'].forEach(function(k){localStorage.removeItem(k)});
+  toast('所有数据已清空');setTimeout(function(){location.reload()},1000);
+}
+
+function sendFeishu(title,fields){
+  var webhook=localStorage.getItem('feishu_webhook');if(!webhook)return;
+  var lines=fields.map(function(f){return '**'+f.l+'：**'+f.v}).join('\n');
+  try{fetch(webhook,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({msg_type:'interactive',card:{header:{title:{content:title,tag:'plain_text'},template:'blue'},elements:[{tag:'div',text:{content:lines,tag:'lark_md'}},{tag:'hr'},{tag:'note',elements:[{content:'软安华南区伙伴门户 · '+now(),tag:'plain_text'}]}]}})})}catch(e){}
+}
+
+if(g(PK).length===0){
+  s(PK,[{id:'Pdemo001',company:'华南科技信息有限公司',name:'张三',email:'demo@partner.com',phone:'13800138000',password:'demo123',industry:'汽车',note:'专注汽车信息安全咨询',status:'approved',createdAt:now()}]);
+}
+
+var saved=localStorage.getItem(UK);
+if(saved){try{var user=JSON.parse(saved);var found=g(PK).find(function(p){return p.id===user.id&&p.status==='approved'});if(found){localStorage.setItem(UK,JSON.stringify(found));document.getElementById('sidebar').classList.add('show');document.getElementById('mainContent').classList.remove('full');document.getElementById('sidebarName').textContent=found.name;document.getElementById('sidebarCompany').textContent=found.company;document.getElementById('sidebarAvatar').textContent=found.name.charAt(0);document.getElementById('dashName').textContent=found.name;refreshDashboard();goPage('dashboard')}else{localStorage.removeItem(UK)}}catch(e){}}
+
+// ====== ANNOUNCEMENTS ======
+function getAnnouncements(){try{return JSON.parse(localStorage.getItem(AK))||[]}catch(e){return[]}}
+function renderAnnouncements(){
+  var anns=getAnnouncements().filter(function(a){return a.status==='published'}).sort(function(a,b){return b.pinned-a.pinned||b.createdAt.localeCompare(a.createdAt)});
+  var html='';
+  if(anns.length===0){
+    html='<div class="text-center text-sm text-slate-400" style="padding:16px">暂无公告</div>';
+  }else{
+    anns.forEach(function(a){
+      html+='<div class="announcement-card"><div class="ann-title">'+a.title+(a.pinned?' <span class="announcement-pin">置顶</span>':'')+'</div><div class="ann-date">'+a.createdAt+'</div><div class="ann-body">'+a.content.replace(/\n/g,'<br>')+'</div></div>';
+    });
+  }
+  var dashEl=document.getElementById('dashAnnouncements');if(dashEl)dashEl.innerHTML=html;
+  var listEl=document.getElementById('announcementList');if(listEl)listEl.innerHTML=html||'<div class="text-center text-slate-400" style="padding:40px">暂无公告</div>';
+}
+function renderAdminAnnouncements(){
+  var anns=getAnnouncements().sort(function(a,b){return b.createdAt.localeCompare(a.createdAt)});
+  var sc={published:'✅ 已发布',draft:'📝 草稿'};
+  document.getElementById('adminAnnounceList').innerHTML=anns.length?anns.map(function(a){return '<div class="card" style="margin-bottom:8px;padding:16px"><div class="flex items-center justify-between"><div><b style="font-size:15px">'+a.title+'</b>'+(a.pinned?' <span class="announcement-pin">置顶</span>':'')+' <span style="font-size:12px;color:var(--slate-400)">'+a.createdAt+'</span></div><span class="badge badge-blue">'+sc[a.status]+'</span></div><div style="font-size:13px;color:var(--slate-600);margin-top:6px">'+a.content.replace(/\n/g,'<br>')+'</div><div class="flex gap-2" style="margin-top:10px"><button class="btn btn-outline btn-sm" onclick="showAnnounceEditor(\''+a.id+'\')">编辑</button><button class="btn btn-outline btn-sm" onclick="deleteAnnouncement(\''+a.id+'\')" style="color:var(--red-500);border-color:var(--red-500)">删除</button></div></div>'}).join(''):'<div class="text-center text-slate-400" style="padding:32px">暂无公告</div>';
+}
+function showAnnounceEditor(id){
+  document.getElementById('announceEditor').classList.remove('hidden');
+  if(!id){document.getElementById('annEditId').value='';document.getElementById('annEditTitle').value='';document.getElementById('annEditContent').value='';document.getElementById('annEditStatus').value='published';document.getElementById('annEditPinned').value='0';document.getElementById('announceEditorTitle').textContent='发布新公告';return}
+  var a=getAnnouncements().find(function(x){return x.id===id});if(!a)return;
+  document.getElementById('annEditId').value=a.id;document.getElementById('annEditTitle').value=a.title;document.getElementById('annEditContent').value=a.content;document.getElementById('annEditStatus').value=a.status;document.getElementById('annEditPinned').value=a.pinned?'1':'0';document.getElementById('announceEditorTitle').textContent='编辑公告';
+}
+function saveAnnouncement(){
+  var anns=getAnnouncements(),id=document.getElementById('annEditId').value;
+  var obj={id:id||uid(),title:document.getElementById('annEditTitle').value.trim(),content:document.getElementById('annEditContent').value.trim(),status:document.getElementById('annEditStatus').value,pinned:document.getElementById('annEditPinned').value==='1',createdAt:now()};
+  if(!obj.title){toast('请输入标题','error');return}
+  if(id){var i=anns.findIndex(function(x){return x.id===id});if(i>=0){obj.createdAt=anns[i].createdAt;anns[i]=obj}}else{anns.push(obj)}
+  s(AK,anns);document.getElementById('announceEditor').classList.add('hidden');renderAdminAnnouncements();renderAnnouncements();toast('公告已保存');
+}
+function deleteAnnouncement(id){if(!confirm('确定删除该公告？'))return;var anns=getAnnouncements().filter(function(x){return x.id!==id});s(AK,anns);renderAdminAnnouncements();renderAnnouncements();toast('公告已删除');}
+
+// ====== MEMBER MANAGEMENT ======
+function renderMemberManagement(){
+  var partners=g(PK),sc={pending:'badge-pending',approved:'badge-approved',rejected:'badge-rejected',suspended:'badge-rejected',deleted:'badge-rejected'},sm={pending:'待审批',approved:'正常',rejected:'已拒绝',suspended:'已暂停',deleted:'已删除'};
+  var ptMap={city:'城市代理商',industry:'行业代理商',ecosystem:'生态合作伙伴',project:'项目授权代理商'};
+  document.getElementById('memberCount').textContent=partners.length;
+  document.getElementById('adminMemberList').innerHTML=partners.map(function(p){
+    var ci=p.partnerType==='city'?p.city||'--':p.partnerType==='industry'?p.industry||'--':'--';
+    var status=p.status||'approved';
+    return '<tr><td style="font-weight:500">'+p.company+'</td><td>'+p.name+'</td><td>'+p.email+'</td><td>'+p.phone+'</td><td>'+ptMap[p.partnerType]+'</td><td><span class="badge '+sc[status]+'">'+sm[status]+'</span></td><td><div class="flex gap-2" style="flex-wrap:wrap"><button class="btn btn-outline btn-sm" onclick="editMember(\''+p.id+'\')">✏️ 编辑</button><button class="btn btn-outline btn-sm" onclick="resetMemberPassword(\''+p.id+'\')">🔑 重置密码</button><select onchange="changeMemberStatus(\''+p.id+'\',this.value)" style="font-size:11px;padding:4px 8px;border-radius:6px;border:1px solid var(--slate-200);max-width:70px"><option value="">状态</option><option value="approved">正常</option><option value="suspended">暂停</option><option value="deleted">删除</option></select></div></td></tr>';
+  }).join('')||'<tr><td colspan="7" class="text-center" style="padding:32px;color:var(--slate-400)">暂无成员</td></tr>';
+}
+function editMember(id){
+  var p=g(PK).find(function(x){return x.id===id});if(!p)return;
+  var html='<div class="modal-overlay" id="editMemberModal" onclick="if(event.target===this)this.remove()"><div class="modal-box"><h2>编辑成员信息</h2><div class="form-row"><div class="form-group"><label>公司名称</label><input type="text" id="editMCompany" class="input" value="'+p.company+'"></div><div class="form-group"><label>联系人</label><input type="text" id="editMName" class="input" value="'+p.name+'"></div></div><div class="form-row"><div class="form-group"><label>邮箱</label><input type="email" id="editMEmail" class="input" value="'+p.email+'"></div><div class="form-group"><label>手机</label><input type="tel" id="editMPhone" class="input" value="'+p.phone+'"></div></div><div class="form-row"><div class="form-group"><label>合作类型</label><select id="editMPartnerType" class="input"><option value="city"'+(p.partnerType==='city'?' selected':'')+'>城市代理商</option><option value="industry"'+(p.partnerType==='industry'?' selected':'')+'>行业代理商</option><option value="ecosystem"'+(p.partnerType==='ecosystem'?' selected':'')+'>生态合作伙伴</option><option value="project"'+(p.partnerType==='project'?' selected':'')+'>项目授权代理商</option></select></div><div class="form-group"><label>城市/行业</label><input type="text" id="editMCity" class="input" value="'+(p.city||p.industry||'')+'"></div></div><div class="form-group"><label>备注</label><textarea id="editMNote" class="input" rows="2">'+(p.note||'')+'</textarea></div><div class="modal-actions"><button class="btn btn-outline btn-sm" onclick="document.getElementById(\'editMemberModal\').remove()">取消</button><button class="btn btn-primary btn-sm" onclick="saveMember(\''+id+'\')">保存</button></div></div></div>';
+  document.body.insertAdjacentHTML('beforeend',html);
+}
+function saveMember(id){
+  var partners=g(PK),i=partners.findIndex(function(x){return x.id===id});if(i<0)return;
+  partners[i].company=document.getElementById('editMCompany').value.trim()||partners[i].company;
+  partners[i].name=document.getElementById('editMName').value.trim()||partners[i].name;
+  partners[i].email=document.getElementById('editMEmail').value.trim()||partners[i].email;
+  partners[i].phone=document.getElementById('editMPhone').value.trim()||partners[i].phone;
+  partners[i].partnerType=document.getElementById('editMPartnerType').value;
+  partners[i].city=document.getElementById('editMCity').value.trim();
+  partners[i].note=document.getElementById('editMNote').value.trim();
+  s(PK,partners);
+  document.getElementById('editMemberModal').remove();
+  renderMemberManagement();renderResetRequests();refreshAdmin();toast('成员信息已更新');
+}
+function resetMemberPassword(id){
+  var newPwd=prompt('请输入新密码（至少6位，默认 ruanan123）：','ruanan123');
+  if(!newPwd||newPwd.length<6){toast('密码至少6位','error');return}
+  var partners=g(PK),i=partners.findIndex(function(x){return x.id===id});if(i<0)return;
+  partners[i].password=newPwd;s(PK,partners);
+  toast('密码已重置为：'+newPwd+' | 请通知用户 '+partners[i].email);
+}
+function changeMemberStatus(id,newStatus){
+  if(!newStatus)return;
+  if(newStatus==='deleted'&&!confirm('确定删除该成员？此操作不可恢复。'))return;
+  var partners=g(PK),i=partners.findIndex(function(x){return x.id===id});if(i<0)return;
+  partners[i].status=newStatus;s(PK,partners);
+  if(newStatus==='deleted'){partners=g(PK).filter(function(x){return x.id!==id});s(PK,partners)}
+  renderMemberManagement();renderResetRequests();refreshAdmin();toast('成员状态已更新：'+({approved:'正常',suspended:'已暂停',deleted:'已删除'})[newStatus]);
+}
+</script>
+</body>
+</html>

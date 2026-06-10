@@ -193,9 +193,11 @@ body{background:linear-gradient(135deg,#f0f4f8 0%,#e8edf2 100%);min-height:100vh
     <span class="step-arrow" id="stepArr3">›</span>
     <div class="step-item"><div class="step-num" id="stepNum4">4</div>项目信息</div>
     <span class="step-arrow" id="stepArr4">›</span>
-    <div class="step-item"><div class="step-num" id="stepNum5">5</div>优势匹配</div>
+    <div class="step-item"><div class="step-num" id="stepNum5">5</div>需求确认</div>
     <span class="step-arrow" id="stepArr5">›</span>
-    <div class="step-item"><div class="step-num" id="stepNum6">6</div>方案与报价</div>
+    <div class="step-item"><div class="step-num" id="stepNum6">6</div>优势匹配</div>
+    <span class="step-arrow" id="stepArr6">›</span>
+    <div class="step-item"><div class="step-num" id="stepNum7">7</div>方案与报价</div>
   </div>
   <div id="mainContent"></div>
 </div>
@@ -205,6 +207,7 @@ body{background:linear-gradient(135deg,#f0f4f8 0%,#e8edf2 100%);min-height:100vh
 const API='http://localhost:8081';
 var authToken=localStorage.getItem('selector_token')||'';
 var authUser=null;
+var captchaId='';
 
 async function apiCall(method,url,body){
   var o={method,headers:{}};
@@ -238,30 +241,47 @@ function showLogin(tab){
     h+='<button class="btn-full" onclick="doForgot()">重置密码</button>';
     h+='<div class="link" onclick="showLogin(\'login\')">返回登录</div>';
   }else{
-    h+='<label>用户名</label><input id="loginUser" value="admin">';
-    h+='<label>密码</label><input id="loginPwd" type="password" value="ruanan2024" onkeydown="if(event.key===\'Enter\')doLogin()">';
+    h+='<label>用户名</label><input id="loginUser" placeholder="请输入用户名">';
+    h+='<label>密码</label><input id="loginPwd" type="password" placeholder="请输入密码" onkeydown="if(event.key===\'Enter\')doLogin()">';
     h+='<button class="btn-full" onclick="doLogin()">登 录</button>';
+	    h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">';
+	    h+='<label style="margin:0;white-space:nowrap;font-size:13px;font-weight:600;color:#555">验证码</label>';
+	    h+='<span id="captchaQuestion" style="font-weight:900;font-size:16px;color:#1D4699;background:#E8EEF8;padding:6px 14px;border-radius:8px;letter-spacing:1px;min-width:100px;text-align:center">加载中...</span>';
+	    h+='<span onclick="refreshCaptcha()" style="cursor:pointer;font-size:18px;user-select:none" title="换一个">🔄</span>';
+	    h+='</div>';
+	    h+='<input id="captchaAnswer" type="text" placeholder="请输入验证码答案（数字）" style="margin-bottom:10px" onkeydown="if(event.key===\'Enter\')doLogin()">';
     h+='<div class="link" onclick="showLogin(\'register\')">没有账号？立即注册</div>';
   }
   h+='<div class="err-msg" id="loginErr" style="text-align:center"></div>';
   document.getElementById('loginBox').innerHTML=h;
-  if(tab==='login'){document.getElementById('loginUser').focus();}
+  if(tab==='login'){document.getElementById('loginUser').focus();refreshCaptcha();}
 }
 showLogin();
 
+async function refreshCaptcha(){
+  try{
+    var r=await fetch(API+'/api/captcha');
+    var d=await r.json();
+    captchaId=d.captcha_id;
+    var el=document.getElementById('captchaQuestion');
+    if(el)el.textContent=d.question;
+  }catch(e){}
+}
 async function doLogin(){
   var u=document.getElementById('loginUser').value.trim();
   var p=document.getElementById('loginPwd').value.trim();
+  var ca=document.getElementById('captchaAnswer');ca=ca?ca.value.trim():'';
   if(!u||!p){showErr('请输入用户名和密码');return;}
+  if(!ca){showErr('请输入验证码答案');return;}
   try{
-    var d=await apiCall('POST','/api/login','username='+encodeURIComponent(u)+'&password='+encodeURIComponent(p));
+    var d=await apiCall('POST','/api/login','username='+encodeURIComponent(u)+'&password='+encodeURIComponent(p)+'&captcha_id='+encodeURIComponent(captchaId)+'&captcha_answer='+encodeURIComponent(ca));
     authToken=d.token;authUser=d;
     localStorage.setItem('selector_token',authToken);
     document.getElementById('loginOverlay').style.display='none';
     document.getElementById('loginUser').value='';
-    document.getElementById('loginPwd').value='';
+    document.getElementById('loginPwd').value='';var caEl=document.getElementById('captchaAnswer');if(caEl)caEl.value='';
     updateUserUI();
-  }catch(e){showErr(e.message);}
+  }catch(e){showErr(e.message);refreshCaptcha();}
 }
 async function doRegister(){
   var u=document.getElementById('regUser').value.trim();
@@ -293,7 +313,7 @@ async function doForgot(){
   if(!u||!em){showErr('请填写用户名和邮箱');return;}
   try{
     var d=await apiCall('POST','/api/forgot-password','username='+encodeURIComponent(u)+'&email='+encodeURIComponent(em));
-    alert('密码已重置！\n\n新密码：'+d.new_password+'\n\n请使用新密码登录后修改密码。');
+    	    alert(d.message||'密码已重置，请使用新密码登录后修改密码。');
     showLogin('login');
   }catch(e){showErr(e.message);}
 }
@@ -320,7 +340,10 @@ const PRODUCT_KB = {
 };
 
 const INDUSTRY_PRODUCT_MAP = {
- '汽车':{primary:['SAST','SCA','FIRMWARE','FUZZ'],reason:'R155+ISO 21434+GB44495三重合规'},
+ '汽车整车厂商':{primary:['SAST','SCA','FIRMWARE','FUZZ'],reason:'R155+ISO 21434+GB44495三重合规'},
+ '汽车零部件厂商':{primary:['SAST','SCA','FIRMWARE'],reason:'OEM准入审计+ASPICE+供应链合规'},
+ '安防设备':{primary:['FIRMWARE','SAST','SCA'],reason:'固件安全+视频数据隐私+出口合规'},
+ '船舶':{primary:['SAST','SCA','FIRMWARE'],reason:'IACS船级社合规+关键系统+供应链'},
  '芯片半导体':{primary:['FIRMWARE','SAST','SCA'],reason:'安全启动链+BootROM+固件审计'},
  '消费电子':{primary:['SAST','SCA','FIRMWARE'],reason:'迭代快+开源多+固件+CRA合规'},
  '金融':{primary:['SAST','SCA','LLM'],reason:'监管收紧+开源治理+AI安全'},
@@ -334,7 +357,20 @@ const INDUSTRY_PRODUCT_MAP = {
  '能源':{primary:['SAST','SCA','FIRMWARE'],reason:'关基保护+SCADA+供应链'},
  '游戏互联网':{primary:['SAST','SCA'],reason:'迭代快+CRA+SDK供应链'},
  '智能硬件':{primary:['FIRMWARE','SAST','SCA'],reason:'固件+CRA+供应链+物联网'},
- '教育':{primary:['SAST','SCA'],reason:'预算有限+LMS开源部署'}
+ '教育':{primary:['SAST','SCA'],reason:'预算有限+LMS开源部署'},
+	 '汽车测评咨询机构':{primary:['SAST','SCA','FIRMWARE'],reason:'CNAS测评+UN R155合规检测+多品牌评估'},
+	 '军工测评机构':{primary:['SAST','FIRMWARE','AI_SAST'],reason:'GJB合规测评+涉密环境+遗留代码'},
+	 'GPU类半导体':{primary:['FIRMWARE','SAST','SCA'],reason:'GPU固件驱动+CUDA安全+AI计算完整性'},
+	 'SOC_MPU芯片':{primary:['FIRMWARE','SAST','SCA'],reason:'BootROM+多核异构+功能安全'},
+	 '存储半导体':{primary:['FIRMWARE','SAST'],reason:'FTL固件+SSD控制器+SED密码合规'},
+	 '消费金融行业':{primary:['SAST','SCA','LLM'],reason:'监管收紧+开源治理+AI安全'},
+	 '电信运营商':{primary:['SAST','SCA','FIRMWARE'],reason:'关基保护+5G软件化+外包审计'},
+	 '央企集团':{primary:['SAST','SCA','AI_SAST'],reason:'信创替代+多业态+关基合规'},
+	 '网络设备行业':{primary:['FIRMWARE','SAST','SCA'],reason:'协议栈安全+固件+CRA/NDAA出口'},
+	 '云服务商':{primary:['SAST','SCA','LLM'],reason:'云原生安全+容器+多租户隔离'},
+	 '电商平台':{primary:['SAST','SCA'],reason:'迭代快+SDK供应链+个人信息保护'},
+	 'CNAS机构':{primary:['SAST','SCA','FIRMWARE'],reason:'认可检测+CMA/CNAS+标准化报告'},
+	 'IT咨询公司':{primary:['SAST','SCA','LLM'],reason:'多行业覆盖+标准化报告+合规咨询'},
 };
 
 function computeRecommendations(){
@@ -344,7 +380,14 @@ function computeRecommendations(){
   if(imap){for(var i=0;i<imap.primary.length;i++){var pid=imap.primary[i];scores[pid]=(scores[pid]||0)+3;reasons[pid]=imap.reason;}}
   var pnMap={'pn_t1':'SAST','pn_t2':'SCA','pn_t3':'FIRMWARE','pn_t4':'LLM','pn_t5':'AI_SAST','pn_t6':'SAST'};
   for(var j=0;j<state.productNeeds.length;j++){var nid=pnMap[state.productNeeds[j]];if(nid){scores[nid]=(scores[nid]||0)+4;reasons[nid]=(reasons[nid]||'用户选择该类型产品');}}
-  for(var k=0;k<state.bizScenes.length;k++){var bid=state.bizScenes[k];if(bid.charAt(0)==='b'&&bid.charAt(1)==='c'){scores.SCA=(scores.SCA||0)+1;scores.SAST=(scores.SAST||0)+1;}if(bid.charAt(0)==='b'&&bid.charAt(1)==='t'){scores.SAST=(scores.SAST||0)+2;}if(bid.charAt(0)==='b'&&bid.charAt(1)==='s'){scores.SCA=(scores.SCA||0)+2;}}
+  for(var k=0;k<state.bizScenes.length;k++){var bid=state.bizScenes[k];
+    // Industry-specific scene patterns: *_c* compliance, *_s* supplychain, *_d* devops, *_f* firmware, *_a* AI
+    if(bid.indexOf('_c')>=0||bid.indexOf('_s')>=0||bid.indexOf('_o')>=0){scores.SCA=(scores.SCA||0)+1;scores.SAST=(scores.SAST||0)+1;}
+    if(bid.indexOf('_d')>=0||bid.indexOf('_p')>=0||bid.indexOf('_t')>=0){scores.SAST=(scores.SAST||0)+2;}
+    if(bid.indexOf('_s')>=0||bid.indexOf('_f')>=0){scores.SCA=(scores.SCA||0)+2;}
+    if(bid.indexOf('_f')>=0||bid.indexOf('_h')>=0){scores.FIRMWARE=(scores.FIRMWARE||0)+2;}
+    if(bid.indexOf('_a')>=0){scores.LLM=(scores.LLM||0)+2;scores.AI_SAST=(scores.AI_SAST||0)+1;}
+  }
   if(info.languages&&info.languages.length>0){for(var li=0;li<info.languages.length;li++){var lang=info.languages[li];var lmap={C_C:'SAST',Java:'SAST','C#':'SAST',Python:'SAST',Go:'SAST'};for(var pk in lmap){if(lang.indexOf(pk)>=0||pk.indexOf(lang)>=0){scores[lmap[pk]]=(scores[lmap[pk]]||0)+2;}}}}
   if(info.codeSize){if(info.codeSize.indexOf('固件')>=0){scores.FIRMWARE=(scores.FIRMWARE||0)+3;}else{scores.SAST=(scores.SAST||0)+2;}}
   if(info.focuses&&info.focuses.length>0){for(var fi=0;fi<info.focuses.length;fi++){var f=info.focuses[fi];if(f.indexOf('AI')>=0||f.indexOf('修复')>=0){scores.AI_SAST=(scores.AI_SAST||0)+2;}if(f.indexOf('溯源')>=0||f.indexOf('SBOM')>=0||f.indexOf('供应链')>=0){scores.SCA=(scores.SCA||0)+2;}if(f.indexOf('精准')>=0||f.indexOf('规则')>=0){scores.SAST=(scores.SAST||0)+1;}}}
@@ -375,14 +418,17 @@ const PRODUCTS = {
 
 // ===== 行业数据 =====
 const INDUSTRIES = {
-  汽车:{icon:'🚗',reg:'UN R155/R156 · ISO/SAE 21434 · GB/T 44495 · ISO 26262 功能安全',pain:'整车厂商（OEM）严格审计Tier 1/2软件供应商，要求交付代码必须附带安全审计报告和SBOM。单辆高端车代码量超1亿行，需满足R155法规要求的全链路软件安全审计和OTA更新安全管理。ISO 26262对安全关键代码有功能安全验证强制要求。',rec:['SAST','SCA','FIRMWARE','AI_SAST']},
+  汽车整车厂商:{icon:'🚗',reg:'UN R155/R156 · ISO/SAE 21434 · GB/T 44495 · ISO 26262 功能安全',pain:'整车厂商（OEM）严格审计Tier 1/2软件供应商，要求交付代码必须附带安全审计报告和SBOM。单辆高端车代码量超1亿行，需满足R155法规要求的全链路软件安全审计和OTA更新安全管理。ISO 26262对安全关键代码有功能安全验证强制要求。',rec:['SAST','SCA','FIRMWARE','AI_SAST']},
   芯片半导体:{icon:'🔲',reg:'密评 · GB/T 18336 · NIST FIPS 140',pain:'安全启动链验证链路长，RISC-V生态工具不成熟，芯片流片前需完成BootROM安全审计以避免不可修复的硬件漏洞。',rec:['FIRMWARE','SAST','SCA']},
   消费电子:{icon:'📱',reg:'等保2.0 · 个人信息保护法 · CCC认证 · EU CRA',pain:'产品迭代周期短（2-4周），安全测试常被压缩。智能设备大量使用开源组件和第三方SDK，供应链透明度低，用户隐私泄露风险高。欧盟CRA要求提供SBOM和软件安全自评估，出口产品需满足CRA合规。',rec:['SAST','SCA','FIRMWARE']},
   金融:{icon:'🏦',reg:'等保2.0三级 · JR/T 0071 · PCI DSS',pain:'监管对软件供应链安全要求持续收紧，开源组件漏洞（如Log4j）需72小时内完成应急响应。AI大模型应用激增，大模型安全成为新兴监管重点。',rec:['SAST','SCA','LLM']},
   军工:{icon:'🛡️',reg:'GJB 8114/5369 · 涉密信息系统安全保密规定',pain:'必须完全离线部署，无法使用联网工具。大量90年代至今的遗留C/C++/汇编代码缺乏文档和测试，人工审计效率极低。国产化替代要求所有工具来自国内供应商。',rec:['SAST','FIRMWARE','AI_SAST']},
   政府:{icon:'🏛️',reg:'等保2.0 · 关基保护条例 · 信创目录 · 供应链安全审查 · 大模型备案',pain:'信创环境安全工具匮乏，关基软件供应链需自主可控。政务系统大量依赖外包开发，需源码级安全审计。开源软件需满足供应链安全审查要求，AI大模型应用需完成安全评估和备案。',rec:['SAST','SCA','LLM']},
   医疗设备:{icon:'🏥',reg:'医疗器械网络安全注册审查 · IEC 62304 · FDA 510(k)/PMA · 个人信息保护法',pain:'医疗器械软件（SaMD）注册需提供安全审计报告，固件涉及患者安全。FDA强制要求上市前提交软件安全验证证据，NMPA注册同样要求代码安全审查。开源组件（DICOM库、通信栈）使用普遍需合规管理。',rec:['SAST','SCA','FIRMWARE']},
-  教育:{icon:'🎓',reg:'等保2.0 · 教育App备案管理办法',pain:'安全投入预算有限，但涉及大量学生个人信息。开源学习管理系统（Moodle等）部署广泛，需要高性价比的安全方案。',rec:['SAST','SCA']},
+
+  汽车零部件厂商:{icon:'🔧',reg:'UN R155/R156 · ISO/SAE 21434 · ASPICE · GB 44495',pain:'Tier1/2供应商需通过OEM的严格软件安全审计，交付代码须附带SAST报告和SBOM。ASPICE认证要求软件工程过程合规，供应链准入压力大，需同时满足多家OEM的不同安全要求。',rec:['SAST','SCA','FIRMWARE']},
+  安防设备:{icon:'📹',reg:'等保2.0 · GB 35114 · CCC认证 · EU CRA · GDPR · NDAA',pain:'安防摄像头/NVR/门禁等设备固件安全参差不齐，视频数据涉及个人隐私和国家安全。GB 35114对视频监控系统有网络安全强制要求，海外市场需满足CRA和NDAA合规。设备量大面广，供应链组件复用度高，单个漏洞可影响海量设备。',rec:['FIRMWARE','SAST','SCA']},
+  船舶:{icon:'🚢',reg:'IACS UR E26/E27 · CCS/DNV/Lloyd规范 · IMO海事网络安全 · 等保2.0',pain:'船舶智能化趋势下，导航/动力/通信等关键系统软件安全要求快速提升。IACS UR E26/E27对船舶网络韧性提出强制要求，船级社入级检验需提交软件安全证据。大量OT/IT融合系统需安全审计，供应链涉及全球数百家设备供应商。',rec:['SAST','SCA','FIRMWARE']},  教育:{icon:'🎓',reg:'等保2.0 · 教育App备案管理办法',pain:'安全投入预算有限，但涉及大量学生个人信息。开源学习管理系统（Moodle等）部署广泛，需要高性价比的安全方案。',rec:['SAST','SCA']},
   电子通信:{icon:'📡',reg:'3GPP SECAM · 关基保护条例 · 商用密码应用',pain:'5G网络设备软件化趋势下，基站和核心网设备固件/软件安全审计需求激增。通信设备供应链涉及全球数百家供应商，需满足运营商准入要求。',rec:['FIRMWARE','SAST','SCA']},
   信创软件:{icon:'🇨🇳',reg:'信创目录 · 等保2.0 · 关基保护条例 · 密码法',pain:'国产化替代要求全链路自主可控，信创环境（国产CPU+OS）安全工具匮乏。需满足密码法和关基合规审计，大量迁移代码需要安全评估。',rec:['SAST','SCA','AI_SAST']},
   具身智能:{icon:'🦾',reg:'EU CRA · 等保2.0 · 生成式AI管理办法 · ISO 26262 功能安全',pain:'具身智能设备集成了大模型推理、多模态感知、运动控制等，软硬件栈复杂。需满足欧盟CRA（网络韧性法案）网络安全要求，功能安全（如ISO 26262导出的SOTIF）对AI决策安全有严格标准。AI模型安全和嵌入式固件安全风险并存。',rec:['FIRMWARE','LLM','SAST']},
@@ -390,47 +436,37 @@ const INDUSTRIES = {
   能源:{icon:'⚡',reg:'等保2.0 · 关基保护条例 · 电力监控系统安全防护 · NERC CIP',pain:'电力、石油、新能源等能源关键基础设施面临高级威胁，SCADA/ICS系统安全漏洞频发。电力监控系统需满足16号令要求，新能源电站软件供应链缺乏统一安全标准。',rec:['SAST','SCA','FIRMWARE']},
   游戏互联网:{icon:'🎮',reg:'等保2.0 · 个人信息保护法 · 未成年人网络保护 · EU CRA · GDPR',pain:'游戏引擎和客户端代码量大、迭代快、外挂和逆向分析风险高。服务端涉及大量用户数据和支付信息，第三方SDK和开源组件使用广泛。欧盟CRA要求出口游戏/应用提供SBOM和软件安全声明，安全合规压力大。',rec:['SAST','SCA']},
   智能硬件:{icon:'🔀',reg:'等保2.0 · CCC认证 · EU CRA · 商用密码应用',pain:'充电宝、交换机、安防摄像头、路由器和各类智能终端固件安全参差不齐。物联网设备量大面广，供应链组件复用度高，单个漏洞可影响海量设备。欧盟CRA要求物联网/智能硬件出口需提供完整SBOM和网络安全声明，固件级安全审计成为准入门槛。',rec:['FIRMWARE','SAST','SCA']},
+	  // ── 新增L2子行业 ──
+	  汽车测评咨询机构:{icon:'📋',reg:'UN R155/R156 · ISO/SAE 21434 · CNAS-CL01 · GB/T 44495',pain:'汽车测评和咨询机构需要为客户提供标准化的软件安全检测报告，需满足CNAS认可要求。测评方法需覆盖UN R155和ISO 21434合规检测，对多品牌多车型的软件安全进行横向对比评估。咨询项目需要深度行业经验和案例支撑。',rec:['SAST','SCA','FIRMWARE']},
+	  军工测评机构:{icon:'🔬',reg:'GJB 8114/5369 · 涉密信息系统安全保密规定 · CNAS-CL01',pain:'军工软件测评机构需要满足GJB标准的软件安全检测能力，全部检测必须在涉密离线环境中完成。需具备对C/C++遗留代码的自动化分析能力，以及国产化环境的适配要求。检测报告需满足军代表和装备机关的审查标准。',rec:['SAST','FIRMWARE','AI_SAST']},
+	  GPU类半导体:{icon:'🎮',reg:'密评 · GB/T 18336 · NIST FIPS 140 · EU CRA',pain:'GPU芯片固件和驱动代码量极大，涉及CUDA/OpenCL等并行计算框架。AI训练和推理场景下的GPU软件栈安全审计需求激增，包括GPU驱动安全、显存数据保护和AI计算完整性。GPU固件安全启动和可信执行环境(TEE)是新兴安全需求。',rec:['FIRMWARE','SAST','SCA']},
+	  SOC_MPU芯片:{icon:'💻',reg:'密评 · GB/T 18336 · ISO 26262 · IEC 62443',pain:'SoC/MPU芯片集成了CPU、GPU、NPU、DSP等多种处理单元，软件栈极其复杂。车载SoC需满足ISO 26262功能安全要求，工业MPU需满足IEC 62443安全标准。芯片流片前的BootROM和固件安全审计至关重要，一旦流片后发现问题无法修复。',rec:['FIRMWARE','SAST','SCA']},
+	  存储半导体:{icon:'💾',reg:'密评 · GB/T 18336 · NIST SP 800-53 · 等保2.0',pain:'存储芯片固件（FTL/控制器）安全直接影响数据机密性和完整性。SSD控制器固件复杂度持续增长，需防范固件级后门和数据泄露。自加密驱动器(SED)的密码模块实现需满足FIPS 140合规。存储供应链安全需审计第三方固件组件。',rec:['FIRMWARE','SAST']},
+	  消费金融行业:{icon:'💳',reg:'等保2.0三级 · JR/T 0171 · PCI DSS · 个人金融信息保护',pain:'消费金融业务涉及大量个人借贷和信用数据，监管对数据安全和隐私保护要求极高。线上业务迭代快，第三方SDK和开源组件使用广泛，供应链安全风险突出。互联网小贷和消费分期业务需满足金融监管的软件安全审查要求。',rec:['SAST','SCA','LLM']},
+	  电信运营商:{icon:'📡',reg:'等保2.0 · 关基保护条例 · 电信条例 · 3GPP SECAM',pain:'电信运营商作为关键信息基础设施运营者，面临国家级网络威胁。5G网络软件化和虚拟化趋势下，核心网软件安全审计需求激增。OSS/BSS系统大量依赖外包开发，需源码级安全审查。需满足工信部网络安全考核和关基保护合规要求。',rec:['SAST','SCA','FIRMWARE']},
+	  央企集团:{icon:'🏢',reg:'等保2.0 · 关基保护条例 · 信创目录 · 密码法 · 数据安全法',pain:'央企集团业务多元、层级复杂，IT系统数量庞大且安全水平参差不齐。关基保护条例要求软件供应链自主可控，信创替代过程中大量迁移代码需安全评估。集团统一采购的安全工具需满足多业态需求，从能源到制造到金融全覆盖。',rec:['SAST','SCA','AI_SAST']},
+	  网络设备行业:{icon:'🌐',reg:'等保2.0 · 关基保护条例 · 商用密码应用 · EU CRA · NDAA',pain:'交换机/路由器/网关等网络设备固件安全是网络基础设施的基石。设备涉及大量通信协议栈和加密实现，需满足3GPP/IEEE等国际标准和国内密评要求。海外市场需同时满足CRA和NDAA合规，固件级安全审计和SBOM成为出口准入门槛。',rec:['FIRMWARE','SAST','SCA']},
+	  云服务商:{icon:'☁️',reg:'等保2.0三级 · 关基保护条例 · 云计算服务安全评估 · GDPR',pain:'云服务商需满足云计算服务安全评估要求，平台软件的供应链安全直接影响租户安全。容器、K8s、微服务等云原生技术的安全治理复杂度高。多租户环境下的代码安全审计和数据隔离验证是监管关注重点。',rec:['SAST','SCA','LLM']},
+	  电商平台:{icon:'🛒',reg:'等保2.0 · 个人信息保护法 · 电子商务法 · GDPR · PCI DSS',pain:'电商平台代码量极大、迭代极快、涉及大量用户数据和支付信息。促销期间系统稳定性压力大，安全漏洞可能造成大规模数据泄露。第三方插件/SDK众多，供应链安全治理挑战大。需同时满足国内个人信息保护和海外GDPR合规。',rec:['SAST','SCA']},
+	  CNAS机构:{icon:'🏅',reg:'CNAS-CL01 · CNAS-CL45 · ISO/IEC 17025 · GB/T 25000.51',pain:'CNAS认可检测机构需要具备标准化、可复现的软件安全检测能力，检测方法和工具需经过能力验证。检测报告需满足CMA和CNAS双重要求，作为司法鉴定和监管采信的依据。对检测工具的技术能力和报告规范有极高要求。',rec:['SAST','SCA','FIRMWARE']},
+	  IT咨询公司:{icon:'💼',reg:'ISO 27001 · 等保2.0 · 关基保护条例 · 个人信息保护法',pain:'IT咨询公司为客户提供安全评估和合规咨询服务，需要专业的安全检测工具作为能力支撑。咨询项目要求输出标准化、客户可理解的安全报告。需要覆盖多个行业和法规体系的安全检测能力，从金融到制造到政府。',rec:['SAST','SCA','LLM']},
 };
 
-// ===== 场景库 =====
-const SCENARIOS = {
-  compliance:[
-    {id:'c1',title:'法规合规审计',desc:'出具满足特定法规要求的安全审计报告',tags:['R155','等保','GJB','ISO 21434']},
-    {id:'c2',title:'供应链安全合规',desc:'管理供应商软件的SBOM和开源合规',tags:['SBOM','许可证','供应链']},
-    {id:'c3',title:'信创国产化替代',desc:'在信创环境中部署国产安全工具',tags:['信创','国产化','自主可控']},
-    {id:'c4',title:'涉密环境安全检测',desc:'在完全离线涉密环境中进行代码安全审计',tags:['离线','涉密','军工']},
-    {id:'c5',title:'行业认证准备',desc:'为ISO/ASPICE/功能安全等认证提供安全证据',tags:['ISO 26262','ASPICE','IEC 62304']},
-    {id:'c6',title:'行业客户合规审计',desc:'应客户要求出具第三方安全检测报告',tags:['第三方审计','客户准入','安全评估']},
-    {id:'c7',title:'开源许可合规审计',desc:'扫描开源许可证冲突、传染性风险，确保合规使用',tags:['GPL合规','许可证冲突','开源治理']},
-    {id:'c8',title:'软件出海合规审计',desc:'满足欧盟CRA、GDPR等出海法规要求',tags:['CRA','GDPR','SBOM','出海合规']},
-  ],
-  tool:[
-    {id:'t1',title:'代码安全扫描',desc:'需要自动化的代码漏洞和合规检测工具',tags:['SAST','漏洞检测','编码规范']},
-    {id:'t2',title:'开源组件管理',desc:'需要管理第三方和开源组件的安全风险',tags:['SCA','组件安全','漏洞追踪']},
-    {id:'t3',title:'固件安全分析',desc:'需要对嵌入式/IoT/ECU固件进行安全审计',tags:['固件解包','启动验证','Fuzz']},
-    {id:'t4',title:'AI大模型安全',desc:'需要对部署的大模型进行安全测试和合规评估',tags:['提示注入','越狱检测','隐私评估']},{id:'t5',title:'大模型安全测试',desc:'需要对大模型应用进行提示注入、越狱、数据泄露等安全检测',tags:['AI安全','提示注入','越狱检测']},{id:'t7',title:'DevSecOps工具链采购',desc:'搭建DevSecOps安全工具链，将安全检测嵌入CI/CD流水线',tags:['DevSecOps','CI/CD','安全左移']},{id:'t6',title:'AI SAST 智能代码扫描',desc:'以SAST为底座+大模型驱动的智能化静态代码安全测试，按用户付费',tags:['AI代码审计','LLM','自动修复']},
-  ],
-  service:[
-    {id:'s1',title:'代码安全审计服务',desc:'专家深度审计 · ≤10GB源码 · 含复测',tags:['专家审计','深度分析','审计报告','含复测']},
-    {id:'s2',title:'固件安全测试服务',desc:'芯片/设备固件专业安全测试 · ≤20GB',tags:['芯片测试','漏洞挖掘','安全评估']},
-    {id:'s3',title:'开源合规审计服务',desc:'开源组件许可证+漏洞合规审计 · ≤20GB源码',tags:['SBOM','许可证','合规审计','组件清查']},
-    {id:'s4',title:'渗透测试服务',desc:'对应用系统进行黑盒/白盒渗透测试',tags:['渗透测试','红队','攻击模拟']},
-    {id:'s5',title:'合规咨询服务',desc:'法规合规差距分析和整改方案咨询',tags:['R155','等保','GJB','合规咨询']},
-    {id:'s6',title:'安全培训服务',desc:'为开发团队提供安全编码和工具使用培训',tags:['安全培训','SDL','赋能']},
-    {id:'s7',title:'驻场安全支持',desc:'安全专家驻场协助安全检测和漏洞修复',tags:['驻场','应急响应','持续支持']},
-  ],
+// ===== 行业层级映射: 1级 → 2级子行业 =====
+const INDUSTRY_LEVELS = {
+  '汽车行业':{icon:'🚗',desc:'整车制造、供应链及测评咨询',children:[{key:'汽车整车厂商',name:'整车厂商'},{key:'汽车零部件厂商',name:'汽车供应链行业'},{key:'汽车测评咨询机构',name:'汽车测评/咨询机构'}]},
+  '军工行业':{icon:'🛡️',desc:'军工客户与测评机构',children:[{key:'军工',name:'军工客户'},{key:'军工测评机构',name:'军工测评机构'}]},
+  '智能设备行业':{icon:'📱',desc:'通信、消费、机器人、无人机、安防、网络',children:[{key:'电子通信',name:'电子通信行业'},{key:'消费电子',name:'消费电子行业'},{key:'具身智能',name:'具身智能行业'},{key:'低空经济',name:'低空经济行业'},{key:'安防设备',name:'安防行业'},{key:'网络设备行业',name:'网络设备行业'}]},
+  '芯片半导体行业':{icon:'🔲',desc:'GPU、SoC/MPU、存储',children:[{key:'GPU类半导体',name:'GPU类半导体'},{key:'SOC_MPU芯片',name:'SOC/MPU芯片'},{key:'存储半导体',name:'存储半导体'}]},
+  '金融行业':{icon:'🏦',desc:'金融科技与消费金融',children:[{key:'金融',name:'金融科技行业'},{key:'消费金融行业',name:'消费金融行业'}]},
+  '政教行业':{icon:'🏛️',desc:'政府与高等教育',children:[{key:'政府',name:'政府行业'},{key:'教育',name:'高等教育行业'}]},
+  '国央企行业':{icon:'🏭',desc:'电信、能源、央企集团',children:[{key:'电信运营商',name:'电信运营商'},{key:'能源',name:'能源行业'},{key:'央企集团',name:'央企集团'}]},
+  '互联网行业':{icon:'🌐',desc:'游戏、云服务、电商',children:[{key:'游戏互联网',name:'游戏制作商'},{key:'云服务商',name:'云服务商'},{key:'电商平台',name:'电商平台'}]},
+  '测评认证/咨询机构':{icon:'📊',desc:'CNAS认可机构与IT咨询公司',children:[{key:'CNAS机构',name:'CNAS机构'},{key:'IT咨询公司',name:'IT咨询公司'}]},
 };
-
-// ===== 预算区间 =====
-const BUDGET_RANGES = [
-  {id:'b1',range:'20万以下',desc:'适合小型团队<br>或单产品试用',factor:0.3,maxProducts:1},
-  {id:'b2',range:'20-50万',desc:'适合中型团队<br>1-2个产品模块',factor:0.6,maxProducts:2},
-  {id:'b3',range:'50-100万',desc:'适合大型团队<br>2-3个产品组合',factor:1.0,maxProducts:3},
-  {id:'b4',range:'100万以上',desc:'适合企业级<br>全栈安全方案',factor:1.5,maxProducts:99},
-];
 
 // ===== State =====
-let state = {step:0,userInfo:{company:'',address:'',contact:'',title:'',email:'',phone:''},industry:null,productNeeds:[],bizScenes:[],projectInfo:{scale:'',teamSize:'',languages:[],codeSize:'',focuses:[],replaceExisting:'',existingTool:''},selectedAdvantages:[],customPain:'',products:[]};
+let state = {step:0,userInfo:{company:'',address:'',contact:'',title:'',email:'',phone:''},industry:null,industryL1:null,productNeeds:[],bizScenes:[],projectInfo:{scale:'',teamSize:'',languages:[],codeSize:'',focuses:[],replaceExisting:'',existingTool:''},selectedAdvantages:[],customPain:'',products:[]};
 
 // ===== Render Engine =====
 function render(){
@@ -444,14 +480,15 @@ function render(){
   else if(step===4) app.innerHTML = rStep4();
   else if(step===5) app.innerHTML = rStep5();
   else if(step===6) app.innerHTML = rStep6();
+  else if(step===7) app.innerHTML = rStep7();
 }
 
 function updateUI(){
-  document.getElementById('progressBar').style.width = (state.step*14.3)+'%';
-  for(let i=0;i<=6;i++){
+  document.getElementById('progressBar').style.width = (state.step*(100/7))+'%';
+  for(let i=0;i<=7;i++){
     const el=document.getElementById('stepNum'+i); if(!el) continue;
     el.className='step-num'+(i===state.step?' active':i<state.step?' done':'');
-    if(i<6){ const arr=document.getElementById('stepArr'+i); if(arr) arr.className='step-arrow'+(i<state.step?' done':''); };
+    if(i<7){ const arr=document.getElementById('stepArr'+i); if(arr) arr.className='step-arrow'+(i<state.step?' done':''); };
   }
 }
 
@@ -467,27 +504,54 @@ function rStep0(){
   return html;
 }
 
-// ===== Step 1: 行业 =====
+// ===== Step 1: 行业选择（两级：1级→2级） =====
 function rStep1(){
-  let h=`<div class="card"><div class="sec-label">STEP 1 · 选择行业</div><h2 class="sec-title">选择客户所属行业</h2><p class="sec-sub">系统将根据行业自动匹配对应的法规要求和产品推荐策略</p><div class="grid3">`;
-  for(const [key,ind] of Object.entries(INDUSTRIES)){
-    h+=`<div class="ind-card${state.industry===key?' selected':''}" data-action="selectIndustry" data-param="${key}">
-      <div class="ind-icon">${ind.icon}</div>
-      <div class="ind-name">${key}</div>
-      <div class="ind-reg">${ind.reg}</div>
-    </div>`;
-  }
-  h+=`</div></div>`;
-  if(state.industry){
-    const ind=INDUSTRIES[state.industry];
-    h+=`<div class="card" style="border-left:4px solid var(--blue)"><div style="font-weight:700;color:var(--text-darker);margin-bottom:6px">📋 ${state.industry}行业 · 合规要求</div><div style="font-size:13px;color:var(--text);line-height:1.8">${ind.reg}</div></div>`;
-    h+=`<div style="display:flex;gap:12px;justify-content:center;margin-top:16px">
-      <button class="btn btn-outline btn-lg" data-action="goStep" data-param="0">← 返回修改信息</button>
-      <button class="btn btn-primary btn-lg" data-action="goStep" data-param="2">下一步：选择需求场景 →</button></div>`;
+  let h='';
+  if(!state.industryL1){
+    // ── 阶段1: 选择1级行业 ──
+    h+='<div class="card"><div class="sec-label">STEP 1 · 选择行业</div><h2 class="sec-title">选择客户所属一级行业</h2><p class="sec-sub">系统将根据行业自动匹配对应的法规要求和产品推荐策略</p><div class="grid3">';
+    for(const [key,l1] of Object.entries(INDUSTRY_LEVELS)){
+      h+='<div class="ind-card" data-action="selectIndustryL1" data-param="'+key+'">';
+      h+='<div class="ind-icon">'+l1.icon+'</div>';
+      h+='<div class="ind-name">'+key+'</div>';
+      h+='<div class="ind-reg">'+l1.desc+'</div>';
+      h+='</div>';
+    }
+    h+='</div></div>';
+  } else {
+    // ── 阶段2: 选择2级子行业 ──
+    const l1 = INDUSTRY_LEVELS[state.industryL1];
+    h+='<div class="card"><div class="sec-label">STEP 1 · 选择子行业</div>';
+    h+='<h2 class="sec-title">'+l1.icon+' '+state.industryL1+' → 选择细分行业</h2>';
+    h+='<p class="sec-sub">'+l1.desc+'</p>';
+    h+='<div class="grid3">';
+    for(let i=0;i<l1.children.length;i++){
+      const child = l1.children[i];
+      const indData = INDUSTRIES[child.key];
+      if(!indData) continue;
+      h+='<div class="ind-card'+(state.industry===child.key?' selected':'')+'" data-action="selectIndustry" data-param="'+child.key+'">';
+      h+='<div class="ind-icon">'+indData.icon+'</div>';
+      h+='<div class="ind-name">'+child.name+'</div>';
+      h+='<div class="ind-reg">'+indData.reg+'</div>';
+      h+='</div>';
+    }
+    h+='</div></div>';
+
+    // Show selected L2 info
+    if(state.industry){
+      const ind=INDUSTRIES[state.industry];
+      h+='<div class="card" style="border-left:4px solid var(--blue)"><div style="font-weight:700;color:var(--text-darker);margin-bottom:6px">📋 '+state.industry+' · 合规要求</div><div style="font-size:13px;color:var(--text);line-height:1.8">'+ind.reg+'</div></div>';
+    }
+
+    h+='<div style="display:flex;gap:12px;justify-content:center;margin-top:16px">';
+    h+='<button class="btn btn-outline btn-lg" data-action="backToIndustryL1">← 返回一级行业</button>';
+    if(state.industry){
+      h+='<button class="btn btn-primary btn-lg" data-action="goStep" data-param="2">下一步：选择需求场景 →</button>';
+    }
+    h+='</div>';
   }
   return h;
 }
-
 // ===== Step 2: 产品需求 =====
 const PRODUCT_NEEDS = {
   tools:[
@@ -529,65 +593,526 @@ function rStep2(){
 
   h+='<div style="display:flex;gap:12px;justify-content:center">';
   h+='<button class="btn btn-outline btn-lg" data-action="goStep" data-param="1">← 重新选择行业</button>';
-  h+='<button class="btn btn-primary btn-lg" data-action="goNextCheck">下一步：业务场景描述 →</button>';
+  h+='<button class="btn btn-primary btn-lg" data-action="goNextCheck">下一步：选择业务场景 →</button>';
   h+='</div>';
   return h;
 }
 
-// ===== Step 3: 业务场景描述 =====
-const BIZ_SCENES = {
-  compliance:[
-    {id:'bc1',title:'出海法规',desc:'满足欧盟CRA、GDPR等出海合规要求',icon:'🌍'},
-    {id:'bc2',title:'行业强标',desc:'ISO 26262/ISO 21434/DO-178C等行业强制标准',icon:'📏'},
-    {id:'bc3',title:'国内法规',desc:'等保/关基/信创/GB44495等国内法规',icon:'🇨🇳'},
-    {id:'bc4',title:'技术强标',desc:'MISRA C/C++、CERT、GJB等编码规范',icon:'⚡'},
-    {id:'bc5',title:'产品资质认证',desc:'TUV/ASPICE/CC EAL等产品认证',icon:'🏅'},
-    {id:'bc6',title:'下游客户供应链审查',desc:'应客户要求进行供应链安全审查',icon:'🔗'},
-    {id:'bc7',title:'开源合规审计',desc:'扫描开源许可证冲突和传染性风险',icon:'📜'},
-    {id:'bc8',title:'软件供应链审查',desc:'对软件项目的供应链安全进行全面审查',icon:'🔍'},
-    {id:'bc9',title:'编码规范报告提交',desc:'输出符合行业标准的编码规范检测报告',icon:'📊'},
-    {id:'bc10',title:'提交SBOM报告',desc:'生成并提交标准格式的SBOM报告',icon:'📦'},
-  ],
-  toolchain:[
-    {id:'bt1',title:'集成研发流水线',desc:'将安全检测工具嵌入CI/CD流水线',icon:'⚙'},
-    {id:'bt2',title:'安全部门增加审计工具',desc:'为安全团队配备专业代码审计工具',icon:'🔎'},
-    {id:'bt3',title:'提升产品代码质量',desc:'通过自动化检测提升整体代码质量水平',icon:'📈'},
-    {id:'bt4',title:'增加研发管控水平',desc:'加强研发过程的安全管控能力',icon:'🎯'},
-    {id:'bt5',title:'落地研发安全生命周期',desc:'建立覆盖全生命周期的安全研发管理体系',icon:'🔄'},
-  ],
-  supplychain:[
-    {id:'bs1',title:'上游供应商软件合规审查',desc:'对供应商交付的软件进行合规检测',icon:'🏭'},
-    {id:'bs2',title:'整机软件供应链安全测试',desc:'对整机产品进行完整的供应链安全检测',icon:'🖥'},
-    {id:'bs3',title:'测试部门供应链复核',desc:'由测试部门对供应链安全进行复核验证',icon:'✅'},
-    {id:'bs4',title:'测评机构增加检测工具',desc:'测评机构采购专业检测工具扩展业务',icon:'🔬'},
-    {id:'bs5',title:'企业落地内部评审体系',desc:'建立企业内部的软件安全评审体系',icon:'🏛'},
-  ]
+// ===== Step 3: 行业专属业务场景库 =====
+const INDUSTRY_SCENES = {
+  '汽车整车厂商':{groups:[
+    {title:'法规合规驱动',icon:'📋',items:[
+      {id:'auto_c1',title:'UN R155/R156 合规',desc:'满足联合国车辆网络安全法规R155及软件升级法规R156',icon:'🇺🇳'},
+      {id:'auto_c2',title:'ISO/SAE 21434',desc:'建立符合ISO 21434的网络安全工程体系',icon:'📏'},
+      {id:'auto_c3',title:'GB 44495 汽车安全',desc:'满足国标GB 44495汽车软件升级与网络安全要求',icon:'🇨🇳'},
+      {id:'auto_c4',title:'Tier1 准入审计',desc:'应OEM要求提交代码安全审计报告和SBOM',icon:'🏭'},
+      {id:'auto_c5',title:'ASPICE 认证',desc:'为ASPICE认证提供安全检测证据',icon:'🏅'},
+    ]},
+    {title:'软件定义汽车(SDV)开发安全',icon:'🚗',items:[
+      {id:'auto_d1',title:'OTA 升级安全',desc:'车载软件OTA升级包的代码安全检测与合规校验',icon:'🔄'},
+      {id:'auto_d2',title:'车载以太网安全',desc:'SOME/IP/DoIP等车载以太网协议的模糊测试',icon:'🌐'},
+      {id:'auto_d3',title:'V2X 通信安全',desc:'车路协同通信协议安全审计与Fuzz',icon:'📡'},
+      {id:'auto_d4',title:'ISO 26262 功能安全',desc:'ASIL等级代码的功能安全验证与编码规范检查',icon:'⚡'},
+      {id:'auto_d5',title:'AUTOSAR 代码审计',desc:'AUTOSAR CP/AP平台代码的静态安全扫描',icon:'📊'},
+    ]},
+    {title:'供应链安全准入',icon:'🔗',items:[
+      {id:'auto_s1',title:'Tier1 供应商安全审查',desc:'对上游Tier1/2供应商软件交付物进行安全检测',icon:'🏢'},
+      {id:'auto_s2',title:'SBOM 整车交付',desc:'整车软件SBOM自动生成，满足OEM交付要求',icon:'📦'},
+      {id:'auto_s3',title:'第三方库合规管理',desc:'车载第三方库/COTS组件的许可证和漏洞管理',icon:'📜'},
+      {id:'auto_s4',title:'整机固件安全测试',desc:'ECU/域控/车机整机固件安全审计与漏洞挖掘',icon:'🔐'},
+    ]},
+  ]},
+  '芯片半导体':{groups:[
+    {title:'流片前安全审计',icon:'🔲',items:[
+      {id:'chip_f1',title:'BootROM 安全审计',desc:'芯片BootROM代码的静态分析，避免不可修复的硬件漏洞',icon:'🔐'},
+      {id:'chip_f2',title:'固件安全检测',desc:'芯片固件/Firmware的漏洞挖掘与合规检测',icon:'🔍'},
+      {id:'chip_f3',title:'侧信道攻击评估',desc:'对密码实现进行侧信道（SPA/DPA/时序）分析',icon:'⚡'},
+      {id:'chip_f4',title:'安全启动链验证',desc:'从BootROM→Bootloader→OS的完整启动链验证',icon:'🔗'},
+    ]},
+    {title:'硬件可信与生态',icon:'🛡',items:[
+      {id:'chip_h1',title:'TEE 可信执行环境',desc:'TrustZone/SGX等TEE环境的代码安全审计',icon:'🏰'},
+      {id:'chip_h2',title:'RISC-V 安全评估',desc:'RISC-V生态工具链和固件的安全测试',icon:'🔧'},
+      {id:'chip_h3',title:'硬件信任根审计',desc:'PUF/OTP/eFuse等信任根实现的安全审查',icon:'🪪'},
+      {id:'chip_h4',title:'芯片多架构解包',desc:'x86/ARM/MIPS/RISC-V等多架构固件自动化解包分析',icon:'🧩'},
+    ]},
+    {title:'密码与合规',icon:'🔑',items:[
+      {id:'chip_p1',title:'FIPS 140 合规',desc:'密码模块的FIPS 140-3合规检测',icon:'🇺🇸'},
+      {id:'chip_p2',title:'商用密码密评',desc:'满足GB/T 39786等国密评估要求',icon:'🇨🇳'},
+      {id:'chip_p3',title:'NIST 密码算法审计',desc:'密码算法实现的正确性和安全性审计',icon:'📐'},
+    ]},
+  ]},
+  '消费电子':{groups:[
+    {title:'出海合规',icon:'🌍',items:[
+      {id:'ce_c1',title:'EU CRA 法规合规',desc:'满足欧盟网络韧性法案(CRA)的SBOM和软件安全要求',icon:'🇪🇺'},
+      {id:'ce_c2',title:'GDPR 隐私保护',desc:'软件层面的用户数据采集与隐私合规检测',icon:'🔒'},
+      {id:'ce_c3',title:'产品CE认证支持',desc:'为CE认证提供软件安全检测报告',icon:'📋'},
+      {id:'ce_c4',title:'多国法规适配',desc:'同时满足中国/欧盟/北美等多地区法规要求',icon:'🗺'},
+    ]},
+    {title:'供应链安全',icon:'📦',items:[
+      {id:'ce_s1',title:'第三方SDK安全审查',desc:'对集成的广告/支付/统计等第三方SDK进行安全检测',icon:'🧩'},
+      {id:'ce_s2',title:'开源组件漏洞治理',desc:'产品中开源组件的漏洞识别、追踪与修复',icon:'🐛'},
+      {id:'ce_s3',title:'SBOM自动生成',desc:'一键生成标准格式的软件物料清单',icon:'📊'},
+      {id:'ce_s4',title:'供应链透明化',desc:'建立从组件到产品的全链路供应链可视化',icon:'🔍'},
+    ]},
+    {title:'研发安全加速',icon:'⚡',items:[
+      {id:'ce_d1',title:'快速迭代安全检测',desc:'2-4周迭代周期内的自动化增量安全扫描',icon:'🔄'},
+      {id:'ce_d2',title:'DevSecOps集成',desc:'将安全检测嵌入CI/CD流水线，实现安全左移',icon:'⚙'},
+      {id:'ce_d3',title:'多语言混合项目',desc:'Android/iOS/嵌入式多平台代码统一安全检测',icon:'📱'},
+      {id:'ce_d4',title:'编码规范自动化',desc:'自动化的CERT/MISRA/OWASP Mobile编码规范检查',icon:'📏'},
+    ]},
+  ]},
+  '金融':{groups:[
+    {title:'监管合规',icon:'🏛',items:[
+      {id:'fin_c1',title:'等保2.0三级合规',desc:'满足网络安全等级保护三级软件安全要求',icon:'🇨🇳'},
+      {id:'fin_c2',title:'关基保护条例',desc:'关键信息基础设施软件供应链安全审查',icon:'🛡'},
+      {id:'fin_c3',title:'JR/T 0071 金融安全',desc:'金融行业网络安全等级保护实施指引',icon:'📜'},
+      {id:'fin_c4',title:'PCI DSS 支付安全',desc:'支付卡行业数据安全标准的代码合规审计',icon:'💳'},
+    ]},
+    {title:'安全运营',icon:'🔐',items:[
+      {id:'fin_o1',title:'72h应急响应支撑',desc:'开源组件漏洞(Log4j级)的72小时内全量排查',icon:'🚨'},
+      {id:'fin_o2',title:'外包开发安全审计',desc:'对外包供应商交付的代码进行源码级安全审查',icon:'🏢'},
+      {id:'fin_o3',title:'持续安全监控',desc:'建立代码安全持续监控和漏洞预警机制',icon:'📡'},
+      {id:'fin_o4',title:'监管报送支撑',desc:'向监管机构提交标准化的软件安全评估报告',icon:'📋'},
+    ]},
+    {title:'创新业务安全',icon:'🚀',items:[
+      {id:'fin_i1',title:'AI大模型安全',desc:'金融AI大模型应用的安全测试与合规评估',icon:'🤖'},
+      {id:'fin_i2',title:'开放银行API安全',desc:'API接口的代码安全审计与数据泄露检测',icon:'🔌'},
+      {id:'fin_i3',title:'信创迁移安全',desc:'向信创环境迁移过程中的代码安全评估',icon:'🔄'},
+      {id:'fin_i4',title:'分布式架构安全',desc:'微服务/容器化架构下的组件安全治理',icon:'☸'},
+    ]},
+  ]},
+  '军工':{groups:[
+    {title:'涉密环境安全',icon:'🔒',items:[
+      {id:'mil_s1',title:'完全离线部署',desc:'在物理隔离的涉密网络中部署安全检测工具',icon:'🔌'},
+      {id:'mil_s2',title:'涉密代码审计',desc:'对涉密项目代码进行离线静态安全分析',icon:'🔍'},
+      {id:'mil_s3',title:'无外网更新方案',desc:'支持通过光盘/移动介质进行规则库和漏洞库更新',icon:'💿'},
+      {id:'mil_s4',title:'三员分立管理',desc:'支持涉密系统要求的系统管理员/安全员/审计员分立',icon:'👥'},
+    ]},
+    {title:'遗留代码治理',icon:'📜',items:[
+      {id:'mil_l1',title:'C/C++遗留代码审计',desc:'对90年代至今的C/C++/汇编遗留代码进行自动化审计',icon:'🕰'},
+      {id:'mil_l2',title:'汇编级安全检查',desc:'对底层汇编代码的缓冲区溢出等漏洞检测',icon:'⚙'},
+      {id:'mil_l3',title:'无文档代码分析',desc:'对缺乏文档的遗留代码进行源码级安全分析',icon:'📄'},
+      {id:'mil_l4',title:'老代码重构建议',desc:'基于AI的代码质量评估和重构安全建议',icon:'✨'},
+    ]},
+    {title:'自主可控',icon:'🇨🇳',items:[
+      {id:'mil_a1',title:'国产化全栈替代',desc:'所有工具来自国内供应商，支持信创环境',icon:'💻'},
+      {id:'mil_a2',title:'GJB 8114/5369 合规',desc:'满足GJB 8114(软件测试)和GJB 5369(软件安全)标准',icon:'📏'},
+      {id:'mil_a3',title:'源码级自主审查',desc:'提供源码级的安全分析能力，不依赖外部服务',icon:'🔎'},
+    ]},
+  ]},
+  '政府':{groups:[
+    {title:'信创与等保合规',icon:'🏛',items:[
+      {id:'gov_c1',title:'信创环境适配',desc:'在国产CPU+国产OS的信创环境中部署运行',icon:'💻'},
+      {id:'gov_c2',title:'等保2.0合规检测',desc:'满足网络安全等级保护2.0的代码安全要求',icon:'🛡'},
+      {id:'gov_c3',title:'关基供应链审查',desc:'关键信息基础设施的软件供应链安全审查',icon:'🔗'},
+      {id:'gov_c4',title:'密码法合规',desc:'密码算法使用合规检测与密评支持',icon:'🔑'},
+    ]},
+    {title:'供应链与外包',icon:'📦',items:[
+      {id:'gov_s1',title:'外包项目源码审计',desc:'对政务系统外包开发交付的源码进行安全审查',icon:'🏢'},
+      {id:'gov_s2',title:'SBOM自主生成',desc:'为政务软件自动生成标准化SBOM报告',icon:'📊'},
+      {id:'gov_s3',title:'开源软件合规',desc:'政务系统中开源组件的许可证和漏洞合规管理',icon:'📜'},
+    ]},
+    {title:'新技术安全',icon:'🤖',items:[
+      {id:'gov_a1',title:'大模型安全备案',desc:'为政务AI大模型应用提供安全评估和备案支撑',icon:'🤖'},
+      {id:'gov_a2',title:'AI应用安全检测',desc:'智能政务应用的安全测试和隐私合规评估',icon:'✨'},
+      {id:'gov_a3',title:'数据安全合规',desc:'满足数据安全法和个人信息保护法的软件合规检测',icon:'🔒'},
+    ]},
+  ]},
+  '医疗设备':{groups:[
+    {title:'注册审查合规',icon:'🏥',items:[
+      {id:'med_r1',title:'NMPA 网络安全注册',desc:'满足医疗器械网络安全注册审查指导原则',icon:'🇨🇳'},
+      {id:'med_r2',title:'FDA 510(k)/PMA',desc:'为FDA上市前提交提供软件安全验证证据',icon:'🇺🇸'},
+      {id:'med_r3',title:'IEC 62304 软件生命周期',desc:'满足IEC 62304医疗设备软件生命周期安全要求',icon:'📏'},
+      {id:'med_r4',title:'MDR/IVDR 合规',desc:'满足欧盟医疗器械法规的网络安全要求',icon:'🇪🇺'},
+    ]},
+    {title:'患者安全',icon:'❤',items:[
+      {id:'med_p1',title:'固件安全审计',desc:'医疗设备嵌入式固件的安全审计与漏洞挖掘',icon:'🔐'},
+      {id:'med_p2',title:'DICOM协议安全',desc:'医学影像DICOM协议栈的安全测试',icon:'🖼'},
+      {id:'med_p3',title:'患者隐私保护',desc:'医疗数据采集/传输/存储环节的隐私合规检测',icon:'🔒'},
+      {id:'med_p4',title:'功能安全代码验证',desc:'安全关键代码的MISRA-C和功能安全验证',icon:'⚡'},
+    ]},
+    {title:'供应链安全',icon:'📦',items:[
+      {id:'med_s1',title:'开源组件管理',desc:'DICOM库等医疗开源组件的漏洞和许可管理',icon:'📚'},
+      {id:'med_s2',title:'SaMD软件合规',desc:'独立软件(SaMD)的全生命周期安全检测',icon:'💻'},
+      {id:'med_s3',title:'供应商安全审计',desc:'对医疗软件/组件供应商的安全能力审查',icon:'🏭'},
+    ]},
+  ]},
+  '通信':{groups:[
+    {title:'5G/网络设备安全',icon:'📡',items:[
+      {id:'tel_51',title:'5G核心网安全',desc:'5GC网络功能(NF)软件的安全审计',icon:'🌐'},
+      {id:'tel_52',title:'基站固件审计',desc:'gNB/eNB基站固件的安全检测与漏洞挖掘',icon:'📻'},
+      {id:'tel_53',title:'网络切片安全',desc:'5G网络切片管理软件的代码安全测试',icon:'🔪'},
+      {id:'tel_54',title:'3GPP SECAM 合规',desc:'满足3GPP安全保证方法论的软件安全要求',icon:'📏'},
+    ]},
+    {title:'接入设备安全',icon:'🖥',items:[
+      {id:'tel_d1',title:'ONT/ONU固件审计',desc:'光网络终端的固件安全分析与漏洞检测',icon:'📡'},
+      {id:'tel_d2',title:'路由器安全测试',desc:'家庭/企业路由器的固件和Web管理界面安全',icon:'🏠'},
+      {id:'tel_d3',title:'交换机OS安全',desc:'交换机操作系统软件的代码级安全审计',icon:'🔀'},
+    ]},
+    {title:'通信协议安全',icon:'🎯',items:[
+      {id:'tel_f1',title:'21协议Fuzz测试',desc:'蓝牙/WiFi/5G/Modbus等21种协议的模糊测试',icon:'🎯'},
+      {id:'tel_f2',title:'协议栈安全审计',desc:'LTE/NR协议栈实现的代码安全分析',icon:'📚'},
+      {id:'tel_f3',title:'互操作安全测试',desc:'多厂商设备互操作场景下的安全漏洞检测',icon:'🤝'},
+    ]},
+  ]},
+  '信创软件':{groups:[
+    {title:'国产化适配',icon:'🇨🇳',items:[
+      {id:'ti_a1',title:'国产CPU适配',desc:'在飞腾/鲲鹏/龙芯/申威等国产CPU上部署运行',icon:'💻'},
+      {id:'ti_a2',title:'国产OS适配',desc:'在麒麟/统信UOS/方德等国产OS上部署运行',icon:'🖥'},
+      {id:'ti_a3',title:'信创数据库适配',desc:'对达梦/人大金仓/南大通用等国产数据库的安全检测',icon:'🗄'},
+      {id:'ti_a4',title:'中间件安全适配',desc:'东方通/宝兰德等国产中间件的安全审计',icon:'🔧'},
+    ]},
+    {title:'全链路自主可控',icon:'🛡',items:[
+      {id:'ti_s1',title:'源码安全审计',desc:'信创软件的全量源码安全分析和漏洞检测',icon:'🔍'},
+      {id:'ti_s2',title:'SBOM自主生成',desc:'为信创软件自动生成国产化SBOM清单',icon:'📦'},
+      {id:'ti_s3',title:'许可证合规审计',desc:'开源许可证冲突和传染性风险检测',icon:'📜'},
+    ]},
+    {title:'密码与安全合规',icon:'🔑',items:[
+      {id:'ti_p1',title:'密码法合规',desc:'商用密码算法使用合规检测与密评支撑',icon:'📐'},
+      {id:'ti_p2',title:'关基保护审计',desc:'关键信息基础设施的软件供应链安全审查',icon:'🏛'},
+      {id:'ti_p3',title:'信创目录合规',desc:'确保工具和产品符合信创目录要求',icon:'📋'},
+    ]},
+  ]},
+  '具身智能':{groups:[
+    {title:'AI模型安全',icon:'🤖',items:[
+      {id:'ea_a1',title:'提示注入检测',desc:'对具身智能设备的LLM推理接口进行提示注入检测',icon:'💉'},
+      {id:'ea_a2',title:'越狱与对齐测试',desc:'大模型越狱红队测试和安全对齐评估',icon:'🔓'},
+      {id:'ea_a3',title:'多模态感知安全',desc:'视觉/语音/触觉等多模态感知模型的安全鲁棒性',icon:'👁'},
+      {id:'ea_a4',title:'模型数据泄露评估',desc:'模型训练数据和推理数据的隐私泄露检测',icon:'🔒'},
+    ]},
+    {title:'嵌入式系统安全',icon:'🔐',items:[
+      {id:'ea_e1',title:'嵌入式固件审计',desc:'运动控制/传感器/执行器固件的安全审计',icon:'⚙'},
+      {id:'ea_e2',title:'传感器安全测试',desc:'LiDAR/摄像头/IMU等传感器接口的安全测试',icon:'📷'},
+      {id:'ea_e3',title:'实时OS安全',desc:'RTOS/实时控制软件的代码安全与功能安全验证',icon:'⏱'},
+    ]},
+    {title:'法规合规',icon:'📏',items:[
+      {id:'ea_c1',title:'EU CRA 合规',desc:'满足欧盟网络韧性法案对具身智能设备的要求',icon:'🇪🇺'},
+      {id:'ea_c2',title:'ISO 26262 SOTIF',desc:'预期功能安全(SOTIF)对AI决策安全的验证',icon:'📐'},
+      {id:'ea_c3',title:'生成式AI管理办法',desc:'满足生成式AI服务管理暂行办法的安全评估',icon:'🇨🇳'},
+    ]},
+  ]},
+  '低空经济':{groups:[
+    {title:'适航审定',icon:'🛩',items:[
+      {id:'la_c1',title:'DO-178C 软件审定',desc:'满足DO-178C机载软件适航审定的安全要求',icon:'📏'},
+      {id:'la_c2',title:'适航软件安全检测',desc:'eVTOL/无人机适航软件的代码安全分析',icon:'✈'},
+      {id:'la_c3',title:'航电系统安全',desc:'航电系统软件的固件审计与漏洞检测',icon:'🖥'},
+      {id:'la_c4',title:'适航取证支撑',desc:'为CAAC/FAA/EASA适航取证提供软件安全证据',icon:'📋'},
+    ]},
+    {title:'飞控安全',icon:'🎮',items:[
+      {id:'la_f1',title:'飞行控制代码审计',desc:'飞控算法和控制逻辑的代码安全审计',icon:'🕹'},
+      {id:'la_f2',title:'避障系统安全',desc:'感知避障算法的安全鲁棒性和代码安全',icon:'👁'},
+      {id:'la_f3',title:'RTOS实时安全',desc:'飞控实时操作系统的安全和功能安全验证',icon:'⚡'},
+    ]},
+    {title:'通信链路安全',icon:'📡',items:[
+      {id:'la_t1',title:'通信链路安全审计',desc:'无人机通信链路的协议安全和加密审计',icon:'📡'},
+      {id:'la_t2',title:'导航系统安全',desc:'GNSS/RTK导航定位模块的安全检测',icon:'📍'},
+      {id:'la_t3',title:'抗干扰安全测试',desc:'通信抗干扰和防劫持的安全模糊测试',icon:'🛡'},
+    ]},
+  ]},
+  '能源':{groups:[
+    {title:'关基保护合规',icon:'⚡',items:[
+      {id:'en_c1',title:'等保2.0合规',desc:'能源行业网络安全等级保护软件安全要求',icon:'🛡'},
+      {id:'en_c2',title:'关基保护条例',desc:'能源关键信息基础设施软件供应链安全审查',icon:'🏛'},
+      {id:'en_c3',title:'电力16号令',desc:'电力监控系统安全防护16号令的代码合规',icon:'🔌'},
+      {id:'en_c4',title:'NERC CIP 合规',desc:'北美电力可靠性标准CIP的软件安全审计',icon:'🇺🇸'},
+    ]},
+    {title:'工控系统安全',icon:'🏭',items:[
+      {id:'en_i1',title:'SCADA 安全审计',desc:'数据采集与监控系统软件的安全测试',icon:'📊'},
+      {id:'en_i2',title:'PLC/RTU 安全检测',desc:'可编程逻辑控制器固件的安全分析',icon:'🔧'},
+      {id:'en_i3',title:'工控协议Fuzz',desc:'Modbus/DNP3/IEC 61850等工控协议的模糊测试',icon:'🎯'},
+    ]},
+    {title:'供应链安全',icon:'📦',items:[
+      {id:'en_s1',title:'供应商安全审计',desc:'能源设备供应商的软件安全能力审查',icon:'🏢'},
+      {id:'en_s2',title:'开源组件治理',desc:'能源软件系统中开源组件的漏洞和许可管理',icon:'📦'},
+      {id:'en_s3',title:'国产化安全替代',desc:'能源领域国产化软件的安全评估和迁移支持',icon:'🇨🇳'},
+    ]},
+  ]},
+  '游戏互联网':{groups:[
+    {title:'数据安全与隐私',icon:'🔒',items:[
+      {id:'gi_d1',title:'用户隐私保护',desc:'用户数据采集/存储/使用的隐私合规检测',icon:'👤'},
+      {id:'gi_d2',title:'支付安全审计',desc:'支付模块和服务端接口的代码安全审计',icon:'💳'},
+      {id:'gi_d3',title:'未成年人保护',desc:'防沉迷/实名认证系统的代码安全检测',icon:'👶'},
+      {id:'gi_d4',title:'个人信息保护法合规',desc:'满足个保法的软件隐私合规检测',icon:'📜'},
+    ]},
+    {title:'代码安全防护',icon:'🛡',items:[
+      {id:'gi_c1',title:'反外挂与反逆向',desc:'游戏客户端代码的逆向分析和外挂防护检测',icon:'🎯'},
+      {id:'gi_c2',title:'游戏引擎安全',desc:'Unity/Unreal/Cocos等引擎的安全审计',icon:'🎮'},
+      {id:'gi_c3',title:'服务端安全测试',desc:'游戏服务端代码的漏洞扫描和安全测试',icon:'🖥'},
+      {id:'gi_c4',title:'SDK安全审查',desc:'广告/支付/统计等第三方SDK的安全检测',icon:'🧩'},
+    ]},
+    {title:'出海合规',icon:'🌍',items:[
+      {id:'gi_o1',title:'EU CRA 合规',desc:'游戏/应用出海欧盟的CRA软件安全要求',icon:'🇪🇺'},
+      {id:'gi_o2',title:'GDPR 隐私合规',desc:'满足GDPR的玩家数据隐私保护检测',icon:'🔒'},
+      {id:'gi_o3',title:'出海SBOM要求',desc:'为出口应用/游戏生成标准格式SBOM报告',icon:'📦'},
+      {id:'gi_o4',title:'多国内容合规',desc:'满足不同国家的软件安全和内容合规要求',icon:'🗺'},
+    ]},
+  ]},
+  '智能硬件':{groups:[
+    {title:'固件安全',icon:'🔐',items:[
+      {id:'sh_f1',title:'IoT固件安全审计',desc:'充电宝/安防摄像头/路由器等智能终端固件分析',icon:'🔍'},
+      {id:'sh_f2',title:'安全启动验证',desc:'BootROM→Bootloader→OS安全启动链完整性验证',icon:'🔗'},
+      {id:'sh_f3',title:'固件多架构解包',desc:'多种芯片平台固件的自动化解包和安全分析',icon:'🧩'},
+      {id:'sh_f4',title:'芯片级漏洞挖掘',desc:'针对芯片特有功能的固件级漏洞挖掘',icon:'🐛'},
+    ]},
+    {title:'通信协议安全',icon:'📡',items:[
+      {id:'sh_p1',title:'WiFi/BT协议安全',desc:'无线通信协议的模糊测试和安全审计',icon:'📶'},
+      {id:'sh_p2',title:'Zigbee/Z-Wave安全',desc:'物联网短距协议的模糊测试与合规',icon:'🏠'},
+      {id:'sh_p3',title:'Matter/Thread安全',desc:'新一代智能家居协议的安全测试',icon:'🏡'},
+    ]},
+    {title:'IoT出口合规',icon:'🌍',items:[
+      {id:'sh_e1',title:'EU CRA合规',desc:'智能硬件出口欧盟需满足的CRA网络安全要求',icon:'🇪🇺'},
+      {id:'sh_e2',title:'FCC/CE认证支撑',desc:'为无线设备认证提供软件安全检测报告',icon:'📋'},
+      {id:'sh_e3',title:'出口SBOM生成',desc:'为IoT设备出口自动生成标准化SBOM报告',icon:'📦'},
+      {id:'sh_e4',title:'商用密码合规',desc:'智能硬件中的密码算法使用合规检测',icon:'🔑'},
+    ]},
+  ]},
+  '教育':{groups:[
+    {title:'隐私与合规',icon:'🎓',items:[
+      {id:'edu_p1',title:'学生信息保护',desc:'教育软件中大量学生个人信息的隐私合规检测',icon:'🔒'},
+      {id:'edu_p2',title:'教育App备案',desc:'满足教育App备案管理办法的软件安全要求',icon:'📱'},
+      {id:'edu_p3',title:'未成年人保护',desc:'未成年人个人信息保护和内容安全合规',icon:'👶'},
+      {id:'edu_p4',title:'等保2.0合规',desc:'教育系统网络安全等级保护软件安全要求',icon:'🛡'},
+    ]},
+    {title:'开源生态治理',icon:'📚',items:[
+      {id:'edu_o1',title:'LMS系统安全',desc:'Moodle/Sakai等开源学习管理系统的安全审计',icon:'🏫'},
+      {id:'edu_o2',title:'开源组件漏洞管理',desc:'教育软件中大规模开源组件的漏洞治理',icon:'📦'},
+      {id:'edu_o3',title:'高性价比方案',desc:'在有限预算下实现最大安全覆盖的产品选型',icon:'💰'},
+    ]},
+  ]},
+};
+
+// ── 场景组 → 产品映射：控制哪些产品选择后显示哪些场景组 ──
+// pn_t1=SAST pn_t2=SCA pn_t3=FIRMWARE pn_t4=LLM pn_t5=AI_SAST pn_t6=DevSecOps
+const SCENE_GROUP_PRODUCTS = {
+  '汽车整车厂商':{'法规合规驱动':['pn_t1','pn_t2'],'软件定义汽车(SDV)开发安全':['pn_t1','pn_t3'],'供应链安全准入':['pn_t2','pn_t3']},
+  '芯片半导体':{'流片前安全审计':['pn_t1','pn_t3'],'硬件可信与生态':['pn_t3'],'密码与合规':['pn_t1','pn_t2']},
+  '消费电子':{'出海合规':['pn_t1','pn_t2'],'供应链安全':['pn_t2'],'研发安全加速':['pn_t1','pn_t6']},
+  '金融':{'监管合规':['pn_t1','pn_t2'],'安全运营':['pn_t2'],'创新业务安全':['pn_t4','pn_t5','pn_t1']},
+  '军工':{'涉密环境安全':['pn_t1','pn_t3'],'遗留代码治理':['pn_t1','pn_t5'],'自主可控':['pn_t1','pn_t2']},
+  '政府':{'信创与等保合规':['pn_t1','pn_t2'],'供应链与外包':['pn_t2','pn_t1'],'新技术安全':['pn_t4','pn_t5']},
+  '医疗设备':{'注册审查合规':['pn_t1','pn_t2'],'患者安全':['pn_t3','pn_t1'],'供应链安全':['pn_t2']},
+  '通信':{'5G/网络设备安全':['pn_t1','pn_t3'],'接入设备安全':['pn_t3'],'通信协议安全':['pn_t3']},
+  '信创软件':{'国产化适配':['pn_t1','pn_t2'],'全链路自主可控':['pn_t1','pn_t2'],'密码与安全合规':['pn_t1','pn_t2']},
+  '具身智能':{'AI模型安全':['pn_t4','pn_t5'],'嵌入式系统安全':['pn_t3','pn_t1'],'法规合规':['pn_t1','pn_t2']},
+  '低空经济':{'适航审定':['pn_t1','pn_t2'],'飞控安全':['pn_t1','pn_t3'],'通信链路安全':['pn_t3']},
+  '能源':{'关基保护合规':['pn_t1','pn_t2'],'工控系统安全':['pn_t3','pn_t1'],'供应链安全':['pn_t2']},
+  '游戏互联网':{'数据安全与隐私':['pn_t1','pn_t2'],'代码安全防护':['pn_t1'],'出海合规':['pn_t2']},
+  '智能硬件':{'固件安全':['pn_t3'],'通信协议安全':['pn_t3'],'IoT出口合规':['pn_t2','pn_t3']},
+
+  '汽车零部件厂商':{'OEM准入合规':['pn_t1','pn_t2'],'产品开发安全':['pn_t1','pn_t3'],'供应链管理':['pn_t2']},
+  '安防设备':{'固件与设备安全':['pn_t3'],'隐私与合规':['pn_t1','pn_t2'],'出口与认证':['pn_t2']},
+  '船舶':{'船级社合规':['pn_t1','pn_t2'],'关键系统安全':['pn_t1','pn_t3'],'供应链安全':['pn_t2']},
+  '教育':{'隐私与合规':['pn_t1','pn_t2'],'开源生态治理':['pn_t2']},
+	 '汽车测评咨询机构':{'法规合规测评':['pn_t1','pn_t2'],'供应链测评':['pn_t2','pn_t3'],'咨询支撑':['pn_t1','pn_t2']},
+	 '军工测评机构':{'军标合规测评':['pn_t1','pn_t3'],'遗留代码测评':['pn_t1','pn_t5']},
+	 'GPU类半导体':{'GPU固件安全':['pn_t3','pn_t1'],'密码与合规':['pn_t1','pn_t2']},
+	 'SOC_MPU芯片':{'流片前审计':['pn_t3','pn_t1'],'功能安全':['pn_t1']},
+	 '存储半导体':{'控制器固件安全':['pn_t3'],'数据安全合规':['pn_t1','pn_t2']},
+	 '消费金融行业':{'监管合规':['pn_t1','pn_t2'],'敏捷业务安全':['pn_t1','pn_t2','pn_t4']},
+	 '电信运营商':{'关基保护':['pn_t1','pn_t2'],'5G网络软件安全':['pn_t1','pn_t3']},
+	 '央企集团':{'信创合规':['pn_t1','pn_t2'],'多业态安全':['pn_t1','pn_t5']},
+	 '网络设备行业':{'设备固件安全':['pn_t3','pn_t1'],'协议与出口合规':['pn_t3','pn_t2']},
+	 '云服务商':{'云原生安全':['pn_t1','pn_t2'],'合规与隐私':['pn_t1','pn_t4']},
+	 '电商平台':{'数据安全与隐私':['pn_t1','pn_t2'],'大促安全':['pn_t1','pn_t2']},
+	 'CNAS机构':{'认可检测能力':['pn_t1','pn_t2'],'标准化报告':['pn_t1','pn_t2','pn_t3']},
+	 'IT咨询公司':{'咨询服务能力':['pn_t1','pn_t2'],'多行业覆盖':['pn_t1','pn_t2','pn_t4']},
+
+  // ── 新增L2行业场景（复用相似行业场景数据） ──
+  '汽车测评咨询机构':{groups:[
+    {title:'法规合规测评',icon:'📋',items:[
+      {id:'ac_c1',title:'UN R155/R156 合规测评',desc:'对整车和零部件软件进行UN R155/R156合规测评',icon:'🇺🇳'},
+      {id:'ac_c2',title:'ISO/SAE 21434 测评',desc:'按ISO 21434标准进行网络安全工程测评',icon:'📏'},
+      {id:'ac_c3',title:'GB 44495 汽车安全测评',desc:'满足国标GB 44495汽车软件安全测评要求',icon:'🇨🇳'},
+      {id:'ac_c4',title:'CNAS认可检测',desc:'出具满足CNAS-CL01/CL45认可要求的标准化检测报告',icon:'🏅'},
+    ]},
+    {title:'供应链测评',icon:'🔗',items:[
+      {id:'ac_s1',title:'Tier1供应商测评',desc:'对Tier1供应商软件交付物进行第三方安全检测',icon:'🏢'},
+      {id:'ac_s2',title:'整车SBOM测评',desc:'整车软件SBOM的完整性和合规性测评',icon:'📦'},
+      {id:'ac_s3',title:'ECU固件测评',desc:'ECU/域控固件的安全测评与漏洞评估',icon:'🔐'},
+    ]},
+    {title:'咨询支撑',icon:'💼',items:[
+      {id:'ac_a1',title:'合规差距分析',desc:'汽车网络安全法规合规差距分析和整改方案',icon:'📊'},
+      {id:'ac_a2',title:'ASPICE咨询支撑',desc:'为ASPICE认证提供安全检测证据和咨询',icon:'🏅'},
+    ]},
+  ]},
+  '军工测评机构':{groups:[
+    {title:'军标合规测评',icon:'🔬',items:[
+      {id:'mt_c1',title:'GJB 8114 测评',desc:'满足GJB 8114(软件测试)标准的测评服务',icon:'📏'},
+      {id:'mt_c2',title:'GJB 5369 测评',desc:'满足GJB 5369(软件安全)标准的测评服务',icon:'🛡'},
+      {id:'mt_c3',title:'涉密环境测评',desc:'在涉密离线环境中开展软件安全测评',icon:'🔒'},
+      {id:'mt_c4',title:'军代表审查报告',desc:'输出满足军代表审查要求的标准化测评报告',icon:'📋'},
+    ]},
+    {title:'遗留代码测评',icon:'📜',items:[
+      {id:'mt_l1',title:'C/C++遗留代码测评',desc:'对遗留C/C++/汇编代码的自动化安全测评',icon:'🕰'},
+      {id:'mt_l2',title:'国产化适配测评',desc:'对国产化环境（CPU+OS）的软件安全测评',icon:'🇨🇳'},
+    ]},
+  ]},
+  'GPU类半导体':{groups:[
+    {title:'GPU固件安全',icon:'🎮',items:[
+      {id:'gpu_f1',title:'GPU固件审计',desc:'GPU固件的安全启动链和代码安全审计',icon:'🔐'},
+      {id:'gpu_f2',title:'GPU驱动安全',desc:'CUDA/OpenCL驱动代码的安全检测',icon:'🔍'},
+      {id:'gpu_f3',title:'AI计算完整性',desc:'GPU AI训练/推理的计算完整性和数据保护',icon:'🤖'},
+      {id:'gpu_f4',title:'TEE安全分析',desc:'GPU可信执行环境(TEE)的安全审计',icon:'🏰'},
+    ]},
+    {title:'密码与合规',icon:'🔑',items:[
+      {id:'gpu_p1',title:'FIPS 140合规',desc:'GPU密码模块的FIPS 140合规检测',icon:'🇺🇸'},
+      {id:'gpu_p2',title:'商用密码密评',desc:'GPU密码实现的国密评估',icon:'🇨🇳'},
+    ]},
+  ]},
+  'SOC_MPU芯片':{groups:[
+    {title:'流片前审计',icon:'💻',items:[
+      {id:'soc_f1',title:'BootROM安全审计',desc:'SoC/MPU芯片BootROM代码的流片前安全审计',icon:'🔐'},
+      {id:'soc_f2',title:'固件安全检测',desc:'SoC固件/Firmware的漏洞挖掘与合规检测',icon:'🔍'},
+      {id:'soc_f3',title:'安全启动链验证',desc:'多核异构SoC的安全启动链完整性验证',icon:'🔗'},
+      {id:'soc_f4',title:'多架构解包分析',desc:'ARM/RISC-V/x86多核架构固件的解包分析',icon:'🧩'},
+    ]},
+    {title:'功能安全',icon:'⚡',items:[
+      {id:'soc_a1',title:'ISO 26262 功能安全',desc:'车载SoC的ASIL等级功能安全代码验证',icon:'📐'},
+      {id:'soc_a2',title:'IEC 62443 安全',desc:'工业MPU的IEC 62443安全标准合规',icon:'🏭'},
+    ]},
+  ]},
+  '存储半导体':{groups:[
+    {title:'控制器固件安全',icon:'💾',items:[
+      {id:'st_f1',title:'FTL固件审计',desc:'存储控制器FTL固件的安全审计',icon:'🔍'},
+      {id:'st_f2',title:'SSD控制器安全',desc:'SSD控制器固件的漏洞挖掘和安全检测',icon:'🔐'},
+      {id:'st_f3',title:'固件级后门检测',desc:'存储设备固件级后门和恶意代码检测',icon:'🐛'},
+    ]},
+    {title:'数据安全合规',icon:'🔒',items:[
+      {id:'st_d1',title:'SED密码合规',desc:'自加密驱动器的FIPS 140密码合规检测',icon:'🔑'},
+      {id:'st_d2',title:'供应链安全审计',desc:'存储供应链中第三方固件组件的安全审计',icon:'📦'},
+    ]},
+  ]},
+  '消费金融行业':{groups:[
+    {title:'监管合规',icon:'💳',items:[
+      {id:'cf_c1',title:'JR/T 0171 个金保护',desc:'满足个人金融信息保护技术规范的合规检测',icon:'📜'},
+      {id:'cf_c2',title:'PCI DSS 支付安全',desc:'消费金融支付卡数据安全的代码合规审计',icon:'💳'},
+      {id:'cf_c3',title:'等保2.0三级',desc:'消费金融系统网络安全等级保护合规',icon:'🛡'},
+    ]},
+    {title:'敏捷业务安全',icon:'🔄',items:[
+      {id:'cf_d1',title:'快速迭代安全检测',desc:'消费分期/小贷业务的快速迭代自动化安全检测',icon:'⚡'},
+      {id:'cf_d2',title:'第三方SDK审查',desc:'消费金融应用中第三方SDK的安全审查',icon:'🧩'},
+      {id:'cf_d3',title:'开源组件治理',desc:'消费金融系统中开源组件的漏洞和许可管理',icon:'📦'},
+    ]},
+  ]},
+  '电信运营商':{groups:[
+    {title:'关基保护',icon:'📡',items:[
+      {id:'to_c1',title:'关基保护条例合规',desc:'满足关键信息基础设施保护条例的软件安全要求',icon:'🛡'},
+      {id:'to_c2',title:'等保2.0合规',desc:'电信系统网络安全等级保护软件安全要求',icon:'🇨🇳'},
+      {id:'to_c3',title:'工信部安全考核',desc:'满足工信部年度网络安全考核的软件安全指标',icon:'📋'},
+    ]},
+    {title:'5G网络软件安全',icon:'🌐',items:[
+      {id:'to_n1',title:'5GC核心网安全审计',desc:'5G核心网网络功能(NF)软件的代码安全审计',icon:'🔍'},
+      {id:'to_n2',title:'OSS/BSS安全审计',desc:'运营支撑系统外包开发代码的安全审查',icon:'🏢'},
+      {id:'to_n3',title:'3GPP SECAM合规',desc:'满足3GPP安全保证方法论的软件安全要求',icon:'📏'},
+    ]},
+  ]},
+  '央企集团':{groups:[
+    {title:'信创合规',icon:'🇨🇳',items:[
+      {id:'sg_c1',title:'信创环境适配',desc:'在国产CPU+国产OS环境中部署安全检测工具',icon:'💻'},
+      {id:'sg_c2',title:'关基供应链审查',desc:'央企关键信息基础设施的软件供应链安全审查',icon:'🔗'},
+      {id:'sg_c3',title:'密码法合规',desc:'商用密码算法使用合规检测与密评支持',icon:'🔑'},
+    ]},
+    {title:'多业态安全',icon:'🏢',items:[
+      {id:'sg_m1',title:'多业态代码审计',desc:'覆盖能源/制造/金融/交通等多业态的统一代码安全平台',icon:'🔍'},
+      {id:'sg_m2',title:'信创迁移安全评估',desc:'信创替代过程中大量迁移代码的安全评估',icon:'🔄'},
+      {id:'sg_m3',title:'集团供应链治理',desc:'集团统一的开源组件供应链安全治理',icon:'📦'},
+    ]},
+  ]},
+  '网络设备行业':{groups:[
+    {title:'设备固件安全',icon:'🌐',items:[
+      {id:'ne_f1',title:'交换机固件审计',desc:'交换机操作系统软件的代码级安全审计',icon:'🔀'},
+      {id:'ne_f2',title:'路由器固件测试',desc:'路由器固件的安全分析和漏洞检测',icon:'📻'},
+      {id:'ne_f3',title:'安全启动验证',desc:'网络设备安全启动链的完整性验证',icon:'🔗'},
+    ]},
+    {title:'协议与出口合规',icon:'📡',items:[
+      {id:'ne_p1',title:'通信协议Fuzz',desc:'网络设备通信协议栈的模糊测试',icon:'🎯'},
+      {id:'ne_p2',title:'CRA/NDAA双合规',desc:'同时满足欧盟CRA和美国NDAA的出口合规',icon:'🌍'},
+      {id:'ne_p3',title:'密评合规检测',desc:'网络设备中密码算法的国密合规检测',icon:'🔑'},
+    ]},
+  ]},
+  '云服务商':{groups:[
+    {title:'云原生安全',icon:'☁️',items:[
+      {id:'cs_n1',title:'容器安全检测',desc:'容器镜像和编排配置的代码安全检测',icon:'📦'},
+      {id:'cs_n2',title:'K8s安全审计',desc:'Kubernetes集群组件的安全审计',icon:'☸'},
+      {id:'cs_n3',title:'微服务安全治理',desc:'微服务架构下的组件安全和API安全治理',icon:'🔌'},
+    ]},
+    {title:'合规与隐私',icon:'🔒',items:[
+      {id:'cs_c1',title:'云服务安全评估',desc:'满足云计算服务安全评估的软件安全要求',icon:'🛡'},
+      {id:'cs_c2',title:'多租户隔离验证',desc:'多租户环境下的代码级数据隔离验证',icon:'🏢'},
+      {id:'cs_c3',title:'GDPR隐私合规',desc:'满足GDPR的云平台用户数据隐私保护检测',icon:'🇪🇺'},
+    ]},
+  ]},
+  '电商平台':{groups:[
+    {title:'数据安全与隐私',icon:'🔒',items:[
+      {id:'ep_d1',title:'用户隐私保护',desc:'用户数据采集/存储/使用的隐私合规检测',icon:'👤'},
+      {id:'ep_d2',title:'支付安全审计',desc:'支付模块和服务端接口的代码安全审计',icon:'💳'},
+      {id:'ep_d3',title:'个人信息保护法合规',desc:'满足个保法的电商平台隐私合规检测',icon:'📜'},
+    ]},
+    {title:'大促安全',icon:'🛒',items:[
+      {id:'ep_s1',title:'大促代码安全',desc:'促销活动期间大规模代码变更的自动化安全检测',icon:'🎯'},
+      {id:'ep_s2',title:'第三方SDK治理',desc:'电商平台大量第三方插件/SDK的安全审查',icon:'🧩'},
+      {id:'ep_s3',title:'供应链组件管理',desc:'电商系统中开源组件的漏洞和许可证管理',icon:'📦'},
+    ]},
+  ]},
+  'CNAS机构':{groups:[
+    {title:'认可检测能力',icon:'🏅',items:[
+      {id:'cn_c1',title:'CNAS-CL01 检测能力',desc:'满足CNAS-CL01认可准则的软件安全检测能力',icon:'📋'},
+      {id:'cn_c2',title:'CNAS-CL45 软件检测',desc:'满足CNAS-CL45软件检测领域的认可要求',icon:'💻'},
+      {id:'cn_c3',title:'ISO 17025 校准检测',desc:'满足ISO/IEC 17025校准和检测实验室能力要求',icon:'📏'},
+    ]},
+    {title:'标准化报告',icon:'📜',items:[
+      {id:'cn_r1',title:'司法采信报告',desc:'可作为司法鉴定和监管采信依据的专业检测报告',icon:'⚖'},
+      {id:'cn_r2',title:'CMA/CNAS双签报告',desc:'同时满足CMA和CNAS要求的双签检测报告',icon:'✅'},
+      {id:'cn_r3',title:'多行业检测模板',desc:'覆盖汽车/军工/金融等多行业的标准化检测报告模板',icon:'📊'},
+    ]},
+  ]},
+  'IT咨询公司':{groups:[
+    {title:'咨询服务能力',icon:'💼',items:[
+      {id:'ic_a1',title:'合规差距分析',desc:'为客户提供多行业法规的合规差距分析服务',icon:'📊'},
+      {id:'ic_a2',title:'安全评估报告',desc:'输出专业标准化的软件安全评估报告',icon:'📋'},
+      {id:'ic_a3',title:'整改方案咨询',desc:'基于检测结果的漏洞修复和合规整改咨询',icon:'🔧'},
+    ]},
+    {title:'多行业覆盖',icon:'🌍',items:[
+      {id:'ic_m1',title:'金融行业咨询',desc:'金融行业软件供应链安全和AI安全评估咨询',icon:'🏦'},
+      {id:'ic_m2',title:'制造行业咨询',desc:'汽车/装备制造行业的网络安全合规咨询',icon:'🏭'},
+      {id:'ic_m3',title:'政府行业咨询',desc:'政府行业信创和关基保护的合规咨询',icon:'🏛'},
+    ]},
+  ]},
 };
 
 function rStep3(){
   const ind = INDUSTRIES[state.industry];
-  let h='<div class="card"><div class="sec-label">STEP 3 · 业务场景描述</div><h2 class="sec-title">选择业务场景 <span style="font-size:14px;color:var(--text);font-weight:400">（多选）</span></h2><p class="sec-sub">'+ind.icon+' '+state.industry+'行业 · 请根据实际业务需求选择对应的场景类别</p>';
-
-  h+='<div class="scene-group"><div class="scene-group-title"><span class="icon">📋</span>第一类：合规驱动</div><div class="scene-tags">';
-  for(var i=0;i<BIZ_SCENES.compliance.length;i++){
-    var s=BIZ_SCENES.compliance[i];
-    h+='<div class="scene-tag'+(state.bizScenes.indexOf(s.id)>=0?' selected':'')+'" data-action="toggleBizScene" data-param="'+s.id+'"><div class="dot"></div><div><div>'+s.icon+' '+s.title+'</div><div class="desc">'+s.desc+'</div></div></div>';
+  const iscenes = INDUSTRY_SCENES[state.industry];
+  const grpProducts = SCENE_GROUP_PRODUCTS[state.industry]||{};
+  // 检查某场景组是否与已选产品有交集
+  function groupMatches(grpTitle){
+    var prods = grpProducts[grpTitle];
+    if(!prods) return true; // 无映射默认显示
+    for(var i=0;i<prods.length;i++){if(state.productNeeds.indexOf(prods[i])>=0)return true;}
+    return false;
   }
-  h+='</div></div>';
+  let h='<div class="card"><div class="sec-label">STEP 3 · 业务场景</div><h2 class="sec-title">'+ind.icon+' '+state.industry+'行业 · 业务场景 <span style="font-size:14px;color:var(--text);font-weight:400">（多选）</span></h2><p class="sec-sub">根据已选的'+state.productNeeds.length+'个产品需求，匹配以下场景</p>';
 
-  h+='<div class="scene-group"><div class="scene-group-title"><span class="icon">🔧</span>第二类：用户自建工具链体系</div><div class="scene-tags">';
-  for(var j=0;j<BIZ_SCENES.toolchain.length;j++){
-    var ss=BIZ_SCENES.toolchain[j];
-    h+='<div class="scene-tag'+(state.bizScenes.indexOf(ss.id)>=0?' selected':'')+'" data-action="toggleBizScene" data-param="'+ss.id+'"><div class="dot"></div><div><div>'+ss.icon+' '+ss.title+'</div><div class="desc">'+ss.desc+'</div></div></div>';
+  if(!iscenes){
+    h+='<p style="color:var(--text);text-align:center;padding:20px">该行业暂无专属场景数据</p>';
+  } else {
+    var shown=0;
+    for(var g=0;g<iscenes.groups.length;g++){
+      var grp=iscenes.groups[g];
+      if(!groupMatches(grp.title)) continue;
+      shown++;
+      h+='<div class="scene-group"><div class="scene-group-title"><span class="icon">'+grp.icon+'</span>'+grp.title+'</div><div class="scene-tags">';
+      for(var i=0;i<grp.items.length;i++){
+        var s=grp.items[i];
+        h+='<div class="scene-tag'+(state.bizScenes.indexOf(s.id)>=0?' selected':'')+'" data-action="toggleBizScene" data-param="'+s.id+'"><div class="dot"></div><div><div>'+s.icon+' '+s.title+'</div><div class="desc">'+s.desc+'</div></div></div>';
+      }
+      h+='</div></div>';
+    }
+    if(shown===0){
+      h+='<p style="color:var(--text);text-align:center;padding:20px">当前产品选择下暂无匹配场景，请返回调整产品需求</p>';
+    }
   }
-  h+='</div></div>';
-
-  h+='<div class="scene-group"><div class="scene-group-title"><span class="icon">🔗</span>第三类：建立供应链审查体系</div><div class="scene-tags">';
-  for(var k=0;k<BIZ_SCENES.supplychain.length;k++){
-    var sss=BIZ_SCENES.supplychain[k];
-    h+='<div class="scene-tag'+(state.bizScenes.indexOf(sss.id)>=0?' selected':'')+'" data-action="toggleBizScene" data-param="'+sss.id+'"><div class="dot"></div><div><div>'+sss.icon+' '+sss.title+'</div><div class="desc">'+sss.desc+'</div></div></div>';
-  }
-  h+='</div></div></div>';
+  h+='</div>';
 
   h+='<div style="display:flex;gap:12px;justify-content:center">';
   h+='<button class="btn btn-outline btn-lg" data-action="goStep" data-param="2">← 返回产品需求</button>';
@@ -653,14 +1178,205 @@ function rStep4(){
 }
 function toggleReplaceInput(){var v=document.getElementById('pReplace').value;document.getElementById('replaceInput').style.display=v==='是'?'block':'none';}
 
-// ===== Step 5: 优势匹配 =====
+
+// ===== Step 5: 需求确认 =====
+function rStep5(){
+  const ind = INDUSTRIES[state.industry];
+  const info = state.projectInfo||{};
+  const iscenes = INDUSTRY_SCENES[state.industry];
+
+  // Build product names list
+  const prodNames = {pn_t1:'SAST 静态代码分析(静兮)',pn_t2:'SCA 软件成分分析(源兮)',pn_t3:'固件安全测试(侦兮)',pn_t4:'大模型安全测试(元安)',pn_t5:'AI SAST 智能代码分析(灵析)',pn_t6:'DevSecOps工具链',pn_s1:'代码安全审计服务',pn_s2:'固件安全测试服务',pn_s3:'开源合规审计服务',pn_s4:'渗透测试服务',pn_s5:'合规咨询服务',pn_s6:'安全培训服务',pn_s7:'驻场安全支持'};
+  const selProducts = state.productNeeds.map(function(p){return prodNames[p]||p;});
+
+  // Build scene names list
+  var allScenes=[];
+  if(iscenes){for(var g=0;g<iscenes.groups.length;g++){for(var i=0;i<iscenes.groups[g].items.length;i++){allScenes.push(iscenes.groups[g].items[i]);}}}
+  const selScenes = state.bizScenes.map(function(sid){var s=allScenes.find(function(x){return x.id===sid;});return s?s.icon+' '+s.title:sid;});
+
+  // Project info summary
+  const scaleText = info.scale||'未填';
+  const teamText = info.teamSize||'未填';
+  const langText = (info.languages||[]).join('、')||'未选';
+  const codeText = info.codeSize||'未填';
+  const focusText = (info.focuses||[]).join('、')||'未选';
+  const replaceText = info.replaceExisting==='是'?'替换现有: '+info.existingTool:'不替换';
+
+  let h='<div class="card"><div class="sec-label">STEP 5 · 需求确认</div><h2 class="sec-title">'+ind.icon+' '+state.industry+'行业 · 需求确认</h2><p class="sec-sub">请确认以下需求摘要，确认无误后进入优势匹配</p>';
+
+  // Industry
+  h+='<div style="margin-bottom:16px;padding:14px;background:var(--blue-light);border-radius:10px;border-left:4px solid var(--blue)">';
+  h+='<div style="font-weight:700;color:var(--blue);margin-bottom:4px">🏭 客户行业</div>';
+  h+='<div style="font-size:14px">'+ind.icon+' '+state.industry+'</div>';
+  h+='<div style="font-size:11px;color:var(--text);margin-top:2px">'+ind.reg+'</div></div>';
+
+  // Products
+  h+='<div style="margin-bottom:16px;padding:14px;background:#f8fdf9;border-radius:10px;border-left:4px solid var(--green)">';
+  h+='<div style="font-weight:700;color:var(--green-dark);margin-bottom:4px">🔧 产品需求 ('+selProducts.length+'项)</div>';
+  h+='<div style="font-size:13px">'+selProducts.map(function(p){return '✓ '+p;}).join('<br>')+'</div></div>';
+
+  // Scenes
+  h+='<div style="margin-bottom:16px;padding:14px;background:#fdf8f4;border-radius:10px;border-left:4px solid var(--teal)">';
+  h+='<div style="font-weight:700;color:var(--teal);margin-bottom:4px">📋 业务场景 ('+selScenes.length+'项)</div>';
+  h+='<div style="font-size:13px">'+(selScenes.length>0?selScenes.map(function(s){return '✓ '+s;}).join('<br>'):'未选')+'</div></div>';
+
+  // Project info
+  h+='<div style="margin-bottom:16px;padding:14px;background:var(--bg-card);border-radius:10px;border-left:4px solid var(--text-dark)">';
+  h+='<div style="font-weight:700;color:var(--text-darker);margin-bottom:4px">📊 项目信息</div>';
+  h+='<table style="width:100%;font-size:12px;color:var(--text-dark)">';
+  h+='<tr><td style="padding:3px 8px;font-weight:600">项目规模</td><td>'+scaleText+'</td></tr>';
+  h+='<tr><td style="padding:3px 8px;font-weight:600">团队规模</td><td>'+teamText+'</td></tr>';
+  h+='<tr><td style="padding:3px 8px;font-weight:600">开发语言</td><td>'+langText+'</td></tr>';
+  h+='<tr><td style="padding:3px 8px;font-weight:600">被测项大小</td><td>'+codeText+'</td></tr>';
+  h+='<tr><td style="padding:3px 8px;font-weight:600">关注度</td><td>'+focusText+'</td></tr>';
+  h+='<tr><td style="padding:3px 8px;font-weight:600">替换现有</td><td>'+replaceText+'</td></tr>';
+  h+='</table></div></div>';
+
+  h+='<div style="display:flex;gap:12px;justify-content:center">';
+  h+='<button class="btn btn-outline btn-lg" data-action="goStep" data-param="4">← 返回修改</button>';
+  h+='<button class="btn btn-primary btn-lg" data-action="goStep" data-param="6">✓ 确认，查看优势匹配 →</button>';
+  h+='</div>';
+  return h;
+}
+
+// ===== Step 6: 优势匹配 =====
 function generateAdvantages(){
   var info=state.projectInfo||{};
+  var ind=state.industry;
   var advantages=[];
+
+  // ── 行业专属优势 ──
+  if(ind==='汽车整车厂商'){
+    advantages.push({id:'a_ind1',product:'行业',title:'ISO 21434 合规经验丰富',desc:'服务比亚迪/长安/德赛西威/华阳通用等头部车企，深度理解汽车网络安全工程',icon:'🚗'});
+    advantages.push({id:'a_ind2',product:'行业',title:'Tier1准入审计通过率100%',desc:'交付的代码安全审计报告已通过一汽/东风/长安等OEM审查',icon:'✅'});
+    advantages.push({id:'a_ind3',product:'行业',title:'GB 44495+R155双合规',desc:'同时满足国内和国际汽车网络安全法规，出海无障碍',icon:'🌍'});
+  }
+  if(ind==='芯片半导体'){
+    advantages.push({id:'a_ind4',product:'行业',title:'芯片级安全分析能力',desc:'100+芯片平台解包，覆盖ARM/x86/MIPS/RISC-V等主流架构',icon:'🔲'});
+    advantages.push({id:'a_ind5',product:'行业',title:'流片前安全审计经验',desc:'帮助芯片企业在流片前发现并修复BootROM和固件安全漏洞',icon:'🔍'});
+    advantages.push({id:'a_ind6',product:'行业',title:'密码模块合规支撑',desc:'密评/FIPS 140/国密算法的代码级合规检测',icon:'🔑'});
+  }
+  if(ind==='军工'){
+    advantages.push({id:'a_ind7',product:'行业',title:'涉密离线全栈部署',desc:'多年涉密环境部署经验，支持物理隔离+三员分立+离线更新',icon:'🔒'});
+    advantages.push({id:'a_ind8',product:'行业',title:'GJB 8114/5369 合规',desc:'满足GJB 8114(软件测试)和GJB 5369(软件安全)的双重标准',icon:'📏'});
+    advantages.push({id:'a_ind9',product:'行业',title:'遗留代码治理专家',desc:'AI驱动的遗留C/C++/汇编代码自动审计，解决文档缺失痛点',icon:'📜'});
+  }
+  if(ind==='金融'){
+    advantages.push({id:'a_ind10',product:'行业',title:'72h应急响应体系',desc:'全量开源组件漏洞追踪能力，Log4j级事件72小时内完成排查',icon:'🚨'});
+    advantages.push({id:'a_ind11',product:'行业',title:'监管报送一站式',desc:'面向央行/银保监会/证监会的标准化安全评估报告',icon:'📋'});
+  }
+  if(ind==='医疗设备'){
+    advantages.push({id:'a_ind12',product:'行业',title:'NMPA/FDA双注册支撑',desc:'为医疗器械软件注册提供标准化的代码安全审计报告',icon:'🏥'});
+    advantages.push({id:'a_ind13',product:'行业',title:'IEC 62304 全流程合规',desc:'覆盖医疗设备软件安全分类和安全生命周期全流程',icon:'📏'});
+  }
+
+  if(ind==='汽车零部件厂商'){
+    advantages.push({id:'a_ind30',product:'行业',title:'多OEM准入经验',desc:'熟悉大众/丰田/比亚迪等主流OEM的安全审计要求，一站式满足多客户准入',icon:'🏭'});
+    advantages.push({id:'a_ind31',product:'行业',title:'ASPICE 合规支撑',desc:'为ASPICE Level 2/3认证提供标准化的软件安全检测证据',icon:'📏'});
+    advantages.push({id:'a_ind32',product:'行业',title:'ECU全品类覆盖',desc:'发动机/底盘/车身/域控等全品类ECU代码安全检测能力',icon:'🔧'});
+  }
+  if(ind==='安防设备'){
+    advantages.push({id:'a_ind33',product:'行业',title:'GB 35114 C级合规',desc:'满足视频监控系统最高安全等级的代码合规要求',icon:'📹'});
+    advantages.push({id:'a_ind34',product:'行业',title:'海量设备批量审计',desc:'摄像头/NVR/门禁等海量IoT设备的固件批量安全检测',icon:'🔀'});
+    advantages.push({id:'a_ind35',product:'行业',title:'NDAA/CRA双合规',desc:'同时满足美国NDAA和欧盟CRA的出口合规要求',icon:'🌍'});
+  }
+  if(ind==='船舶'){
+    advantages.push({id:'a_ind36',product:'行业',title:'IACS UR E26/E27 合规',desc:'满足国际船级社协会最新船舶网络韧性强制要求',icon:'🚢'});
+    advantages.push({id:'a_ind37',product:'行业',title:'船级社入级支撑',desc:'为CCS/DNV/Lloyd等船级社入级检验提供软件安全证据',icon:'🏛'});
+    advantages.push({id:'a_ind38',product:'行业',title:'OT/IT融合安全',desc:'船舶操作技术与信息技术融合系统的深度安全审计经验',icon:'🔀'});
+  }
+  if(ind==='通信'){
+    advantages.push({id:'a_ind14',product:'行业',title:'3GPP SECAM 合规',desc:'满足3GPP安全保证方法论，帮助设备通过运营商准入',icon:'📡'});
+    advantages.push({id:'a_ind15',product:'行业',title:'21协议全覆盖Fuzz',desc:'CAN/车载以太网/蓝牙/5G等21种协议的模糊测试',icon:'🎯'});
+  }
+  if(ind==='信创软件'){
+    advantages.push({id:'a_ind16',product:'行业',title:'全信创生态适配',desc:'支持麒麟/UOS/飞腾/鲲鹏/龙芯等全信创技术栈',icon:'🇨🇳'});
+    advantages.push({id:'a_ind17',product:'行业',title:'源码级自主可控',desc:'全自主研发，不依赖任何国外组件，满足信创目录要求',icon:'🛡'});
+  }
+  if(ind==='具身智能'){
+    advantages.push({id:'a_ind18',product:'行业',title:'大模型+固件双重安全',desc:'同时覆盖LLM安全测试和嵌入式固件审计，应对复合风险',icon:'🤖'});
+    advantages.push({id:'a_ind19',product:'行业',title:'SOTIF 预期功能安全',desc:'AI决策安全的功能安全验证，满足ISO 26262 SOTIF',icon:'📐'});
+  }
+  if(ind==='低空经济'){
+    advantages.push({id:'a_ind20',product:'行业',title:'DO-178C 适航经验',desc:'为eVTOL/无人机提供满足适航审定要求的软件安全检测',icon:'🛩'});
+    advantages.push({id:'a_ind21',product:'行业',title:'飞控代码安全审计',desc:'飞行控制算法的深度代码安全分析能力',icon:'🎮'});
+  }
+  if(ind==='能源'){
+    advantages.push({id:'a_ind22',product:'行业',title:'电力16号令合规',desc:'满足电力监控系统安全防护的软件安全要求',icon:'⚡'});
+    advantages.push({id:'a_ind23',product:'行业',title:'工控协议全覆盖',desc:'Modbus/DNP3/IEC 61850/OPC UA等工控协议测试',icon:'🏭'});
+  }
+  if(ind==='游戏互联网'){
+    advantages.push({id:'a_ind24',product:'行业',title:'快速迭代安全方案',desc:'2-4周版本迭代周期内的自动化增量安全检测',icon:'🔄'});
+    advantages.push({id:'a_ind25',product:'行业',title:'多平台统一检测',desc:'iOS/Android/PC/Web/服务端的统一代码安全平台',icon:'📱'});
+  }
+  if(ind==='智能硬件'){
+    advantages.push({id:'a_ind26',product:'行业',title:'IoT设备量面广覆盖',desc:'充电宝/摄像头/路由器等海量IoT设备的固件批量审计',icon:'🔀'});
+    advantages.push({id:'a_ind27',product:'行业',title:'CRA出口合规一站式',desc:'固件审计+SBOM+网络安全声明，满足出口欧盟要求',icon:'🌍'});
+  }
+  if(ind==='教育'){
+    advantages.push({id:'a_ind28',product:'行业',title:'高性价比方案',desc:'针对有限预算的最优产品组合，最大安全覆盖',icon:'💰'});
+    advantages.push({id:'a_ind29',product:'行业',title:'LMS开源安全治理',desc:'Moodle/Sakai等开源教育平台的专项安全审计',icon:'📚'});
+  }
+
+  // ── 产品维度优势 ──
   // SAST advantages
   if(info.languages&&info.languages.some(function(l){return ['C/C++','Java','C#','Python'].indexOf(l)>=0;})){
     advantages.push({id:'a1',product:'SAST',title:'精准代码漏洞检测',desc:'15语言6000+规则，CWE Top25全覆盖，编译级分析误报率<15%',icon:'🔍'});
     advantages.push({id:'a2',product:'SAST',title:'编码规范合规',desc:'MISRA C/C++ 2023+AUTOSAR C++14+CERT+GJB，TUV双认证',icon:'📏'});
+  }
+
+  // ── 新增L2行业优势 ──
+  if(ind==='汽车测评咨询机构'){
+    advantages.push({id:'a_ind40',product:'行业',title:'CNAS测评能力',desc:'满足CNAS-CL01/CL45软件安全检测能力要求，提供标准化检测报告',icon:'📋'});
+    advantages.push({id:'a_ind41',product:'行业',title:'多品牌多车型覆盖',desc:'支持对国产/合资/进口多品牌车型的软件安全横向对比评估',icon:'🚗'});
+  }
+  if(ind==='军工测评机构'){
+    advantages.push({id:'a_ind42',product:'行业',title:'GJB合规测评',desc:'满足GJB 8114/5369的军工软件安全测评标准，涉密离线部署',icon:'🔬'});
+    advantages.push({id:'a_ind43',product:'行业',title:'军代表审查支撑',desc:'提供满足军代表和装备机关审查要求的标准化测评报告',icon:'📏'});
+  }
+  if(ind==='GPU类半导体'){
+    advantages.push({id:'a_ind44',product:'行业',title:'GPU固件安全',desc:'GPU固件/驱动的深度安全分析，覆盖CUDA/OpenCL框架',icon:'🎮'});
+    advantages.push({id:'a_ind45',product:'行业',title:'AI计算完整性',desc:'GPU AI训练和推理场景下的计算完整性和数据保护',icon:'🤖'});
+  }
+  if(ind==='SOC_MPU芯片'){
+    advantages.push({id:'a_ind46',product:'行业',title:'多核异构安全',desc:'SoC/MPU多处理单元(CPU/GPU/NPU/DSP)的全面软件安全审计',icon:'💻'});
+    advantages.push({id:'a_ind47',product:'行业',title:'车载SoC功能安全',desc:'满足ISO 26262功能安全的车载SoC代码安全验证',icon:'⚡'});
+  }
+  if(ind==='存储半导体'){
+    advantages.push({id:'a_ind48',product:'行业',title:'FTL固件安全',desc:'存储控制器固件(FTL)的深度安全审计和漏洞挖掘',icon:'💾'});
+    advantages.push({id:'a_ind49',product:'行业',title:'SED密码合规',desc:'自加密驱动器(SED)的FIPS 140密码模块合规检测',icon:'🔑'});
+  }
+  if(ind==='消费金融行业'){
+    advantages.push({id:'a_ind50',product:'行业',title:'个人金融信息保护',desc:'满足个人金融信息保护法的软件隐私合规检测',icon:'💳'});
+    advantages.push({id:'a_ind51',product:'行业',title:'敏捷业务安全',desc:'互联网小贷和消费分期业务的快速迭代安全方案',icon:'🔄'});
+  }
+  if(ind==='电信运营商'){
+    advantages.push({id:'a_ind52',product:'行业',title:'关基保护合规',desc:'满足关键信息基础设施保护条例的软件供应链安全审查',icon:'📡'});
+    advantages.push({id:'a_ind53',product:'行业',title:'5G网络软件安全',desc:'5G核心网网络功能(NF)软件的安全审计能力',icon:'🌐'});
+  }
+  if(ind==='央企集团'){
+    advantages.push({id:'a_ind54',product:'行业',title:'多业态全覆盖',desc:'覆盖能源/制造/金融/交通等多业态的统一安全检测平台',icon:'🏢'});
+    advantages.push({id:'a_ind55',product:'行业',title:'信创替代安全',desc:'信创环境替代过程中大量迁移代码的安全评估',icon:'🇨🇳'});
+  }
+  if(ind==='网络设备行业'){
+    advantages.push({id:'a_ind56',product:'行业',title:'协议栈安全审计',desc:'交换机/路由器等网络设备通信协议栈的深度安全检测',icon:'🌐'});
+    advantages.push({id:'a_ind57',product:'行业',title:'出口双合规',desc:'同时满足EU CRA和NDAA的固件安全出口合规要求',icon:'🌍'});
+  }
+  if(ind==='云服务商'){
+    advantages.push({id:'a_ind58',product:'行业',title:'云原生安全治理',desc:'容器/K8s/微服务等云原生技术的代码安全治理',icon:'☁️'});
+    advantages.push({id:'a_ind59',product:'行业',title:'多租户安全隔离',desc:'多租户环境下的代码和数据安全隔离验证',icon:'🔒'});
+  }
+  if(ind==='电商平台'){
+    advantages.push({id:'a_ind60',product:'行业',title:'大促安全护航',desc:'促销活动期间的大规模代码变更安全检测方案',icon:'🛒'});
+    advantages.push({id:'a_ind61',product:'行业',title:'第三方SDK治理',desc:'电商平台大量第三方插件和SDK的安全审查',icon:'🧩'});
+  }
+  if(ind==='CNAS机构'){
+    advantages.push({id:'a_ind62',product:'行业',title:'CMA/CNAS双认可',desc:'满足CMA和CNAS双重要求的标准化软件安全检测能力',icon:'🏅'});
+    advantages.push({id:'a_ind63',product:'行业',title:'司法采信级别报告',desc:'可作为司法鉴定和监管采信依据的专业安全检测报告',icon:'📜'});
+  }
+  if(ind==='IT咨询公司'){
+    advantages.push({id:'a_ind64',product:'行业',title:'多行业覆盖能力',desc:'覆盖金融/制造/政府/汽车等多行业的安全检测能力输出',icon:'💼'});
+    advantages.push({id:'a_ind65',product:'行业',title:'标准化客户报告',desc:'输出专业、客户可理解的标准格式安全评估报告',icon:'📋'});
   }
   if(info.languages&&info.languages.length>=3){
     advantages.push({id:'a3',product:'SAST',title:'多语言混合项目全覆盖',desc:'支持'+(info.languages||[]).length+'种语言的统一检测平台，无需切换工具',icon:'🌐'});
@@ -669,7 +1385,7 @@ function generateAdvantages(){
     advantages.push({id:'a4',product:'SAST',title:'超大项目高性能扫描',desc:'100万行/30min，增量秒级扫描，支持亿行级项目',icon:'⚡'});
   }
   // SCA advantages
-  if(state.bizScenes.some(function(b){return b.indexOf('bc')>=0||b.indexOf('bs')>=0;})){
+  if(state.bizScenes.some(function(b){return b.indexOf('bc')>=0||b.indexOf('bs')>=0||b.indexOf('_s')>=0||b.indexOf('_c')>=0;})){
     advantages.push({id:'a5',product:'SCA',title:'一键SBOM自动生成',desc:'SPDX/CycloneDX标准格式，3000W+组件库，满足CRA合规要求',icon:'📦'});
     advantages.push({id:'a6',product:'SCA',title:'开源许可证合规治理',desc:'2600+许可证识别，传染性风险预警，FOSS合规审查',icon:'📜'});
   }
@@ -682,7 +1398,7 @@ function generateAdvantages(){
     advantages.push({id:'a9',product:'FIRMWARE',title:'无需源码的供应链治理',desc:'8架构(x86/ARM/MIPS等)二进制分析，供应商固件黑盒审查',icon:'🏭'});
   }
   // Fuzz advantages
-  if(state.productNeeds.indexOf('pn_t3')>=0||state.industry==='汽车'){
+  if(state.productNeeds.indexOf('pn_t3')>=0||ind==='汽车整车厂商'||ind==='汽车零部件厂商'){
     advantages.push({id:'a10',product:'FUZZ',title:'21协议全覆盖模糊测试',desc:'CAN/车载以太网/蓝牙/WiFi/5G协议，6000+规则，满足ISO 21434',icon:'🎯'});
   }
   // AI advantages
@@ -703,10 +1419,10 @@ function generateAdvantages(){
   return advantages;
 }
 
-function rStep5(){
+function rStep7(){
   var ind = INDUSTRIES[state.industry];
   var advantages = generateAdvantages();
-  var h='<div class="card"><div class="sec-label">STEP 5 · 优势匹配</div><h2 class="sec-title">软安工具/服务优势匹配</h2><p class="sec-sub">'+ind.icon+' '+state.industry+'行业 · 基于您的项目信息，我们匹配了以下核心优势。请选择您最关注的项（多选）</p>';
+  var h='<div class="card"><div class="sec-label">STEP 6 · 优势匹配</div><h2 class="sec-title">软安工具/服务优势匹配</h2><p class="sec-sub">'+ind.icon+' '+state.industry+'行业 · 基于您的项目信息，我们匹配了以下核心优势。请选择您最关注的项（多选）</p>';
 
   h+='<div class="scene-tags" style="flex-direction:column;gap:8px">';
   for(var i=0;i<advantages.length;i++){
@@ -724,7 +1440,7 @@ function rStep5(){
   return h;
 }
 
-// ===== Step 6: 方案与报价 =====
+// ===== Step 7: 方案与报价 =====
 function rStep6(){
   var ind = INDUSTRIES[state.industry];
   var recommended = computeRecommendations();
@@ -732,7 +1448,7 @@ function rStep6(){
   var advantages = generateAdvantages();
   var selected = advantages.filter(function(a){return state.selectedAdvantages.indexOf(a.id)>=0;});
 
-  var h='<div class="card"><div class="sec-label">STEP 6 · 方案与报价</div><h2 class="sec-title">'+ind.icon+' '+state.industry+'行业 · 智能推荐方案</h2><p class="sec-sub">基于行业、'+state.productNeeds.length+'个产品需求、'+state.bizScenes.length+'个业务场景、'+(info.languages||[]).length+'种开发语言综合分析</p>';
+  var h='<div class="card"><div class="sec-label">STEP 7 · 方案与报价</div><h2 class="sec-title">'+ind.icon+' '+state.industry+'行业 · 智能推荐方案</h2><p class="sec-sub">基于行业、'+state.productNeeds.length+'个产品需求、'+state.bizScenes.length+'个业务场景、'+(info.languages||[]).length+'种开发语言综合分析</p>';
 
   // Selected advantages summary
   if(selected.length>0){
@@ -772,7 +1488,13 @@ function rStep6(){
   // Project scale multiplier
   var scaleMultiplier=info.scale&&info.scale.indexOf('多个')>=0?1.2:1.0;
 
-  var finalPrice=Math.round(discountedBase*teamMultiplier*scaleMultiplier);
+  // Industry pricing coefficient
+  var indCoeff=1.0; var indCoeffLabel='通用行业';
+  if(state.industry==='汽车整车厂商'||state.industry==='汽车零部件厂商'||state.industry==='军工'||state.industry==='医疗设备'||state.industry==='船舶'){indCoeff=1.2;indCoeffLabel='高合规要求行业';}
+  else if(state.industry==='金融'||state.industry==='政府'||state.industry==='能源'){indCoeff=1.1;indCoeffLabel='关基保护行业';}
+  else if(state.industry==='教育'||state.industry==='游戏互联网'){indCoeff=0.9;indCoeffLabel='轻量场景行业';}
+
+  var finalPrice=Math.round(discountedBase*teamMultiplier*scaleMultiplier*indCoeff);
   var priceMin=Math.round(finalPrice*0.85);
   var priceMax=Math.round(finalPrice*1.15);
 
@@ -783,6 +1505,7 @@ function rStep6(){
     '<tr><td style="padding:6px 8px">产品许可费（'+productCount+'产品 × 50万'+(productCount>=2?' × '+bundleDiscount.toFixed(2)+'折扣':'')+'）</td><td style="padding:6px 8px;text-align:right">'+discountedBase+'万/年</td></tr>'+
     '<tr><td style="padding:6px 8px">团队规模系数（'+teamLabel+'，系数'+teamMultiplier.toFixed(1)+'）</td><td style="padding:6px 8px;text-align:right">×'+teamMultiplier.toFixed(1)+'</td></tr>'+
     (scaleMultiplier>1?'<tr><td style="padding:6px 8px">多项目系数</td><td style="padding:6px 8px;text-align:right">×1.2</td></tr>':'')+
+    '<tr><td style="padding:6px 8px">行业定价系数（'+indCoeffLabel+'，系数'+indCoeff.toFixed(1)+'）</td><td style="padding:6px 8px;text-align:right">×'+indCoeff.toFixed(1)+'</td></tr>'+
     '<tr style="font-weight:700;background:#e8eaf6"><td style="padding:8px">参考报价区间</td><td style="padding:8px;text-align:right;font-size:16px;color:var(--blue)">'+priceMin+'万 - '+priceMax+'万/年</td></tr>'+
     '</table>'+
     '<div style="margin-top:10px;font-size:11px;color:var(--text)">*报价包含5用户1并发基础许可。正式报价将根据实际用户数、并发需求、定制开发、驻场服务等因素调整。此区间仅供参考。</div></div>';
@@ -803,7 +1526,7 @@ function rStep6(){
   h+=`<div id="optionForm" style="display:none"><div class="card" id="optionFormContent"></div></div>`;
 
   h+=`<div style="display:flex;gap:12px;justify-content:center;margin-top:16px">
-    <button class="btn btn-outline" data-action="goStep" data-param="4">← 调整痛点</button>
+    <button class="btn btn-outline" data-action="goStep" data-param="6">← 调整优势选择</button>
     <button class="btn btn-outline" data-action="resetAll">🔄 重新选型</button>
   </div>`;
   return h;
@@ -847,7 +1570,9 @@ function saveUserInfo(){
   document.querySelectorAll('#uEmail,#uPhone,#uCompany').forEach(function(el){el.style.borderColor='';});
   state.step=1; render(); window.scrollTo(0,0);
 }
-function selectIndustry(key){ state.industry=key; state.productNeeds=[]; state.bizScenes=[]; state.products=[]; state.customPain=""; render(); }
+function selectIndustryL1(key){ state.industryL1=key; state.industry=null; state.productNeeds=[]; state.bizScenes=[]; state.selectedAdvantages=[]; state.projectInfo={scale:'',teamSize:'',languages:[],codeSize:'',focuses:[],replaceExisting:'',existingTool:''}; state.products=[]; state.customPain=""; render(); }
+function backToIndustryL1(){ state.industryL1=null; state.industry=null; state.productNeeds=[]; state.bizScenes=[]; state.selectedAdvantages=[]; state.projectInfo={scale:'',teamSize:'',languages:[],codeSize:'',focuses:[],replaceExisting:'',existingTool:''}; state.products=[]; state.customPain=""; render(); }
+function selectIndustry(key){ state.industry=key; state.productNeeds=[]; state.bizScenes=[]; state.selectedAdvantages=[]; state.projectInfo={scale:'',teamSize:'',languages:[],codeSize:'',focuses:[],replaceExisting:'',existingTool:''}; state.products=[]; state.customPain=""; render(); }
 function saveProjectInfo(){
   var info=state.projectInfo||{};
   info.scale=document.getElementById('pScale')?.value||'';
@@ -859,7 +1584,7 @@ function saveProjectInfo(){
     toast('请填写所有必填项（项目规模/团队规模/开发语言/被测项大小/是否替换）','error'); return;
   }
   if(info.replaceExisting==='是'&&!info.existingTool){toast('请填写现有工具名称','error');return;}
-  state.projectInfo=info; state.step=5; render(); window.scrollTo(0,0);
+  state.projectInfo=info; state.step=5; render(); window.scrollTo(0,0); window.scrollTo(0,0);
 }
 
 function toggleLang(lang){
@@ -882,15 +1607,19 @@ function toggleAdvantage(id){ var idx=state.selectedAdvantages.indexOf(id); if(i
 function goNextCheck(){
   if(state.step===2&&state.productNeeds.length===0){toast('请至少选择一个产品需求','error');return;}
   if(state.step===3&&state.bizScenes.length===0){toast('请至少选择一个业务场景','error');return;}
-  if(state.step===5&&state.selectedAdvantages.length===0){toast('请至少选择一项优势','error');return;}
+  if(state.step===6&&state.selectedAdvantages.length===0){toast('请至少选择一项优势','error');return;}
   goStep(state.step+1);
 }
 function selectOption(opt){
   const formEl = document.getElementById('optionForm');
   const contentEl = document.getElementById('optionFormContent');
   const ind = INDUSTRIES[state.industry];
-  const sceneNames = [...SCENARIOS.compliance,...SCENARIOS.tool,...SCENARIOS.service];
-  const sceneList = state.scenes.map(sid=>{const s=sceneNames.find(x=>x.id===sid);return s?s.title:sid}).join('、');
+  const iscenes = INDUSTRY_SCENES[state.industry];
+  // Build scene list from industry-specific scenes
+  var allScenes=[];
+  if(iscenes){for(var g=0;g<iscenes.groups.length;g++){for(var i=0;i<iscenes.groups[g].items.length;i++){allScenes.push(iscenes.groups[g].items[i]);}}}
+  const sceneList = state.bizScenes.map(function(sid){var s=allScenes.find(function(x){return x.id===sid;});return s?s.title:sid;}).join('、');
+  var sceneText=sceneList||'未选';
 
   let title='', body='', btnText='', btnAction='';
 
@@ -899,7 +1628,7 @@ function selectOption(opt){
     btnText='📩 生成正式报价方案';
     btnAction='submitAction';
     body=`<p class="sec-sub">我们将根据以下需求生成正式报价单和解决方案文档，请确认并补充联系方式</p>
-    <div class="quote-note"><b>需求摘要：</b><br>· 行业：${ind.icon} ${state.industry}<br>· 需求场景：${sceneList}<br>· 预算：${BUDGET_RANGES.find(b=>b.id===state.budget)?.range||'未选'}<br>· 痛点：${state.pains.join('、')||'未选'}</div>
+    <div class="quote-note"><b>需求摘要：</b><br>· 行业：${ind.icon} ${state.industry}<br>· 需求场景：${sceneText}<br>· 产品需求数：${state.productNeeds.length||'未选'}<br>· 业务场景数：${state.bizScenes.length||'未选'}</div>
     <div class="form-row"><div class="form-group"><label>公司名称 *</label><input id="optCompany" placeholder="请输入公司全称"></div><div class="form-group"><label>联系人 *</label><input id="optName" placeholder="请输入联系人姓名"></div></div>
     <div class="form-row"><div class="form-group"><label>手机号 *</label><input id="optPhone" type="tel" placeholder="请输入手机号"></div><div class="form-group"><label>邮箱</label><input id="optEmail" type="email" placeholder="请输入邮箱"></div></div>
     <div class="form-group"><label>补充说明</label><textarea id="optNote" placeholder="项目背景、特殊需求、时间要求...">${state.customPain||''}</textarea></div>`;
@@ -910,7 +1639,7 @@ function selectOption(opt){
     body=`<p class="sec-sub">我们的商务经理将尽快与您联系，请留下联系方式</p>
     <div class="form-row"><div class="form-group"><label>公司名称 *</label><input id="optCompany" placeholder="请输入公司全称"></div><div class="form-group"><label>联系人 *</label><input id="optName" placeholder="请输入联系人姓名"></div></div>
     <div class="form-row"><div class="form-group"><label>手机号 *</label><input id="optPhone" type="tel" placeholder="请输入手机号"></div><div class="form-group"><label>邮箱</label><input id="optEmail" type="email" placeholder="请输入邮箱"></div></div>
-    <div class="form-group"><label>感兴趣的产品/服务</label><textarea id="optNote" placeholder="请简述你关注的产品或服务...">${sceneList}</textarea></div>`;
+    <div class="form-group"><label>感兴趣的产品/服务</label><textarea id="optNote" placeholder="请简述你关注的产品或服务...">${sceneText}</textarea></div>`;
   }else if(opt==='communicate'){
     title='💬 进一步交流';
     btnText='💬 提交需求信息';
@@ -947,9 +1676,9 @@ function submitActionForm(opt){
   apiCall('POST','/api/leads',fd({
     company:c, contact:n, title:state.userInfo.title||'', email:document.getElementById('optEmail')?.value||'',
     phone:p, address:state.userInfo.address||'',
-    industry:state.industry, scenes:state.scenes.join(','), budget:state.budget||'',
-    pains:state.pains.join(','), custom_pain:state.customPain||'',
-    project_budget:info.budget||'', team_size:info.teamSize||'', languages:info.languages||'', timeline:info.timeline||'',
+    industry:state.industry, scenes:state.bizScenes.join(','), budget:'',
+    pains:'', custom_pain:state.customPain||'',
+    project_budget:info.budget||'', team_size:info.teamSize||'', languages:(info.languages||[]).join(','), timeline:info.timeline||'',
     type:opt, note:document.getElementById('optNote')?.value||''
   })).then(function(){
     const labels = {quote:'报价方案',contact:'销售联系',communicate:'需求交流',poc:'POC申请'};
@@ -958,7 +1687,7 @@ function submitActionForm(opt){
   }).catch(function(e){toast('提交失败: '+e.message,'error');});
 }
 function goStep(n){
-  state.step=n; if(n===0){state.industry=null;state.productNeeds=[];state.bizScenes=[];state.projectInfo={};state.selectedAdvantages=[];state.customPain='';}
+  state.step=n; if(n===0){state.industryL1=null;state.industry=null;state.productNeeds=[];state.bizScenes=[];state.projectInfo={};state.selectedAdvantages=[];state.customPain='';}
   state.products=[]; render(); window.scrollTo(0,0);
 }
 
@@ -994,17 +1723,7 @@ async function delUser(uid){
   await apiCall('DELETE','/api/admin/users/'+uid);
   toast('已删除');showAdmin();
 }
-function toggleScene(id){
-  const idx=state.scenes.indexOf(id);
-  if(idx>=0) state.scenes.splice(idx,1); else state.scenes.push(id);
-  render();
-}
-function togglePain(id){
-  const idx=state.pains.indexOf(id);
-  if(idx>=0) state.pains.splice(idx,1); else state.pains.push(id);
-  render();
-}
-function resetAll(){ state={step:0,userInfo:{company:'',address:'',contact:'',title:'',email:'',phone:''},industry:null,productNeeds:[],bizScenes:[],projectInfo:{scale:'',teamSize:'',languages:[],codeSize:'',focuses:[],replaceExisting:'',existingTool:''},selectedAdvantages:[],customPain:'',products:[]}; render(); }
+function resetAll(){ state={step:0,userInfo:{company:'',address:'',contact:'',title:'',email:'',phone:''},industry:null,industryL1:null,productNeeds:[],bizScenes:[],projectInfo:{scale:'',teamSize:'',languages:[],codeSize:'',focuses:[],replaceExisting:'',existingTool:''},selectedAdvantages:[],customPain:'',products:[]}; render(); }
 
 function toast(msg,t){let d=document.createElement('div');d.className='toast '+(t||'success');d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),3000);}
 
@@ -1017,6 +1736,8 @@ document.addEventListener('click', function(e){
   const savePain = el.getAttribute('data-savepain');
   if (action === 'saveUserInfo') saveUserInfo();
   else if (action === 'saveProjectInfo') saveProjectInfo();
+  else if (action === 'selectIndustryL1') selectIndustryL1(param);
+  else if (action === 'backToIndustryL1') backToIndustryL1();
   else if (action === 'selectIndustry') selectIndustry(param);
   else if (action === 'toggleProductNeed') toggleProductNeed(param);
   else if (action === 'toggleBizScene') toggleBizScene(param);
@@ -1029,24 +1750,9 @@ document.addEventListener('click', function(e){
     goStep(parseInt(param));
   }
   else if (action === 'resetAll') resetAll();
-  else if (action === 'submitQuote') submitQuote();
   else if (action === 'selectOption') selectOption(param);
   else if (action === 'submitAction') submitActionForm(param);
 });
-
-function submitQuote(){
-  const c=document.getElementById('fCompany')?.value.trim();
-  const n=document.getElementById('fName')?.value.trim();
-  const p=document.getElementById('fPhone')?.value.trim();
-  if(!c||!n||!p){toast('请填写公司名称、联系人和手机号','error');return}
-  const servicePriceMap={s1:'代码审计2万/次',s2:'固件测试1万/次',s3:'开源合规5万/次'};
-  const svcs=state.scenes.filter(s=>servicePriceMap[s]).map(s=>servicePriceMap[s]);
-  const data={company:c,name:n,phone:p,email:document.getElementById('fEmail')?.value.trim()||'',note:document.getElementById('fNote')?.value.trim()||'',industry:state.industry,scenes:state.scenes,services:svcs,budget:state.budget,pains:state.pains,customPain:state.customPain,deploy:state.deploy,time:new Date().toLocaleString('zh-CN')};
-  const leads=JSON.parse(localStorage.getItem('ruanan_leads')||'[]');leads.push(data);localStorage.setItem('ruanan_leads',JSON.stringify(leads));
-  console.log('选型提交:',data);
-  toast('✅ 方案已提交！商务经理将在1个工作日内联系您');
-  setTimeout(()=>resetAll(),2000);
-}
 
 // Auto login
 if(authToken){

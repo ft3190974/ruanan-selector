@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+
+# Database (contains user data)
+selector.db
+
+# Backups and temp
+*.bak
+temp-repo/
+.hyperframes_*
+
+# IDE / OS
+.DS_Store
+.vscode/
+
+# Large media / vendor materials
+*.mp4
+*.pptx
+*.pdf
+AI安全防护产品介绍/
+下载/
+桌面3/
+桌面4/
+软安/
+
+# Other Excel files (not the knowledge base)
+选型助手_场景与优势关联表.xlsx
+铁将军-软安服务报价单*.xlsx
+*.xlsx~
+~$*.xlsx
+
+# Scripts
+create_excel.js
+restructure_flow.js
+update_industries.js
