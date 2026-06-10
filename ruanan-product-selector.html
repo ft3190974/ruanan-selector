@@ -251,12 +251,20 @@ function showLogin(tab){
 	    h+='</div>';
 	    h+='<input id="captchaAnswer" type="text" placeholder="请输入验证码答案（数字）" style="margin-bottom:10px" onkeydown="if(event.key===\'Enter\')doLogin()">';
     h+='<div class="link" onclick="showLogin(\'register\')">没有账号？立即注册</div>';
+    h+='<div class="link" onclick="skipLogin()" style="color:#00B050;margin-top:4px">⚡ 免登录直接使用（公网版）</div>';
   }
   h+='<div class="err-msg" id="loginErr" style="text-align:center"></div>';
   document.getElementById('loginBox').innerHTML=h;
   if(tab==='login'){document.getElementById('loginUser').focus();refreshCaptcha();}
 }
 showLogin();
+
+function skipLogin(){
+  authUser={username:"guest",role:"guest"};
+  document.getElementById("loginOverlay").style.display="none";
+  updateUserUI();
+  render();
+}
 
 async function refreshCaptcha(){
   try{
