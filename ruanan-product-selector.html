@@ -375,16 +375,14 @@ const INDUSTRY_PRODUCT_MAP = {
  '教育':{primary:['SAST','SCA'],reason:'预算有限+LMS开源部署'},
 	 '汽车测评咨询机构':{primary:['SAST','SCA','FIRMWARE'],reason:'CNAS测评+UN R155合规检测+多品牌评估'},
 	 '军工测评机构':{primary:['SAST','FIRMWARE','AI_SAST'],reason:'GJB合规测评+涉密环境+遗留代码'},
-	 'GPU类半导体':{primary:['FIRMWARE','SAST','SCA'],reason:'GPU固件驱动+CUDA安全+AI计算完整性'},
-	 'SOC_MPU芯片':{primary:['FIRMWARE','SAST','SCA'],reason:'BootROM+多核异构+功能安全'},
-	 '存储半导体':{primary:['FIRMWARE','SAST'],reason:'FTL固件+SSD控制器+SED密码合规'},
-	 '消费金融行业':{primary:['SAST','SCA','LLM'],reason:'监管收紧+开源治理+AI安全'},
+	 '处理类芯片':{primary:['FIRMWARE','SAST','SCA'],reason:'GPU固件驱动+CUDA安全+AI计算完整性'},
+	 '系统类芯片':{primary:['FIRMWARE','SAST','SCA'],reason:'BootROM+多核异构+功能安全'},
+	 '存储芯片':{primary:['FIRMWARE','SAST'],reason:'FTL固件+SSD控制器+SED密码合规'},
 	 '电信运营商':{primary:['SAST','SCA','FIRMWARE'],reason:'关基保护+5G软件化+外包审计'},
 	 '央企集团':{primary:['SAST','SCA','AI_SAST'],reason:'信创替代+多业态+关基合规'},
-	 '网络设备行业':{primary:['FIRMWARE','SAST','SCA'],reason:'协议栈安全+固件+CRA/NDAA出口'},
 	 '云服务商':{primary:['SAST','SCA','LLM'],reason:'云原生安全+容器+多租户隔离'},
 	 '电商平台':{primary:['SAST','SCA'],reason:'迭代快+SDK供应链+个人信息保护'},
-	 'CNAS机构':{primary:['SAST','SCA','FIRMWARE'],reason:'认可检测+CMA/CNAS+标准化报告'},
+	 '测评/认证':{primary:['SAST','SCA','FIRMWARE'],reason:'认可检测+CMA/CNAS+标准化报告'},
 	 'IT咨询公司':{primary:['SAST','SCA','LLM'],reason:'多行业覆盖+标准化报告+合规咨询'},
 };
 
@@ -411,7 +409,6 @@ function computeRecommendations(){
   return ranked.slice(0,4);
 }
 
-
 // ═══ 产品库 =====
 const PRODUCTS = {
   SAST:{id:'SAST',name:'SAST 静态代码分析',brand:'静兮',icon:'🔍',category:'代码安全',desc:'基于AI引擎的新一代静态应用安全测试工具，AI SAST产品的核心底座',price:50,
@@ -433,51 +430,49 @@ const PRODUCTS = {
 
 // ===== 行业数据 =====
 const INDUSTRIES = {
-  汽车整车厂商:{icon:'🚗',reg:'UN R155/R156 · ISO/SAE 21434 · GB/T 44495 · ISO 26262 功能安全',pain:'整车厂商（OEM）严格审计Tier 1/2软件供应商，要求交付代码必须附带安全审计报告和SBOM。单辆高端车代码量超1亿行，需满足R155法规要求的全链路软件安全审计和OTA更新安全管理。ISO 26262对安全关键代码有功能安全验证强制要求。',rec:['SAST','SCA','FIRMWARE','AI_SAST']},
+  汽车整车厂商:{icon:'🚗',reg:'整车制造、整车测试、整车安全规划、整车研发安全管理等',pain:'整车厂商（OEM）严格审计Tier 1/2软件供应商，要求交付代码必须附带安全审计报告和SBOM。单辆高端车代码量超1亿行，需满足R155法规要求的全链路软件安全审计和OTA更新安全管理。ISO 26262对安全关键代码有功能安全验证强制要求。',rec:['SAST','SCA','FIRMWARE','AI_SAST']},
   芯片半导体:{icon:'🔲',reg:'密评 · GB/T 18336 · NIST FIPS 140',pain:'安全启动链验证链路长，RISC-V生态工具不成熟，芯片流片前需完成BootROM安全审计以避免不可修复的硬件漏洞。',rec:['FIRMWARE','SAST','SCA']},
-  消费电子:{icon:'📱',reg:'等保2.0 · 个人信息保护法 · CCC认证 · EU CRA',pain:'产品迭代周期短（2-4周），安全测试常被压缩。智能设备大量使用开源组件和第三方SDK，供应链透明度低，用户隐私泄露风险高。欧盟CRA要求提供SBOM和软件安全自评估，出口产品需满足CRA合规。',rec:['SAST','SCA','FIRMWARE']},
-  金融:{icon:'🏦',reg:'等保2.0三级 · JR/T 0071 · PCI DSS',pain:'监管对软件供应链安全要求持续收紧，开源组件漏洞（如Log4j）需72小时内完成应急响应。AI大模型应用激增，大模型安全成为新兴监管重点。',rec:['SAST','SCA','LLM']},
-  军工:{icon:'🛡️',reg:'GJB 8114/5369 · 涉密信息系统安全保密规定',pain:'必须完全离线部署，无法使用联网工具。大量90年代至今的遗留C/C++/汇编代码缺乏文档和测试，人工审计效率极低。国产化替代要求所有工具来自国内供应商。',rec:['SAST','FIRMWARE','AI_SAST']},
-  政府:{icon:'🏛️',reg:'等保2.0 · 关基保护条例 · 信创目录 · 供应链安全审查 · 大模型备案',pain:'信创环境安全工具匮乏，关基软件供应链需自主可控。政务系统大量依赖外包开发，需源码级安全审计。开源软件需满足供应链安全审查要求，AI大模型应用需完成安全评估和备案。',rec:['SAST','SCA','LLM']},
+  消费电子:{icon:'📱',reg:'手机、平台、手表等消费类电子产品等',pain:'产品迭代周期短（2-4周），安全测试常被压缩。智能设备大量使用开源组件和第三方SDK，供应链透明度低，用户隐私泄露风险高。欧盟CRA要求提供SBOM和软件安全自评估，出口产品需满足CRA合规。',rec:['SAST','SCA','FIRMWARE']},
+  金融:{icon:'🏦',reg:'银行、证券、基金、保险、消费金融、支付等',pain:'监管对软件供应链安全要求持续收紧，开源组件漏洞（如Log4j）需72小时内完成应急响应。AI大模型应用激增，大模型安全成为新兴监管重点。',rec:['SAST','SCA','LLM']},
+  军工:{icon:'🛡️',reg:'JF项目总集、数字化、测试部门、安全部门等',pain:'必须完全离线部署，无法使用联网工具。大量90年代至今的遗留C/C++/汇编代码缺乏文档和测试，人工审计效率极低。国产化替代要求所有工具来自国内供应商。',rec:['SAST','FIRMWARE','AI_SAST']},
+  政府:{icon:'🏛️',reg:'工信部相关、数管局、网信办相关、信息中心等',pain:'信创环境安全工具匮乏，关基软件供应链需自主可控。政务系统大量依赖外包开发，需源码级安全审计。开源软件需满足供应链安全审查要求，AI大模型应用需完成安全评估和备案。',rec:['SAST','SCA','LLM']},
   医疗设备:{icon:'🏥',reg:'医疗器械网络安全注册审查 · IEC 62304 · FDA 510(k)/PMA · 个人信息保护法',pain:'医疗器械软件（SaMD）注册需提供安全审计报告，固件涉及患者安全。FDA强制要求上市前提交软件安全验证证据，NMPA注册同样要求代码安全审查。开源组件（DICOM库、通信栈）使用普遍需合规管理。',rec:['SAST','SCA','FIRMWARE']},
 
-  汽车零部件厂商:{icon:'🔧',reg:'UN R155/R156 · ISO/SAE 21434 · ASPICE · GB 44495',pain:'Tier1/2供应商需通过OEM的严格软件安全审计，交付代码须附带SAST报告和SBOM。ASPICE认证要求软件工程过程合规，供应链准入压力大，需同时满足多家OEM的不同安全要求。',rec:['SAST','SCA','FIRMWARE']},
-  安防设备:{icon:'📹',reg:'等保2.0 · GB 35114 · CCC认证 · EU CRA · GDPR · NDAA',pain:'安防摄像头/NVR/门禁等设备固件安全参差不齐，视频数据涉及个人隐私和国家安全。GB 35114对视频监控系统有网络安全强制要求，海外市场需满足CRA和NDAA合规。设备量大面广，供应链组件复用度高，单个漏洞可影响海量设备。',rec:['FIRMWARE','SAST','SCA']},
-  船舶:{icon:'🚢',reg:'IACS UR E26/E27 · CCS/DNV/Lloyd规范 · IMO海事网络安全 · 等保2.0',pain:'船舶智能化趋势下，导航/动力/通信等关键系统软件安全要求快速提升。IACS UR E26/E27对船舶网络韧性提出强制要求，船级社入级检验需提交软件安全证据。大量OT/IT融合系统需安全审计，供应链涉及全球数百家设备供应商。',rec:['SAST','SCA','FIRMWARE']},  教育:{icon:'🎓',reg:'等保2.0 · 教育App备案管理办法',pain:'安全投入预算有限，但涉及大量学生个人信息。开源学习管理系统（Moodle等）部署广泛，需要高性价比的安全方案。',rec:['SAST','SCA']},
-  电子通信:{icon:'📡',reg:'3GPP SECAM · 关基保护条例 · 商用密码应用',pain:'5G网络设备软件化趋势下，基站和核心网设备固件/软件安全审计需求激增。通信设备供应链涉及全球数百家供应商，需满足运营商准入要求。',rec:['FIRMWARE','SAST','SCA']},
+  汽车零部件厂商:{icon:'🔧',reg:'智能座舱、自动驾驶、BMS、TBOX、车规级芯片、汽车零部件、域控、MCU等',pain:'Tier1/2供应商需通过OEM的严格软件安全审计，交付代码须附带SAST报告和SBOM。ASPICE认证要求软件工程过程合规，供应链准入压力大，需同时满足多家OEM的不同安全要求。',rec:['SAST','SCA','FIRMWARE']},
+  安防设备:{icon:'📹',reg:'摄像头、智慧城市安防相关等',pain:'安防摄像头/NVR/门禁等设备固件安全参差不齐，视频数据涉及个人隐私和国家安全。GB 35114对视频监控系统有网络安全强制要求，海外市场需满足CRA和NDAA合规。设备量大面广，供应链组件复用度高，单个漏洞可影响海量设备。',rec:['FIRMWARE','SAST','SCA']},
+  船舶:{icon:'🚢',reg:'IACS UR E26/E27 · CCS/DNV/Lloyd规范 · IMO海事网络安全 · 等保2.0',pain:'船舶智能化趋势下，导航/动力/通信等关键系统软件安全要求快速提升。IACS UR E26/E27对船舶网络韧性提出强制要求，船级社入级检验需提交软件安全证据。大量OT/IT融合系统需安全审计，供应链涉及全球数百家设备供应商。',rec:['SAST','SCA','FIRMWARE']},  教育:{icon:'🎓',reg:'大学实验室共创、学校信息中心、现代学院课程合作、课题研究、安全课题分包等',pain:'安全投入预算有限，但涉及大量学生个人信息。开源学习管理系统（Moodle等）部署广泛，需要高性价比的安全方案。',rec:['SAST','SCA']},
+  电子通信:{icon:'📡',reg:'物联网、通信设备、网络设备、安全软件等',pain:'5G网络设备软件化趋势下，基站和核心网设备固件/软件安全审计需求激增。通信设备供应链涉及全球数百家供应商，需满足运营商准入要求。',rec:['FIRMWARE','SAST','SCA']},
   信创软件:{icon:'🇨🇳',reg:'信创目录 · 等保2.0 · 关基保护条例 · 密码法',pain:'国产化替代要求全链路自主可控，信创环境（国产CPU+OS）安全工具匮乏。需满足密码法和关基合规审计，大量迁移代码需要安全评估。',rec:['SAST','SCA','AI_SAST']},
-  具身智能:{icon:'🦾',reg:'EU CRA · 等保2.0 · 生成式AI管理办法 · ISO 26262 功能安全',pain:'具身智能设备集成了大模型推理、多模态感知、运动控制等，软硬件栈复杂。需满足欧盟CRA（网络韧性法案）网络安全要求，功能安全（如ISO 26262导出的SOTIF）对AI决策安全有严格标准。AI模型安全和嵌入式固件安全风险并存。',rec:['FIRMWARE','LLM','SAST']},
-  低空经济:{icon:'🛩️',reg:'民航适航审定 · DO-178C · UN R155 · 等保2.0',pain:'无人机和eVTOL等低空飞行器涉及飞行控制、通信导航、避障系统等安全关键软件，需满足适航软件安全标准。固件和通讯协议安全要求极高。',rec:['SAST','FIRMWARE','SCA']},
-  能源:{icon:'⚡',reg:'等保2.0 · 关基保护条例 · 电力监控系统安全防护 · NERC CIP',pain:'电力、石油、新能源等能源关键基础设施面临高级威胁，SCADA/ICS系统安全漏洞频发。电力监控系统需满足16号令要求，新能源电站软件供应链缺乏统一安全标准。',rec:['SAST','SCA','FIRMWARE']},
-  游戏互联网:{icon:'🎮',reg:'等保2.0 · 个人信息保护法 · 未成年人网络保护 · EU CRA · GDPR',pain:'游戏引擎和客户端代码量大、迭代快、外挂和逆向分析风险高。服务端涉及大量用户数据和支付信息，第三方SDK和开源组件使用广泛。欧盟CRA要求出口游戏/应用提供SBOM和软件安全声明，安全合规压力大。',rec:['SAST','SCA']},
+  具身智能:{icon:'🦾',reg:'工业机器人、人形机器人、环卫机器人等',pain:'具身智能设备集成了大模型推理、多模态感知、运动控制等，软硬件栈复杂。需满足欧盟CRA（网络韧性法案）网络安全要求，功能安全（如ISO 26262导出的SOTIF）对AI决策安全有严格标准。AI模型安全和嵌入式固件安全风险并存。',rec:['FIRMWARE','LLM','SAST']},
+  低空经济:{icon:'🛩️',reg:'无人机、载人飞机、飞行器等',pain:'无人机和eVTOL等低空飞行器涉及飞行控制、通信导航、避障系统等安全关键软件，需满足适航软件安全标准。固件和通讯协议安全要求极高。',rec:['SAST','FIRMWARE','SCA']},
+  能源:{icon:'⚡',reg:'石油石化、电力电网、运输、航空等',pain:'电力、石油、新能源等能源关键基础设施面临高级威胁，SCADA/ICS系统安全漏洞频发。电力监控系统需满足16号令要求，新能源电站软件供应链缺乏统一安全标准。',rec:['SAST','SCA','FIRMWARE']},
+  游戏互联网:{icon:'🎮',reg:'游戏制作公司、游戏运营公司等',pain:'游戏引擎和客户端代码量大、迭代快、外挂和逆向分析风险高。服务端涉及大量用户数据和支付信息，第三方SDK和开源组件使用广泛。欧盟CRA要求出口游戏/应用提供SBOM和软件安全声明，安全合规压力大。',rec:['SAST','SCA']},
   智能硬件:{icon:'🔀',reg:'等保2.0 · CCC认证 · EU CRA · 商用密码应用',pain:'充电宝、交换机、安防摄像头、路由器和各类智能终端固件安全参差不齐。物联网设备量大面广，供应链组件复用度高，单个漏洞可影响海量设备。欧盟CRA要求物联网/智能硬件出口需提供完整SBOM和网络安全声明，固件级安全审计成为准入门槛。',rec:['FIRMWARE','SAST','SCA']},
 	  // ── 新增L2子行业 ──
-	  汽车测评咨询机构:{icon:'📋',reg:'UN R155/R156 · ISO/SAE 21434 · CNAS-CL01 · GB/T 44495',pain:'汽车测评和咨询机构需要为客户提供标准化的软件安全检测报告，需满足CNAS认可要求。测评方法需覆盖UN R155和ISO 21434合规检测，对多品牌多车型的软件安全进行横向对比评估。咨询项目需要深度行业经验和案例支撑。',rec:['SAST','SCA','FIRMWARE']},
-	  军工测评机构:{icon:'🔬',reg:'GJB 8114/5369 · 涉密信息系统安全保密规定 · CNAS-CL01',pain:'军工软件测评机构需要满足GJB标准的软件安全检测能力，全部检测必须在涉密离线环境中完成。需具备对C/C++遗留代码的自动化分析能力，以及国产化环境的适配要求。检测报告需满足军代表和装备机关的审查标准。',rec:['SAST','FIRMWARE','AI_SAST']},
-	  GPU类半导体:{icon:'🎮',reg:'密评 · GB/T 18336 · NIST FIPS 140 · EU CRA',pain:'GPU芯片固件和驱动代码量极大，涉及CUDA/OpenCL等并行计算框架。AI训练和推理场景下的GPU软件栈安全审计需求激增，包括GPU驱动安全、显存数据保护和AI计算完整性。GPU固件安全启动和可信执行环境(TEE)是新兴安全需求。',rec:['FIRMWARE','SAST','SCA']},
-	  SOC_MPU芯片:{icon:'💻',reg:'密评 · GB/T 18336 · ISO 26262 · IEC 62443',pain:'SoC/MPU芯片集成了CPU、GPU、NPU、DSP等多种处理单元，软件栈极其复杂。车载SoC需满足ISO 26262功能安全要求，工业MPU需满足IEC 62443安全标准。芯片流片前的BootROM和固件安全审计至关重要，一旦流片后发现问题无法修复。',rec:['FIRMWARE','SAST','SCA']},
-	  存储半导体:{icon:'💾',reg:'密评 · GB/T 18336 · NIST SP 800-53 · 等保2.0',pain:'存储芯片固件（FTL/控制器）安全直接影响数据机密性和完整性。SSD控制器固件复杂度持续增长，需防范固件级后门和数据泄露。自加密驱动器(SED)的密码模块实现需满足FIPS 140合规。存储供应链安全需审计第三方固件组件。',rec:['FIRMWARE','SAST']},
-	  消费金融行业:{icon:'💳',reg:'等保2.0三级 · JR/T 0171 · PCI DSS · 个人金融信息保护',pain:'消费金融业务涉及大量个人借贷和信用数据，监管对数据安全和隐私保护要求极高。线上业务迭代快，第三方SDK和开源组件使用广泛，供应链安全风险突出。互联网小贷和消费分期业务需满足金融监管的软件安全审查要求。',rec:['SAST','SCA','LLM']},
-	  电信运营商:{icon:'📡',reg:'等保2.0 · 关基保护条例 · 电信条例 · 3GPP SECAM',pain:'电信运营商作为关键信息基础设施运营者，面临国家级网络威胁。5G网络软件化和虚拟化趋势下，核心网软件安全审计需求激增。OSS/BSS系统大量依赖外包开发，需源码级安全审查。需满足工信部网络安全考核和关基保护合规要求。',rec:['SAST','SCA','FIRMWARE']},
-	  央企集团:{icon:'🏢',reg:'等保2.0 · 关基保护条例 · 信创目录 · 密码法 · 数据安全法',pain:'央企集团业务多元、层级复杂，IT系统数量庞大且安全水平参差不齐。关基保护条例要求软件供应链自主可控，信创替代过程中大量迁移代码需安全评估。集团统一采购的安全工具需满足多业态需求，从能源到制造到金融全覆盖。',rec:['SAST','SCA','AI_SAST']},
-	  网络设备行业:{icon:'🌐',reg:'等保2.0 · 关基保护条例 · 商用密码应用 · EU CRA · NDAA',pain:'交换机/路由器/网关等网络设备固件安全是网络基础设施的基石。设备涉及大量通信协议栈和加密实现，需满足3GPP/IEEE等国际标准和国内密评要求。海外市场需同时满足CRA和NDAA合规，固件级安全审计和SBOM成为出口准入门槛。',rec:['FIRMWARE','SAST','SCA']},
-	  云服务商:{icon:'☁️',reg:'等保2.0三级 · 关基保护条例 · 云计算服务安全评估 · GDPR',pain:'云服务商需满足云计算服务安全评估要求，平台软件的供应链安全直接影响租户安全。容器、K8s、微服务等云原生技术的安全治理复杂度高。多租户环境下的代码安全审计和数据隔离验证是监管关注重点。',rec:['SAST','SCA','LLM']},
-	  电商平台:{icon:'🛒',reg:'等保2.0 · 个人信息保护法 · 电子商务法 · GDPR · PCI DSS',pain:'电商平台代码量极大、迭代极快、涉及大量用户数据和支付信息。促销期间系统稳定性压力大，安全漏洞可能造成大规模数据泄露。第三方插件/SDK众多，供应链安全治理挑战大。需同时满足国内个人信息保护和海外GDPR合规。',rec:['SAST','SCA']},
-	  CNAS机构:{icon:'🏅',reg:'CNAS-CL01 · CNAS-CL45 · ISO/IEC 17025 · GB/T 25000.51',pain:'CNAS认可检测机构需要具备标准化、可复现的软件安全检测能力，检测方法和工具需经过能力验证。检测报告需满足CMA和CNAS双重要求，作为司法鉴定和监管采信的依据。对检测工具的技术能力和报告规范有极高要求。',rec:['SAST','SCA','FIRMWARE']},
-	  IT咨询公司:{icon:'💼',reg:'ISO 27001 · 等保2.0 · 关基保护条例 · 个人信息保护法',pain:'IT咨询公司为客户提供安全评估和合规咨询服务，需要专业的安全检测工具作为能力支撑。咨询项目要求输出标准化、客户可理解的安全报告。需要覆盖多个行业和法规体系的安全检测能力，从金融到制造到政府。',rec:['SAST','SCA','LLM']},
+	  汽车测评咨询机构:{icon:'📋',reg:'汽车测试外包、测试认证、测试委外、汽车研发合规咨询、汽车安全测试咨询等',pain:'汽车测评和咨询机构需要为客户提供标准化的软件安全检测报告，需满足CNAS认可要求。测评方法需覆盖UN R155和ISO 21434合规检测，对多品牌多车型的软件安全进行横向对比评估。咨询项目需要深度行业经验和案例支撑。',rec:['SAST','SCA','FIRMWARE']},
+	  军工测评机构:{icon:'🔬',reg:'JS测评认证机构、测评认证机构（军民融合）等',pain:'军工软件测评机构需要满足GJB标准的软件安全检测能力，全部检测必须在涉密离线环境中完成。需具备对C/C++遗留代码的自动化分析能力，以及国产化环境的适配要求。检测报告需满足军代表和装备机关的审查标准。',rec:['SAST','FIRMWARE','AI_SAST']},
+	  处理类芯片:{icon:'🎮',reg:'密评 · GB/T 18336 · NIST FIPS 140 · EU CRA',pain:'GPU芯片固件和驱动代码量极大，涉及CUDA/OpenCL等并行计算框架。AI训练和推理场景下的GPU软件栈安全审计需求激增，包括GPU驱动安全、显存数据保护和AI计算完整性。GPU固件安全启动和可信执行环境(TEE)是新兴安全需求。',rec:['FIRMWARE','SAST','SCA']},
+	  系统类芯片:{icon:'💻',reg:'密评 · GB/T 18336 · ISO 26262 · IEC 62443',pain:'SoC/MPU芯片集成了CPU、GPU、NPU、DSP等多种处理单元，软件栈极其复杂。车载SoC需满足ISO 26262功能安全要求，工业MPU需满足IEC 62443安全标准。芯片流片前的BootROM和固件安全审计至关重要，一旦流片后发现问题无法修复。',rec:['FIRMWARE','SAST','SCA']},
+	  存储芯片:{icon:'💾',reg:'密评 · GB/T 18336 · NIST SP 800-53 · 等保2.0',pain:'存储芯片固件（FTL/控制器）安全直接影响数据机密性和完整性。SSD控制器固件复杂度持续增长，需防范固件级后门和数据泄露。自加密驱动器(SED)的密码模块实现需满足FIPS 140合规。存储供应链安全需审计第三方固件组件。',rec:['FIRMWARE','SAST']},
+	  电信运营商:{icon:'📡',reg:'三大运营商总部、铁塔、运营商项目总集等',pain:'电信运营商作为关键信息基础设施运营者，面临国家级网络威胁。5G网络软件化和虚拟化趋势下，核心网软件安全审计需求激增。OSS/BSS系统大量依赖外包开发，需源码级安全审查。需满足工信部网络安全考核和关基保护合规要求。',rec:['SAST','SCA','FIRMWARE']},
+	  央企集团:{icon:'🏢',reg:'央企数科公司、国企信息中心、国企工程公司、国央企IT运营公司等',pain:'央企集团业务多元、层级复杂，IT系统数量庞大且安全水平参差不齐。关基保护条例要求软件供应链自主可控，信创替代过程中大量迁移代码需安全评估。集团统一采购的安全工具需满足多业态需求，从能源到制造到金融全覆盖。',rec:['SAST','SCA','AI_SAST']},
+	  云服务商:{icon:'☁️',reg:'云计算厂家、云计算运营公司、云计算操作系统制作商等',pain:'云服务商需满足云计算服务安全评估要求，平台软件的供应链安全直接影响租户安全。容器、K8s、微服务等云原生技术的安全治理复杂度高。多租户环境下的代码安全审计和数据隔离验证是监管关注重点。',rec:['SAST','SCA','LLM']},
+	  电商平台:{icon:'🛒',reg:'电商平台、电商软件供应商等',pain:'电商平台代码量极大、迭代极快、涉及大量用户数据和支付信息。促销期间系统稳定性压力大，安全漏洞可能造成大规模数据泄露。第三方插件/SDK众多，供应链安全治理挑战大。需同时满足国内个人信息保护和海外GDPR合规。',rec:['SAST','SCA']},
+	  '测评测评/认证:{认证':{icon:'🏅',reg:'CNAS-CL01 · CNAS-CL45 · ISO/IEC 17025 · GB/T 25000.51',pain:'CNAS认可检测机构需要具备标准化、可复现的软件安全检测能力，检测方法和工具需经过能力验证。检测报告需满足CMA和CNAS双重要求，作为司法鉴定和监管采信的依据。对检测工具的技术能力和报告规范有极高要求。',rec:['SAST','SCA','FIRMWARE']},
+	  IT咨询公司:{icon:'💼',reg:'信息安全咨询、软件安全咨询、出海合规咨询等',pain:'IT咨询公司为客户提供安全评估和合规咨询服务，需要专业的安全检测工具作为能力支撑。咨询项目要求输出标准化、客户可理解的安全报告。需要覆盖多个行业和法规体系的安全检测能力，从金融到制造到政府。',rec:['SAST','SCA','LLM']},
 };
 
 // ===== 行业层级映射: 1级 → 2级子行业 =====
 const INDUSTRY_LEVELS = {
   '汽车行业':{icon:'🚗',desc:'整车制造、供应链及测评咨询',children:[{key:'汽车整车厂商',name:'整车厂商'},{key:'汽车零部件厂商',name:'汽车供应链行业'},{key:'汽车测评咨询机构',name:'汽车测评/咨询机构'}]},
   '军工行业':{icon:'🛡️',desc:'军工客户与测评机构',children:[{key:'军工',name:'军工客户'},{key:'军工测评机构',name:'军工测评机构'}]},
-  '智能设备行业':{icon:'📱',desc:'通信、消费、机器人、无人机、安防、网络',children:[{key:'电子通信',name:'电子通信行业'},{key:'消费电子',name:'消费电子行业'},{key:'具身智能',name:'具身智能行业'},{key:'低空经济',name:'低空经济行业'},{key:'安防设备',name:'安防行业'},{key:'网络设备行业',name:'网络设备行业'}]},
-  '芯片半导体行业':{icon:'🔲',desc:'GPU、SoC/MPU、存储',children:[{key:'GPU类半导体',name:'GPU类半导体'},{key:'SOC_MPU芯片',name:'SOC/MPU芯片'},{key:'存储半导体',name:'存储半导体'}]},
-  '金融行业':{icon:'🏦',desc:'金融科技与消费金融',children:[{key:'金融',name:'金融科技行业'},{key:'消费金融行业',name:'消费金融行业'}]},
+  '智能设备行业':{icon:'📱',desc:'通信、消费、机器人、无人机、安防、网络',children:[{key:'电子通信',name:'电子通信行业'},{key:'消费电子',name:'消费电子行业'},{key:'具身智能',name:'具身智能行业'},{key:'低空经济',name:'低空经济行业'},{key:'安防设备',name:'安防行业'},]},
+  '芯片半导体行业':{icon:'🔲',desc:'GPU、SoC/MPU、存储',children:[{key:'处理类芯片',name:'数字计算芯片'},{key:'系统类芯片',name:'数字复合芯片'},{key:'存储芯片',name:'存储数据电子元器件'}]},
+  '金融行业':{icon:'🏦',desc:'金融科技与消费金融',children:[{key:'金融',name:'金融科技行业'},]},
   '政教行业':{icon:'🏛️',desc:'政府与高等教育',children:[{key:'政府',name:'政府行业'},{key:'教育',name:'高等教育行业'}]},
   '国央企行业':{icon:'🏭',desc:'电信、能源、央企集团',children:[{key:'电信运营商',name:'电信运营商'},{key:'能源',name:'能源行业'},{key:'央企集团',name:'央企集团'}]},
   '互联网行业':{icon:'🌐',desc:'游戏、云服务、电商',children:[{key:'游戏互联网',name:'游戏制作商'},{key:'云服务商',name:'云服务商'},{key:'电商平台',name:'电商平台'}]},
-  '测评认证/咨询机构':{icon:'📊',desc:'CNAS认可机构与IT咨询公司',children:[{key:'CNAS机构',name:'CNAS机构'},{key:'IT咨询公司',name:'IT咨询公司'}]},
+  '测评认证/咨询机构':{icon:'📊',desc:'CNAS认可机构与IT咨询公司',children:[{key:'测评/认证',name:'第三方测评/认证'},{key:'IT咨询公司',name:'IT咨询公司'}]},
 };
 
 // ===== State =====
@@ -547,7 +542,7 @@ function rStep1(){
       h+='<div class="ind-card'+(state.industry===child.key?' selected':'')+'" data-action="selectIndustry" data-param="'+child.key+'">';
       h+='<div class="ind-icon">'+indData.icon+'</div>';
       h+='<div class="ind-name">'+child.name+'</div>';
-      h+='<div class="ind-reg">'+indData.reg+'</div>';
+
       h+='</div>';
     }
     h+='</div></div>';
@@ -791,8 +786,6 @@ const INDUSTRY_SCENES = {
   '具身智能':{groups:[
     {title:'AI模型安全',icon:'🤖',items:[
       {id:'ea_a1',title:'提示注入检测',desc:'对具身智能设备的LLM推理接口进行提示注入检测',icon:'💉'},
-      {id:'ea_a2',title:'越狱与对齐测试',desc:'大模型越狱红队测试和安全对齐评估',icon:'🔓'},
-      {id:'ea_a3',title:'多模态感知安全',desc:'视觉/语音/触觉等多模态感知模型的安全鲁棒性',icon:'👁'},
       {id:'ea_a4',title:'模型数据泄露评估',desc:'模型训练数据和推理数据的隐私泄露检测',icon:'🔒'},
     ]},
     {title:'嵌入式系统安全',icon:'🔐',items:[
@@ -920,16 +913,14 @@ const SCENE_GROUP_PRODUCTS = {
   '教育':{'隐私与合规':['pn_t1','pn_t2'],'开源生态治理':['pn_t2']},
 	 '汽车测评咨询机构':{'法规合规测评':['pn_t1','pn_t2'],'供应链测评':['pn_t2','pn_t3'],'咨询支撑':['pn_t1','pn_t2']},
 	 '军工测评机构':{'军标合规测评':['pn_t1','pn_t3'],'遗留代码测评':['pn_t1','pn_t5']},
-	 'GPU类半导体':{'GPU固件安全':['pn_t3','pn_t1'],'密码与合规':['pn_t1','pn_t2']},
-	 'SOC_MPU芯片':{'流片前审计':['pn_t3','pn_t1'],'功能安全':['pn_t1']},
-	 '存储半导体':{'控制器固件安全':['pn_t3'],'数据安全合规':['pn_t1','pn_t2']},
-	 '消费金融行业':{'监管合规':['pn_t1','pn_t2'],'敏捷业务安全':['pn_t1','pn_t2','pn_t4']},
+	 '处理类芯片':{'GPU固件安全':['pn_t3','pn_t1'],'密码与合规':['pn_t1','pn_t2']},
+	 '系统类芯片':{'流片前审计':['pn_t3','pn_t1'],'功能安全':['pn_t1']},
+	 '存储芯片':{'控制器固件安全':['pn_t3'],'数据安全合规':['pn_t1','pn_t2']},
 	 '电信运营商':{'关基保护':['pn_t1','pn_t2'],'5G网络软件安全':['pn_t1','pn_t3']},
 	 '央企集团':{'信创合规':['pn_t1','pn_t2'],'多业态安全':['pn_t1','pn_t5']},
-	 '网络设备行业':{'设备固件安全':['pn_t3','pn_t1'],'协议与出口合规':['pn_t3','pn_t2']},
 	 '云服务商':{'云原生安全':['pn_t1','pn_t2'],'合规与隐私':['pn_t1','pn_t4']},
 	 '电商平台':{'数据安全与隐私':['pn_t1','pn_t2'],'大促安全':['pn_t1','pn_t2']},
-	 'CNAS机构':{'认可检测能力':['pn_t1','pn_t2'],'标准化报告':['pn_t1','pn_t2','pn_t3']},
+	 '测评/认证':{'认可检测能力':['pn_t1','pn_t2'],'标准化报告':['pn_t1','pn_t2','pn_t3']},
 	 'IT咨询公司':{'咨询服务能力':['pn_t1','pn_t2'],'多行业覆盖':['pn_t1','pn_t2','pn_t4']},
 
   // ── 新增L2行业场景（复用相似行业场景数据） ──
@@ -962,7 +953,7 @@ const SCENE_GROUP_PRODUCTS = {
       {id:'mt_l2',title:'国产化适配测评',desc:'对国产化环境（CPU+OS）的软件安全测评',icon:'🇨🇳'},
     ]},
   ]},
-  'GPU类半导体':{groups:[
+  '处理类芯片':{groups:[
     {title:'GPU固件安全',icon:'🎮',items:[
       {id:'gpu_f1',title:'GPU固件审计',desc:'GPU固件的安全启动链和代码安全审计',icon:'🔐'},
       {id:'gpu_f2',title:'GPU驱动安全',desc:'CUDA/OpenCL驱动代码的安全检测',icon:'🔍'},
@@ -974,7 +965,7 @@ const SCENE_GROUP_PRODUCTS = {
       {id:'gpu_p2',title:'商用密码密评',desc:'GPU密码实现的国密评估',icon:'🇨🇳'},
     ]},
   ]},
-  'SOC_MPU芯片':{groups:[
+  '系统类芯片':{groups:[
     {title:'流片前审计',icon:'💻',items:[
       {id:'soc_f1',title:'BootROM安全审计',desc:'SoC/MPU芯片BootROM代码的流片前安全审计',icon:'🔐'},
       {id:'soc_f2',title:'固件安全检测',desc:'SoC固件/Firmware的漏洞挖掘与合规检测',icon:'🔍'},
@@ -986,7 +977,7 @@ const SCENE_GROUP_PRODUCTS = {
       {id:'soc_a2',title:'IEC 62443 安全',desc:'工业MPU的IEC 62443安全标准合规',icon:'🏭'},
     ]},
   ]},
-  '存储半导体':{groups:[
+  '存储芯片':{groups:[
     {title:'控制器固件安全',icon:'💾',items:[
       {id:'st_f1',title:'FTL固件审计',desc:'存储控制器FTL固件的安全审计',icon:'🔍'},
       {id:'st_f2',title:'SSD控制器安全',desc:'SSD控制器固件的漏洞挖掘和安全检测',icon:'🔐'},
@@ -995,18 +986,6 @@ const SCENE_GROUP_PRODUCTS = {
     {title:'数据安全合规',icon:'🔒',items:[
       {id:'st_d1',title:'SED密码合规',desc:'自加密驱动器的FIPS 140密码合规检测',icon:'🔑'},
       {id:'st_d2',title:'供应链安全审计',desc:'存储供应链中第三方固件组件的安全审计',icon:'📦'},
-    ]},
-  ]},
-  '消费金融行业':{groups:[
-    {title:'监管合规',icon:'💳',items:[
-      {id:'cf_c1',title:'JR/T 0171 个金保护',desc:'满足个人金融信息保护技术规范的合规检测',icon:'📜'},
-      {id:'cf_c2',title:'PCI DSS 支付安全',desc:'消费金融支付卡数据安全的代码合规审计',icon:'💳'},
-      {id:'cf_c3',title:'等保2.0三级',desc:'消费金融系统网络安全等级保护合规',icon:'🛡'},
-    ]},
-    {title:'敏捷业务安全',icon:'🔄',items:[
-      {id:'cf_d1',title:'快速迭代安全检测',desc:'消费分期/小贷业务的快速迭代自动化安全检测',icon:'⚡'},
-      {id:'cf_d2',title:'第三方SDK审查',desc:'消费金融应用中第三方SDK的安全审查',icon:'🧩'},
-      {id:'cf_d3',title:'开源组件治理',desc:'消费金融系统中开源组件的漏洞和许可管理',icon:'📦'},
     ]},
   ]},
   '电信运营商':{groups:[
@@ -1033,18 +1012,6 @@ const SCENE_GROUP_PRODUCTS = {
       {id:'sg_m3',title:'集团供应链治理',desc:'集团统一的开源组件供应链安全治理',icon:'📦'},
     ]},
   ]},
-  '网络设备行业':{groups:[
-    {title:'设备固件安全',icon:'🌐',items:[
-      {id:'ne_f1',title:'交换机固件审计',desc:'交换机操作系统软件的代码级安全审计',icon:'🔀'},
-      {id:'ne_f2',title:'路由器固件测试',desc:'路由器固件的安全分析和漏洞检测',icon:'📻'},
-      {id:'ne_f3',title:'安全启动验证',desc:'网络设备安全启动链的完整性验证',icon:'🔗'},
-    ]},
-    {title:'协议与出口合规',icon:'📡',items:[
-      {id:'ne_p1',title:'通信协议Fuzz',desc:'网络设备通信协议栈的模糊测试',icon:'🎯'},
-      {id:'ne_p2',title:'CRA/NDAA双合规',desc:'同时满足欧盟CRA和美国NDAA的出口合规',icon:'🌍'},
-      {id:'ne_p3',title:'密评合规检测',desc:'网络设备中密码算法的国密合规检测',icon:'🔑'},
-    ]},
-  ]},
   '云服务商':{groups:[
     {title:'云原生安全',icon:'☁️',items:[
       {id:'cs_n1',title:'容器安全检测',desc:'容器镜像和编排配置的代码安全检测',icon:'📦'},
@@ -1069,7 +1036,7 @@ const SCENE_GROUP_PRODUCTS = {
       {id:'ep_s3',title:'供应链组件管理',desc:'电商系统中开源组件的漏洞和许可证管理',icon:'📦'},
     ]},
   ]},
-  'CNAS机构':{groups:[
+  '测评/认证':{groups:[
     {title:'认可检测能力',icon:'🏅',items:[
       {id:'cn_c1',title:'CNAS-CL01 检测能力',desc:'满足CNAS-CL01认可准则的软件安全检测能力',icon:'📋'},
       {id:'cn_c2',title:'CNAS-CL45 软件检测',desc:'满足CNAS-CL45软件检测领域的认可要求',icon:'💻'},
@@ -1192,7 +1159,6 @@ function rStep4(){
   return h;
 }
 function toggleReplaceInput(){var v=document.getElementById('pReplace').value;document.getElementById('replaceInput').style.display=v==='是'?'block':'none';}
-
 
 // ===== Step 5: 需求确认 =====
 function rStep5(){
@@ -1349,21 +1315,17 @@ function generateAdvantages(){
     advantages.push({id:'a_ind42',product:'行业',title:'GJB合规测评',desc:'满足GJB 8114/5369的军工软件安全测评标准，涉密离线部署',icon:'🔬'});
     advantages.push({id:'a_ind43',product:'行业',title:'军代表审查支撑',desc:'提供满足军代表和装备机关审查要求的标准化测评报告',icon:'📏'});
   }
-  if(ind==='GPU类半导体'){
+  if(ind==='处理类芯片'){
     advantages.push({id:'a_ind44',product:'行业',title:'GPU固件安全',desc:'GPU固件/驱动的深度安全分析，覆盖CUDA/OpenCL框架',icon:'🎮'});
     advantages.push({id:'a_ind45',product:'行业',title:'AI计算完整性',desc:'GPU AI训练和推理场景下的计算完整性和数据保护',icon:'🤖'});
   }
-  if(ind==='SOC_MPU芯片'){
+  if(ind==='系统类芯片'){
     advantages.push({id:'a_ind46',product:'行业',title:'多核异构安全',desc:'SoC/MPU多处理单元(CPU/GPU/NPU/DSP)的全面软件安全审计',icon:'💻'});
     advantages.push({id:'a_ind47',product:'行业',title:'车载SoC功能安全',desc:'满足ISO 26262功能安全的车载SoC代码安全验证',icon:'⚡'});
   }
-  if(ind==='存储半导体'){
+  if(ind==='存储芯片'){
     advantages.push({id:'a_ind48',product:'行业',title:'FTL固件安全',desc:'存储控制器固件(FTL)的深度安全审计和漏洞挖掘',icon:'💾'});
     advantages.push({id:'a_ind49',product:'行业',title:'SED密码合规',desc:'自加密驱动器(SED)的FIPS 140密码模块合规检测',icon:'🔑'});
-  }
-  if(ind==='消费金融行业'){
-    advantages.push({id:'a_ind50',product:'行业',title:'个人金融信息保护',desc:'满足个人金融信息保护法的软件隐私合规检测',icon:'💳'});
-    advantages.push({id:'a_ind51',product:'行业',title:'敏捷业务安全',desc:'互联网小贷和消费分期业务的快速迭代安全方案',icon:'🔄'});
   }
   if(ind==='电信运营商'){
     advantages.push({id:'a_ind52',product:'行业',title:'关基保护合规',desc:'满足关键信息基础设施保护条例的软件供应链安全审查',icon:'📡'});
@@ -1373,10 +1335,6 @@ function generateAdvantages(){
     advantages.push({id:'a_ind54',product:'行业',title:'多业态全覆盖',desc:'覆盖能源/制造/金融/交通等多业态的统一安全检测平台',icon:'🏢'});
     advantages.push({id:'a_ind55',product:'行业',title:'信创替代安全',desc:'信创环境替代过程中大量迁移代码的安全评估',icon:'🇨🇳'});
   }
-  if(ind==='网络设备行业'){
-    advantages.push({id:'a_ind56',product:'行业',title:'协议栈安全审计',desc:'交换机/路由器等网络设备通信协议栈的深度安全检测',icon:'🌐'});
-    advantages.push({id:'a_ind57',product:'行业',title:'出口双合规',desc:'同时满足EU CRA和NDAA的固件安全出口合规要求',icon:'🌍'});
-  }
   if(ind==='云服务商'){
     advantages.push({id:'a_ind58',product:'行业',title:'云原生安全治理',desc:'容器/K8s/微服务等云原生技术的代码安全治理',icon:'☁️'});
     advantages.push({id:'a_ind59',product:'行业',title:'多租户安全隔离',desc:'多租户环境下的代码和数据安全隔离验证',icon:'🔒'});
@@ -1385,7 +1343,7 @@ function generateAdvantages(){
     advantages.push({id:'a_ind60',product:'行业',title:'大促安全护航',desc:'促销活动期间的大规模代码变更安全检测方案',icon:'🛒'});
     advantages.push({id:'a_ind61',product:'行业',title:'第三方SDK治理',desc:'电商平台大量第三方插件和SDK的安全审查',icon:'🧩'});
   }
-  if(ind==='CNAS机构'){
+  if(ind==='测评/认证'){
     advantages.push({id:'a_ind62',product:'行业',title:'CMA/CNAS双认可',desc:'满足CMA和CNAS双重要求的标准化软件安全检测能力',icon:'🏅'});
     advantages.push({id:'a_ind63',product:'行业',title:'司法采信级别报告',desc:'可作为司法鉴定和监管采信依据的专业安全检测报告',icon:'📜'});
   }
