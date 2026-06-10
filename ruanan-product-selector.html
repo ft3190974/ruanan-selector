@@ -187,9 +187,9 @@ body{background:linear-gradient(135deg,#f0f4f8 0%,#e8edf2 100%);min-height:100vh
   <div class="steps-bar">
     <div class="step-item"><div class="step-num" id="stepNum0">0</div>信息登记</div><span class="step-arrow" id="stepArr0">›</span><div class="step-item"><div class="step-num" id="stepNum1">1</div>选择行业</div>
     <span class="step-arrow" id="stepArr1">›</span>
-    <div class="step-item"><div class="step-num" id="stepNum2">2</div>产品需求</div>
+    <div class="step-item"><div class="step-num" id="stepNum2">2</div>业务场景</div>
     <span class="step-arrow" id="stepArr2">›</span>
-    <div class="step-item"><div class="step-num" id="stepNum3">3</div>业务场景</div>
+    <div class="step-item"><div class="step-num" id="stepNum3">3</div>产品需求</div>
     <span class="step-arrow" id="stepArr3">›</span>
     <div class="step-item"><div class="step-num" id="stepNum4">4</div>项目信息</div>
     <span class="step-arrow" id="stepArr4">›</span>
@@ -485,8 +485,8 @@ function render(){
   updateUI();
   if(step===0) app.innerHTML = rStep0();
   else if(step===1) app.innerHTML = rStep1();
-  else if(step===2) app.innerHTML = rStep2();
-  else if(step===3) app.innerHTML = rStep3();
+  else if(step===2) app.innerHTML = rStep3();
+  else if(step===3) app.innerHTML = rStep2();
   else if(step===4) app.innerHTML = rStep4();
   else if(step===5) app.innerHTML = rStep5();
   else if(step===6) app.innerHTML = rStep7();
@@ -557,7 +557,7 @@ function rStep1(){
     h+='<div style="display:flex;gap:12px;justify-content:center;margin-top:16px">';
     h+='<button class="btn btn-outline btn-lg" data-action="backToIndustryL1">← 返回一级行业</button>';
     if(state.industry){
-      h+='<button class="btn btn-primary btn-lg" data-action="goStep" data-param="2">下一步：选择需求场景 →</button>';
+      h+='<button class="btn btn-primary btn-lg" data-action="goStep" data-param="2">下一步：选择业务场景 →</button>';
     }
     h+='</div>';
   }
@@ -586,7 +586,7 @@ const PRODUCT_NEEDS = {
 
 function rStep2(){
   const ind = INDUSTRIES[state.industry];
-  let h='<div class="card"><div class="sec-label">STEP 2 · 产品需求</div><h2 class="sec-title">选择产品需求 <span style="font-size:14px;color:var(--text);font-weight:400">（多选）</span></h2><p class="sec-sub">'+ind.icon+' '+state.industry+'行业 · 请选择需要的工具产品与测试服务</p>';
+  let h='<div class="card"><div class="sec-label">STEP 3 · 产品需求</div><h2 class="sec-title">选择产品需求 <span style="font-size:14px;color:var(--text);font-weight:400">（多选）</span></h2><p class="sec-sub">'+ind.icon+' '+state.industry+'行业 · 请选择需要的工具产品与测试服务</p>';
 
   h+='<div class="scene-group"><div class="scene-group-title"><span class="icon">🔧</span>工具需求</div><div class="scene-tags">';
   for(var i=0;i<PRODUCT_NEEDS.tools.length;i++){
@@ -603,8 +603,8 @@ function rStep2(){
   h+='</div></div></div>';
 
   h+='<div style="display:flex;gap:12px;justify-content:center">';
-  h+='<button class="btn btn-outline btn-lg" data-action="goStep" data-param="1">← 重新选择行业</button>';
-  h+='<button class="btn btn-primary btn-lg" data-action="goNextCheck">下一步：选择业务场景 →</button>';
+  h+='<button class="btn btn-outline btn-lg" data-action="goStep" data-param="2">← 返回业务场景</button>';
+  h+='<button class="btn btn-primary btn-lg" data-action="goNextCheck">下一步：填写项目信息 →</button>';
   h+='</div>';
   return h;
 }
@@ -1066,24 +1066,15 @@ const SCENE_GROUP_PRODUCTS = {
 function rStep3(){
   const ind = INDUSTRIES[state.industry];
   const iscenes = INDUSTRY_SCENES[state.industry];
-  const grpProducts = SCENE_GROUP_PRODUCTS[state.industry]||{};
   // 检查某场景组是否与已选产品有交集
-  function groupMatches(grpTitle){
-    var prods = grpProducts[grpTitle];
-    if(!prods) return true; // 无映射默认显示
-    for(var i=0;i<prods.length;i++){if(state.productNeeds.indexOf(prods[i])>=0)return true;}
-    return false;
-  }
-  let h='<div class="card"><div class="sec-label">STEP 3 · 业务场景</div><h2 class="sec-title">'+ind.icon+' '+state.industry+'行业 · 业务场景 <span style="font-size:14px;color:var(--text);font-weight:400">（多选）</span></h2><p class="sec-sub">根据已选的'+state.productNeeds.length+'个产品需求，匹配以下场景</p>';
+  let h='<div class="card"><div class="sec-label">STEP 2 · 业务场景</div><h2 class="sec-title">'+ind.icon+' '+state.industry+'行业 · 业务场景 <span style="font-size:14px;color:var(--text);font-weight:400">（多选）</span></h2><p class="sec-sub">请选择客户关注的业务场景</p>';
 
   if(!iscenes){
     h+='<p style="color:var(--text);text-align:center;padding:20px">该行业暂无专属场景数据</p>';
   } else {
-    var shown=0;
+    
     for(var g=0;g<iscenes.groups.length;g++){
       var grp=iscenes.groups[g];
-      if(!groupMatches(grp.title)) continue;
-      shown++;
       h+='<div class="scene-group"><div class="scene-group-title"><span class="icon">'+grp.icon+'</span>'+grp.title+'</div><div class="scene-tags">';
       for(var i=0;i<grp.items.length;i++){
         var s=grp.items[i];
@@ -1091,15 +1082,12 @@ function rStep3(){
       }
       h+='</div></div>';
     }
-    if(shown===0){
-      h+='<p style="color:var(--text);text-align:center;padding:20px">当前产品选择下暂无匹配场景，请返回调整产品需求</p>';
-    }
   }
   h+='</div>';
 
   h+='<div style="display:flex;gap:12px;justify-content:center">';
-  h+='<button class="btn btn-outline btn-lg" data-action="goStep" data-param="2">← 返回产品需求</button>';
-  h+='<button class="btn btn-primary btn-lg" data-action="goNextCheck">下一步：填写项目信息 →</button>';
+  h+='<button class="btn btn-outline btn-lg" data-action="goStep" data-param="1">← 返回选择行业</button>';
+  h+='<button class="btn btn-primary btn-lg" data-action="goNextCheck">下一步：选择产品需求 →</button>';
   h+='</div>';
   return h;
 }
@@ -1154,7 +1142,7 @@ function rStep4(){
 
   h+='</div>';
   h+='<div style="display:flex;gap:12px;justify-content:center">';
-  h+='<button class="btn btn-outline btn-lg" data-action="goStep" data-param="3">← 返回业务场景</button>';
+  h+='<button class="btn btn-outline btn-lg" data-action="goStep" data-param="3">← 返回产品需求</button>';
   h+='<button class="btn btn-primary btn-lg" data-action="saveProjectInfo">下一步：查看推荐方案 →</button>';
   h+='</div>';
   return h;
@@ -1579,8 +1567,8 @@ function toggleProductNeed(id){ var idx=state.productNeeds.indexOf(id); if(idx>=
 function toggleBizScene(id){ var idx=state.bizScenes.indexOf(id); if(idx>=0)state.bizScenes.splice(idx,1); else state.bizScenes.push(id); render(); }
 function toggleAdvantage(id){ var idx=state.selectedAdvantages.indexOf(id); if(idx>=0)state.selectedAdvantages.splice(idx,1); else state.selectedAdvantages.push(id); render(); }
 function goNextCheck(){
-  if(state.step===2&&state.productNeeds.length===0){toast('请至少选择一个产品需求','error');return;}
-  if(state.step===3&&state.bizScenes.length===0){toast('请至少选择一个业务场景','error');return;}
+  if(state.step===2&&state.bizScenes.length===0){toast('请至少选择一个业务场景','error');return;}
+  if(state.step===3&&state.productNeeds.length===0){toast('请至少选择一个产品需求','error');return;}
   if(state.step===6&&state.selectedAdvantages.length===0){toast('请至少选择一项优势','error');return;}
   goStep(state.step+1);
 }
