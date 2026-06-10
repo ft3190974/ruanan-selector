@@ -208,6 +208,7 @@ const API='http://localhost:8081';
 var authToken=localStorage.getItem('selector_token')||'';
 var authUser=null;
 var captchaId='';
+var captchaAnswerLocal='';
 
 async function apiCall(method,url,body){
   var o={method,headers:{}};
@@ -266,14 +267,19 @@ function skipLogin(){
   render();
 }
 
-async function refreshCaptcha(){
-  try{
-    var r=await fetch(API+'/api/captcha');
-    var d=await r.json();
-    captchaId=d.captcha_id;
-    var el=document.getElementById('captchaQuestion');
-    if(el)el.textContent=d.question;
-  }catch(e){}
+function refreshCaptcha(){
+  // 前端本地生成算术验证码（100以内加减乘除）
+  var a=Math.floor(Math.random()*99)+1;
+  var b=Math.floor(Math.random()*99)+1;
+  var op=Math.floor(Math.random()*3); // 0=+ 1=- 2=*
+  var q,ans;
+  if(op===0){q=a+' + '+b+' = ?';ans=a+b;}
+  else if(op===1){if(a<b){var t=a;a=b;b=t;}q=a+' - '+b+' = ?';ans=a-b;}
+  else{if(a>20)a=Math.floor(Math.random()*9)+1;if(b>20)b=Math.floor(Math.random()*9)+1;q=a+' × '+b+' = ?';ans=a*b;}
+  captchaAnswerLocal=ans;
+  captchaId=Math.random().toString(36).substr(2,16);
+  var el=document.getElementById('captchaQuestion');
+  if(el)el.textContent=q;
 }
 async function doLogin(){
   var u=document.getElementById('loginUser').value.trim();
@@ -281,6 +287,7 @@ async function doLogin(){
   var ca=document.getElementById('captchaAnswer');ca=ca?ca.value.trim():'';
   if(!u||!p){showErr('请输入用户名和密码');return;}
   if(!ca){showErr('请输入验证码答案');return;}
+  if(parseInt(ca)!==captchaAnswerLocal){showErr('验证码答案错误，请重试');refreshCaptcha();return;}
   try{
     var d=await apiCall('POST','/api/login','username='+encodeURIComponent(u)+'&password='+encodeURIComponent(p)+'&captcha_id='+encodeURIComponent(captchaId)+'&captcha_answer='+encodeURIComponent(ca));
     authToken=d.token;authUser=d;
@@ -487,8 +494,8 @@ function render(){
   else if(step===3) app.innerHTML = rStep3();
   else if(step===4) app.innerHTML = rStep4();
   else if(step===5) app.innerHTML = rStep5();
-  else if(step===6) app.innerHTML = rStep6();
-  else if(step===7) app.innerHTML = rStep7();
+  else if(step===6) app.innerHTML = rStep7();
+  else if(step===7) app.innerHTML = rStep6();
 }
 
 function updateUI(){
