@@ -346,12 +346,13 @@ function validateCompany(v){return v.length>=2&&!/^[\d\s\-]+$/.test(v);}
 
 // ===== 产品智能知识库 =====
 const PRODUCT_KB = {
-  SAST:{id:'SAST',name:'SAST 静态代码分析',brand:'静兮',icon:'🔍',desc:'基于AI引擎的新一代静态应用安全测试工具，国内唯一TUV双认证',metrics:'15语言·6000+规则·<15%误报·85%+检出·100万行/30min',price:'50万/年',features:['30+语言','AI去误报','MISRA/CERT/GJB','CI/CD集成','增量扫描','IDE实时检测','中文合规报告','离线部署']},
-  SCA:{id:'SCA',name:'SCA 软件成分分析',brand:'源兮',icon:'📦',desc:'软件物料清单自动生成与开源风险管理平台',metrics:'3000W+组件·3亿+版本·60W+漏洞·2600+许可',price:'50万/年',features:['SBOM自动生成','CNVD/CNNVD/CVE','许可证合规','依赖图谱','供应链投毒检测','离线同步','SPDX/CycloneDX','AOSP全覆盖']},
-  FIRMWARE:{id:'FIRMWARE',name:'固件安全测试',brand:'侦兮',icon:'🔐',desc:'芯片级固件安全分析与漏洞挖掘平台',metrics:'100+芯片平台·8架构(x86/ARM/MIPS等)',price:'50万/年',features:['100+芯片解包','安全启动链验证','BootROM审计','TEE安全分析','AI Fuzz框架','RISC-V支持','协议分析','离线']},
-  FUZZ:{id:'FUZZ',name:'Fuzz 模糊测试',brand:'侦兮',icon:'🎯',desc:'协议与接口模糊测试平台，覆盖21种协议',metrics:'21协议·6000+规则·10万+用例·100+畸变',price:'50万/年',features:['CAN/CANFD','汽车以太网','蓝牙/WiFi/5G','Modbus/MQTT','文件Fuzz','ISO 21434','GB 44495']},
-  LLM:{id:'LLM',name:'大模型安全测试',brand:'元安',icon:'🤖',desc:'AI大模型全生命周期安全测试与合规评估',price:'50万/年',features:['提示注入检测','越狱红队测试','数据泄露评估','模型鲁棒性','RAG安全','偏见与公平性','合规自评估','持续监控']},
-  AI_SAST:{id:'AI_SAST',name:'AI SAST 智能代码分析',brand:'灵析',icon:'✨',desc:'以SAST为底座+大模型驱动的智能化代码安全测试和自动修复',price:'0.8万/用户/月',features:['SAST底座+大模型','智能静态测试','自然语言查询','AI自动修复','跨文件漏洞','安全编码助手','私有化']}
+  SAST:{id:'SAST',name:'软安SAST 静态代码质量与安全检测',brand:'静兮',icon:'🔍',desc:'编译型检测工具，18+语言支持，跨文件跨函数捕获能力强',metrics:'18+语言·C/C++误报<10%·跨文件分析·AI智能修复',price:'50万/年',features:['18+语言','C/C++误报率<10%','跨文件跨函数','AI智能修复','增量扫描','MISRA/CERT/GJB','CI/CD集成','中文合规报告']},
+  SCA:{id:'SCA',name:'软安SCA 源代码软件成分分析',brand:'源兮',icon:'📦',desc:'20+语言支持，国内顶级数据库，AI智能助手',metrics:'20+语言·100T+数据库·Java 0%误报·C/C++<10%误报',price:'50万/年',features:['20+语言','Java 0%误报','100T+组件数据库','AI智能助手','SBOM生成','许可证合规','供应链投毒检测','SPDX/CycloneDX']},
+  BAT:{id:'BAT',name:'软安BAT 二进制安全检测',brand:'固兮',icon:'🔐',desc:'100+格式支持，通信安全、IAC安全、敏感数据、加密算法识别',metrics:'100+格式·通信安全·IAC安全·加密算法识别',price:'50万/年',features:['100+格式解包','通信安全检测','IAC安全','敏感数据识别','加密算法识别','AI智能助手','成分分析','漏洞挖掘']},
+  FUZZ:{id:'FUZZ',name:'软安Fuzz 黑盒协议模糊测试',brand:'侦兮',icon:'🎯',desc:'50+协议支持，国外顶级团队研发，汽车行业全覆盖',metrics:'50+协议·Can/CanFD·汽车以太网·10万+用例',price:'50万/年',features:['50+协议','CAN/CANFD','汽车以太网','蓝牙/WiFi/5G','Modbus/MQTT','文件Fuzz','ISO 21434','GB 44495']},
+  MST:{id:'MST',name:'软安MST 大模型安全检测',brand:'智兮',icon:'🤖',desc:'大模型全生命周期安全检测，覆盖基座溯源到智能体安全',price:'50万/年',features:['大模型基座溯源','安全漏洞检测','知识产权检测','Skill安全','智能体链路安全','大模型权限控制','内容安全检测','合规评估']},
+  CodingHawk:{id:'CodingHawk',name:'软安Coding Review 代码审计智能体',brand:'Hawk',icon:'✨',desc:'结合静兮(SAST)底座，大模型驱动的智能化代码审计和自动修复',price:'0.8万/用户/月',features:['SAST底座+大模型','智能化代码审计','AI自动修复','C/C++表现突出','自然语言查询','安全编码助手','私有化部署','按用户弹性扩展']},
+  GuardFox:{id:'GuardFox',name:'软安GuardFox AI漏洞分析验证',brand:'洞兮',icon:'🦊',desc:'CVE漏洞验证、POC生成与验证，提高安全团队分析效率',price:'另议',features:['CVE漏洞验证','POC自动生成','POC验证','漏洞优先级评估','漏洞复现','安全团队提效','集成工单系统','报告导出']},
 };
 
 const INDUSTRY_PRODUCT_MAP = {
@@ -411,21 +412,27 @@ function computeRecommendations(){
 
 // ═══ 产品库 =====
 const PRODUCTS = {
-  SAST:{id:'SAST',name:'SAST 静态代码分析',brand:'静兮',icon:'🔍',category:'代码安全',desc:'基于AI引擎的新一代静态应用安全测试工具，AI SAST产品的核心底座',price:50,
-    features:['30+语言支持','AI去误报引擎','MISRA/CERT/GJB合规','CI/CD集成','增量秒级扫描','IDE实时检测','中文合规报告','涉密离线部署'],
+  SAST:{id:'SAST',name:'软安SAST 静态代码质量与安全检测',brand:'静兮',icon:'🔍',category:'代码安全',desc:'编译型检测工具，18+语言支持，跨文件跨函数捕获能力强，提供AI智能修复',price:50,
+    features:['18+语言支持','C/C++误报率<10%','跨文件跨函数分析','AI智能修复','增量秒级扫描','MISRA/CERT/GJB合规','CI/CD集成','中文合规报告'],
     scenes:['SAST'],tags:['代码审计','静态分析','安全左移','DevSecOps']},
-  SCA:{id:'SCA',name:'SCA 软件成分分析',brand:'源兮',icon:'📦',category:'供应链安全',desc:'软件物料清单自动生成与开源风险管理平台',price:50,
-    features:['SBOM自动生成','CNVD/CNNVD/CVE多源漏洞','许可证合规检测','依赖图谱分析','供应链投毒检测','断网离线同步','SPDX/CycloneDX'],
+  SCA:{id:'SCA',name:'软安SCA 源代码软件成分分析',brand:'源兮',icon:'📦',category:'供应链安全',desc:'20+语言支持，Java误报率0%，C/C++误报率低于10%，国内顶级数据库(100T+)，提供AI智能助手',price:50,
+    features:['20+语言支持','Java 0%误报率','100T+组件数据库','AI智能助手','SBOM自动生成','许可证合规','供应链投毒检测','断网离线同步'],
     scenes:['SCA'],tags:['开源治理','SBOM','供应链安全','组件安全']},
-  FIRMWARE:{id:'FIRMWARE',name:'固件安全测试',brand:'侦兮',icon:'🔐',category:'固件安全',desc:'芯片级固件安全分析与漏洞挖掘平台',price:50,
-    features:['100+芯片平台解包','安全启动链验证','BootROM审计','TEE安全分析','AI Fuzz框架','RISC-V支持','通信协议分析','涉密离线'],
-    scenes:['FIRMWARE'],tags:['固件分析','芯片安全','IoT安全','嵌入式']},
-  LLM:{id:'LLM',name:'大模型安全测试',brand:'元安',icon:'🤖',category:'AI安全',desc:'AI大模型全生命周期安全测试与合规评估',price:50,
-    features:['提示注入检测','越狱红队测试','数据泄露评估','模型鲁棒性测试','RAG安全检测','偏见与公平性','合规自评估报告','持续安全监控'],
-    scenes:['LLM'],tags:['AI安全','大模型','提示注入','对齐评估']},
-  AI_SAST:{id:'AI_SAST',name:'AI SAST 智能代码分析',brand:'灵析',icon:'✨',category:'代码安全',desc:'以静兮(SAST)为底座，通过大模型直接对代码进行智能化静态测试和自动修复',price:0.8,priceUnit:'用户',priceModel:'按用户付费',
-    features:['SAST底座+大模型引擎','智能化静态测试','自然语言查询','AI自动修复建议','跨文件漏洞检测','数十亿参数代码模型','安全编码助手','私有化部署','按用户数弹性扩展'],
-    scenes:['AI_SAST'],tags:['AI审计','遗留代码','自动修复','代码理解']},
+  BAT:{id:'BAT',name:'软安BAT 二进制安全检测',brand:'固兮',icon:'🔐',category:'固件安全',desc:'100+格式支持，成分分析精度高，支持通信安全、IAC安全、敏感数据、加密算法识别，提供AI智能助手',price:50,
+    features:['100+格式解包','通信安全检测','IAC安全分析','敏感数据识别','加密算法识别','AI智能助手','成分分析','漏洞挖掘'],
+    scenes:['BAT'],tags:['固件分析','二进制安全','IoT安全','嵌入式']},
+  FUZZ:{id:'FUZZ',name:'软安Fuzz 黑盒协议模糊测试',brand:'侦兮',icon:'🎯',category:'协议安全',desc:'50+协议支持，支持Can、CanFD、汽车以太网等多个汽车行业协议，国外顶级团队研发',price:50,
+    features:['50+协议支持','CAN/CANFD','汽车以太网','蓝牙/WiFi/5G','Modbus/MQTT','文件Fuzz','ISO 21434','GB 44495'],
+    scenes:['FUZZ'],tags:['协议测试','黑盒测试','汽车安全','工控安全']},
+  MST:{id:'MST',name:'软安MST 大模型安全检测',brand:'智兮',icon:'🤖',category:'AI安全',desc:'大模型基座溯源、大模型安全漏洞检测、大模型知识产权检测、Skill安全、智能体链路安全检测、大模型权限控制、大模型内容安全',price:50,
+    features:['大模型基座溯源','安全漏洞检测','知识产权检测','Skill安全','智能体链路安全','大模型权限控制','内容安全检测','合规评估'],
+    scenes:['MST'],tags:['AI安全','大模型','提示注入','对齐评估']},
+  CodingHawk:{id:'CodingHawk',name:'软安Coding Review 代码审计智能体',brand:'Hawk',icon:'✨',category:'代码安全',desc:'结合静兮(SAST)底座，通过大模型直接对代码进行智能化静态测试和自动修复，C/C++表现突出',price:0.8,priceUnit:'用户',priceModel:'按用户付费',
+    features:['SAST底座+大模型引擎','智能化代码审计','AI自动修复建议','C/C++表现突出','自然语言查询','跨文件漏洞检测','安全编码助手','私有化部署','按用户数弹性扩展'],
+    scenes:['CodingHawk'],tags:['AI审计','遗留代码','自动修复','代码理解']},
+  GuardFox:{id:'GuardFox',name:'软安GuardFox AI漏洞分析验证',brand:'洞兮',icon:'🦊',category:'漏洞管理',desc:'对检测出的CVE进行漏洞验证、POC生成与验证，提高安全团队分析效率',price:0,priceNote:'另议',
+    features:['CVE漏洞验证','POC自动生成','POC验证','漏洞优先级评估','漏洞复现','安全团队提效','集成工单系统','报告导出'],
+    scenes:['GuardFox'],tags:['漏洞验证','POC','CVE','安全运营']},
 };
 
 // ===== 行业数据 =====
@@ -566,21 +573,25 @@ function rStep1(){
 // ===== Step 2: 产品需求 =====
 const PRODUCT_NEEDS = {
   tools:[
-    {id:'pn_t1',title:'代码安全扫描(SAST)',desc:'自动化的代码漏洞检测与编码规范合规检查工具',icon:'🔍'},
-    {id:'pn_t2',title:'开源组件管理(SCA)',desc:'第三方与开源组件安全风险管理和SBOM生成',icon:'📦'},
-    {id:'pn_t3',title:'固件安全分析',desc:'嵌入式/IoT/ECU固件安全审计与漏洞挖掘',icon:'🔐'},
-    {id:'pn_t4',title:'AI大模型安全测试',desc:'大模型提示注入、越狱检测与合规评估',icon:'🤖'},
-    {id:'pn_t5',title:'AI SAST智能代码扫描',desc:'大模型驱动的智能化静态代码安全测试与自动修复',icon:'✨'},
-    {id:'pn_t6',title:'DevSecOps工具链',desc:'搭建CI/CD安全工具链，实现安全左移',icon:'⚙'},
+    {id:'pn_sast',title:'软安SAST 静态代码检测',desc:'18+语言编译型检测，C/C++误报<10%，AI智能修复',icon:'🔍'},
+    {id:'pn_sca',title:'软安SCA 软件成分分析',desc:'20+语言，Java 0%误报，100T+数据库',icon:'📦'},
+    {id:'pn_bat',title:'软安BAT 二进制安全检测',desc:'100+格式，通信/IAC/敏感数据/加密算法',icon:'🔐'},
+    {id:'pn_fuzz',title:'软安Fuzz 协议模糊测试',desc:'50+协议，Can/汽车以太网，顶级团队',icon:'🎯'},
+    {id:'pn_mst',title:'软安MST 大模型安全检测',desc:'基座溯源/漏洞/知识产权/Skill/智能体安全',icon:'🤖'},
+    {id:'pn_hawk',title:'软安Coding Review 代码审计智能体',desc:'SAST底座+大模型，C/C++突出',icon:'✨'},
+    {id:'pn_fox',title:'软安GuardFox AI漏洞分析',desc:'CVE验证、POC生成，提高分析效率',icon:'🦊'},
   ],
   services:[
-    {id:'pn_s1',title:'代码安全审计服务',desc:'专家深度审计·含复测·≤10GB源码',icon:'📋'},
-    {id:'pn_s2',title:'固件安全测试服务',desc:'芯片/设备固件专业安全测试·≤20GB',icon:'🔬'},
-    {id:'pn_s3',title:'开源合规审计服务',desc:'开源组件许可证+漏洞合规审计',icon:'📜'},
-    {id:'pn_s4',title:'渗透测试服务',desc:'对应用系统进行黑盒/白盒渗透测试',icon:'🎯'},
-    {id:'pn_s5',title:'合规咨询服务',desc:'法规合规差距分析和整改方案咨询',icon:'💡'},
-    {id:'pn_s6',title:'安全培训服务',desc:'为开发团队提供安全编码和工具使用培训',icon:'🎓'},
-    {id:'pn_s7',title:'驻场安全支持',desc:'安全专家驻场协助安全检测和漏洞修复',icon:'🛡'},
+    {id:'sv_bat',title:'固件安全测试服务',desc:'芯片/设备固件专业安全测试·≤20GB',icon:'🔬'},
+    {id:'sv_fuzz',title:'Fuzz模糊测试服务',desc:'协议与接口模糊测试，21种协议覆盖',icon:'🎯'},
+    {id:'sv_pentest',title:'渗透测试服务',desc:'对应用系统进行黑盒/白盒渗透测试',icon:'🎯'},
+    {id:'sv_audit',title:'代码审计测试服务',desc:'专家深度审计·含复测·≤10GB源码',icon:'📋'},
+    {id:'sv_oss',title:'开源许可测试服务',desc:'开源组件许可证+漏洞合规审计',icon:'📜'},
+    {id:'sv_sbom',title:'软件成分分析测试服务',desc:'SBOM生成+供应链安全分析',icon:'📦'},
+    {id:'sv_mst',title:'大模型安全检测服务',desc:'大模型安全检测与合规评估',icon:'🤖'},
+    {id:'sv_consult_lic',title:'开源许可咨询服务',desc:'开源许可证合规咨询与整改',icon:'📜'},
+    {id:'sv_consult_std',title:'编码规范咨询服务',desc:'MISRA/CERT/GJB等编码规范咨询',icon:'📏'},
+    {id:'sv_consult_sdl',title:'研发安全生命周期服务',desc:'SDL/SDL安全左移流程建设',icon:'🔄'},
   ]
 };
 
