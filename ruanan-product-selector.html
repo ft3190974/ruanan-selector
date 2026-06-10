@@ -451,9 +451,9 @@ const INDUSTRIES = {
 	  // ── 新增L2子行业 ──
 	  汽车测评咨询机构:{icon:'📋',reg:'汽车测试外包、测试认证、测试委外、汽车研发合规咨询、汽车安全测试咨询等',pain:'汽车测评和咨询机构需要为客户提供标准化的软件安全检测报告，需满足CNAS认可要求。测评方法需覆盖UN R155和ISO 21434合规检测，对多品牌多车型的软件安全进行横向对比评估。咨询项目需要深度行业经验和案例支撑。',rec:['SAST','SCA','FIRMWARE']},
 	  军工测评机构:{icon:'🔬',reg:'JS测评认证机构、测评认证机构（军民融合）等',pain:'军工软件测评机构需要满足GJB标准的软件安全检测能力，全部检测必须在涉密离线环境中完成。需具备对C/C++遗留代码的自动化分析能力，以及国产化环境的适配要求。检测报告需满足军代表和装备机关的审查标准。',rec:['SAST','FIRMWARE','AI_SAST']},
-	  处理类芯片:{icon:'🎮',reg:'密评 · GB/T 18336 · NIST FIPS 140 · EU CRA',pain:'GPU芯片固件和驱动代码量极大，涉及CUDA/OpenCL等并行计算框架。AI训练和推理场景下的GPU软件栈安全审计需求激增，包括GPU驱动安全、显存数据保护和AI计算完整性。GPU固件安全启动和可信执行环境(TEE)是新兴安全需求。',rec:['FIRMWARE','SAST','SCA']},
-	  系统类芯片:{icon:'💻',reg:'密评 · GB/T 18336 · ISO 26262 · IEC 62443',pain:'SoC/MPU芯片集成了CPU、GPU、NPU、DSP等多种处理单元，软件栈极其复杂。车载SoC需满足ISO 26262功能安全要求，工业MPU需满足IEC 62443安全标准。芯片流片前的BootROM和固件安全审计至关重要，一旦流片后发现问题无法修复。',rec:['FIRMWARE','SAST','SCA']},
-	  存储芯片:{icon:'💾',reg:'密评 · GB/T 18336 · NIST SP 800-53 · 等保2.0',pain:'存储芯片固件（FTL/控制器）安全直接影响数据机密性和完整性。SSD控制器固件复杂度持续增长，需防范固件级后门和数据泄露。自加密驱动器(SED)的密码模块实现需满足FIPS 140合规。存储供应链安全需审计第三方固件组件。',rec:['FIRMWARE','SAST']},
+	  处理类芯片:{icon:'🎮',reg:'GPU、CPU、NPU类芯片等',pain:'GPU芯片固件和驱动代码量极大，涉及CUDA/OpenCL等并行计算框架。AI训练和推理场景下的GPU软件栈安全审计需求激增，包括GPU驱动安全、显存数据保护和AI计算完整性。GPU固件安全启动和可信执行环境(TEE)是新兴安全需求。',rec:['FIRMWARE','SAST','SCA']},
+	  系统类芯片:{icon:'💻',reg:'SOC、MPU、MCU类芯片等',pain:'SoC/MPU芯片集成了CPU、GPU、NPU、DSP等多种处理单元，软件栈极其复杂。车载SoC需满足ISO 26262功能安全要求，工业MPU需满足IEC 62443安全标准。芯片流片前的BootROM和固件安全审计至关重要，一旦流片后发现问题无法修复。',rec:['FIRMWARE','SAST','SCA']},
+	  存储芯片:{icon:'💾',reg:'DRAM、Flash、SRAM等',pain:'存储芯片固件（FTL/控制器）安全直接影响数据机密性和完整性。SSD控制器固件复杂度持续增长，需防范固件级后门和数据泄露。自加密驱动器(SED)的密码模块实现需满足FIPS 140合规。存储供应链安全需审计第三方固件组件。',rec:['FIRMWARE','SAST']},
 	  电信运营商:{icon:'📡',reg:'三大运营商总部、铁塔、运营商项目总集等',pain:'电信运营商作为关键信息基础设施运营者，面临国家级网络威胁。5G网络软件化和虚拟化趋势下，核心网软件安全审计需求激增。OSS/BSS系统大量依赖外包开发，需源码级安全审查。需满足工信部网络安全考核和关基保护合规要求。',rec:['SAST','SCA','FIRMWARE']},
 	  央企集团:{icon:'🏢',reg:'央企数科公司、国企信息中心、国企工程公司、国央企IT运营公司等',pain:'央企集团业务多元、层级复杂，IT系统数量庞大且安全水平参差不齐。关基保护条例要求软件供应链自主可控，信创替代过程中大量迁移代码需安全评估。集团统一采购的安全工具需满足多业态需求，从能源到制造到金融全覆盖。',rec:['SAST','SCA','AI_SAST']},
 	  云服务商:{icon:'☁️',reg:'云计算厂家、云计算运营公司、云计算操作系统制作商等',pain:'云服务商需满足云计算服务安全评估要求，平台软件的供应链安全直接影响租户安全。容器、K8s、微服务等云原生技术的安全治理复杂度高。多租户环境下的代码安全审计和数据隔离验证是监管关注重点。',rec:['SAST','SCA','LLM']},
@@ -472,7 +472,7 @@ const INDUSTRY_LEVELS = {
   '政教行业':{icon:'🏛️',desc:'政府与高等教育',children:[{key:'政府',name:'政府行业'},{key:'教育',name:'高等教育行业'}]},
   '国央企行业':{icon:'🏭',desc:'电信、能源、央企集团',children:[{key:'电信运营商',name:'电信运营商'},{key:'能源',name:'能源行业'},{key:'央企集团',name:'央企集团'}]},
   '互联网行业':{icon:'🌐',desc:'游戏、云服务、电商',children:[{key:'游戏互联网',name:'游戏制作商'},{key:'云服务商',name:'云服务商'},{key:'电商平台',name:'电商平台'}]},
-  '测评认证/咨询机构':{icon:'📊',desc:'CNAS认可机构与IT咨询公司',children:[{key:'测评/认证',name:'第三方测评/认证'},{key:'IT咨询公司',name:'IT咨询公司'}]},
+  '测评认证/咨询机构':{icon:'📊',desc:'CNAS认可机构与IT咨询公司',children:[{key:'测评/认证',name:'第三方测评&认证'},{key:'IT咨询公司',name:'IT咨询公司'}]},
 };
 
 // ===== State =====
@@ -542,6 +542,7 @@ function rStep1(){
       h+='<div class="ind-card'+(state.industry===child.key?' selected':'')+'" data-action="selectIndustry" data-param="'+child.key+'">';
       h+='<div class="ind-icon">'+indData.icon+'</div>';
       h+='<div class="ind-name">'+child.name+'</div>';
+      h+='<div class="ind-reg">'+indData.reg+'</div>';
 
       h+='</div>';
     }
