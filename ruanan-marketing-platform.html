@@ -682,7 +682,7 @@ async function delCase(id){if(!confirm('确定删除？'))return;try{await api('
 async function updPartner(id,status){try{await api('PUT','/api/admin/partners/'+id,fd({status:status}));toast('已更新');aTab('partners')}catch(e){toast(e.message,'error')}}
 function replyT(id){var r=prompt('回复内容:');if(!r)return;api('PUT','/api/tickets/'+id+'/reply','reply='+encodeURIComponent(r)).then(function(){toast('已回复');aTab("tickets")}).catch(function(e){toast(e.message,'error')})}
 async function closeT(id){try{await api('PUT','/api/tickets/'+id+'/close','');toast('已关闭');aTab("tickets")}catch(e){toast(e.message,'error')}}
-function addUser(){var u=prompt('用户名:');if(!u)return;var p=prompt('密码:');if(!p)return;var e=prompt('邮箱:')||'';var r=prompt('角色(user/partner/admin):')||'user';api('POST','/api/admin/users',fd({username:u,password:p,email:e,role:r})).then(function(){toast('已创建');aTab('users')}).catch(function(er){toast(er.message,'error')})}
+function addUser(){var u=prompt('用户名:');if(!u)return;var p=prompt('密码:');if(!p)return;var e=prompt('邮箱:')||'';var r=prompt('角色(user/partner/admin):')||'user';api('POST','/api/admin/users',fd({username:u,password:p,email:e,role:r})).then(function(){toast('已创建');_renderUsers()}).catch(function(er){toast(er.message,'error')})}
 function resetPwd(id){var p=prompt('新密码:');if(!p)return;api('PUT','/api/admin/users/'+id+'/reset-password',fd({new_password:p})).then(function(){toast('已重置')}).catch(function(e){toast(e.message,'error')})}
 async function delUser(id){if(!confirm('确定删除？'))return;try{await api('DELETE','/api/admin/users/'+id);toast('已删除');aTab('users')}catch(e){toast(e.message,'error')}}
 
@@ -1053,16 +1053,16 @@ async function _saveInternal(btn) {
   if (!u || !p) { toast('请填写用户名和密码', 'error'); return; }
   try {
     await api('POST', '/api/admin/users', fd({ username: u, password: p, email: document.getElementById('iuEmail')?.value || '', role: document.getElementById('iuRole')?.value || 'user', company: document.getElementById('iuCompany')?.value || '' }));
-    toast('已创建'); btn.closest('.modal-overlay').remove(); aTab('users');
+    toast('已创建'); btn.closest('.modal-overlay').remove(); _renderUsers();
   } catch(e) { toast(e.message, 'error'); }
 }
 function _renderPartners(){api('GET','/api/admin/partners').then(function(a){var ct=document.getElementById('aContent');var h='<button class="btn btn-primary btn-sm" onclick="_openPartnerForm()" style="margin-bottom:12px">+ 新增合作伙伴</button>';if(a.length){h+='<table class="data-table"><tr><th>公司</th><th>联系人</th><th>手机</th><th>状态</th><th>操作</th></tr>'+a.map(function(x){return '<tr><td>'+x.company+'</td><td>'+x.contact+'</td><td>'+x.phone+'</td><td><span class="badge '+(x.status==='approved'?'badge-green':'badge-yellow')+'">'+(x.status==='approved'?'已通过':'待审核')+'</span></td><td>'+(x.status==='pending'?'<button class="btn btn-sm btn-outline" onclick="updPartner('+x.id+',\'approved\')">通过</button> <button class="btn btn-sm" style="color:var(--danger)" onclick="updPartner('+x.id+',\'rejected\')">拒绝</button>':'')+'</td></tr>';}).join('')+'</table>';}else{h+='<div class="empty-state"><div class="es-icon">🤝</div><div class="es-title">暂无合作伙伴</div></div>';}ct.innerHTML=h;}).catch(function(){})}
 function _openPartnerForm(){var m=document.createElement('div');m.className='modal-overlay';m.onclick=function(e){if(e.target===m)m.remove()};m.innerHTML='<div class="modal-box"><h3 style="margin-bottom:16px">新增合作伙伴</h3><div class="form-grid"><div class="form-group"><label>用户名 *</label><input id="puUser"></div><div class="form-group"><label>密码 *</label><input id="puPwd" type="password"></div></div><div class="form-grid"><div class="form-group"><label>公司全称 *</label><input id="puCompany"></div><div class="form-group"><label>合作伙伴类型</label><select id="puType"><option value="城市级合作伙伴">城市级合作伙伴</option><option value="项目授权合作伙伴">项目授权合作伙伴</option><option value="行业级合作伙伴">行业级合作伙伴</option><option value="生态合作伙伴">生态合作伙伴</option></select></div></div><button class="btn btn-primary btn-lg" onclick="_savePartner(this)" style="width:100%;justify-content:center;margin-top:8px">创建</button></div>';document.body.appendChild(m)}
-async function _savePartner(btn){var u=document.getElementById('puUser')?.value.trim(),p=document.getElementById('puPwd')?.value.trim(),c=document.getElementById('puCompany')?.value.trim(),t=document.getElementById('puType')?.value;if(!u||!p||!c){toast('请填写必填项','error');return}try{await api('POST','/api/admin/users',fd({username:u,password:p,role:'partner',company:c}));toast('合作伙伴已创建');btn.closest('.modal-overlay').remove();aTab('partners')}catch(e){toast(e.message,'error')}}
+async function _savePartner(btn){var u=document.getElementById('puUser')?.value.trim(),p=document.getElementById('puPwd')?.value.trim(),c=document.getElementById('puCompany')?.value.trim(),t=document.getElementById('puType')?.value;if(!u||!p||!c){toast('请填写必填项','error');return}try{await api('POST','/api/admin/users',fd({username:u,password:p,role:'partner',company:c}));toast('合作伙伴已创建');btn.closest('.modal-overlay').remove();_renderPartners()}catch(e){toast(e.message,'error')}}
 function _openChangePwd(){var m=document.createElement('div');m.className='modal-overlay';m.onclick=function(e){if(e.target===m)m.remove()};m.innerHTML='<div class=\"modal-box\" style=\"max-width:420px\"><h3 style=\"margin-bottom:16px\">修改密码</h3><p style=\"font-size:12px;color:var(--text3);margin-bottom:12px\">密码需8位以上，含字母和数字</p><div class=\"form-group\"><label>原密码</label><input id=\"cpOld\" type=\"password\"></div><div class=\"form-group\"><label>新密码</label><input id=\"cpNew\" type=\"password\"></div><div class=\"form-group\"><label>确认新密码</label><input id=\"cpNew2\" type=\"password\"></div><button class=\"btn btn-primary btn-lg\" onclick=\"_doChangePwd(this)\" style=\"width:100%;justify-content:center\">确认修改</button></div>';document.body.appendChild(m)}
 async function _doChangePwd(btn){var o=document.getElementById('cpOld')?.value,p=document.getElementById('cpNew')?.value,p2=document.getElementById('cpNew2')?.value;if(!o||!p){toast('请填写完整','error');return}if(p!==p2){toast('两次密码不一致','error');return}if(p.length<8||!/[A-Za-z]/.test(p)||!/[0-9]/.test(p)){toast('密码需8位以上，含字母和数字','error');return}try{await api('POST','/api/change-password',fd({old_password:o,new_password:p}));toast('密码修改成功');btn.closest('.modal-overlay').remove()}catch(e){toast(e.message,'error')}}
 function _resetInternalPwd(id) { var p = prompt('新密码（8位以上，含字母和数字）:'); if (!p) return; api('PUT', '/api/admin/users/' + id + '/reset-password', fd({ new_password: p })).then(function() { toast('已重置'); }).catch(function(e) { toast(e.message, 'error'); }); }
-async function _delInternal(id) { if (!confirm('确定删除此用户？')) return; try { await api('DELETE', '/api/admin/users/' + id); toast('已删除'); aTab('users'); } catch(e) { toast(e.message, 'error'); } }
+async function _delInternal(id) { if (!confirm('确定删除此用户？')) return; try { await api('DELETE', '/api/admin/users/' + id); toast('已删除'); _renderUsers(); } catch(e) { toast(e.message, 'error'); } }
 
 // ── Customer Accounts ──
 function _renderCustomers() {
@@ -1093,7 +1093,7 @@ async function _saveCust(btn) {
   if (!u || !p || !co || !na || !em) { toast('请填写所有必填项', 'error'); return; }
   try {
     await api('POST', '/api/customer/admin/users', fd({ username: u, password: p, company: co, contact_name: na, email: em, position: document.getElementById('cuPos')?.value || '', phone: document.getElementById('cuPhone')?.value || '', product_purchased: document.getElementById('cuProd')?.value || '', industry: document.getElementById('cuIndustry')?.value || '', valid_from: document.getElementById('cuValidFrom')?.value || '', valid_days: document.getElementById('cuValidDays')?.value || 365 }));
-    toast('客户账号已创建'); btn.closest('.modal-overlay').remove(); aTab('customers');
+    toast('客户账号已创建'); btn.closest('.modal-overlay').remove(); _renderCustomers();
   } catch(e) { toast(e.message, 'error'); }
 }
 function _loadTmAdmin(){
@@ -1201,8 +1201,8 @@ async function _delKb(id){if(!confirm('确定删除？'))return;try{await api('D
 // ── Customer admin helpers ──
 
 function _resetCustPwd(id) { var p = prompt('新密码（8位以上，含字母和数字）:'); if (!p) return; api('PUT', '/api/customer/admin/users/' + id + '/reset-password', fd({ new_password: p })).then(function() { toast('已重置'); }).catch(function(e) { toast(e.message, 'error'); }); }
-function _toggleCust(id, status) { var ns = status === 'frozen' ? 'active' : 'frozen'; var la = ns === 'frozen' ? '冻结' : '解冻'; if (!confirm('确定' + la + '此账号？')) return; api('PUT', '/api/customer/admin/users/' + id + '/status', fd({ status: ns })).then(function() { toast('已' + la); aTab('customers'); }).catch(function(e) { toast(e.message, 'error'); }); }
-async function _delCust(id) { if (!confirm('确定删除此客户账号？')) return; try { await api('DELETE', '/api/customer/admin/users/' + id); toast('已删除'); aTab('customers'); } catch(e) { toast(e.message, 'error'); } }
+function _toggleCust(id, status) { var ns = status === 'frozen' ? 'active' : 'frozen'; var la = ns === 'frozen' ? '冻结' : '解冻'; if (!confirm('确定' + la + '此账号？')) return; api('PUT', '/api/customer/admin/users/' + id + '/status', fd({ status: ns })).then(function() { toast('已' + la); _renderCustomers(); }).catch(function(e) { toast(e.message, 'error'); }); }
+async function _delCust(id) { if (!confirm('确定删除此客户账号？')) return; try { await api('DELETE', '/api/customer/admin/users/' + id); toast('已删除'); _renderCustomers(); } catch(e) { toast(e.message, 'error'); } }
 
 // ── Audit Log ──
 function _renderAudit() {
