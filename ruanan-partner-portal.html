@@ -343,21 +343,17 @@ function showRegister(){
 function register(e){
   e.preventDefault();
   var pt=document.getElementById('regPartnerType').value;
-  var city=pt==='city'?document.getElementById('regCity').value.trim():'';
-  var industry=pt==='industry'?document.getElementById('regIndustry2').value:(pt==='ecosystem'||pt==='project'?'':document.getElementById('regIndustry2').value);
-  var p={id:uid(),company:document.getElementById('regCompany').value.trim(),name:document.getElementById('regName').value.trim(),email:document.getElementById('regEmail').value.trim(),phone:document.getElementById('regPhone').value.trim(),password:document.getElementById('regPwd').value.trim(),partnerType:pt,city:city,industry:industry,note:document.getElementById('regNote').value.trim(),status:'pending',createdAt:now()};
+  var ptLabel={'city':'城市级合作伙伴','project':'项目授权合作伙伴','industry':'行业级合作伙伴','ecosystem':'生态合作伙伴'}[pt]||pt;
+  var p={id:uid(),company:document.getElementById('regCompany').value.trim(),name:document.getElementById('regName').value.trim(),title:document.getElementById('regTitle').value.trim(),email:document.getElementById('regEmail').value.trim(),phone:document.getElementById('regPhone').value.trim(),partnerType:pt,note:document.getElementById('regNote').value.trim(),status:'pending',createdAt:now()};
+  if(!p.company||!p.name||!p.email||!p.phone||!pt){toast('请填写所有必填项','error');return}
   var partners=g(PK);
-  if(partners.find(function(x){return x.email===p.email})){toast('该邮箱已注册','error');return}
+  if(partners.find(function(x){return x.email===p.email})){toast('该邮箱已提交过申请','error');return}
   partners.push(p);s(PK,partners);
-  sendFeishu('🆕 新合作伙伴注册',[{l:'公司',v:p.company},{l:'联系人',v:p.name},{l:'邮箱',v:p.email},{l:'电话',v:p.phone},{l:'类型',v:pt==='city'?'城市代理商('+city+')':pt==='industry'?'行业代理商('+industry+')':pt==='ecosystem'?'生态合作伙伴':'项目授权代理商'}]);
-  toast('注册申请已提交！审核通过后即可登录');showLogin();
+  sendFeishu('🆕 新合作伙伴申请',[{l:'公司',v:p.company},{l:'联系人',v:p.name},{l:'职位',v:p.title},{l:'邮箱',v:p.email},{l:'电话',v:p.phone},{l:'类型',v:ptLabel}]);
+  toast('申请已提交！审核通过后即可登录');showLogin();
 }
 
-function togglePartnerFields(){
-  var v=document.getElementById('regPartnerType').value;
-  document.getElementById('regCityGroup').classList.toggle('hidden',v!=='city');
-  document.getElementById('regIndustryGroup').classList.toggle('hidden',v!=='industry');
-}
+function togglePartnerFields(){}
 
 function login(e){
   e.preventDefault();
