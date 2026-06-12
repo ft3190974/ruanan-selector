@@ -17,6 +17,7 @@ MARKETING_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-marketing-pl
 CUSTOMER_PORTAL_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-customer-portal.html")
 PARTNER_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-partner-portal.html")
 PROMO_VIDEO_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\promo_video.html")
+OUTRO_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\outro.html")
 ADMIN_PWD = os.environ.get("ADMIN_PWD", "admin123")
 
 # ── 安全配置 ──
@@ -1653,6 +1654,9 @@ async def marketing_file(): return FileResponse(str(MARKETING_FILE))
 
 @app.get("/promo_video.html")
 async def promo_video_file(): return FileResponse(str(PROMO_VIDEO_FILE))
+
+@app.get("/outro.html")
+async def outro_file(): return FileResponse(str(OUTRO_FILE))
 
 @app.on_event("startup")
 async def startup():
