@@ -112,7 +112,7 @@ tr:hover td{background:var(--slate-50)}
       <p style="font-size:14px;color:var(--slate-500);margin-top:4px">合作伙伴支持门户</p>
     </div>
     <form onsubmit="login(event)">
-      <div class="form-group"><label>伙伴邮箱</label><input type="email" id="loginEmail" class="input" required placeholder="partner@company.com"></div>
+      <div class="form-group"><label>用户名</label><input type="text" id="loginUser" class="input" required placeholder="请输入管理员分配的用户名"></div>
       <div class="form-group"><label>密码</label><input type="password" id="loginPwd" class="input" required placeholder="请输入密码"></div>
       <button type="submit" class="btn btn-primary w-full" style="padding:12px;justify-content:center;font-size:16px">登 录</button>
     </form>
@@ -126,7 +126,7 @@ tr:hover td{background:var(--slate-50)}
       <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#2563eb,#1d4ed8);display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:#fff;margin-bottom:12px">软</div>
       <h1 style="font-size:20px;font-weight:800;color:var(--slate-900)">软安华南合作伙伴申请</h1>
     </div>
-    <form onsubmit="register(event)"><div class="form-row"><div class="form-group"><label>公司全称 *</label><input type="text" id="regCompany" class="input" required></div><div class="form-group"><label>联系人 *</label><input type="text" id="regName" class="input" required></div></div><div class="form-row"><div class="form-group"><label>联系人职位 *</label><input type="text" id="regTitle" class="input" required placeholder="如：销售总监"></div><div class="form-group"><label>联系方式 *</label><input type="tel" id="regPhone" class="input" required placeholder="手机号"></div></div><div class="form-group"><label>联系人邮箱 *</label><input type="email" id="regEmail" class="input" required></div><div class="form-group"><label>申请合作伙伴类型 *</label><select id="regPartnerType" class="input" required onchange="togglePartnerFields()"><option value="">请选择</option><option value="city">城市级合作伙伴</option><option value="project">项目授权合作伙伴</option><option value="industry">行业级合作伙伴</option><option value="ecosystem">生态合作伙伴</option></select></div><div class="form-group hidden" id="regCityGroup"><label>代理城市 *</label><input type="text" id="regCity" class="input" placeholder="请输入城市名称，如：深圳、广州"></div><div class="form-group hidden" id="regIndustryGroup"><label>专注行业 *</label><select id="regIndustry2" class="input"><option value="">请选择</option><option>汽车</option><option>智能制造</option><option>医疗</option><option>政教（含国央企）</option><option>金融</option><option>芯片半导体</option><option>军工</option><option>信创软件</option><option>其他</option></select></div><div class="form-group"><label>备注</label><textarea id="regNote" class="input" rows="2" placeholder="简要介绍贵司业务方向..."></textarea></div><button type="submit" class="btn btn-primary w-full" style="padding:12px;justify-content:center">提交申请</button></form>
+    <form onsubmit="register(event)"><div class="form-group"><label>设置用户名 *</label><input type="text" id="regUser" class="input" required placeholder="字母开头，2-20位"></div><div class="form-group"><label>设置密码 *</label><input type="password" id="regPwd" class="input" required placeholder="至少6位，含字母和数字"></div><div class="form-row"><div class="form-group"><label>公司全称 *</label><input type="text" id="regCompany" class="input" required></div><div class="form-group"><label>联系人 *</label><input type="text" id="regName" class="input" required></div></div><div class="form-row"><div class="form-group"><label>联系人职位 *</label><input type="text" id="regTitle" class="input" required placeholder="如：销售总监"></div><div class="form-group"><label>联系方式 *</label><input type="tel" id="regPhone" class="input" required placeholder="手机号"></div></div><div class="form-group"><label>联系人邮箱 *</label><input type="email" id="regEmail" class="input" required></div><div class="form-group"><label>申请合作伙伴类型 *</label><select id="regPartnerType" class="input" required onchange="togglePartnerFields()"><option value="">请选择</option><option value="city">城市级合作伙伴</option><option value="project">项目授权合作伙伴</option><option value="industry">行业级合作伙伴</option><option value="ecosystem">生态合作伙伴</option></select></div><div class="form-group hidden" id="regCityGroup"><label>代理城市 *</label><input type="text" id="regCity" class="input" placeholder="请输入城市名称，如：深圳、广州"></div><div class="form-group hidden" id="regIndustryGroup"><label>专注行业 *</label><select id="regIndustry2" class="input"><option value="">请选择</option><option>汽车</option><option>智能制造</option><option>医疗</option><option>政教（含国央企）</option><option>金融</option><option>芯片半导体</option><option>军工</option><option>信创软件</option><option>其他</option></select></div><div class="form-group"><label>备注</label><textarea id="regNote" class="input" rows="2" placeholder="简要介绍贵司业务方向..."></textarea></div><button type="submit" class="btn btn-primary w-full" style="padding:12px;justify-content:center">提交申请</button></form>
     <p class="text-center text-sm text-slate-400 mt-4">已有账号？<a href="#" onclick="showLogin()" style="color:var(--brand);font-weight:600;text-decoration:none">立即登录</a></p><p class="text-center mt-3"><a href="ruanan-marketing-platform.html" style="color:var(--slate-500);font-size:13px;text-decoration:none">← 返回平台首页</a></p>
   </div>
 </div>
@@ -140,7 +140,7 @@ tr:hover td{background:var(--slate-50)}
       <p style="font-size:14px;color:var(--slate-500);margin-top:4px">输入注册邮箱，管理员将为您重置密码</p>
     </div>
     <form onsubmit="submitForgotPwd(event)">
-      <div class="form-group"><label>注册邮箱</label><input type="email" id="forgotEmail" class="input" required placeholder="请输入您的注册邮箱"></div>
+      <div class="form-group"><label>用户名</label><input type="text" id="forgotUser" class="input" required placeholder="请输入您的用户名"></div><div class="form-group"><label>注册邮箱</label><input type="email" id="forgotEmail" class="input" required placeholder="请输入您的注册邮箱"></div>
       <button type="submit" class="btn btn-primary w-full" style="padding:12px;justify-content:center;font-size:16px">提交重置申请</button>
     </form>
     <p class="text-center text-sm text-slate-400 mt-4"><a href="#" onclick="showLogin()" style="color:var(--brand);font-weight:600;text-decoration:none">← 返回登录</a></p>
@@ -306,6 +306,7 @@ tr:hover td{background:var(--slate-50)}
 </div>
 
 <script>
+var API=window.location.hostname==='localhost'?'http://localhost:8081':'';
 const PK='ruanan_partners',CK='ruanan_customers',TK='ruanan_tests',UK='ruanan_user',SK='ruanan_special_prices';
 var defaultProductMaterials=[{id:'p1',title:'SAST 产品白皮书',product:'SAST',type:'白皮书',desc:'静态代码分析技术详解、AI引擎架构、30+语言支持矩阵、MISRA/CERT合规规则集',icon:'📄'},{id:'p2',title:'SAST vs Coverity 竞品对比',product:'SAST',type:'竞品分析',desc:'检出率、语言覆盖、合规规则、本地服务、部署灵活性全面对比',icon:'⚔️'},{id:'p3',title:'SCA 产品手册',product:'SCA',type:'产品手册',desc:'SBOM自动生成、开源漏洞追踪、许可证合规、供应链依赖分析功能概览',icon:'📘'},{id:'p4',title:'SCA vs Blackduck 选型指南',product:'SCA',type:'选型指南',desc:'从功能覆盖、中国生态、本地服务、价格模式四维度对比分析',icon:'📊'},{id:'p5',title:'固件安全测试技术白皮书',product:'固件安全',type:'白皮书',desc:'固件解包引擎、安全启动链验证、BootROM分析、IoT/汽车/通信设备场景',icon:'🔐'},{id:'p6',title:'固件安全 vs Cybellum 对比',product:'固件安全',type:'竞品分析',desc:'芯片级安全启动验证、RISC-V支持、中国合规生态深度对比',icon:'⚔️'},{id:'p7',title:'大模型安全测试方案',product:'大模型安全',type:'解决方案',desc:'提示注入检测、数据泄露评估、模型对抗鲁棒性、AI供应链安全',icon:'🤖'},{id:'p8',title:'AI SAST 技术概述',product:'AI SAST',type:'技术文档',desc:'LLM辅助漏洞分析、自然语言代码查询、遗留代码批量审计、自动修复建议',icon:'✨'},{id:'p9',title:'汽车软件安全解决方案',product:'方案',type:'行业方案',desc:'R155/R156合规、供应商SBOM审计、ECU固件安全、GB/T 44495-44496',icon:'🚗'},{id:'p10',title:'军工软件安全保障方案',product:'方案',type:'行业方案',desc:'GJB 8114/5369合规、涉密离线部署、AI辅助遗留代码审计、全中文支持',icon:'🛡️'},{id:'p11',title:'5G通信设备安全方案',product:'方案',type:'行业方案',desc:'3GPP SECAM审计、NFV安全、MEC安全、基站固件安全、等保2.0',icon:'📡'},{id:'p12',title:'芯片半导体安全方案',product:'方案',type:'行业方案',desc:'BootROM审计、安全启动链验证、密评合规、NPU固件安全、RISC-V支持',icon:'🔲'}];
 var AK='ruanan_announcements';var defaultIndustries=['汽车','芯片半导体','消费电子','军工','电子通信','金融','医疗','教育','政府','其他'];
@@ -340,33 +341,54 @@ function showRegister(){
   document.getElementById('page-register').classList.add('active');document.getElementById('page-register').style.display='flex';
 }
 
-function register(e){
+async function register(e){
   e.preventDefault();
-  var pt=document.getElementById('regPartnerType').value;
-  var ptLabel={'city':'城市级合作伙伴','project':'项目授权合作伙伴','industry':'行业级合作伙伴','ecosystem':'生态合作伙伴'}[pt]||pt;
-  var city=pt==='city'?document.getElementById('regCity').value.trim():'';var industry=pt==='industry'?document.getElementById('regIndustry2').value:'';var p={id:uid(),company:document.getElementById('regCompany').value.trim(),name:document.getElementById('regName').value.trim(),title:document.getElementById('regTitle').value.trim(),email:document.getElementById('regEmail').value.trim(),phone:document.getElementById('regPhone').value.trim(),partnerType:pt,city:city,industry:industry,note:document.getElementById('regNote').value.trim(),status:'pending',createdAt:now()};
-  if(!p.company||!p.name||!p.email||!p.phone||!pt){toast('请填写所有必填项','error');return}
-  var partners=g(PK);
-  if(partners.find(function(x){return x.email===p.email})){toast('该邮箱已提交过申请','error');return}
-  partners.push(p);s(PK,partners);
-  sendFeishu('🆕 新合作伙伴申请',[{l:'公司',v:p.company},{l:'联系人',v:p.name},{l:'职位',v:p.title},{l:'邮箱',v:p.email},{l:'电话',v:p.phone},{l:'类型',v:ptLabel}]);
-  toast('申请已提交！审核通过后即可登录');showLogin();
+  var pt=document.getElementById("regPartnerType").value;
+  var ptLabel={"city":"城市级合作伙伴","project":"项目授权合作伙伴","industry":"行业级合作伙伴","ecosystem":"生态合作伙伴"}[pt]||pt;
+  var city=pt==="city"?document.getElementById("regCity").value.trim():"";
+  var industry=pt==="industry"?document.getElementById("regIndustry2").value:"";
+  var username=document.getElementById("regUser").value.trim();
+  var pwd=document.getElementById("regPwd").value.trim();
+  var company=document.getElementById("regCompany").value.trim();
+  var name=document.getElementById("regName").value.trim();
+  var email=document.getElementById("regEmail").value.trim();
+  var phone=document.getElementById("regPhone").value.trim();
+  if(!username||!pwd||!company||!name||!email||!phone||!pt){toast("请填写所有必填项","error");return}
+  if(username.length<2||username.length>20||!/^[a-zA-Z]/.test(username)){toast("用户名需字母开头，2-20位","error");return}
+  if(pwd.length<6){toast("密码至少6位","error");return}
+  var body="username="+encodeURIComponent(username)+"&password="+encodeURIComponent(pwd)+"&email="+encodeURIComponent(email)+"&phone="+encodeURIComponent(phone)+"&company="+encodeURIComponent(company)+"&role=partner";
+  try{
+    var r=await fetch(API+"/api/register",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:body});
+    var d=await r.json();
+    if(!r.ok){toast(d.detail||"注册失败","error");return}
+    var partners=g(PK);
+    var p={id:d.username||username,company:company,name:name,title:document.getElementById("regTitle").value.trim(),email:email,phone:phone,partnerType:pt,city:city,industry:industry,note:document.getElementById("regNote").value.trim(),status:"pending",createdAt:now(),username:username};
+    partners.push(p);s(PK,partners);
+    sendFeishu("🆕 新合作伙伴申请",[{l:"公司",v:company},{l:"用户名",v:username},{l:"联系人",v:name},{l:"邮箱",v:email},{l:"电话",v:phone},{l:"类型",v:ptLabel}]);
+    toast("申请已提交！管理员审核通过后即可登录");showLogin();
+  }catch(e){toast("网络错误，请稍后重试","error");}
 }
 
 function togglePartnerFields(){var v=document.getElementById('regPartnerType').value;document.getElementById('regCityGroup').classList.toggle('hidden',v!=='city');document.getElementById('regIndustryGroup').classList.toggle('hidden',v!=='industry')}
 
-function login(e){
+async function login(e){
   e.preventDefault();
-  var email=document.getElementById('loginEmail').value.trim(),pwd=document.getElementById('loginPwd').value.trim();
-  var partners=g(PK),p=partners.find(function(x){return x.email===email&&x.password===pwd});
-  if(!p){toast('邮箱或密码错误','error');return}
-  if(p.status==='pending'){toast('账号审核中，请联系管理员','error');return}
-  if(p.status==='rejected'){toast('账号已被拒绝','error');return}
-  localStorage.setItem(UK,JSON.stringify(p));
-  document.getElementById('sidebar').classList.add('show');document.getElementById('mainContent').classList.remove('full');
-  document.getElementById('sidebarName').textContent=p.name;document.getElementById('sidebarCompany').textContent=p.company;
-  document.getElementById('sidebarAvatar').textContent=p.name.charAt(0);document.getElementById('dashName').textContent=p.name;
-  refreshDashboard();goPage('dashboard');
+  var username=document.getElementById("loginUser").value.trim(),pwd=document.getElementById("loginPwd").value.trim();
+  if(!username||!pwd){toast("请输入用户名和密码","error");return}
+  try{
+    var r=await fetch(API+"/api/login",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:"username="+encodeURIComponent(username)+"&password="+encodeURIComponent(pwd)});
+    var d=await r.json();
+    if(!r.ok){toast(d.detail||"登录失败","error");return}
+    var partners=g(PK),lp=partners.find(function(x){return x.username===username||x.email===username});
+    if(lp&&lp.status==="pending"){toast("账号审核中，请联系管理员","error");return}
+    if(lp&&lp.status==="rejected"){toast("账号已被拒绝","error");return}
+    var p={username:d.username||username,role:d.role,token:d.token,company:lp?lp.company:(d.company||""),name:lp?lp.name:(d.username||username),email:lp?lp.email:"",id:lp?lp.id:uid()};
+    localStorage.setItem(UK,JSON.stringify(p));
+    document.getElementById("sidebar").classList.add("show");document.getElementById("mainContent").classList.remove("full");
+    document.getElementById("sidebarName").textContent=p.name;document.getElementById("sidebarCompany").textContent=p.company;
+    document.getElementById("sidebarAvatar").textContent=p.name.charAt(0);document.getElementById("dashName").textContent=p.name;
+    refreshDashboard();goPage("dashboard");
+  }catch(e){toast("网络错误，请稍后重试","error");}
 }
 
 function logout(){
@@ -516,10 +538,10 @@ function handleResetRequest(id,action){
   if(action==='approve'){
     var partners=g(PK);
     var pi=partners.findIndex(function(x){return x.email===requests[i].email});
-    if(pi>=0){partners[pi].password='ruanan123';s(PK,partners)}
+    if(pi>=0){partners[pi].status='approved';s(PK,partners)}
     requests[i].status='done';
     s(RK,requests);
-    toast('密码已重置为 ruanan123，请通知用户');
+    toast('已通过审核，用户可用注册时设置的密码登录');
   }else{
     requests[i].status='rejected';
     s(RK,requests);
@@ -657,7 +679,7 @@ function sendFeishu(title,fields){
 }
 
 if(g(PK).length===0){
-  s(PK,[{id:'Pdemo001',company:'华南科技信息有限公司',name:'张三',email:'demo@partner.com',phone:'13800138000',password:'demo123',industry:'汽车',note:'专注汽车信息安全咨询',status:'approved',createdAt:now()}]);
+  s(PK,[{id:'Pdemo001',username:'demo',company:'华南科技信息有限公司',name:'张三',email:'demo@partner.com',phone:'13800138000',industry:'汽车',note:'专注汽车信息安全咨询',status:'approved',createdAt:now()}]);
 }
 
 var saved=localStorage.getItem(UK);
