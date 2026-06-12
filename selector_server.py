@@ -16,7 +16,7 @@ STATIC_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-product-selecto
 MARKETING_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-marketing-platform.html")
 CUSTOMER_PORTAL_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-customer-portal.html")
 PARTNER_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-partner-portal.html")
-ADMIN_PWD = os.environ.get("ADMIN_PWD", secrets.token_hex(16))
+ADMIN_PWD = os.environ.get("ADMIN_PWD", "admin123")
 
 # ── 安全配置 ──
 MIN_PASSWORD_LENGTH = 8
@@ -294,14 +294,12 @@ async def init_db():
             created_at TEXT DEFAULT(datetime('now','localtime'))
         );
     """)
-    # Create default admin
+    # Create default admin (only if not exists)
     try:
         ph = hashlib.sha256(ADMIN_PWD.encode()).hexdigest()
         existing = await db_fetchone(db, "SELECT id FROM users WHERE username='admin'")
         if not existing:
             await db.execute("INSERT INTO users(username,password_hash,role,email) VALUES(?,?,'admin','admin@ruanan.com')", ('admin', ph))
-        else:
-            await db.execute("UPDATE users SET password_hash=? WHERE username='admin'", (ph,))
     except: pass
     # Migrate: add status column to customer_users if missing
     try:
