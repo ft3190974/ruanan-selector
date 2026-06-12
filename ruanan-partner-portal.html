@@ -116,7 +116,7 @@ tr:hover td{background:var(--slate-50)}
       <div class="form-group"><label>密码</label><input type="password" id="loginPwd" class="input" required placeholder="请输入密码"></div>
       <button type="submit" class="btn btn-primary w-full" style="padding:12px;justify-content:center;font-size:16px">登 录</button>
     </form>
-    <p class="text-center text-sm text-slate-400 mt-4">演示账号: demo / demo123</p><p class="text-center mt-2"><a href="#" onclick="showRegister()" class="btn btn-outline btn-sm" style="color:var(--brand);font-weight:600;text-decoration:none;display:inline-block;padding:8px 24px">提交申请</a></p><p class="text-center mt-4"><a href="ruanan-marketing-platform.html" style="color:var(--slate-500);font-size:13px;text-decoration:none">← 返回平台首页</a></p>
+    <p class="text-center mt-2"><a href="#" onclick="showRegister()" class="btn btn-outline btn-sm" style="color:var(--brand);font-weight:600;text-decoration:none;display:inline-block;padding:8px 24px">提交申请</a></p><p class="text-center mt-4"><a href="ruanan-marketing-platform.html" style="color:var(--slate-500);font-size:13px;text-decoration:none">← 返回平台首页</a></p>
 	      </div>
 </div>
 
@@ -699,9 +699,14 @@ function sendFeishu(title,fields){
   try{fetch(webhook,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({msg_type:'interactive',card:{header:{title:{content:title,tag:'plain_text'},template:'blue'},elements:[{tag:'div',text:{content:lines,tag:'lark_md'}},{tag:'hr'},{tag:'note',elements:[{content:'软安华南区伙伴门户 · '+now(),tag:'plain_text'}]}]}})})}catch(e){}
 }
 
-if(g(PK).length===0){
-  s(PK,[{id:'Pdemo001',username:'demo',password:'demo123',company:'华南科技信息有限公司',name:'张三',email:'demo@partner.com',phone:'13800138000',industry:'汽车',note:'专注汽车信息安全咨询',status:'approved',createdAt:now()}]);
-}
+(function(){
+  var partners=g(PK);
+  var di=partners.findIndex(function(x){return x.id==='Pdemo001'});
+  var demo={id:'Pdemo001',username:'demo',password:'demo123',company:'华南科技信息有限公司',name:'张三',email:'demo@partner.com',phone:'13800138000',industry:'汽车',note:'专注汽车信息安全咨询',status:'approved',createdAt:now()};
+  if(di>=0){partners[di]=Object.assign(partners[di],demo);}
+  else{partners.push(demo);}
+  s(PK,partners);
+})();
 
 var saved=localStorage.getItem(UK);
 if(saved){try{var user=JSON.parse(saved);var found=g(PK).find(function(p){return p.id===user.id&&p.status==='approved'});if(found){localStorage.setItem(UK,JSON.stringify(found));document.getElementById('sidebar').classList.add('show');document.getElementById('mainContent').classList.remove('full');document.getElementById('sidebarName').textContent=found.name;document.getElementById('sidebarCompany').textContent=found.company;document.getElementById('sidebarAvatar').textContent=found.name.charAt(0);document.getElementById('dashName').textContent=found.name;refreshDashboard();goPage('dashboard')}else{localStorage.removeItem(UK)}}catch(e){}}
