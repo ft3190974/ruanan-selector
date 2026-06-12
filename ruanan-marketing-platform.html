@@ -448,7 +448,7 @@ PAGES.home=function(){
   h+='<div class="qaction-card" onclick="nav(\'selector\')"><div class="qa-icon purple">🔬</div><div class="qa-body"><div class="qa-title">用户需求匹配</div><div class="qa-desc">AI分析 + 自主选型 + 快速联系</div></div></div>';
   h+='<div class="qaction-card" onclick="nav(\'products\')"><div class="qa-icon gold">📦</div><div class="qa-body"><div class="qa-title">产品中心</div><div class="qa-desc">了解7款核心安全产品</div></div></div>';
   h+='<div class="qaction-card" onclick="nav(\'solutions\')"><div class="qa-icon success">🏭</div><div class="qa-body"><div class="qa-title">行业方案</div><div class="qa-desc">9大行业深度解决方案</div></div></div>';
-  h+='<div class="qaction-card" onclick="window.open(\'/support\')"><div class="qa-icon info">💡</div><div class="qa-body"><div class="qa-title">客户成功技术服务中心</div><div class="qa-desc">知识库与问答社区（客户独立登录）</div></div></div>';
+  h+='<div class="qaction-card" onclick="window.open(\'ruanan-customer-portal.html\')"><div class="qa-icon info">💡</div><div class="qa-body"><div class="qa-title">客户成功技术服务中心</div><div class="qa-desc">知识库与问答社区（客户独立登录）</div></div></div>';
   h+='</div>';
 
   // Stats
@@ -601,7 +601,7 @@ function loadInsights(search){
 
 // ═══ BLOG (客户成功技术服务中心) ═══
 PAGES.blog=function(){
-  window.location.href='/support';
+  window.location.href='ruanan-customer-portal.html';
   return '<div class="empty-state"><div class="es-icon">💡</div><div class="es-title">正在跳转到客户成功技术服务中心...</div></div>';
 };
 
