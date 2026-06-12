@@ -708,8 +708,11 @@ function sendFeishu(title,fields){
   s(PK,partners);
 })();
 
-var saved=localStorage.getItem(UK);
-if(saved){try{var user=JSON.parse(saved);var found=g(PK).find(function(p){return p.id===user.id&&p.status==='approved'});if(found){localStorage.setItem(UK,JSON.stringify(found));document.getElementById('sidebar').classList.add('show');document.getElementById('mainContent').classList.remove('full');document.getElementById('sidebarName').textContent=found.name;document.getElementById('sidebarCompany').textContent=found.company;document.getElementById('sidebarAvatar').textContent=found.name.charAt(0);document.getElementById('dashName').textContent=found.name;refreshDashboard();goPage('dashboard')}else{localStorage.removeItem(UK)}}catch(e){}}
+// Restore saved username only (not auto-login)
+var savedUser=localStorage.getItem('ruanan_saved_user');
+if(savedUser){try{document.getElementById('loginUser').value=savedUser;}catch(e){}}
+// Always start at login page - password required every visit
+localStorage.removeItem(UK);
 
 // ====== ANNOUNCEMENTS ======
 function getAnnouncements(){try{return JSON.parse(localStorage.getItem(AK))||[]}catch(e){return[]}}

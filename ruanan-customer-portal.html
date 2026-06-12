@@ -229,6 +229,7 @@ async function doLogin(){
     var d=await api('POST','/api/customer/login','username='+encodeURIComponent(u)+'&password='+encodeURIComponent(p));
     customerToken=d.token;customerUser={username:d.username,id:d.id,role:'customer'};
     localStorage.setItem('customer_token',customerToken);
+    localStorage.setItem('customer_saved_user',u);
     document.getElementById('loginOverlay').style.display='none';
     document.getElementById('appLayout').style.display='flex';
     updateUI();nav('kb');
@@ -244,7 +245,7 @@ async function doForgot(){
 
 function _openCustChangePwd(){var m=document.createElement('div');m.className='modal-overlay';m.onclick=function(e){if(e.target===m)m.remove()};m.innerHTML='<div class=\"modal-box\" style=\"max-width:420px\"><h3 style=\"margin-bottom:16px\">修改密码</h3><p style=\"font-size:12px;color:var(--text3);margin-bottom:12px\">密码需8位以上，含字母和数字</p><div class=\"form-group\"><label>原密码</label><input id=\"cpOld\" type=\"password\"></div><div class=\"form-group\"><label>新密码</label><input id=\"cpNew\" type=\"password\"></div><div class=\"form-group\"><label>确认新密码</label><input id=\"cpNew2\" type=\"password\"></div><button class=\"btn btn-primary btn-lg\" onclick=\"_doCustChangePwd(this)\" style=\"width:100%;justify-content:center\">确认修改</button></div>';document.body.appendChild(m)}
 async function _doCustChangePwd(btn){var o=document.getElementById('cpOld')?.value,p=document.getElementById('cpNew')?.value,p2=document.getElementById('cpNew2')?.value;if(!o||!p){toast('请填写完整','error');return}if(p!==p2){toast('两次密码不一致','error');return}if(p.length<8||!/[A-Za-z]/.test(p)||!/[0-9]/.test(p)){toast('密码需8位以上，含字母和数字','error');return}try{await api('POST','/api/customer/change-password',fd({old_password:o,new_password:p}));toast('密码修改成功');btn.closest('.modal-overlay').remove()}catch(e){toast(e.message,'error')}}
-function doLogout(){customerToken='';customerUser=null;localStorage.removeItem('customer_token');document.getElementById('loginOverlay').style.display='flex';document.getElementById('appLayout').style.display='none';updateUI();showLogin('login');}
+function doLogout(){customerToken='';customerUser=null;localStorage.removeItem('customer_token');localStorage.removeItem('customer_saved_user');document.getElementById('loginOverlay').style.display='flex';document.getElementById('appLayout').style.display='none';updateUI();showLogin('login');}
 
 // ═══ UI ═══
 function updateUI(){
@@ -498,12 +499,11 @@ function toast(msg,t){
 }
 
 // ═══ INIT ═══
-if(customerToken){
-  api('GET','/api/customer/me').then(function(u){
-    if(u.role!=='guest'){customerUser=u;document.getElementById('loginOverlay').style.display='none';document.getElementById('appLayout').style.display='flex';updateUI();nav('kb');}
-    else{customerToken='';localStorage.removeItem('customer_token');showLogin('login');}
-  }).catch(function(){customerToken='';localStorage.removeItem('customer_token');showLogin('login')});
-}else{showLogin('login');}
+// Clear auth token on load - password required every visit
+customerToken='';localStorage.removeItem('customer_token');
+var savedUser=localStorage.getItem('customer_saved_user');
+showLogin('login');
+if(savedUser){setTimeout(function(){var el=document.getElementById('lu');if(el)el.value=savedUser;},100);}
 </script>
 </body>
 </html>

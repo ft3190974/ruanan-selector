@@ -364,7 +364,7 @@ function skipLogin(){authUser={username:'guest',role:'guest'};hideLogin();update
 async function doLogin(){
   var u=document.getElementById('lu').value.trim(),p=document.getElementById('lp').value.trim();
   if(!u||!p){showErr('请输入用户名和密码');return;}
-  try{var d=await api('POST','/api/login','username='+encodeURIComponent(u)+'&password='+encodeURIComponent(p));authToken=d.token;authUser=d;localStorage.setItem('selector_token',authToken);hideLogin();updateAll();toast('登录成功');}catch(e){showErr(e.message);}
+  try{var d=await api('POST','/api/login','username='+encodeURIComponent(u)+'&password='+encodeURIComponent(p));authToken=d.token;authUser=d;localStorage.setItem('selector_token',authToken);localStorage.setItem('selector_saved_user',u);hideLogin();updateAll();toast('登录成功');}catch(e){showErr(e.message);}
 }
 async function doRegister(){
   var u=document.getElementById('regUser').value.trim(),p=document.getElementById('regPwd').value.trim(),em=document.getElementById('regEmail').value.trim(),ph=document.getElementById('regPhone').value.trim(),cp=document.getElementById('regCompany').value.trim(),rl=document.getElementById('regRole').value;
@@ -378,7 +378,7 @@ async function doForgot(){
   if(!u||!em){showErr('请填写用户名和邮箱');return;}
   try{var d=await api('POST','/api/forgot-password','username='+encodeURIComponent(u)+'&email='+encodeURIComponent(em));alert(d.message);showLogin('login');}catch(e){showErr(e.message);}
 }
-function doLogout(){authToken='';authUser=null;localStorage.removeItem('selector_token');updateAll();nav('home');toast('已退出登录');}
+function doLogout(){authToken='';authUser=null;localStorage.removeItem('selector_token');localStorage.removeItem('selector_saved_user');updateAll();nav('home');toast('已退出登录');}
 
 /* ── NAVIGATION ── */
 function updateAll(){updateSidebar();updateTopbar();}
@@ -689,7 +689,12 @@ async function delUser(id){if(!confirm('确定删除？'))return;try{await api('
 // ── Training admin helpers ──
 
 /* ═══ INIT ═══ */
-if(authToken){api('GET','/api/me').then(function(u){if(u.role!=='guest'){authUser=u;updateAll();}else{authToken='';localStorage.removeItem('selector_token');}var h=window.location.hash.replace('#','');nav(h&&PAGES[h]?h:'home');}).catch(function(){authToken='';localStorage.removeItem('selector_token');var h=window.location.hash.replace('#','');nav(h&&PAGES[h]?h:'home');})}else{var h=window.location.hash.replace('#','');nav(h&&PAGES[h]?h:'home')}
+// Clear auth token on load - password required every visit
+authToken='';localStorage.removeItem('selector_token');
+// Restore saved username
+var savedUser=localStorage.getItem('selector_saved_user');
+if(savedUser){var el=document.getElementById('lu');if(el)el.value=savedUser;}
+var h=window.location.hash.replace('#','');nav(h&&PAGES[h]?h:'home');
 window.onhashchange=function(){var h=window.location.hash.replace('#','');if(PAGES[h])nav(h);};
 </script>
 <style>
