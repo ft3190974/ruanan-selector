@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Edit",
+      "Write",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git remote *)",
+      "Bash(sed *)",
+      "Bash(curl *)",
+      "Bash(npm install *)",
+      "Bash(npm ls *)",
+      "Bash(node temp-repo/*)",
+      "Bash(taskkill *)",
+      "Bash(netstat *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(rm -rf */.git)",
+      "WebFetch",
+      "WebSearch",
+      "Read",
+      "Grep",
+      "Glob",
+      "Skill",
+      "TaskCreate",
+      "TaskUpdate",
+      "TaskOutput",
+      "Bash(node *)",
+      "Bash(python *)",
+      "Bash(sleep *)",
+      "Bash(rm *)",
+      "Bash(wc *)",
+      "Bash(ls *)",
+      "Bash(mv *)",
+      "Bash(find *)",
+      "Bash(grep *)",
+      "Bash(diff *)",
+      "Bash(pip *)",
+      "Bash(npx *)"
+    ]
+  }
+}

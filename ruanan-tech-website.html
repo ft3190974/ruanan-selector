@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>软安科技 | 软件安全测试专家 - SAST·SCA·固件安全·大模型安全·AI SAST</title>
+<meta name="description" content="软安科技提供SAST静态代码分析、SCA软件成分分析、固件安全测试、大模型安全测试、AI SAST，对标Coverity/Blackduck/Cybellum，覆盖汽车、芯片、军工、消费电子、通信等行业。">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        brand: {50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a',950:'#172554'},
+        surface:{dark:'#0f172a',card:'#1e293b',light:'#f8fafc'}
+      }
+    }
+  }
+}
+</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+  *{font-family:'Inter','Noto Sans SC',sans-serif}
+  html{scroll-behavior:smooth}
+  .gradient-hero{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 50%,#0f172a 100%)}
+  .gradient-card{background:linear-gradient(135deg,rgba(30,41,59,0.9) 0%,rgba(15,23,42,0.95) 100%)}
+  .gradient-blue{background:linear-gradient(135deg,#2563eb 0%,#06b6d4 100%)}
+  .text-gradient{background:linear-gradient(135deg,#60a5fa 0%,#06b6d4 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .glow{box-shadow:0 0 40px rgba(59,130,246,0.15)}
+  .glow-cyan{box-shadow:0 0 30px rgba(6,182,212,0.2)}
+  .section-dark{background:#0f172a}
+  .section-light{background:#f8fafc}
+  .card-hover{transition:all 0.3s ease}
+  .card-hover:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,0.2)}
+  .module-badge{display:inline-block;padding:2px 10px;border-radius:9999px;font-size:12px;font-weight:500}
+  .module-on{background:rgba(34,197,94,0.15);color:#4ade80}
+  .module-off{background:rgba(148,163,184,0.1);color:#94a3b8}
+  /* Chat Widget */
+  .chat-widget{position:fixed;bottom:24px;right:24px;z-index:9999}
+  .chat-bubble{width:56px;height:56px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s}
+  .chat-bubble:hover{transform:scale(1.08)}
+  .chat-window{position:fixed;bottom:96px;right:24px;width:380px;height:520px;border-radius:16px;display:none;flex-direction:column;overflow:hidden;z-index:9998}
+  .chat-window.open{display:flex}
+  @media(max-width:480px){.chat-window{width:calc(100vw-32px);right:16px;bottom:80px;height:420px}}
+  /* Steps */
+  .step-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;transition:all 0.3s}
+  .step-dot.active{background:#2563eb;color:#fff}
+  .step-dot.done{background:#16a34a;color:#fff}
+  .step-dot.pending{background:#334155;color:#94a3b8}
+  .step-line{width:40px;height:2px;background:#334155;transition:all 0.3s}
+  .step-line.done{background:#16a34a}
+  /* Animations */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  .animate-fadeUp{animation:fadeUp 0.6s ease forwards}
+  @keyframes pulse-glow{0%,100%{box-shadow:0 0 20px rgba(59,130,246,0.2)}50%{box-shadow:0 0 40px rgba(59,130,246,0.4)}}
+  .pulse-glow{animation:pulse-glow 2s infinite}
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);z-index:9990;display:none;align-items:center;justify-content:center}
+  .modal-overlay.open{display:flex}
+  .modal-box{background:#1e293b;border-radius:20px;padding:32px;max-width:700px;width:90%;max-height:85vh;overflow-y:auto;border:1px solid rgba(59,130,246,0.2)}
+  .comparison-check{color:#4ade80;font-weight:700}
+  .comparison-cross{color:#f87171}
+  .comparison-partial{color:#fbbf24}
+</style>
+</head>
+<body class="bg-surface-dark text-white">
+
+<!-- ==================== NAVIGATION ==================== -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-surface-dark/95 backdrop-blur-md border-b border-white/5" id="navbar">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg gradient-blue flex items-center justify-center font-black text-white text-sm">软</div>
+        <span class="text-lg font-bold tracking-tight">软安科技<span class="text-brand-400 font-normal text-sm ml-2 hidden sm:inline">SoftSec</span></span>
+      </div>
+      <div class="hidden lg:flex items-center gap-1">
+        <a href="#home" class="px-3 py-2 text-sm text-slate-300 hover:text-white rounded-lg hover:bg-white/5 transition">首页</a>
+        <a href="#products" class="px-3 py-2 text-sm text-slate-300 hover:text-white rounded-lg hover:bg-white/5 transition">产品</a>
+        <a href="#solutions" class="px-3 py-2 text-sm text-slate-300 hover:text-white rounded-lg hover:bg-white/5 transition">解决方案</a>
+        <a href="#cases" class="px-3 py-2 text-sm text-slate-300 hover:text-white rounded-lg hover:bg-white/5 transition">案例</a>
+        <a href="#comparison" class="px-3 py-2 text-sm text-slate-300 hover:text-white rounded-lg hover:bg-white/5 transition">竞品对比</a>
+        <button onclick="openWizard()" class="px-4 py-2 text-sm bg-brand-600 hover:bg-brand-500 rounded-lg transition font-medium">智能选型</button>
+        <a href="#demo" class="px-4 py-2 text-sm border border-brand-500 text-brand-400 hover:bg-brand-500/10 rounded-lg transition">申请试用</a>
+      </div>
+      <button class="lg:hidden text-white p-2" onclick="toggleMobileMenu()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+  <!-- Mobile Menu -->
+  <div class="lg:hidden hidden bg-surface-dark border-b border-white/5" id="mobileMenu">
+    <div class="px-4 py-3 flex flex-col gap-1">
+      <a href="#home" onclick="toggleMobileMenu()" class="px-3 py-2.5 text-slate-300 hover:text-white rounded-lg">首页</a>
+      <a href="#products" onclick="toggleMobileMenu()" class="px-3 py-2.5 text-slate-300 hover:text-white rounded-lg">产品</a>
+      <a href="#solutions" onclick="toggleMobileMenu()" class="px-3 py-2.5 text-slate-300 hover:text-white rounded-lg">解决方案</a>
+      <a href="#cases" onclick="toggleMobileMenu()" class="px-3 py-2.5 text-slate-300 hover:text-white rounded-lg">案例</a>
+      <a href="#comparison" onclick="toggleMobileMenu()" class="px-3 py-2.5 text-slate-300 hover:text-white rounded-lg">竞品对比</a>
+      <button onclick="openWizard();toggleMobileMenu()" class="px-3 py-2.5 text-left text-brand-400 rounded-lg">智能选型</button>
+      <a href="#demo" onclick="toggleMobileMenu()" class="px-3 py-2.5 text-brand-400 rounded-lg">申请试用</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section id="home" class="gradient-hero pt-32 pb-20 px-4">
+  <div class="max-w-7xl mx-auto text-center">
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-300 text-sm mb-8">
+      <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span> 为关键系统构建软件安全防线
+    </div>
+    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight mb-6">
+      覆盖<span class="text-gradient">代码·组件·固件·AI</span><br>全生命周期软件安全
+    </h1>
+    <p class="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto mb-10 leading-relaxed">
+      5大产品线 × 5大行业解决方案，帮助汽车、芯片、军工、通信、消费电子企业<br class="hidden sm:block">
+      满足R155/R156、等保2.0、GJB 8114等合规要求，构建自主可控的软件安全测试体系
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <button onclick="openWizard()" class="px-8 py-3.5 rounded-xl gradient-blue text-white font-semibold text-lg hover:opacity-90 transition pulse-glow">免费智能选型</button>
+      <a href="#demo" class="px-8 py-3.5 rounded-xl border border-white/20 text-white font-semibold text-lg hover:bg-white/5 transition">预约产品演示</a>
+    </div>
+    <div class="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto">
+      <div class="text-center"><div class="text-3xl font-black text-white mb-1">99.2<span class="text-brand-400">%</span></div><div class="text-xs text-slate-400">漏洞检出率</div></div>
+      <div class="text-center"><div class="text-3xl font-black text-white mb-1">30<span class="text-brand-400">+</span></div><div class="text-xs text-slate-400">支持编程语言</div></div>
+      <div class="text-center"><div class="text-3xl font-black text-white mb-1">200<span class="text-brand-400">+</span></div><div class="text-xs text-slate-400">服务客户</div></div>
+      <div class="text-center"><div class="text-3xl font-black text-white mb-1">5<span class="text-brand-400">大</span></div><div class="text-xs text-slate-400">产品矩阵</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PRODUCTS ==================== -->
+<section id="products" class="section-dark py-20 px-4">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-14">
+      <div class="text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3">Products</div>
+      <h2 class="text-3xl sm:text-4xl font-black mb-4">五大核心产品线</h2>
+      <p class="text-slate-400 max-w-xl mx-auto">从源代码到二进制固件，从开源组件到AI模型，全栈安全检测能力</p>
+    </div>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="productGrid"></div>
+  </div>
+</section>
+
+<!-- ==================== SOLUTIONS ==================== -->
+<section id="solutions" class="section-light py-20 px-4 text-slate-900">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-14">
+      <div class="text-brand-600 text-sm font-semibold tracking-widest uppercase mb-3">Solutions</div>
+      <h2 class="text-3xl sm:text-4xl font-black mb-4">行业解决方案</h2>
+      <p class="text-slate-500 max-w-xl mx-auto">深耕五大关键行业，提供合规驱动的安全检测方案</p>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="solutionGrid"></div>
+  </div>
+</section>
+
+<!-- ==================== CASES ==================== -->
+<section id="cases" class="section-dark py-20 px-4">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-14">
+      <div class="text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3">Case Studies</div>
+      <h2 class="text-3xl sm:text-4xl font-black mb-4">典型客户案例</h2>
+      <p class="text-slate-400 max-w-xl mx-auto">来自真实客户的安全检测实践，了解软安如何帮助企业构建安全防线</p>
+    </div>
+    <div class="flex flex-wrap gap-3 mb-10 justify-center" id="caseFilters"></div>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="caseGrid"></div>
+    <!-- Case Detail Modal -->
+    <div class="modal-overlay" id="caseModal">
+      <div class="modal-box" id="caseModalContent"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== COMPARISON ==================== -->
+<section id="comparison" class="section-light py-20 px-4 text-slate-900">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-14">
+      <div class="text-brand-600 text-sm font-semibold tracking-widest uppercase mb-3">Comparison</div>
+      <h2 class="text-3xl sm:text-4xl font-black mb-4">产品竞争力对比</h2>
+      <p class="text-slate-500 max-w-xl mx-auto">透明对比国际竞品，帮您做出最佳选型决策</p>
+    </div>
+    <div class="mb-8 flex flex-wrap gap-4 justify-center" id="comparisonSelectors"></div>
+    <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm" id="comparisonTable"></div>
+  </div>
+</section>
+
+<!-- ==================== DEMO ==================== -->
+<section id="demo" class="section-dark py-20 px-4">
+  <div class="max-w-2xl mx-auto text-center">
+    <div class="text-brand-400 text-sm font-semibold tracking-widest uppercase mb-3">Get Started</div>
+    <h2 class="text-3xl sm:text-4xl font-black mb-4">预约演示 / 申请试用</h2>
+    <p class="text-slate-400 mb-10">填写信息，我们的安全专家将在24小时内与您联系</p>
+    <form id="demoForm" class="text-left space-y-5" onsubmit="submitDemo(event)">
+      <div class="grid sm:grid-cols-2 gap-5">
+        <div><label class="block text-sm text-slate-300 mb-1.5">公司名称 *</label><input type="text" required class="w-full bg-surface-card border border-white/10 rounded-lg px-4 py-2.5 text-white focus:border-brand-500 focus:outline-none transition" placeholder="请输入公司名称"></div>
+        <div><label class="block text-sm text-slate-300 mb-1.5">联系人 *</label><input type="text" required class="w-full bg-surface-card border border-white/10 rounded-lg px-4 py-2.5 text-white focus:border-brand-500 focus:outline-none transition" placeholder="请输入联系人姓名"></div>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-5">
+        <div><label class="block text-sm text-slate-300 mb-1.5">邮箱 *</label><input type="email" required class="w-full bg-surface-card border border-white/10 rounded-lg px-4 py-2.5 text-white focus:border-brand-500 focus:outline-none transition" placeholder="your@company.com"></div>
+        <div><label class="block text-sm text-slate-300 mb-1.5">电话</label><input type="tel" class="w-full bg-surface-card border border-white/10 rounded-lg px-4 py-2.5 text-white focus:border-brand-500 focus:outline-none transition" placeholder="请输入联系电话"></div>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-5">
+        <div><label class="block text-sm text-slate-300 mb-1.5">行业</label><select class="w-full bg-surface-card border border-white/10 rounded-lg px-4 py-2.5 text-white focus:border-brand-500 focus:outline-none transition"><option>汽车</option><option>芯片半导体</option><option>消费电子</option><option>军工</option><option>电子通信</option><option>其他</option></select></div>
+        <div><label class="block text-sm text-slate-300 mb-1.5">兴趣产品</label><select class="w-full bg-surface-card border border-white/10 rounded-lg px-4 py-2.5 text-white focus:border-brand-500 focus:outline-none transition"><option>SAST 静态代码分析</option><option>SCA 软件成分分析</option><option>固件安全测试</option><option>大模型安全测试</option><option>AI SAST</option><option>综合方案/多产品</option></select></div>
+      </div>
+      <div><label class="block text-sm text-slate-300 mb-1.5">备注</label><textarea rows="3" class="w-full bg-surface-card border border-white/10 rounded-lg px-4 py-2.5 text-white focus:border-brand-500 focus:outline-none transition" placeholder="请描述您的需求或关注的安全问题..."></textarea></div>
+      <button type="submit" class="w-full py-3 rounded-xl gradient-blue text-white font-semibold text-lg hover:opacity-90 transition">提交申请</button>
+    </form>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="bg-slate-950 border-t border-white/5 py-12 px-4">
+  <div class="max-w-7xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-8 text-sm text-slate-400">
+    <div>
+      <div class="flex items-center gap-2 mb-4"><div class="w-8 h-8 rounded-lg gradient-blue flex items-center justify-center font-black text-white text-xs">软</div><span class="text-white font-bold">软安科技</span></div>
+      <p class="leading-relaxed">为关键系统构建软件安全防线。自主可控，安全可信。</p>
+    </div>
+    <div><h4 class="text-white font-semibold mb-3">产品</h4><div class="space-y-2"><p>SAST 静态代码分析</p><p>SCA 软件成分分析</p><p>固件安全测试</p><p>大模型安全测试</p><p>AI SAST</p></div></div>
+    <div><h4 class="text-white font-semibold mb-3">解决方案</h4><div class="space-y-2"><p>汽车软件安全</p><p>芯片半导体安全</p><p>消费电子安全</p><p>军工软件安全</p><p>通信设备安全</p></div></div>
+    <div><h4 class="text-white font-semibold mb-3">联系我们</h4><div class="space-y-2"><p>邮箱: contact@ruanan.com</p><p>电话: 400-XXX-XXXX</p><p>地址: 深圳市南山区</p></div></div>
+  </div>
+  <div class="max-w-7xl mx-auto mt-10 pt-6 border-t border-white/5 text-center text-xs text-slate-500">
+    &copy; 2026 软安科技有限公司. 保留所有权利.
+  </div>
+</footer>
+
+<!-- ==================== PRODUCT SELECTION WIZARD MODAL ==================== -->
+<div class="modal-overlay" id="wizardModal">
+  <div class="modal-box">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-xl font-bold">智能产品选型</h3>
+      <button onclick="closeWizard()" class="text-slate-400 hover:text-white text-2xl leading-none">&times;</button>
+    </div>
+    <!-- Steps indicator -->
+    <div class="flex items-center justify-center gap-0 mb-8">
+      <div class="flex items-center"><div class="step-dot active" id="stepDot1">1</div><span class="text-xs text-slate-400 ml-2 hidden sm:inline">行业</span></div>
+      <div class="step-line mx-2" id="stepLine1"></div>
+      <div class="flex items-center"><div class="step-dot pending" id="stepDot2">2</div><span class="text-xs text-slate-400 ml-2 hidden sm:inline">关注领域</span></div>
+      <div class="step-line mx-2" id="stepLine2"></div>
+      <div class="flex items-center"><div class="step-dot pending" id="stepDot3">3</div><span class="text-xs text-slate-400 ml-2 hidden sm:inline">合规需求</span></div>
+      <div class="step-line mx-2" id="stepLine3"></div>
+      <div class="flex items-center"><div class="step-dot pending" id="stepDot4">4</div><span class="text-xs text-slate-400 ml-2 hidden sm:inline">技术环境</span></div>
+      <div class="step-line mx-2" id="stepLine4"></div>
+      <div class="flex items-center"><div class="step-dot pending" id="stepDot5">5</div><span class="text-xs text-slate-400 ml-2 hidden sm:inline">结果</span></div>
+    </div>
+    <div id="wizardContent"></div>
+  </div>
+</div>
+
+<!-- ==================== AI CHAT WIDGET ==================== -->
+<div class="chat-widget">
+  <div class="chat-window bg-surface-card border border-white/10 shadow-2xl" id="chatWindow">
+    <div class="bg-brand-700 px-5 py-3.5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm">AI</div>
+        <div><div class="text-sm font-semibold">软安选型助手</div><div class="text-xs text-brand-200">在线</div></div>
+      </div>
+      <button onclick="toggleChat()" class="text-white/60 hover:text-white text-xl">&times;</button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-4 space-y-3 text-sm" id="chatMessages">
+      <div class="flex gap-2"><div class="w-7 h-7 rounded-full bg-brand-600 flex items-center justify-center text-xs shrink-0">AI</div><div class="bg-white/5 rounded-lg px-3 py-2 text-slate-200">您好！我是软安科技产品选型助手。我可以帮您：<br>• 根据需求推荐合适产品<br>• 解答合规标准问题<br>• 对比产品差异<br><br>请告诉我您所在的行业和关注的安全问题？</div></div>
+    </div>
+    <div class="p-3 border-t border-white/5 flex gap-2">
+      <input type="text" id="chatInput" placeholder="输入您的问题..." class="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-brand-500 focus:outline-none" onkeydown="if(event.key==='Enter')sendMessage()">
+      <button onclick="sendMessage()" class="px-4 py-2 bg-brand-600 hover:bg-brand-500 rounded-lg text-sm transition">发送</button>
+    </div>
+  </div>
+  <div class="chat-bubble gradient-blue" onclick="toggleChat()" id="chatBubble">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  </div>
+</div>
+
+<script>
+// ==================== DATA ====================
+const products = [
+  {id:'sast',name:'SAST 静态代码分析',icon:'&#x1F50D;',tagline:'源代码级漏洞检测，精准定位安全缺陷',desc:'基于自研AI引擎的静态应用安全测试工具，支持30+编程语言，覆盖MISRA C、CERT、CWE等国际标准，检出率99.2%，误报率低于5%。对标Coverity，本地化合规支持更优。',features:['30+编程语言支持','MISRA/CERT/CWE规则集','AI辅助误报消减','DevSecOps集成','增量扫描<3分钟','GB/T 44495合规规则'],competitor:'Coverity',languages:'C/C++, Java, Python, JavaScript, Go, C#, PHP, Ruby, Rust, Swift, Kotlin, TypeScript 等30+',deploy:'本地部署 / 私有云 / 涉密离线'},
+  {id:'sca',name:'SCA 软件成分分析',icon:'📦',tagline:'开源组件成分识别与漏洞管理',desc:'自动生成SBOM软件物料清单，实时追踪开源组件漏洞(CVE)及许可证合规风险。对标Blackduck，更理解中国企业的开源治理场景。',features:['SBOM自动生成','CVE/NVD实时同步','许可证合规检测','供应链依赖分析','SPDX/CycloneDX导出','供应商自助检测门户'],competitor:'Blackduck',languages:'支持所有主流包管理器: Maven, npm, PyPI, NuGet, Go Modules, Cargo 等',deploy:'本地部署 / 私有云 / SaaS'},
+  {id:'firmware',name:'固件安全测试',icon:'🔐',tagline:'固件二进制深度安全分析',desc:'针对IoT设备、汽车ECU、通信设备固件的二进制安全分析。覆盖BootROM到应用程序的全链路检测，对标Cybellum，支持RISC-V等新兴架构。',features:['固件解包与逆向分析','硬编码密钥检测','安全启动链验证','已知CVE漏洞匹配','JTAG/SWD接口检测','RISC-V架构支持'],competitor:'Cybellum',languages:'ARM/Thumb, x86/x64, RISC-V, MIPS, PowerPC, AVR 等',deploy:'本地部署 / 涉密离线 / 私有云'},
+  {id:'llm-security',name:'大模型安全测试',icon:'🤖',tagline:'AI大模型全生命周期安全评估',desc:'覆盖模型训练、推理、部署全阶段的安全测试。检测提示注入、数据泄露、模型逆向、对抗样本等AI特有安全风险。',features:['提示注入检测','训练数据泄露评估','模型对抗鲁棒性测试','输出内容安全审查','API接口安全测试','模型供应链安全'],competitor:'暂无直接竞品',languages:'支持主流模型框架: PyTorch, TensorFlow, ONNX, vLLM 等',deploy:'本地部署 / 私有云'},
+  {id:'ai-sast',name:'AI SAST',icon:'✨',tagline:'AI驱动的智能静态代码分析',desc:'将大语言模型与传统SAST引擎结合，提升漏洞理解深度，自动生成修复建议，大幅降低安全审计人力成本。',features:['LLM辅助漏洞分析','自动修复建议生成','自然语言查询代码','遗留代码批量审计','安全知识图谱','审计报告自动生成'],competitor:'传统SAST+AI增强',languages:'同SAST产品线 + 框架级语义理解增强',deploy:'本地部署 / 私有云 / SaaS'}
+];
+
+const solutions = [
+  {id:'automotive',name:'汽车软件供应链安全',icon:'🚗',compliance:['WP.29 R155','R156','GB/T 44495','GB/T 44496','ISO/SAE 21434'],painPoints:['供应商代码质量参差不齐','开源组件合规审计周期长','车型准入审查缺少系统化工具','ECU固件安全检测能力缺失'],desc:'覆盖主机厂及Tier-1供应商的全链路软件安全检测方案。从AUTOSAR源码到ECU固件，从SBOM生成到供应商合规审计，一站式满足R155/R156及国标要求。'},
+  {id:'semiconductor',name:'芯片半导体安全',icon:'🔲',compliance:['密评','GM/T 0008','NIST FIPS 140-3','ISO 19790','AEC-Q100'],painPoints:['BootROM漏洞流片后不可修复','安全启动链缺乏自动化验证','AI加速器固件安全盲区','密码实现合规审计困难'],desc:'从BootROM到应用处理器的芯片全链路安全验证。覆盖安全启动链完整性、密码模块合规、AI引擎固件安全等关键场景。'},
+  {id:'consumer',name:'消费电子IoT安全',icon:'📱',compliance:['个人信息保护法','ETSI EN 303 645','NIST IR 8259','CCC/CQC','数据安全法'],painPoints:['固件硬编码云服务凭证','OTA更新缺乏签名验证','蓝牙/WiFi协议栈漏洞','大规模设备召回风险'],desc:'智能家居、可穿戴、智能门锁等消费电子设备的全场景安全测试，帮助品牌方规避大规模安全事件风险。'},
+  {id:'defense',name:'军工软件安全保障',icon:'🛡️',compliance:['GJB 8114','GJB 5369','GJB 9001C','GJB 438B','军用软件定型审查'],painPoints:['数十万行遗留代码安全审计','涉密环境工具部署受限','国产化替代代码安全验证','人工审查效率低下'],desc:'覆盖Ada/C/C++等军工常用语言的SAST方案，支持全离线涉密部署，内置国军标检查规则集，AI辅助遗留代码审计。'},
+  {id:'telecom',name:'5G通信与网络基础设施安全',icon:'📡',compliance:['3GPP SECAM','等保2.0','网络安全法','CSEC','NESAS'],painPoints:['海外运营商SECAM审计周期长','基站固件远程可利用漏洞','核心网虚拟化组件漏洞','通信设备超长服役期风险'],desc:'从5G基站到核心网的通信设备全栈安全检测，内置3GPP SECAM检查清单，将审计准备周期从6个月缩短至2个月。'}
+];
+
+const cases = [
+  {id:'case1',title:'某合资主机厂汽车软件供应链安全合规落地实践',industry:'automotive',product:['sast','sca','firmware'],excerpt:'该主机厂在车型准入审查中面临供应商代码质量和开源合规双重挑战。通过SAST+SCA+固件安全测试三件套，供应商代码缺陷密度从12.7/KLOC降至2.1/KLOC，合规审计周期缩短60%。',challenge:'某合资品牌主机厂在2025年新车型准入审查中，被要求提供全部47家Tier-1供应商的SBOM和漏洞扫描报告。此前各供应商使用不同工具出具的报告格式不一、质量参差，合规审查团队需要数月手工汇总。同时多款ECU固件被发现存在硬编码调试密钥，构成严重安全隐患。',solution:'部署软安SAST对供应商交付的C/C++/AUTOSAR源码进行统一静态分析，覆盖MISRA C:2012和CERT C标准；部署SCA生成标准化SBOM，建立供应商开源合规自查门户；部署固件安全测试平台对T-BOX、网关、域控制器固件进行二进制安全分析。三款产品数据通过统一平台汇聚，形成"代码-组件-固件"三层检测闭环。',results:[{metric:'缺陷密度',value:'12.7→2.1/KLOC'},{metric:'合规审计周期',value:'缩短60%'},{metric:'固件高危漏洞',value:'发现23个'},{metric:'GB/T 44495',value:'一次通过'}],competitiveNote:'相比分别采购Coverity+Blackduck+第三方固件检测方案，软安单一厂商完整方案避免了多工具数据孤岛，且内置GB/T 44495/44496中国法规检查规则集。'},  {id:'case2',title:'某AI芯片厂商BootROM安全审计与固件安全验证',industry:'semiconductor',product:['firmware','sast','llm-security'],excerpt:'该AI芯片厂商在流片前通过固件安全测试平台对BootROM和启动链进行深度审计，发现3个不可修复的高危漏洞，避免了数亿元的流片损失。',challenge:'某国产AI芯片厂商在28nm SoC流片前夕，安全架构团队对BootROM和Secure Boot Chain的验证仍主要依赖人工代码审查和有限的fuzzing测试。芯片内嵌NPU的AI推理引擎固件安全更是缺乏成熟的检测工具。',solution:'部署软安固件安全测试平台对BootROM二进制、SBL/ABL引导加载程序、TEE可信执行环境进行深度静态分析；SAST对芯片配套SDK的HAL层C代码进行规则检测；大模型安全测试平台对NPU推理引擎的模型加载接口和运行时进行安全评估。',results:[{metric:'BootROM高危漏洞',value:'发现3个'},{metric:'安全启动链验证',value:'自动化70%'},{metric:'避免流片损失',value:'估算>2亿元'},{metric:'密码模块合规',value:'通过密评'}],competitiveNote:'相比Cybellum偏重固件成分分析，软安方案深入到芯片级安全启动链完整性验证，且支持RISC-V架构（竞品多只覆盖ARM/x86）。国产化工具链满足芯片行业信创要求。'},  {id:'case3',title:'某头部智能门锁品牌固件安全与OTA更新安全性审查',industry:'consumer',product:['firmware','sca','sast'],excerpt:'该品牌在年度安全审查中发现云端固件中7个可远程利用的高危漏洞，包括硬编码的AWS密钥和未加密的OTA更新通道，及时修复避免了一次可能导致数百万台设备召回的危机。',challenge:'该品牌智能门锁年出货量超500万台，固件基于Linux+BusyBox构建，大量使用开源组件（OpenSSL、MQTT客户端、WiFi协议栈等）。安全团队在内部红队测试中发现固件存在多个潜在入口，但缺乏系统化的固件安全检测流程和自动化工具。',solution:'部署软安固件安全测试平台对门锁固件进行全面二进制分析，自动检测硬编码凭证、调试接口暴露、已知CVE漏洞匹配；SCA生成详尽SBOM，识别开源组件的许可证合规和漏洞状态；SAST对配套手机App（Android/iOS）源码进行安全扫描。',results:[{metric:'发现高危漏洞',value:'7个'},{metric:'开源组件漏洞',value:'34个CVE'},{metric:'潜在召回设备',value:'500万+台'},{metric:'OTA更新流程',value:'全面加固'}],competitiveNote:'消费电子领域专项检测规则（IoT协议栈、常见嵌入式框架如BusyBox/OpenWrt），配合国内CCC/CQC认证合规对接经验，国际竞品缺乏的本土认证生态理解。'},  {id:'case4',title:'某航空电子系统百万行遗留代码安全审计',industry:'defense',product:['sast','ai-sast','firmware'],excerpt:'通过AI SAST对某航电系统120万行遗留C代码进行智能安全审计，在传统人工审查基础上额外发现23个内存安全缺陷，自动生成GJB 5369符合性审查报告。',challenge:'某航空电子系统包含超过120万行C语言遗留代码，部分代码已运行超过15年。由于原开发团队已解散且文档缺失，传统人工代码审查效率极低。同时涉密环境要求所有检测工具必须全离线运行，不允许任何网络连接。',solution:'在涉密网环境部署软安SAST+AI SAST全离线版。AI SAST利用大语言模型理解遗留代码的语义上下文，自动识别传统规则引擎容易遗漏的内存安全问题（use-after-free、double-free、buffer overflow等）；固件安全测试对航电计算机的实时操作系统固件进行安全性分析。',results:[{metric:'AI辅助发现缺陷',value:'23个(人工遗漏)'},{metric:'代码审计效率',value:'提升4倍'},{metric:'GJB 5369审查',value:'自动生成报告'},{metric:'离线部署',value:'涉密网全离线'}],competitiveNote:'国产自主可控工具链+全离线部署能力+中文本地化+军标规则集深度定制——四项均非Coverity等国际竞品所能提供。军工信创要求下，国际工具面临禁用风险。'},  {id:'case5',title:'某5G基站设备商SECAM安全审计与全球运营商准入',industry:'telecom',product:['sast','sca','firmware','llm-security'],excerpt:'某国产5G设备商通过软安全栈安全检测方案，将3GPP SECAM审计准备周期从6个月缩短至2个月，在审计前发现并修复了RU固件中一个CVSS 9.8级别的远程可利用漏洞。',challenge:'该设备商在拓展东南亚和中东市场时，面临当地运营商严格的3GPP SECAM安全评估要求。首次SECAM审计中，30%的代码未经过系统化安全测试，大量开源组件（DPDK、OpenStack、FD.io）缺乏漏洞管理，RU固件存在一个CVSS 9.8级别的远程代码执行漏洞。',solution:'部署SAST对5G协议栈（RRC/PDCP/RLC/MAC层）和核心网CUPS架构代码进行全量扫描；SCA对虚拟化平台开源组件建立持续漏洞监控；固件安全测试对RU/DU/CU固件进行深度分析；大模型安全测试对RIC中的xApp/rApp智能应用进行安全评估。',results:[{metric:'SECAM审计周期',value:'6月→2月'},{metric:'高危漏洞(CVSS 9.8)',value:'发现1个'},{metric:'受影响基站',value:'5万+(已全部修复)'},{metric:'代码安全测试覆盖',value:'30%→95%'}],competitiveNote:'覆盖从芯片到应用的通信设备全栈检测，内置3GPP SECAM检查清单直接对标运营商审计要求，相比Blackduck仅识别开源漏洞，软安更理解通信行业特有的协议栈安全场景。'}
+];
+
+// ==================== RENDER PRODUCTS ====================
+document.getElementById('productGrid').innerHTML = products.map(p => `
+  <div class="gradient-card rounded-2xl p-6 border border-white/5 card-hover cursor-pointer glow" onclick="scrollToDemo()">
+    <div class="text-3xl mb-4">${p.icon}</div>
+    <h3 class="text-lg font-bold mb-2">${p.name}</h3>
+    <p class="text-slate-400 text-sm mb-4 leading-relaxed">${p.tagline}</p>
+    <div class="flex flex-wrap gap-1.5 mb-4">
+      ${p.features.slice(0,4).map(f=>`<span class="text-xs px-2 py-0.5 rounded-full bg-brand-500/10 text-brand-300">${f}</span>`).join('')}
+    </div>
+    <div class="flex items-center justify-between text-xs">
+      <span class="text-slate-500">对标: <span class="text-brand-400">${p.competitor}</span></span>
+      <span class="text-brand-400">了解详情 →</span>
+    </div>
+  </div>
+`).join('');
+
+// ==================== RENDER SOLUTIONS ====================
+document.getElementById('solutionGrid').innerHTML = solutions.map(s => `
+  <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm card-hover cursor-pointer">
+    <div class="text-3xl mb-3">${s.icon}</div>
+    <h3 class="text-lg font-bold text-slate-900 mb-2">${s.name}</h3>
+    <p class="text-slate-500 text-sm mb-4 leading-relaxed">${s.desc.substring(0,80)}...</p>
+    <div class="flex flex-wrap gap-1 mb-4">
+      ${s.compliance.slice(0,3).map(c=>`<span class="text-xs px-2 py-0.5 rounded-full bg-brand-50 text-brand-700 font-medium">${c}</span>`).join('')}
+    </div>
+    <div class="text-xs text-brand-600 font-medium">查看详细方案 →</div>
+  </div>
+`).join('');
+
+// ==================== RENDER CASES ====================
+let caseFilter = 'all';
+function renderCases(){
+  const filtered = caseFilter==='all' ? cases : cases.filter(c=>c.industry===caseFilter || c.product.includes(caseFilter));
+  document.getElementById('caseGrid').innerHTML = filtered.map(c => `
+    <div class="gradient-card rounded-2xl p-6 border border-white/5 card-hover cursor-pointer" onclick="openCase('${c.id}')">
+      <span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-500/20 text-brand-300 mb-3">${getIndustryName(c.industry)}</span>
+      <h3 class="font-bold mb-2 leading-snug">${c.title}</h3>
+      <p class="text-slate-400 text-sm leading-relaxed mb-3">${c.excerpt.substring(0,100)}...</p>
+      <div class="flex flex-wrap gap-1">
+        ${c.product.map(p=>`<span class="text-xs text-brand-400/70">#${products.find(pr=>pr.id===p)?.name.split(' ')[0]}</span>`).join(' ')}
+      </div>
+    </div>
+  `).join('');
+}
+
+const industries = [{id:'all',name:'全部'},{id:'automotive',name:'汽车'},{id:'semiconductor',name:'芯片半导体'},{id:'consumer',name:'消费电子'},{id:'defense',name:'军工'},{id:'telecom',name:'电子通信'}];
+document.getElementById('caseFilters').innerHTML = industries.map(ind=>`
+  <button onclick="caseFilter='${ind.id}';renderCases();document.querySelectorAll('#caseFilters button').forEach(b=>b.classList.remove('bg-brand-600','text-white'));this.classList.add('bg-brand-600','text-white')" class="px-4 py-1.5 rounded-full text-sm border border-white/10 hover:border-brand-500 transition ${ind.id==='all'?'bg-brand-600 text-white':''}">${ind.name}</button>
+`).join('');
+renderCases();
+
+function getIndustryName(id){return industries.find(i=>i.id===id)?.name||id;}
+function openCase(id){
+  const c = cases.find(x=>x.id===id); if(!c)return;
+  document.getElementById('caseModalContent').innerHTML=`
+    <button onclick="document.getElementById('caseModal').classList.remove('open')" class="text-slate-400 hover:text-white text-2xl leading-none absolute top-4 right-4">&times;</button>
+    <span class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-brand-500/20 text-brand-300 mb-3">${getIndustryName(c.industry)}</span>
+    <h2 class="text-xl font-bold mb-4">${c.title}</h2>
+    <div class="space-y-5 text-sm text-slate-300 leading-relaxed">
+      <div><h4 class="text-brand-400 font-semibold mb-1.5">🚨 挑战</h4><p>${c.challenge}</p></div>
+      <div><h4 class="text-green-400 font-semibold mb-1.5">✅ 解决方案</h4><p>${c.solution}</p></div>
+      <div><h4 class="text-yellow-400 font-semibold mb-1.5">📊 成果</h4><div class="grid grid-cols-2 gap-3">${c.results.map(r=>`<div class="bg-white/5 rounded-lg p-3 text-center"><div class="text-lg font-bold text-white">${r.value}</div><div class="text-xs text-slate-400">${r.metric}</div></div>`).join('')}</div></div>
+      <div><h4 class="text-purple-400 font-semibold mb-1.5">🏆 竞争优势</h4><p>${c.competitiveNote}</p></div>
+    </div>
+  `;
+  document.getElementById('caseModal').classList.add('open');
+}
+
+// ==================== COMPARISON TABLE ====================
+const competitors = ['Coverity (SAST)','Blackduck (SCA)','Cybellum (固件)','Fortify (SAST)','Synopsys (综合)'];
+const compDimensions = [
+  {dim:'漏洞检出率', ours:'99.2%', comp:['93%','95%','N/A','90%','92%']},
+  {dim:'编程语言支持', ours:'30+', comp:['28','N/A','N/A','27','25']},
+  {dim:'中国法规合规规则', ours:'✅ 内置', comp:['❌','❌','❌','❌','❌']},
+  {dim:'涉密离线部署', ours:'✅ 支持', comp:['❌','❌','❌','部分','❌']},
+  {dim:'本地化中文支持', ours:'✅ 全中文', comp:['部分','部分','❌','部分','部分']},
+  {dim:'供应商自助门户', ours:'✅ 内置', comp:['❌','额外付费','❌','❌','额外付费']},
+  {dim:'SBOM标准格式', ours:'SPDX/CycloneDX', comp:['N/A','SPDX','N/A','N/A','SPDX']},
+  {dim:'AI辅助分析', ours:'✅ 内置', comp:['❌','❌','❌','❌','❌']},
+  {dim:'部署模式', ours:'本地/云/离线', comp:['本地/云','云为主','本地','本地/云','本地/云']},
+  {dim:'联系方式', ours:'24h响应', comp:['海外时差','海外时差','海外时差','48h','48h']}
+];
+
+function renderComparison(){
+  document.getElementById('comparisonSelectors').innerHTML = `
+    <span class="text-sm text-slate-500 self-center">软安产品 vs 国际竞品：</span>
+    ${products.map(p=>`<span class="px-3 py-1 rounded-full text-xs bg-brand-100 text-brand-700 font-medium">${p.name.split(' ')[0]}</span>`).join('')}
+  `;
+  document.getElementById('comparisonTable').innerHTML = `
+    <table class="w-full text-sm">
+      <thead><tr class="bg-slate-50">
+        <th class="text-left px-4 py-3 font-semibold text-slate-700">对比维度</th>
+        <th class="px-4 py-3 font-semibold text-brand-700 bg-brand-50">软安科技</th>
+        ${competitors.map(c=>`<th class="px-4 py-3 font-semibold text-slate-600">${c}</th>`).join('')}
+      </tr></thead>
+      <tbody>${compDimensions.map((d,i)=>`
+        <tr class="border-t border-slate-100 hover:bg-slate-50/50">
+          <td class="px-4 py-3 font-medium text-slate-800">${d.dim}</td>
+          <td class="px-4 py-3 text-center bg-brand-50/50 font-semibold text-brand-700">${d.ours}</td>
+          ${d.comp.map(c=>`<td class="px-4 py-3 text-center ${c.includes('❌')?'text-red-400':c.includes('✅')?'text-green-500':c==='N/A'?'text-slate-300':''}">${c}</td>`).join('')}
+        </tr>
+      `).join('')}</tbody>
+    </table>
+  `;
+}
+renderComparison();
+
+// ==================== WIZARD ====================
+let wizardStep = 1;
+let wizardAnswers = {};
+
+function openWizard(){wizardStep=1;wizardAnswers={};renderWizard();document.getElementById('wizardModal').classList.add('open');}
+function closeWizard(){document.getElementById('wizardModal').classList.remove('open');}
+
+function updateStepDots(){
+  for(let i=1;i<=5;i++){
+    const dot = document.getElementById('stepDot'+i);
+    const line = document.getElementById('stepLine'+(i-1));
+    dot.className = 'step-dot ' + (i===wizardStep?'active':i<wizardStep?'done':'pending');
+    if(line) line.className = 'step-line ' + (i<=wizardStep?'done':'');
+  }
+}
+
+function renderWizard(){
+  updateStepDots();
+  const c = document.getElementById('wizardContent');
+  switch(wizardStep){
+    case 1: c.innerHTML=`<h4 class="text-lg font-semibold mb-4">步骤1: 选择您的行业</h4><div class="grid grid-cols-2 gap-3">${[{id:'automotive',name:'🚗 汽车',desc:'主机厂及供应链'},{id:'semiconductor',name:'🔲 芯片半导体',desc:'芯片安全'},{id:'consumer',name:'📱 消费电子',desc:'IoT/可穿戴'},{id:'defense',name:'🛡️ 军工',desc:'国防装备'},{id:'telecom',name:'📡 电子通信',desc:'5G/通信设备'},{id:'other',name:'🌐 其他行业',desc:'其他'}].map(o=>`<button onclick="wizardAnswers.industry='${o.id}';wizardStep=2;renderWizard()" class="p-4 rounded-xl border border-white/10 hover:border-brand-500 text-left transition card-hover"><div class="text-lg font-semibold mb-1">${o.name}</div><div class="text-xs text-slate-400">${o.desc}</div></button>`).join('')}</div>`; break;
+    case 2: c.innerHTML=`<h4 class="text-lg font-semibold mb-4">步骤2: 主要关注领域（可多选）</h4><div class="space-y-2">${['源代码安全','开源组件合规','固件/二进制安全','AI模型安全','全面安全检测'].map((a,i)=>{const vals=['source','oss','firmware','ai','all'];return`<label class="flex items-center gap-3 p-3 rounded-xl border border-white/10 hover:border-brand-500 cursor-pointer"><input type="checkbox" value="${vals[i]}" class="accent-brand-500 w-4 h-4" onchange="wizardAnswers.focus=[...document.querySelectorAll('#wizardContent input:checked')].map(x=>x.value)"><span>${a}</span></label>`}).join('')}</div><div class="flex gap-3 mt-6"><button onclick="wizardStep=1;renderWizard()" class="px-4 py-2 border border-white/10 rounded-lg text-sm">上一步</button><button onclick="wizardAnswers.focus=wizardAnswers.focus||[];wizardStep=3;renderWizard()" class="px-4 py-2 bg-brand-600 rounded-lg text-sm">下一步</button></div>`; break;
+    case 3: c.innerHTML=`<h4 class="text-lg font-semibold mb-4">步骤3: 合规需求（可多选）</h4><div class="space-y-2">${[{id:'r155','R155/R156 (WP.29 车辆网络安全)'},{id:'gbt','GB/T 44495-44496 (汽车软件)'},{id:'gjb','GJB 8114/5369 (军用软件)'},{id:'dj2','等保2.0 (网络安全等级保护)'},{id:'miping','密评 (商用密码应用安全)'},{id:'secam','3GPP SECAM (通信设备安全)'},{id:'none','暂无特定合规需求'}].map(c=>`<label class="flex items-center gap-3 p-3 rounded-xl border border-white/10 hover:border-brand-500 cursor-pointer"><input type="checkbox" value="${c.id}" class="accent-brand-500 w-4 h-4" onchange="wizardAnswers.compliance=[...document.querySelectorAll('#wizardContent input:checked')].map(x=>x.value)"><span>${c.desc}</span></label>`).join('')}</div><div class="flex gap-3 mt-6"><button onclick="wizardStep=2;renderWizard()" class="px-4 py-2 border border-white/10 rounded-lg text-sm">上一步</button><button onclick="wizardAnswers.compliance=wizardAnswers.compliance||[];wizardStep=4;renderWizard()" class="px-4 py-2 bg-brand-600 rounded-lg text-sm">下一步</button></div>`; break;
+    case 4: c.innerHTML=`<h4 class="text-lg font-semibold mb-4">步骤4: 技术环境</h4><div class="space-y-4"><div><label class="text-sm text-slate-300 mb-2 block">主要编程语言</label><div class="flex flex-wrap gap-2">${['C/C++','Java','Python','JavaScript/TS','Go','C#','Rust','PHP','Ruby','Swift/Kotlin','汇编','其他'].map(l=>`<label class="px-3 py-1.5 rounded-full border border-white/10 cursor-pointer hover:border-brand-500 text-sm"><input type="checkbox" value="${l}" class="accent-brand-500 mr-1.5">${l}</label>`).join('')}</div></div><div><label class="text-sm text-slate-300 mb-2 block">部署方式偏好</label><div class="grid grid-cols-2 gap-2">${[{id:'onprem',name:'本地部署'},{id:'private','私有云'},{id:'saas','SaaS'},{id:'offline','涉密离线环境'}].map(d=>`<label class="flex items-center gap-2 p-3 rounded-xl border border-white/10 cursor-pointer hover:border-brand-500"><input type="radio" name="deploy" value="${d.id}" class="accent-brand-500" onchange="wizardAnswers.deploy=this.value">${d.name}</label>`).join('')}</div></div></div><div class="flex gap-3 mt-6"><button onclick="wizardStep=3;renderWizard()" class="px-4 py-2 border border-white/10 rounded-lg text-sm">上一步</button><button onclick="wizardAnswers.languages=[...document.querySelectorAll('#wizardContent input[type=checkbox]:checked')].map(x=>x.value);wizardStep=5;renderWizard()" class="px-4 py-2 bg-brand-600 rounded-lg text-sm">查看推荐结果</button></div>`; break;
+    case 5: const recs = getRecommendations(); c.innerHTML=`<h4 class="text-lg font-semibold mb-4">🎯 选型推荐结果</h4><div class="space-y-4">${recs.map(r=>`<div class="bg-brand-500/5 border border-brand-500/20 rounded-xl p-4"><div class="flex items-center gap-2 mb-2"><span class="text-2xl">${r.icon}</span><span class="font-bold text-brand-400">${r.name}</span><span class="text-xs px-2 py-0.5 rounded-full bg-green-500/20 text-green-400">强烈推荐</span></div><p class="text-sm text-slate-300">${r.reason}</p></div>`).join('')}</div><div class="mt-4 p-4 bg-white/5 rounded-xl text-sm"><span class="text-brand-400 font-semibold">💡 选型逻辑：</span>基于您的行业"${getIndustryName(wizardAnswers.industry||'other')}"和关注领域，我们推荐以上产品组合。${getSolutionLink()}</div><div class="flex gap-3 mt-6"><button onclick="wizardStep=4;renderWizard()" class="px-4 py-2 border border-white/10 rounded-lg text-sm">修改条件</button><a href="#demo" onclick="closeWizard()" class="px-6 py-2 gradient-blue rounded-lg text-sm font-semibold">预约演示</a></div>`; break;
+  }
+}
+
+function getRecommendations(){
+  const industry = wizardAnswers.industry || 'other';
+  const focus = wizardAnswers.focus || [];
+  const recs = [];
+  // Rule-based matching
+  if(industry==='automotive'||focus.includes('source')||focus.includes('all')) recs.push({icon:'🔍',name:'SAST 静态代码分析',reason:'汽车/源代码安全场景的首选工具，覆盖MISRA C/CERT C标准，满足R155/GB/T 44495合规要求。'});
+  if(industry==='automotive'||industry==='consumer'||industry==='telecom'||focus.includes('oss')||focus.includes('all')) recs.push({icon:'📦',name:'SCA 软件成分分析',reason:'开源组件成分与漏洞管理，自动生成SBOM，满足供应商开源合规审计要求。'});
+  if(industry==='automotive'||industry==='semiconductor'||industry==='consumer'||focus.includes('firmware')||focus.includes('all')) recs.push({icon:'🔐',name:'固件安全测试',reason:'固件二进制深度分析，覆盖BootROM到应用程序全链路，检测硬编码密钥和已知CVE。'});
+  if(focus.includes('ai')||focus.includes('all')) recs.push({icon:'🤖',name:'大模型安全测试',reason:'AI模型全生命周期安全评估，检测提示注入、数据泄露等AI特有风险。'});
+  if(recs.length===0) recs.push({icon:'✨',name:'SAST + AI SAST',reason:'通用安全检测方案，覆盖主流编程语言，AI辅助提升审计效率。综合推荐从SAST开始。'});
+  return recs.slice(0,3);
+}
+function getSolutionLink(){
+  const ind = wizardAnswers.industry || '';
+  const sol = solutions.find(s=>s.id===ind);
+  return sol ? `查看"${sol.name}"详细方案了解更多。` : '';
+}
+
+// ==================== CHAT AGENT ====================
+const knowledgeBase = {
+  'r155':'WP.29 R155法规要求车辆制造商建立网络安全管理系统(CSMS)，覆盖车辆全生命周期的安全风险。软安SAST+固件安全测试方案可帮助Tier-1供应商满足代码安全和固件安全两个维度的CSMS要求。',
+  'r156':'R156法规要求车辆制造商建立软件更新管理系统(SUMS)，确保OTA更新的安全性和完整性。软安固件安全测试平台可以验证OTA更新包的数字签名、回滚保护和加密传输。',
+  'gbt':'GB/T 44495和GB/T 44496是中国汽车信息安全通用技术要求和软件升级通用技术要求，与UN R155/R156对应。软安产品内置国标检查规则集，可直接用于车型准入审查。',
+  'coverity':'Coverity是Synopsys旗下的SAST工具，在静态代码分析领域有深厚积累。软安SAST与之对标，优势在于：中国法规合规规则内置、全中文界面、涉密离线部署支持、以及不依赖海外License服务器。',
+  'blackduck':'Blackduck是Synopsys旗下的SCA工具，开源组件漏洞数据库覆盖面广。软安SCA与之对标，优势在于：更理解中国企业开源治理场景、供应商自助检测门户、以及本地化服务响应速度。',
+  'cybellum':'Cybellum是以色列固件安全公司，擅长汽车ECU固件成分分析。软安固件安全测试与之对标，优势在于：不仅限于成分分析，深入芯片级安全启动链验证、支持RISC-V架构、以及中国合规生态支持。',
+  'sast':'软安SAST是静态应用安全测试工具，支持30+编程语言，检出率99.2%，误报率低于5%。AI引擎辅助误报消减，增量扫描可在3分钟内完成。适用于汽车、军工、通信等对代码质量有高要求的行业。',
+  'sca':'软安SCA是软件成分分析工具，自动生成SBOM物料清单，实时追踪CVE/NVD漏洞数据库，支持SPDX和CycloneDX标准格式导出。帮助企业满足开源许可证合规和供应链安全要求。',
+  'firmware':'软安固件安全测试平台，支持ARM、x86、RISC-V等多种架构固件的二进制安全分析。可检测硬编码密钥、调试接口暴露、安全启动链缺陷等问题，广泛应用于汽车ECU、IoT设备、芯片固件安全测试。',
+  '选型':'建议您使用我们的智能选型向导（点击导航栏"智能选型"按钮），通过4步简单选择，我们将为您推荐最合适的产品组合。',
+  '试用':'欢迎申请免费试用！您可以在本页底部填写试用申请表，我们的安全专家将在24小时内与您联系，根据您的需求定制试用方案。',
+  '价格':'软安提供灵活的授权模式，包括年度订阅和永久授权两种方式。具体价格因产品模块、部署规模和支持等级而异，建议您预约演示获取详细报价。',
+  'demo':'您可以在本页底部填写预约演示表单，或直接联系我们：邮箱 contact@ruanan.com，电话 400-XXX-XXXX。我们将为您安排专属产品演示。',
+};
+
+function sendMessage(){
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if(!msg) return;
+  const messages = document.getElementById('chatMessages');
+  messages.innerHTML += `<div class="flex gap-2 justify-end"><div class="bg-brand-600 rounded-lg px-3 py-2 text-sm">${msg}</div><div class="w-7 h-7 rounded-full bg-slate-500 flex items-center justify-center text-xs shrink-0">U</div></div>`;
+  input.value = '';
+  messages.scrollTop = messages.scrollHeight;
+
+  // Simulate AI response
+  setTimeout(()=>{
+    let reply = '';
+    const q = msg.toLowerCase();
+    for(const [key,val] of Object.entries(knowledgeBase)){
+      if(q.includes(key.toLowerCase())){reply = val; break;}
+    }
+    if(!reply){
+      if(q.includes('汽车')||q.includes('车')) reply = '汽车行业推荐方案：SAST（代码安全）+ SCA（开源合规）+ 固件安全测试（ECU固件）。三位一体满足R155/R156和GB/T 44495/44496合规要求。您想深入了解哪个产品？';
+      else if(q.includes('芯片')||q.includes('半导体')) reply = '芯片半导体行业推荐：固件安全测试（BootROM/启动链验证）+ SAST（SDK代码检测）+ 大模型安全测试（NPU/AI引擎安全）。支持RISC-V架构，满足密评要求。';
+      else if(q.includes('军工')||q.includes('涉密')) reply = '军工行业推荐：SAST + AI SAST + 固件安全测试。全离线部署，内置GJB 8114/5369规则集，AI辅助遗留代码审计。所有工具支持涉密网环境运行。';
+      else if(q.includes('通信')||q.includes('5g')) reply = '通信行业推荐：SAST（协议栈代码）+ SCA（虚拟化组件）+ 固件安全测试（RU/DU/CU固件）+ 大模型安全测试（RIC智能应用）。内置3GPP SECAM检查清单。';
+      else if(q.includes('消费')||q.includes('iot')||q.includes('智能')) reply = '消费电子/IoT推荐：固件安全测试（固件凭证/OTA安全）+ SCA（开源组件）+ SAST（配套App代码）。帮助品牌方规避大规模安全事件和召回风险。';
+      else reply = '感谢您的咨询！我是软安产品选型助手，可以帮您了解我们的5款产品（SAST/SCA/固件安全/大模型安全/AI SAST）、5大行业方案或合规标准。您也可以点击导航栏的"智能选型"按钮进行产品匹配。';
+    }
+    messages.innerHTML += `<div class="flex gap-2"><div class="w-7 h-7 rounded-full bg-brand-600 flex items-center justify-center text-xs shrink-0">AI</div><div class="bg-white/5 rounded-lg px-3 py-2 text-sm text-slate-200">${reply}</div></div>`;
+    messages.scrollTop = messages.scrollHeight;
+  }, 600+Math.random()*800);
+}
+
+function toggleChat(){
+  document.getElementById('chatWindow').classList.toggle('open');
+}
+
+function toggleMobileMenu(){
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+
+function scrollToDemo(){
+  document.getElementById('demo').scrollIntoView({behavior:'smooth'});
+}
+
+function submitDemo(e){
+  e.preventDefault();
+  alert('感谢您的申请！\n\n我们的安全专家将在24小时内与您联系。\n\n（演示模式：表单数据将在实际部署后发送至后台系统）');
+  e.target.reset();
+}
+
+// Close modals on overlay click
+document.getElementById('wizardModal').addEventListener('click',function(e){if(e.target===this)closeWizard();});
+document.getElementById('caseModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+</script>
+</body>
+</html>

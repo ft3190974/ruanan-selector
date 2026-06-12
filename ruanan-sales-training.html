@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>软安科技 - 销售培训系统</title>
+<style>
+:root{--p:#1a56db;--pd:#1e40af;--pl:#dbeafe;--bg:#f1f5f9;--c:#fff;--t:#1e293b;--t2:#64748b;--b:#e2e8f0;--s:#16a34a;--w:#ea580c;--e:#dc2626;--r:12px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--t);display:flex;min-height:100vh}
+.sb{width:260px;background:linear-gradient(180deg,#0f172a,#1e293b);color:#fff;display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;overflow-y:auto}
+.sb-logo{padding:20px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sb-logo h2{font-size:18px;letter-spacing:1px}
+.sb-logo span{font-size:11px;opacity:.6}
+.sb-nav{padding:12px 0;flex:1;overflow-y:auto}
+.ng{padding:0 16px;margin-bottom:8px}
+.ng-t{font-size:10px;text-transform:uppercase;letter-spacing:2px;opacity:.4;padding:12px 0 6px}
+.ni{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;transition:.15s;font-size:14px;opacity:.75}
+.ni:hover{opacity:1;background:rgba(255,255,255,.08)}
+.ni.ac{opacity:1;background:var(--p);font-weight:600}
+.ni .bd{font-size:10px;padding:2px 7px;border-radius:10px;margin-left:auto}
+.bd-done{background:rgba(22,163,74,.3);color:#86efac}
+.bd-new{background:rgba(59,130,246,.3);color:#93c5fd}
+.main{flex:1;margin-left:260px}
+.pg{display:none}
+.pg.ac{display:block}
+.tb{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:var(--c);border-bottom:1px solid var(--b);position:sticky;top:0;z-index:50}
+.tb h1{font-size:20px}
+.tb .acts{display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:14px;cursor:pointer;border:1px solid transparent;transition:.15s;font-weight:500;font-family:inherit}
+.btn-p{background:var(--p);color:#fff}
+.btn-p:hover{background:var(--pd)}
+.btn-o{background:transparent;border-color:var(--b);color:var(--t)}
+.btn-o:hover{background:var(--bg)}
+.btn-s{background:var(--s);color:#fff}
+.btn-w{background:var(--w);color:#fff}
+.btn-e{background:var(--e);color:#fff}
+.btn-sm{padding:5px 10px;font-size:12px}
+.ct{padding:32px;max-width:960px}
+.card{background:var(--c);border:1px solid var(--b);border-radius:var(--r);padding:24px;margin-bottom:20px}
+.card h3{font-size:17px;margin-bottom:12px}
+.card p{color:var(--t2);line-height:1.7}
+.pb{height:6px;background:var(--b);border-radius:3px;margin-top:12px;overflow:hidden}
+.pb .fill{height:100%;background:var(--s);border-radius:3px;transition:.4s}
+.ml{display:flex;flex-direction:column;gap:10px}
+.mi{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--bg);border-radius:10px;cursor:pointer;transition:.15s;border:1px solid transparent}
+.mi:hover{border-color:var(--p);background:#fff}
+.mi .info{flex:1}
+.mi .info .t{font-weight:600;font-size:15px}
+.mi .info .d{font-size:12px;color:var(--t2);margin-top:2px}
+.mi .arr{opacity:.3}
+.vw{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r);background:#000;margin:16px 0}
+.vw iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+.att{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg);border-radius:8px;margin:6px 0}
+.att .ic{font-size:20px}
+.att a{color:var(--p);text-decoration:none;font-weight:500}
+.att a:hover{text-decoration:underline}
+.qb{background:var(--c);border:1px solid var(--b);border-radius:var(--r);padding:28px}
+.qp{display:flex;gap:6px;margin-bottom:20px}
+.qp .dot{width:28px;height:4px;border-radius:2px;background:var(--b)}
+.qp .dot.done{background:var(--s)}
+.qp .dot.wrong{background:var(--e)}
+.qp .dot.cur{background:var(--p)}
+.qq{font-size:18px;font-weight:700;margin-bottom:20px}
+.qo{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.opt{padding:14px 18px;border:2px solid var(--b);border-radius:10px;cursor:pointer;transition:.15s;font-size:15px}
+.opt:hover{border-color:var(--p);background:var(--pl)}
+.opt.sel{border-color:var(--p);background:var(--pl);font-weight:600}
+.opt.correct{border-color:var(--s);background:#dcfce7}
+.opt.wrong{border-color:var(--e);background:#fef2f2}
+.qr{text-align:center;padding:40px}
+.qr .score{font-size:48px;font-weight:800;margin:16px 0}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:13px;font-weight:600;margin-bottom:4px;color:var(--t)}
+.fg input,.fg textarea,.fg select{width:100%;padding:9px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;outline:none;font-family:inherit}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(26,86,219,.1)}
+.fg textarea{min-height:80px;resize:vertical}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--b)}
+th{font-weight:600;background:var(--bg)}
+.chip{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600}
+.chip-b{background:var(--pl);color:var(--p)}
+.chip-g{background:#dcfce7;color:var(--s)}
+.chip-o{background:#fff7ed;color:var(--w)}
+.toast{position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:8px;color:#fff;font-size:14px;z-index:9999;animation:ti .3s;font-weight:500}
+.ts{background:var(--s)}
+.te{background:var(--e)}
+@keyframes ti{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.h{display:none!important}
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--b);margin-bottom:20px}
+.tab{padding:10px 18px;cursor:pointer;font-size:14px;font-weight:500;color:var(--t2);border-bottom:2px solid transparent;margin-bottom:-2px}
+.tab.ac{color:var(--p);border-bottom-color:var(--p)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:768px){.sb{width:60px}.sb .ng-t,.sb .ni span,.sb-logo span{display:none}.main{margin-left:60px}.ct{padding:16px}.g2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="sb h" id="sb">
+  <div class="sb-logo"><h2>软安科技</h2><span>销售培训系统</span></div>
+  <div class="sb-nav" id="sideNav"></div>
+  
+  <div class="ubar" id="ubar" style="display:none">
+    <div class="av" id="uav"></div>
+    <div class="un" id="uun"></div>
+    <div class="lo" onclick="lgOut()" title="退出登录">退出</div>
+  </div>
+	  <div style="padding:16px;border-top:1px solid rgba(255,255,255,.1)">
+    <div style="font-size:11px;opacity:.6;margin-bottom:6px">学习进度</div>
+    <div class="pb"><div class="fill" id="op" style="width:0%"></div></div>
+    <div style="font-size:11px;margin-top:4px;opacity:.5" id="pl"></div>
+  </div>
+</div>
+
+<div class="main h" id="mainWrap">
+
+<div class="pg ac" id="pg-home">
+  <div class="tb"><h1>📚 销售培训中心</h1><div class="acts"><button class="btn btn-o" onclick="sp('exam')">📝 参加考试</button><button class="btn btn-o" onclick="sa()">⚙️ 管理</button></div></div>
+  <div class="ct" id="hc"></div>
+</div>
+
+<div class="pg" id="pg-mod">
+  <div class="tb"><h1 id="mt"></h1><div class="acts"><button class="btn btn-s" id="bdone" onclick="md()">✓ 标记完成</button><button class="btn btn-o" onclick="sp('home')">← 返回</button></div></div>
+  <div class="ct" id="mc"></div>
+</div>
+
+<div class="pg" id="pg-exam">
+  <div class="tb"><h1>📝 知识考核</h1><div class="acts"><button class="btn btn-o" onclick="sp('home')">← 返回</button></div></div>
+  <div class="ct" id="ec"></div>
+</div>
+
+<div class="pg" id="pg-admin">
+  <div class="tb"><h1>⚙️ 管理后台</h1><div class="acts"><button class="btn btn-o" onclick="sp('home')">← 返回首页</button></div></div>
+  <div class="ct" id="ac"></div>
+</div>
+
+</div>
+
+<div id="toast" class="toast h"></div>
+<div class="lg-wrap" id="lgWrap">
+  <div class="lg-card" id="lgLogin">
+    <h2>🔐 销售培训系统</h2>
+    <div class="sub">登录以继续学习</div>
+    <div class="fg"><label>用户名</label><input id="lgun" placeholder="请输入用户名" autocomplete="username"></div>
+    <div class="fg"><label>密码</label><input id="lgpw" type="password" placeholder="请输入密码" autocomplete="current-password"></div><div style="text-align:right;margin:2px 0 8px;font-size:12px"><a onclick="showFp()" style="color:var(--t2);cursor:pointer;text-decoration:none">忘记密码？</a></div>
+    <button class="btn btn-p" onclick="lgDo()" type="button">登 录</button>
+    <div class="sw">还没有账号？<a onclick="lgSw('reg')">立即注册</a></div>
+  </div>
+  <div class="lg-card h" id="lgReg">
+    <h2>📝 注册账号</h2>
+    <div class="sub">创建新的学习账号</div>
+    <div class="fg"><label>用户名</label><input id="rgun" placeholder="请输入用户名"></div>
+    <div class="fg"><label>密码</label><input id="rgpw" type="password" placeholder="请输入密码"></div>
+    <div class="fg"><label>确认密码</label><input id="rgpw2" type="password" placeholder="请再次输入密码"></div>
+    <button class="btn btn-s" onclick="rgDo()" type="button">注 册</button>
+    <div class="sw">已有账号？<a onclick="lgSw('login')">去登录</a></div>
+  </div>
+</div>
+
+<script>
+var D=[
+{id:'m1',g:'产品知识',t:'SAST 静态代码分析',d:'掌握SAST核心能力与Coverity对标话术',v:'',c:'<h2>SAST 静态代码分析</h2><p>软安SAST是国内领先的静态代码安全分析工具，支持C/C++、Java、Python、JavaScript、Go等30+编程语言，误报率≤5%。</p><h3>核心卖点</h3><ul><li>数据流/控制流/过程间分析全覆盖</li><li>支持GB/T 34943-2017、CWE Top 25、OWASP Top 10</li><li>检出率对齐Coverity，部署成本低60%</li><li>中文报告，符合国内合规要求</li></ul><h3>竞品对比话术</h3><p><strong>vs Coverity：</strong>"Coverity是行业标杆但我们做到了检出率对齐且价格显著更低，本地化部署和中文技术支持响应更及时。"</p>',at:[]},
+{id:'m2',g:'产品知识',t:'SCA 软件成分分析',d:'掌握SCA产品能力与Blackduck对标策略',v:'',c:'<h2>SCA 软件成分分析</h2><p>全面的开源组件安全与合规管理，覆盖NVD、CNVD、CNNVD三大漏洞库，精准识别组件许可合规风险。</p><h3>核心卖点</h3><ul><li>社区版+企业版双模式，社区版永久免费</li><li>支持NPM/Maven/PyPI/NuGet/Gradle/Docker镜像</li><li>SBOM生成符合SPDX/CycloneDX标准</li><li>对标Blackduck，性价比优势显著</li></ul><h3>竞品对比话术</h3><p><strong>vs Blackduck：</strong>"Blackduck在北美市场地位与我们在中国市场优势类似——更懂本地合规需求，GB/T 44495/44496汽车标准全覆盖。社区版免费策略帮助客户低门槛建立SCA能力。"</p>',at:[]},
+{id:'m3',g:'产品知识',t:'固件安全测试',d:'IoT/嵌入式固件安全分析能力',v:'',c:'<h2>固件安全测试</h2><p>面向IoT设备和嵌入式系统的固件安全检测平台，支持固件解包、二进制分析、漏洞扫描和配置审计。</p><h3>核心卖点</h3><ul><li>支持300+固件格式自动识别解包</li><li>固件级CVE漏洞匹配</li><li>硬编码密钥/证书/密码检测</li><li>对标Cybellum，本土化合规支持更全面</li></ul><h3>竞品对比话术</h3><p><strong>vs Cybellum：</strong>"Cybellum在汽车固件领域有先发优势，但我们不仅覆盖汽车ECU，还深度支持消费电子和军工固件审计，且支持涉密离线环境部署——这是国外工具无法做到的核心差异化。"</p>',at:[]},
+{id:'m4',g:'产品知识',t:'大模型安全测试',d:'AI模型安全评测与对抗测试',v:'',c:'<h2>大模型安全测试</h2><p>面向大语言模型（LLM）的全生命周期安全评测平台，覆盖训练数据、模型推理、应用部署三个阶段。</p><h3>核心卖点</h3><ul><li>提示注入/越狱/数据泄露检测</li><li>偏见与歧视性输出评测</li><li>幻觉内容识别</li><li>合规检查（生成式AI管理办法对齐）</li></ul><h3>目标客户</h3><p>正在部署或自研大模型的企业客户，尤其是金融、政务、汽车等受强监管行业。</p>',at:[]},
+{id:'m5',g:'产品知识',t:'AI SAST',d:'AI驱动的下一代静态分析',v:'',c:'<h2>AI SAST</h2><p>融合大模型能力的智能静态代码分析引擎，利用AI提升缺陷检测准确性和覆盖率，大幅降低误报率。</p><h3>核心卖点</h3><ul><li>AI辅助缺陷分类，误报率降至3%以下</li><li>智能修复建议生成</li><li>代码语义理解，发现传统规则引擎漏报</li><li>支持自然语言查询代码安全问题</li></ul><h3>差异化</h3><p>传统SAST依赖规则匹配，AI SAST利用大模型对代码语义的深层理解，可发现跨文件、跨函数的复杂安全逻辑缺陷。</p>',at:[]},
+{id:'m6',g:'行业知识',t:'汽车行业安全合规',d:'R155/R156、GB/T 44495/44496解读',v:'',c:'<h2>汽车行业安全合规</h2><h3>关键法规</h3><ul><li><strong>UN R155</strong> — 车辆网络安全管理系统（CSMS）认证，要求车企建立覆盖全生命周期的网络安全管理体系</li><li><strong>UN R156</strong> — 软件更新管理系统（SUMS）认证</li><li><strong>GB/T 44495-2024</strong> — 汽车软件升级通用技术要求（对标R156）</li><li><strong>GB/T 44496-2024</strong> — 汽车网络安全通用技术要求（对标R155）</li></ul><h3>我们的价值</h3><ul><li>SAST+SCA覆盖代码和组件安全，满足CSMS代码审查要求</li><li>固件测试覆盖ECU固件安全</li><li>中文报告可直接用于GB/T审核</li></ul><h3>目标客户</h3><p>OEM、Tier-1/Tier-2供应商、软件供应商</p>',at:[]},
+{id:'m7',g:'行业知识',t:'芯片半导体安全',d:'密评、BootROM审计、安全启动',v:'',c:'<h2>芯片半导体安全</h2><h3>关键需求</h3><ul><li><strong>密评</strong> — 商用密码应用安全性评估，芯片中使用国密算法的合规性检查</li><li><strong>BootROM审计</strong> — 对芯片引导代码的安全审计</li><li><strong>侧信道分析</strong> — 功耗/电磁侧信道安全评估</li></ul><h3>我们的价值</h3><ul><li>固件安全测试覆盖BootROM二进制审计</li><li>SAST支持C/C++嵌入式代码分析</li><li>支持涉密离线环境部署</li></ul><h3>目标客户</h3><p>芯片设计公司、IC设计服务商、安全芯片厂商</p>',at:[]},
+{id:'m8',g:'行业知识',t:'消费电子与IoT安全',d:'固件安全、个人隐私合规',v:'',c:'<h2>消费电子与IoT安全</h2><h3>关键需求</h3><ul><li><strong>个人信息保护法</strong> — App/设备个人信息收集合规</li><li><strong>IoT安全标准</strong> — GB/T 41388-2022、EN 303 645</li><li><strong>固件供应链安全</strong> — 开源组件漏洞管理</li></ul><h3>我们的价值</h3><ul><li>固件安全测试覆盖智能家居/穿戴设备固件</li><li>SCA管理IoT固件中的开源组件风险</li><li>本地化部署满足数据不出境合规要求</li></ul><h3>目标客户</h3><p>智能家居品牌、IoT设备制造商、电子消费品ODM</p>',at:[]},
+{id:'m9',g:'行业知识',t:'军工安全合规',d:'GJB 8114/5369，涉密离线部署',v:'',c:'<h2>军工安全合规</h2><h3>关键标准</h3><ul><li><strong>GJB 8114</strong> — 军用软件安全性通用要求</li><li><strong>GJB 5369</strong> — 军用软件测试要求</li><li><strong>涉密信息系统</strong> — 安全保密产品检测</li></ul><h3>我们的价值</h3><ul><li>全产品支持涉密离线环境部署</li><li>SAST符合GJB代码安全性检查要求</li><li>固件安全测试覆盖军用嵌入式设备审计</li><li>国产化适配（麒麟/统信/飞腾/鲲鹏）</li></ul><h3>目标客户</h3><p>军工电子集团、国防科研院所、军队信息化单位</p>',at:[]},
+{id:'m10',g:'销售技巧',t:'销售话术 - 产品卖点',d:'5大产品核心卖点与电梯演讲',v:'https://player.bilibili.com/player.html?bvid=BV1GJ411x7h7',c:'<h2>产品卖点 电梯演讲</h2><h3>30秒版本</h3><p>"软安科技是国内领先的软件安全测试解决方案提供商，产品覆盖SAST、SCA、固件安全、大模型安全和AI SAST五大方向。我们服务了多家汽车主机厂和芯片企业，在检出率对齐国际标杆的同时，提供更优的性价比和本地化支持。"</p><h3>客户常见问题</h3><p><strong>Q: 和国际品牌差在哪？</strong><br>A: SAST/SCA领域检出率对齐Coverity和Blackduck，差异化在于：中文报告、国内合规标准适配、更快技术支持响应、涉密离线部署能力。</p><p><strong>Q: 支持哪些语言/平台？</strong><br>A: 30+编程语言全覆盖，主流CI/CD平台原生集成（GitLab/Jenkins/GitHub），可对接企业已有DevSecOps流程。</p>',at:[]},
+{id:'m11',g:'销售技巧',t:'销售话术 - 竞品战法',d:'逐竞品对比策略与攻防话术',v:'',c:'<h2>竞品战法</h2><h3>vs Coverity (Synopsys)</h3><ul><li><strong>我们优势：</strong>价格低50-60%、中文报告、本地售后、国产化支持</li><li><strong>对方优势：</strong>品牌知名度、Gartner象限、海外案例</li><li><strong>应对：</strong>强调"国内合规适配"和"响应速度"，争取POC</li></ul><h3>vs Blackduck (Synopsys)</h3><ul><li><strong>我们优势：</strong>免费社区版降低门槛、GB/T标准覆盖、中国漏洞库（CNVD/CNNVD）</li><li><strong>对方优势：</strong>数据库体量、国际标准支持、成熟度</li><li><strong>应对：</strong>强调"本地合规"和"免费版可以先用起来"</li></ul><h3>vs Cybellum</h3><ul><li><strong>我们优势：</strong>多行业覆盖（不限于汽车）、涉密部署、性价比</li><li><strong>对方优势：</strong>汽车固件分析深度、宝马/丰田等标杆案例</li><li><strong>应对：</strong>强调多行业适用性，消费电子+军工场景案例</li></ul>',at:[]},
+{id:'m12',g:'销售技巧',t:'销售话术 - 异议处理',d:'常见客户异议及应对策略',v:'',c:'<h2>异议处理手册</h2><h3>"已经用了Coverity/Blackduck"</h3><p>不直接替代而是补充。"我们理解您已投入，软安工具可以作为补充，覆盖国际工具在中文合规和涉密场景的盲区。"提供免费试用/POC。</p><h3>"价格太贵了"</h3><p>拆解除成本。强调"价格是Coverity的40%但功能对齐"，展示ROI计算，提供阶梯报价方案。</p><h3>"小公司不需要"</h3><p>强调合规驱动。"汽车行业即使小型Tier-2也必须满足R155，否则无法进入供应链。"推荐SCA社区版作为切入点。</p><h3>"国产工具能力够吗？"</h3><p>用数据说话。出示检出率对比数据、客户案例、POC结果。邀请技术团队对标测试。</p>',at:[]},
+{id:'m13',g:'综合',t:'行业案例速查手册',d:'各行业典型客户案例与成果数据',v:'',c:'<h2>行业案例速查</h2><h3>汽车行业</h3><p>某合资OEM — SAST+SCA覆盖全车软件供应链，检出缺陷12,000+，帮助客户6个月内通过CSMS认证</p><h3>芯片行业</h3><p>某安全芯片设计公司 — 固件安全测试完成BootROM审计，发现3个0-day级别漏洞</p><h3>消费电子</h3><p>某头部智能家居品牌 — SCA管理300+开源组件，通过个人信息保护合规检查</p><h3>军工行业</h3><p>某国防科研院所 — 全产品离线部署在涉密内网，通过GJB 8114安全检查</p><h3>通信行业</h3><p>某5G设备商 — 固件安全测试覆盖基站设备，满足等保2.0三级要求</p>',at:[]}
+];
+
+var Q=[
+{id:'q1',q:'软安SAST对标的主要国际竞品是？',o:['Checkmarx','Coverity','SonarQube','Fortify'],a:1,x:'软安SAST对标Coverity（Synopsys），在检出率对齐的前提下提供更优的性价比和本土化支持。'},
+{id:'q2',q:'UN R155主要针对哪个行业？',o:['金融','医疗','汽车','通信'],a:2,x:'UN R155是联合国关于车辆网络安全管理体系（CSMS）的法规，主要针对汽车行业。'},
+{id:'q3',q:'软安SCA社区版有什么特点？',o:['仅支持5种语言','需要付费','永久免费','仅限云部署'],a:2,x:'软安SCA社区版永久免费，帮助客户低门槛建立SCA能力，是重要的获客策略。'},
+{id:'q4',q:'GJB 8114是关于什么的？',o:['军用软件安全性通用要求','芯片设计标准','汽车网络安全','商用密码标准'],a:0,x:'GJB 8114是军用软件安全性通用要求，是军工行业的关键合规标准。'},
+{id:'q5',q:'固件安全测试的对标竞品是？',o:['Blackduck','Coverity','Cybellum','Snyk'],a:2,x:'软安固件安全测试对标Cybellum，但覆盖范围更广（汽车+消费电子+军工）且支持涉密部署。'},
+{id:'q6',q:'GB/T 44496-2024对应哪个国际法规？',o:['ISO 27001','UN R155','UN R156','GDPR'],a:1,x:'GB/T 44496（汽车网络安全通用技术要求）对标UN R155。'},
+{id:'q7',q:'AI SAST相比传统SAST的最大区别是？',o:['支持更多语言','利用AI降低误报率并提供修复建议','完全替代人工审查','只能在云端使用'],a:1,x:'AI SAST利用大模型进行代码语义理解，将误报率降至3%以下并提供智能修复建议。'},
+{id:'q8',q:'面对"已经用了Coverity"的客户，最佳策略是？',o:['强调Coverity已过时','攻击Coverity缺陷','建议作为补充方案覆盖涉密场景','直接放弃'],a:2,x:'不直接替代而是补充，强调软安产品在国际工具无法覆盖的涉密和本地合规场景中的价值。'}
+];
+
+var AP='train888';
+var M=JSON.parse(JSON.stringify(D));
+var QS=JSON.parse(JSON.stringify(Q));
+var QE=[
+{id:'qe1',q:'请简述软安SAST相比Coverity的核心竞争优势（至少列出3点）。',a:'1. 价格低50-60%；2. 中文报告，符合国内合规要求；3. 本地化部署和中文技术支持响应更及时；4. 涉密离线环境部署能力；5. 国产化适配（麒麟/统信/飞腾/鲲鹏）。'},
+{id:'qe2',q:'某汽车Tier-1供应商客户说"已经用了Coverity和Blackduck"，请写出你的回应策略和话术要点。',a:'核心策略：不直接替代而是补充。话术要点：1. 承认客户的已有投入，不贬低竞品；2. 指出国际工具在中文合规和涉密场景的盲区；3. 强调GB/T 44495/44496汽车标准全覆盖；4. 中文报告可直接用于CSMS/SUMS审核；5. 先提供免费POC，让技术团队看到实际效果；6. 可先从SCA社区版免费切入建立信任。'},
+{id:'qe3',q:'请列举软安科技五大产品方向，并简述每个方向的适用客户群体。',a:'1. SAST — 有代码安全需求的软件开发团队；2. SCA — 关注开源组件安全和合规的企业，社区版适合中小企业入门；3. 固件安全测试 — IoT/嵌入式/汽车电子/军工设备制造商；4. 大模型安全测试 — 部署或自研大模型的金融/政务/汽车等受强监管行业；5. AI SAST — 追求更高检测准确率和自动修复建议的开发团队。'}
+];
+var QES=JSON.parse(JSON.stringify(QE));
+var P={};
+var CM=null;
+var ES=null;
+
+// IndexedDB存储（替代localStorage，支持更大附件）
+var _db=null;
+var _dbReady=new Promise(function(resolve){
+  var r=indexedDB.open('ruanan_training',1);
+  r.onupgradeneeded=function(e){var db=e.target.result;if(!db.objectStoreNames.contains('s')){db.createObjectStore('s');}};
+  r.onsuccess=function(e){_db=e.target.result;resolve(_db);};
+  r.onerror=function(){console.warn('IndexedDB不可用，回退到localStorage');resolve(null);};
+});
+function _dbs(k,cb){_dbReady.then(function(db){if(!db){var v=null;try{v=JSON.parse(localStorage.getItem(k));}catch(e){}cb(v);return;}var tx=db.transaction('s','readonly');var req=tx.objectStore('s').get(k);req.onsuccess=function(){cb(req.result||null);};req.onerror=function(){cb(null);};});}
+function _dbp(k,v){return _dbReady.then(function(db){if(!db){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){return false;}return true;}return new Promise(function(resolve){var tx=db.transaction('s','readwrite');var req=tx.objectStore('s').put(v,k);tx.oncomplete=function(){resolve(true);};tx.onabort=function(){resolve(false);};req.onerror=function(){resolve(false);};});});}
+function sv(k,v){_dbp(k,v).then(function(ok){if(!ok)tt('⚠️ 数据保存失败，可能空间不足','te');});}
+function ld(k,cb){_dbs(k,cb);}
+	// ── 用户管理 ──
+	var CU=null;  // Current User
+	var UL=[];    // User List
+
+	// 默认管理员账号
+	var DEF_USERS=[{id:'u1',un:'admin',pw:'train888',role:'admin',p:{}}];
+
+	function _uKey(){return CU?CU.id:'_anon_';}
+	function _getUP(){if(CU)return CU.p||{};return P;}
+	function _setUP(v){if(CU){CU.p=v;sv('users',UL);}else{P=v;}}
+
+	function sum(){
+	  var h='<div class="card"><h3>用户管理</h3><div class="tbl"><table><thead><tr><th>用户名</th><th>角色</th><th>学习进度</th><th>注册时间</th><th>操作</th></tr></thead><tbody>';
+	  UL.forEach(function(u){
+	    var dn=0;M.forEach(function(m){if(u.p&&u.p[m.id])dn++;});
+	    var pct=M.length>0?Math.round(dn/M.length*100):0;
+	    h+='<tr><td>'+es(u.un)+'</td><td>'+(u.role==='admin'?'<span class="role-ad">管理员</span>':'<span class="role-usr">学员</span>')+'</td><td><div class="pb" style="width:120px"><div class="fill" style="width:'+pct+'%"></div></div><span style="font-size:11px">'+dn+'/'+M.length+'</span></td><td style="font-size:11px;color:var(--t2)">'+(u.ts||'--')+'</td><td>'+(u.id!==CU.id?'<button class="btn btn-e btn-sm" onclick="dui(\''+u.id+'\')">删除</button>':'<span style="font-size:11px;color:var(--t2)">当前用户</span>')+'</td></tr>';
+	  });
+	  h+='</tbody></table></div></div>';
+	  h+='<div class="card"><h3>添加用户</h3><div class="g2"><div class="fg"><label>用户名</label><input id="nuun"></div><div class="fg"><label>密码</label><input id="nupw" type="password"></div></div><div class="fg"><label>角色</label><select id="nuro"><option value="user">学员</option><option value="admin">管理员</option></select></div><button class="btn btn-p" onclick="nud()">+ 添加用户</button> <button class="btn btn-o" onclick="genUsers()">🎲 批量生成</button></div>';
+	  return h;
+	}
+	
+  function genUsers(){
+    var n=prompt('请输入要生成的学员账号数量（1-50）：','5');
+    n=parseInt(n);if(!n||n<1||n>50){tt('请输入1-50之间的数字','te');return;}
+    var cnt=0;
+    for(var i=0;i<n;i++){
+      var un='user'+(100+Math.floor(Math.random()*900));
+      if(UL.some(function(u){return u.un===un})){i--;continue;}
+      UL.push({id:'u'+Date.now()+i,un:un,pw:'123456',role:'user',p:{},ts:new Date().toISOString().slice(0,10)});
+      cnt++;
+    }
+    sv('users',UL);sat('users');tt('✅ 已生成'+cnt+'个学员账号，默认密码：123456');
+  }function dui(id){if(!confirm('确认删除该用户？'))return;UL=UL.filter(function(u){return u.id!==id});sv('users',UL);sat('users');tt('已删除');}
+	function nud(){
+	  var un=document.getElementById('nuun').value.trim(),pw=document.getElementById('nupw').value.trim(),ro=document.getElementById('nuro').value;
+	  if(!un||!pw){tt('请填写完整');return;}
+	  if(UL.some(function(u){return u.un===un})){tt('用户名已存在');return;}
+	  UL.push({id:'u'+Date.now(),un:un,pw:pw,role:ro,p:{},ts:new Date().toISOString().slice(0,10)});
+	  sv('users',UL);sat('users');tt('✅ 已添加');
+	}
+
+	// ── 登录/注册/退出 ──
+	
+  function showFp(){
+    var un=prompt('请输入要找回密码的用户名：');
+    if(!un)return;
+    var u=UL.find(function(x){return x.un===un});
+    if(!u){tt('❌ 用户名不存在','te');return;}
+    if(u.role==='admin'){tt('管理员密码无法找回，请联系系统管理员','te');return;}
+    var np=prompt('用户 '+un+' 已找到！\n请输入新密码（至少4位）：');
+    if(!np||np.length<4){tt('密码至少4位','te');return;}
+    u.pw=np;sv('users',UL);
+    tt('✅ 密码已重置，请使用新密码登录');
+  }function lgSw(m){
+	  document.getElementById('lgLogin').classList.toggle('h',m==='reg');
+	  document.getElementById('lgReg').classList.toggle('h',m==='login');
+	}
+	function lgDo(){
+	  var un=document.getElementById('lgun').value.trim(),pw=document.getElementById('lgpw').value.trim();
+	  if(!un||!pw){tt('请输入用户名和密码','te');return;}
+	  var u=UL.find(function(x){return x.un===un&&x.pw===pw});
+	  if(!u){tt('❌ 用户名或密码错误','te');return;}
+	  _onLogin(u);
+	}
+	function rgDo(){
+	  var un=document.getElementById('rgun').value.trim(),pw=document.getElementById('rgpw').value.trim(),pw2=document.getElementById('rgpw2').value.trim();
+	  if(!un||!pw){tt('请填写完整','te');return;}
+	  if(pw!==pw2){tt('两次密码不一致','te');return;}
+	  if(UL.some(function(u){return u.un===un})){tt('用户名已存在','te');return;}
+	  var u={id:'u'+Date.now(),un:un,pw:pw,role:'user',p:{},ts:new Date().toISOString().slice(0,10)};
+	  UL.push(u);sv('users',UL);
+	  _onLogin(u);tt('✅ 注册成功');
+	}
+	function _onLogin(u){
+	  CU=u;
+	  document.getElementById('lgWrap').classList.add('h');
+	  document.getElementById('sb').classList.remove('h');
+	  document.getElementById('mainWrap').classList.remove('h');
+	  document.getElementById('ubar').style.display='';
+	  document.getElementById('uav').textContent=u.un.charAt(0).toUpperCase();
+	  document.getElementById('uun').textContent=u.un+(u.role==='admin'?' (管理员)':'');
+	  P=_getUP();
+	  rs();rh();up();
+	}
+	function lgOut(){
+	  if(!confirm('确认退出登录？'))return;
+	  _setUP(P);
+	  sv('users',UL);
+	  CU=null;P={};
+	  var el=document.getElementById('lgWrap');if(el)el.classList.remove('h');
+	  document.getElementById('sb').classList.add('h');
+	  document.getElementById('mainWrap').classList.add('h');
+	  document.getElementById('ubar').style.display='none';
+	  document.getElementById('lgun').value='';document.getElementById('lgpw').value='';
+	}
+
+
+function rs(){
+  var gs={};
+  M.forEach(function(m){if(!gs[m.g])gs[m.g]=[];gs[m.g].push(m);});
+  var h='';
+  Object.keys(gs).forEach(function(g){
+    h+='<div class="ng"><div class="ng-t">'+g+'</div>';
+    gs[g].forEach(function(m){
+      var dn=P[m.id],tx=dn?'✓':'';
+      h+='<div class="ni" onclick="sm(\''+m.id+'\')"><span>'+m.t+'</span>'+(tx?'<span class="bd '+(dn?'bd-done':'bd-new')+'">'+tx+'</span>':'')+'</div>';
+    });
+    h+='</div>';
+  });
+  h+='<div class="ng"><div class="ng-t">考核</div><div class="ni" onclick="sp(\'exam\')"><span>📝 知识考核</span></div></div>';
+  document.getElementById('sideNav').innerHTML=h;
+}
+
+function up(){var P=_getUP();
+  var dn=0,t=M.length;
+  M.forEach(function(m){if(P[m.id])dn++;});
+  var pct=t>0?Math.round(dn/t*100):0;
+  document.getElementById('op').style.width=pct+'%';
+  document.getElementById('pl').textContent=dn+'/'+t+' 模块完成';
+}
+
+function sp(p){
+  document.querySelectorAll('.pg').forEach(function(el){el.classList.remove('ac')});
+  var el=document.getElementById('pg-'+p);
+  if(el)el.classList.add('ac');
+  if(p==='home'){rh();rs();up();}
+  if(p==='exam')le();
+}
+
+function rh(){var P=_getUP();
+  var gs={};
+  M.forEach(function(m){if(!gs[m.g])gs[m.g]=[];gs[m.g].push(m);});
+  var h='';
+  Object.keys(gs).forEach(function(g){
+    h+='<div class="card"><h3>'+g+'</h3><div class="ml">';
+    gs[g].forEach(function(m){
+      h+='<div class="mi" onclick="sm(\''+m.id+'\')"><div class="info"><div class="t">'+(P[m.id]?'✅ ':'')+m.t+'</div><div class="d">'+m.d+'</div></div><div class="arr">→</div></div>';
+    });
+    h+='</div></div>';
+  });
+  document.getElementById('hc').innerHTML=h;
+}
+
+function sm(id){
+  CM=M.find(function(m){return m.id===id});
+  if(!CM)return;
+  sp('mod');
+  document.getElementById('mt').textContent=CM.t;
+  var btn=document.getElementById('bdone');
+  if(P[id]){btn.textContent='✓ 已完成';btn.className='btn btn-o';}
+  else{btn.textContent='✓ 标记完成';btn.className='btn btn-s';}
+  var h='<div class="card">'+CM.c+'</div>';
+  if(CM.v){h+='<div class="card"><h3>📺 视频讲解</h3><div class="vw"><iframe src="'+CM.v+'" allowfullscreen></iframe></div></div>';}
+  if(CM.at&&CM.at.length>0){
+    h+='<div class="card"><h3>📎 附件资料</h3>';
+    CM.at.forEach(function(a,i){h+='<div class="att"><span class="ic">📄</span><a href="#" onclick="da(\''+CM.id+'\','+i+');return false;">'+a.n+'</a><span style="color:var(--t2);font-size:11px">('+fs(a.s)+')</span></div>';});
+    h+='</div>';
+  }
+  document.getElementById('mc').innerHTML=h;
+}
+
+function md(){if(!CM)return;var up=_getUP();up[CM.id]=true;_setUP(up);sv('users',UL);up();rs();document.getElementById('bdone').textContent='✓ 已完成';document.getElementById('bdone').className='btn btn-o';tt('✅ 已标记完成');}
+
+function le(){
+  var all=[];
+  QS.forEach(function(q){all.push({type:'choice',data:q});});
+  QES.forEach(function(q){all.push({type:'essay',data:q});});
+  for(var i=all.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=all[i];all[i]=all[j];all[j]=t;}
+  if(all.length===0){document.getElementById('ec').innerHTML='<div class="card"><h3>暂无考题</h3><p>请联系管理员添加考试题目。</p></div>';return;}
+  ES={idx:0,ans:{},sub:{},essayAns:{},essayScore:{},done:false,questions:all};re();
+}
+
+function re(){
+  var s=ES,q=s.questions[s.idx],h='<div class="qb"><div class="qp">';
+  s.questions.forEach(function(_,i){var cl='dot';if(s.sub[i]!==undefined||s.essayScore[i]!==undefined)cl+=' '+(s.sub[i]||s.essayScore[i]>=2?'done':'wrong');else if(i===s.idx)cl+=' cur';h+='<div class="'+cl+'"></div>';});
+  h+='</div><div class="qq">第'+(s.idx+1)+'/'+s.questions.length+'题：';
+  if(q.type==='essay')h+='<span class="chip chip-o" style="font-size:10px;vertical-align:middle;margin-right:4px">问答</span>';
+  h+=q.data.q+'</div>';
+  if(q.type==='choice'){
+    h+='<div class="qo">';
+    q.data.o.forEach(function(o,i){var cl='opt';if(s.sub[s.idx]!==undefined){if(i===q.data.a)cl+=' correct';else if(s.ans[s.idx]===i)cl+=' wrong';}else if(s.ans[s.idx]===i)cl+=' sel';h+='<div class="'+cl+'" onclick="sa2('+i+')">'+String.fromCharCode(65+i)+'. '+o+'</div>';});
+    h+='</div>';
+    if(s.sub[s.idx]!==undefined){h+='<div style="padding:12px;background:var(--bg);border-radius:8px;margin-bottom:16px"><strong>'+(s.sub[s.idx]?'✅ 正确':'❌ 错误')+'</strong> '+q.data.x+'</div>';}
+  }else{
+    if(s.essayAns[s.idx]===undefined){
+      h+='<div class="fg"><textarea id="essayInput" style="min-height:120px" placeholder="请输入你的回答..."></textarea></div>';
+    }else{
+      h+='<div class="fg"><label>你的回答：</label><div style="padding:10px;background:var(--bg);border-radius:8px;white-space:pre-wrap;margin-bottom:12px">'+es(s.essayAns[s.idx])+'</div></div>';
+      h+='<div class="fg"><label>📖 参考答案：</label><div style="padding:10px;background:#dcfce7;border-radius:8px;white-space:pre-wrap;margin-bottom:12px">'+es(q.data.a)+'</div></div>';
+      if(s.essayScore[s.idx]===undefined){
+        h+='<div style="margin-bottom:8px"><strong>自我评估：</strong></div><div style="display:flex;gap:8px"><button class="btn btn-s" onclick="essaySelf(2)">✅ 正确</button><button class="btn btn-w" onclick="essaySelf(1)">🔶 部分正确</button><button class="btn btn-e" onclick="essaySelf(0)">❌ 错误</button></div>';
+      }else{
+        var lb=s.essayScore[s.idx]>=2?'✅ 正确':s.essayScore[s.idx]>=1?'🔶 部分正确':'❌ 错误';
+        h+='<div style="padding:10px;background:var(--bg);border-radius:8px"><strong>自评结果：'+lb+'</strong></div>';
+      }
+    }
+  }
+  h+='<div style="display:flex;gap:10px;justify-content:space-between;margin-top:16px"><button class="btn btn-o" '+(s.idx===0?'disabled':'')+' onclick="pq()">← 上一题</button>';
+  if(q.type==='choice'&&s.sub[s.idx]===undefined){h+='<button class="btn btn-p" onclick="sba()">提交答案</button>';}
+  if(q.type==='essay'&&s.essayAns[s.idx]===undefined){h+='<button class="btn btn-p" onclick="sbe()">提交回答</button>';}
+  if(s.idx<s.questions.length-1){h+='<button class="btn btn-p" onclick="nq()">下一题 →</button>';}
+  else if((q.type==='choice'&&s.sub[s.idx]!==undefined)||(q.type==='essay'&&s.essayScore[s.idx]!==undefined)){h+='<button class="btn btn-s" onclick="ser()">查看成绩</button>';}
+  h+='</div></div>';
+  document.getElementById('ec').innerHTML=h;
+}
+
+function sa2(i){if(ES.sub[ES.idx]!==undefined)return;ES.ans[ES.idx]=i;re();}
+function sba(){var a=ES.ans[ES.idx];if(a===undefined){tt('请先选择一个答案');return;}ES.sub[ES.idx]=(a===ES.questions[ES.idx].data.a);re();}
+function sbe(){var v=document.getElementById('essayInput').value.trim();if(!v){tt('请输入你的回答');return;}ES.essayAns[ES.idx]=v;re();}
+function essaySelf(r){if(ES.essayScore[ES.idx]!==undefined)return;ES.essayScore[ES.idx]=r;re();}
+function nq(){if(ES.idx<ES.questions.length-1){ES.idx++;re();}}
+function pq(){if(ES.idx>0){ES.idx--;re();}}
+function ser(){
+  var c=0,t=ES.questions.length;
+  Object.keys(ES.sub).forEach(function(k){if(ES.sub[k])c++;});
+  Object.keys(ES.essayScore).forEach(function(k){if(ES.essayScore[k]>=2)c++;else if(ES.essayScore[k]>=1)c+=0.5;});
+  var pct=Math.round(c/t*100),gd=pct>=80?'优秀':pct>=60?'合格':'需加强',h='<div class="qr"><h2>考核完成</h2><div class="score">'+pct+'分</div><p style="font-size:18px;font-weight:600">'+gd+'</p><p style="color:var(--t2)">得分 '+c+'/'+t+'（问答自评）</p>';
+  if(pct<80)h+='<p style="color:var(--w);margin-top:10px">建议重新复习相关模块后再考一次</p>';
+  h+='<button class="btn btn-p" style="margin-top:20px" onclick="rty()">重新考试</button></div>';
+  document.getElementById('ec').innerHTML=h;
+}
+function rty(){ES=null;le();}
+
+// Admin
+function sa(){if(!CU||CU.role!=='admin'){tt('❌ 仅管理员可访问');return;}sp('admin');document.getElementById('ac').innerHTML='<div class="tabs"><div class="tab ac" onclick="sat(\'modules\')">培训模块</div><div class="tab" onclick="sat(\'questions\')">选择题库</div><div class="tab" onclick="sat(\'essays\')">问答题库</div><div class="tab" onclick="sat(\'data\')">数据管理</div><div class="tab" onclick="sat(\'users\')">用户管理</div></div><div id="atc"></div>';sat('modules');}
+
+function sat(t){
+  document.querySelectorAll('#ac .tab').forEach(function(tb,i){tb.classList.remove('ac');if((t==='modules'&&i===0)||(t==='questions'&&i===1)||(t==='essays'&&i===2)||(t==='data'&&i===3)||(t==='users'&&i===4))tb.classList.add('ac');});
+  var h='';
+  if(t==='modules'){
+    var gs={};M.forEach(function(m){if(!gs[m.g])gs[m.g]=[];gs[m.g].push(m);});
+    h+='<button class="btn btn-p" style="margin-bottom:16px" onclick="sme()">+ 新增模块</button>';
+    Object.keys(gs).forEach(function(g){
+      h+='<div class="card"><h3>'+g+'</h3><div class="tbl"><table><thead><tr><th>标题</th><th>描述</th><th>视频</th><th>附件数</th><th>操作</th></tr></thead><tbody>';
+      gs[g].forEach(function(m){h+='<tr><td>'+es(m.t)+'</td><td>'+es(m.d)+'</td><td>'+(m.v?'有':'无')+'</td><td>'+(m.at?m.at.length:0)+'</td><td><button class="btn btn-o btn-sm" onclick="sme(\''+m.id+'\')">编辑</button> <button class="btn btn-e btn-sm" onclick="dm2(\''+m.id+'\')">删除</button></td></tr>';});
+      h+='</tbody></table></div></div>';
+    });
+  }else if(t==='questions'){
+    h+='<button class="btn btn-p" style="margin-bottom:16px" onclick="sqe()">+ 新增考题</button><div class="tbl"><table><thead><tr><th>题目</th><th>选项数</th><th>正确答案</th><th>操作</th></tr></thead><tbody>';
+    QS.forEach(function(q,i){h+='<tr><td>'+es(q.q)+'</td><td>'+q.o.length+'</td><td>'+String.fromCharCode(65+q.a)+'</td><td><button class="btn btn-o btn-sm" onclick="sqe('+i+')">编辑</button> <button class="btn btn-e btn-sm" onclick="dq('+i+')">删除</button></td></tr>';});
+    h+='</tbody></table></div>';
+  }else if(t==='essays'){
+    h+='<button class="btn btn-p" style="margin-bottom:16px" onclick="sqee()">+ 新增问答题</button>';
+    QES.forEach(function(q,i){h+='<div class="card"><h3>#'+(i+1)+' '+es(q.q)+'</h3><div class="fg"><label>参考答案：</label><div style="padding:8px;background:var(--bg);border-radius:6px;white-space:pre-wrap">'+es(q.a)+'</div></div><button class="btn btn-o btn-sm" onclick="sqee('+i+')">编辑</button> <button class="btn btn-e btn-sm" onclick="dqe('+i+')">删除</button></div>';});
+    if(QES.length===0)h+='<div class="card"><p style="color:var(--t2)">暂无问答题</p></div>';
+  }else if(t==='data'){
+    h+='<div class="card"><h3>数据导出/导入</h3><p style="margin-bottom:12px;color:var(--t2)">导出全部培训数据（模块、考题、进度）备份到本地，或从备份文件恢复。</p><button class="btn btn-p" onclick="ed()">📥 导出全部数据</button> <button class="btn btn-o" onclick="document.getElementById(\'if2\').click()">📤 导入数据</button><input type="file" id="if2" class="h" accept=".json" onchange="id2(this)"></div>';
+    h+='<div class="card"><h3>重置</h3><p style="margin-bottom:12px;color:var(--w)">⚠️ 将培训进度、模块和考题恢复为默认值，此操作不可撤销。</p><button class="btn btn-e" onclick="ra()">🔄 恢复默认</button></div>';
+  }else if(t==='users'){
+    h+=sum();
+  }
+  document.getElementById('atc').innerHTML=h;
+}
+
+var _eid=null,_eat=[];
+function sme(id){
+  _eid=id||null;_eat=[];
+  var m=id?M.find(function(x){return x.id===id}):{id:'',t:'',d:'',g:'产品知识',v:'',c:'',at:[]};
+  if(id&&m.at)_eat=JSON.parse(JSON.stringify(m.at));
+  var h='<div class="card"><h3>'+(id?'编辑模块':'新增模块')+'</h3>';
+  h+='<div class="g2"><div class="fg"><label>模块标题</label><input id="emt" value="'+es(m.t)+'"></div><div class="fg"><label>分组</label><select id="emg">';
+  ['产品知识','行业知识','销售技巧','综合'].forEach(function(g){h+='<option '+(m.g===g?'selected':'')+'>'+g+'</option>';});
+  h+='</select></div></div><div class="fg"><label>描述</label><input id="emd" value="'+es(m.d)+'"></div><div class="fg"><label>视频链接（B站嵌入URL，可选）</label><input id="emv" value="'+es(m.v||'')+'"></div><div class="fg"><label>培训内容（HTML格式）</label><textarea id="emc" style="min-height:200px">'+es(m.c||'')+'</textarea></div><div class="fg"><label>附件（PDF/文档，≤2MB）</label><input type="file" id="emaf" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.png,.jpg" style="margin-bottom:8px"><button class="btn btn-o btn-sm" onclick="aea()">+ 添加附件</button><div id="eal">';
+  _eat.forEach(function(a,i){h+='<div class="att"><span>📄 '+a.n+' ('+fs(a.s)+')</span><button class="btn btn-e btn-sm" onclick="rea('+i+')">删除</button></div>';});
+  h+='</div></div><div style="display:flex;gap:10px;margin-top:16px"><button class="btn btn-p" onclick="svm()">保存</button><button class="btn btn-o" onclick="sat(\'modules\')">取消</button></div></div>';
+  document.getElementById('atc').innerHTML=h;
+}
+function aea(){var f=document.getElementById('emaf');if(!f||!f.files||!f.files[0]){tt('请先选择文件');return;}var file=f.files[0];if(file.size>2*1024*1024){tt('❌ 文件不能超过2MB');return;}var reader=new FileReader();reader.onload=function(e){_eat.push({n:file.name,s:file.size,d:e.target.result});f.value='';rea2();};reader.onerror=function(){tt('❌ 文件读取失败');};reader.readAsDataURL(file);}
+function rea(i){_eat.splice(i,1);rea2();}
+function rea2(){var h='';_eat.forEach(function(a,i){h+='<div class="att"><span>📄 '+a.n+' ('+fs(a.s)+')</span><button class="btn btn-e btn-sm" onclick="rea('+i+')">删除</button></div>';});document.getElementById('eal').innerHTML=h;}
+function svm(){
+  var data={id:_eid||('m'+Date.now()),t:document.getElementById('emt').value.trim(),g:document.getElementById('emg').value,d:document.getElementById('emd').value.trim(),v:document.getElementById('emv').value.trim(),c:document.getElementById('emc').value,at:_eat.slice()};
+  if(!data.t){tt('请输入标题');return;}
+  if(_eid){var idx=M.findIndex(function(m){return m.id===_eid});if(idx>=0)M[idx]=data;}
+  else{M.push(data);}
+  sv('tm',M);rs();up();sat('modules');tt('✅ 已保存');
+}
+function dm2(id){if(!confirm('确认删除？'))return;M=M.filter(function(m){return m.id!==id});sv('tm',M);rs();up();sat('modules');tt('已删除');}
+
+var _eqi=null;
+function sqe(idx){
+  _eqi=idx!==undefined?idx:null;
+  var q=idx!==undefined?QS[idx]:{q:'',o:['','','',''],a:0,x:''},h='<div class="card"><h3>'+(idx!==undefined?'编辑考题':'新增考题')+'</h3>';
+  h+='<div class="fg"><label>题目</label><input id="eqq" value="'+es(q.q)+'"></div><div class="fg"><label>选项</label>';
+  q.o.forEach(function(o,i){h+='<input id="eqo'+i+'" value="'+es(o)+'" style="margin-bottom:6px" placeholder="选项 '+String.fromCharCode(65+i)+'">';});
+  h+='</div><div class="fg"><label>正确答案</label><select id="eqa">';
+  q.o.forEach(function(_,i){h+='<option value="'+i+'" '+(q.a===i?'selected':'')+'>'+String.fromCharCode(65+i)+'</option>';});
+  h+='</select></div><div class="fg"><label>题目解析（答题后显示）</label><input id="eqx" value="'+es(q.x||'')+'"></div>';
+  h+='<button class="btn btn-p" onclick="svq()">保存</button> <button class="btn btn-o" onclick="sat(\'questions\')">取消</button></div>';
+  document.getElementById('atc').innerHTML=h;
+}
+function svq(){
+  var data={id:_eqi!==null?QS[_eqi].id:('q'+Date.now()),q:document.getElementById('eqq').value.trim(),o:[0,1,2,3].map(function(i){return document.getElementById('eqo'+i).value.trim();}),a:parseInt(document.getElementById('eqa').value),x:document.getElementById('eqx').value.trim()};
+  if(!data.q||data.o.some(function(o){return !o})){tt('请填写完整');return;}
+  if(_eqi!==null){QS[_eqi]=data;}else{QS.push(data);}
+  sv('tq',QS);sat('questions');tt('✅ 已保存');
+}
+function dq(i){if(confirm('确认删除？')){QS.splice(i,1);sv('tq',QS);sat('questions');tt('已删除');}}
+
+var _eqei=null;
+function sqee(idx){
+  _eqei=idx!==undefined?idx:null;
+  var q=idx!==undefined?QES[idx]:{q:'',a:''},h='<div class="card"><h3>'+(idx!==undefined?'编辑问答题':'新增问答题')+'</h3>';
+  h+='<div class="fg"><label>题目</label><textarea id="eqeq" style="min-height:80px">'+es(q.q)+'</textarea></div>';
+  h+='<div class="fg"><label>参考答案</label><textarea id="eqea" style="min-height:120px">'+es(q.a)+'</textarea></div>';
+  h+='<button class="btn btn-p" onclick="svqe()">保存</button> <button class="btn btn-o" onclick="sat(\'essays\')">取消</button></div>';
+  document.getElementById('atc').innerHTML=h;
+}
+function svqe(){
+  var data={id:_eqei!==null?QES[_eqei].id:('qe'+Date.now()),q:document.getElementById('eqeq').value.trim(),a:document.getElementById('eqea').value.trim()};
+  if(!data.q||!data.a){tt('请填写题目和参考答案');return;}
+  if(_eqei!==null){QES[_eqei]=data;}else{QES.push(data);}
+  sv('tqe',QES);sat('essays');tt('✅ 已保存');
+}
+function dqe(i){if(confirm('确认删除？')){QES.splice(i,1);sv('tqe',QES);sat('essays');tt('已删除');}}
+
+function ed(){var data={modules:M,questions:QS,essays:QES,progress:_getUP()};var b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='softan-training-'+new Date().toISOString().slice(0,10)+'.json';a.click();tt('✅ 导出成功');}
+function id2(input){var f=input.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){try{var d=JSON.parse(e.target.result);if(d.modules){M=d.modules;sv('tm',M);}if(d.questions){QS=d.questions;sv('tq',QS);}if(d.essays){QES=d.essays;sv('tqe',QES);}if(d.progress){var up=_getUP();Object.assign(up,d.progress);_setUP(up);sv('users',UL);}rs();up();sat('data');tt('✅ 导入成功');}catch(ex){tt('❌ 文件格式错误');}};r.readAsText(f);}
+function ra(){if(!confirm('确认恢复默认？所有自定义数据将丢失！'))return;M=JSON.parse(JSON.stringify(D));QS=JSON.parse(JSON.stringify(Q));QES=JSON.parse(JSON.stringify(QE));P={};CU.p={};sv('tm',M);sv('tq',QS);sv('tqe',QES);sv('users',UL);rs();up();sat('data');tt('✅ 已恢复默认');}
+
+function da(mid,idx){var m=M.find(function(x){return x.id===mid});if(!m||!m.at||!m.at[idx]){tt('❌ 附件不存在');return;}var a=m.at[idx];var el=document.createElement('a');el.href=a.d;el.download=a.n;el.style.display='none';document.body.appendChild(el);el.click();setTimeout(function(){document.body.removeChild(el);},100);}
+function fs(b){return b<1024?b+'B':b<1048576?(b/1024).toFixed(1)+'KB':(b/1048576).toFixed(1)+'MB';}
+function es(s){return(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function tt(m,c){var el=document.getElementById('toast');el.textContent=m;el.className='toast '+(c||'ts');el.classList.remove('h');setTimeout(function(){el.classList.add('h')},2500);}
+
+// Init —— 从IndexedDB加载数据（自动迁移localStorage旧数据）
+function _init(){
+  var keys=['users','tm','tq','tqe'],loaded=0;
+  keys.forEach(function(k){
+    _dbs(k,function(v){
+      if(!v){try{var old=localStorage.getItem(k);if(old){v=JSON.parse(old);localStorage.removeItem(k);}}catch(e){}}
+      if(k==='users'&&v)UL=v;
+      else if(k==='tm'&&v)M=v;
+      else if(k==='tq'&&v)QS=v;
+      else if(k==='tqe'&&v)QES=v;
+      loaded++;
+      if(loaded===4){
+        if(UL.length===0){UL=JSON.parse(JSON.stringify(DEF_USERS));}
+        _dbp('users',UL);_dbp('tm',M);_dbp('tq',QS);_dbp('tqe',QES);
+        var el=document.getElementById('lgWrap');if(el)el.classList.remove('h');
+      }
+    });
+  });
+}
+_init();
+</script>
+</body>
+</html>
