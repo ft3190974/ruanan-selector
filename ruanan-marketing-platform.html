@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>软安科技华南 · 营销管理工作台</title>
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;height:100%}
+body{font-family:'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;background:#F1F5F9;color:#1E293B;line-height:1.6;height:100%;overflow:hidden;-webkit-font-smoothing:antialiased}
+:root{
+  --brand:#1E2330;--brand-light:#2A3140;--brand-dark:#141820;
+  --accent:#5C3D99;--accent-light:#7B5CB8;--accent-bg:rgba(92,61,153,0.06);--accent-bg2:rgba(92,61,153,0.12);
+  --gold:#C8921A;--gold-light:#E5AA2C;--gold-bg:rgba(200,146,26,0.08);
+  --success:#059669;--success-bg:rgba(5,150,105,0.08);
+  --danger:#DC2626;--danger-bg:rgba(220,38,38,0.08);
+  --warning:#D97706;--warning-bg:rgba(217,119,6,0.08);
+  --info:#2563EB;--info-bg:rgba(37,99,235,0.08);
+  --text:#1E293B;--text2:#475569;--text3:#94A3B8;
+  --bg:#F1F5F9;--surface:#FFFFFF;--surface2:#F8FAFC;
+  --border:#E2E8F0;--border2:#CBD5E1;
+  --radius:10px;--radius-sm:6px;--radius-lg:14px;--radius-xl:18px;
+  --shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 16px rgba(0,0,0,0.06);--shadow-lg:0 12px 36px rgba(0,0,0,0.08);
+  --trans:0.2s cubic-bezier(0.4,0,0.2,1);
+}
+a{color:inherit;text-decoration:none}svg{display:block}
+
+/* ═══ LAYOUT ═══ */
+.layout{display:flex;height:100vh;overflow:hidden}
+
+/* ═══ SIDEBAR ═══ */
+.sidebar{width:260px;background:var(--brand);color:#fff;display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;z-index:100}
+.sidebar-brand{padding:22px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0}
+.sb-logo{width:36px;height:36px;border-radius:10px;background:#1E2330;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;flex-shrink:0}
+.sb-title{font-weight:700;font-size:14px;letter-spacing:-0.2px}
+.sb-sub{font-size:10px;color:rgba(255,255,255,0.4);font-weight:400}
+
+.sidebar-user{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:10px;font-size:12px;color:rgba(255,255,255,0.7);flex-shrink:0}
+.u-avatar{width:32px;height:32px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.u-name{font-weight:600;color:#fff}.u-role{font-size:10px;opacity:0.5}
+
+.sidebar-nav{flex:1;padding:12px;overflow-y:auto}
+.sn-section{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.25);padding:16px 10px 6px;font-weight:700}
+.sn-section:first-child{padding-top:4px}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;font-size:13px;font-weight:500;color:rgba(255,255,255,0.55);transition:var(--trans);cursor:pointer;margin-bottom:2px}
+.sidebar-nav a:hover{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.8)}
+.sidebar-nav a.active{background:var(--accent);color:#fff;font-weight:600;box-shadow:0 4px 12px rgba(92,61,153,0.35)}
+.nav-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.nav-badge{font-size:10px;padding:1px 7px;border-radius:100px;background:var(--danger);color:#fff;margin-left:auto;font-weight:600}
+
+.sidebar-footer{padding:12px;border-top:1px solid rgba(255,255,255,0.06);flex-shrink:0}
+.sidebar-footer a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;font-size:12px;color:rgba(255,255,255,0.4);cursor:pointer;transition:var(--trans)}
+.sidebar-footer a:hover{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.7)}
+
+@media(max-width:1024px){.sidebar{width:72px}.sidebar-brand .sb-title,.sidebar-brand .sb-sub{display:none}.sidebar-brand{padding:16px;justify-content:center}.sidebar-user{display:none}.sn-section{display:none}.sidebar-nav a{justify-content:center;padding:12px}.sidebar-nav a span:not(.nav-icon){display:none}.sidebar-footer a span{display:none}.sidebar-footer a{justify-content:center}}
+@media(max-width:640px){.sidebar{display:none}}
+
+/* ═══ MAIN CONTENT ═══ */
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;height:56px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:50}
+.tb-left{display:flex;align-items:center;gap:12px}
+.tb-breadcrumb{font-size:13px;color:var(--text2)}
+.tb-right{display:flex;align-items:center;gap:12px}
+.tb-btn{padding:7px 16px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:var(--trans);font-family:inherit}
+.tb-btn.primary{background:var(--accent);color:#fff}.tb-btn.primary:hover{background:var(--accent-light)}
+.tb-btn.ghost{background:transparent;color:var(--text2);border:1px solid var(--border)}.tb-btn.ghost:hover{background:var(--surface2)}
+.tb-btn.gold{background:var(--gold);color:#fff}.tb-btn.gold:hover{background:var(--gold-light)}
+.main-content{flex:1;padding:24px 28px 40px;max-width:1400px}
+@media(max-width:640px){.topbar{padding:0 14px}.main-content{padding:16px 12px 32px}}
+
+/* ═══ PAGE HEADER ═══ */
+.page-header{margin-bottom:28px}
+.ph-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.ph-eyebrow::before{content:'';width:16px;height:2px;background:var(--accent);border-radius:1px}
+.ph-title{font-size:26px;font-weight:800;color:var(--text);letter-spacing:-0.5px;margin-bottom:6px}
+.ph-sub{font-size:14px;color:var(--text2);max-width:600px;line-height:1.6}
+.page-header.center{text-align:center;display:flex;flex-direction:column;align-items:center}
+.page-header.center .ph-eyebrow{justify-content:center}.page-header.center .ph-eyebrow::before{display:none}.page-header.center .ph-eyebrow::after{content:'';width:16px;height:2px;background:var(--accent);border-radius:1px}
+
+/* ═══ STAT CARDS ═══ */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px 24px;transition:var(--trans)}
+.stat-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.stat-label{font-size:12px;color:var(--text3);font-weight:500;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
+.stat-value{font-size:32px;font-weight:800;color:var(--text);line-height:1;margin-bottom:4px}
+.stat-change{font-size:11px;font-weight:600}.stat-change.up{color:var(--success)}.stat-change.down{color:var(--danger)}
+.stat-card.accent{border-left:3px solid var(--accent)}.stat-card.gold{border-left:3px solid var(--gold)}.stat-card.success{border-left:3px solid var(--success)}.stat-card.info{border-left:3px solid var(--info)}
+@media(max-width:1024px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.stat-grid{grid-template-columns:1fr}}
+
+/* ═══ QUICK ACTIONS ═══ */
+.qaction-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.qaction-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;cursor:pointer;transition:var(--trans);display:flex;align-items:center;gap:14px}
+.qaction-card:hover{border-color:var(--accent);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.qa-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.qa-icon.purple{background:var(--accent-bg2);color:var(--accent)}.qa-icon.gold{background:var(--gold-bg);color:var(--gold)}.qa-icon.success{background:var(--success-bg);color:var(--success)}.qa-icon.info{background:var(--info-bg);color:var(--info)}
+.qa-body{flex:1}.qa-title{font-weight:700;font-size:14px;color:var(--text);margin-bottom:2px}.qa-desc{font-size:11px;color:var(--text3)}
+@media(max-width:1024px){.qaction-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.qaction-grid{grid-template-columns:1fr}}
+
+/* ═══ CARDS ═══ */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px 28px;box-shadow:var(--shadow);transition:var(--trans)}
+.card:hover{box-shadow:var(--shadow-md)}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.ch-title{font-size:16px;font-weight:700;color:var(--text)}.ch-action{font-size:13px;color:var(--accent);font-weight:600;cursor:pointer}
+
+/* ═══ GRIDS ═══ */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.grid-2-1{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+@media(max-width:1024px){.grid-3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.grid-2,.grid-3,.grid-4,.grid-2-1{grid-template-columns:1fr}}
+
+/* Exam styles */
+.qp-dots{display:flex;gap:6px;margin-bottom:16px}
+.qp-dot{width:24px;height:4px;border-radius:2px;background:var(--border)}
+.qp-dot.done{background:var(--success)}
+.qp-dot.wrong{background:var(--danger)}
+.qp-dot.cur{background:var(--accent)}
+.exam-opt{padding:14px 18px;border:2px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:var(--trans);font-size:15px;font-weight:500}
+.exam-opt:hover{border-color:var(--accent);background:var(--accent-bg)}
+.exam-opt.selected{border-color:var(--accent);background:var(--accent-bg2);color:var(--accent);font-weight:600}
+
+/* ═══ BUTTONS ═══ */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;border:1px solid transparent;transition:var(--trans);font-family:inherit;white-space:nowrap}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent-light);box-shadow:0 4px 12px rgba(92,61,153,0.3)}
+.btn-gold{background:var(--gold);color:#fff}.btn-gold:hover{background:var(--gold-light)}
+.btn-success{background:var(--success);color:#fff}.btn-success:hover{opacity:0.9}
+.btn-outline{background:var(--surface);color:var(--text2);border-color:var(--border)}.btn-outline:hover{background:var(--surface2);border-color:var(--border2)}
+.btn-ghost{background:transparent;color:var(--text2);border:none}.btn-ghost:hover{background:var(--surface2)}
+.btn-sm{padding:5px 12px;font-size:12px;border-radius:6px}.btn-lg{padding:13px 28px;font-size:15px;border-radius:10px}
+.btn:disabled{opacity:0.4;cursor:not-allowed;pointer-events:none}
+
+/* ═══ PRODUCT CARDS ═══ */
+.prod-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:var(--trans);display:flex;flex-wrap:wrap}
+.prod-item:hover{box-shadow:var(--shadow-lg);border-color:var(--accent)}
+.pi-visual{width:260px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;color:#fff;text-align:center;min-height:240px}
+.pi-visual.purple{background:linear-gradient(150deg,#1e1b4b,#3b0764)}
+.pi-visual.gold{background:linear-gradient(150deg,#1a1007,#4a2f00)}
+.pi-visual.blue{background:linear-gradient(150deg,#0b1829,#1e3a5f)}
+.pi-visual.teal{background:linear-gradient(150deg,#042222,#0d4d46)}
+.pi-icon{font-size:42px;margin-bottom:8px}.pi-name{font-weight:800;font-size:18px}.pi-sub{font-size:11px;opacity:0.6;margin:4px 0 10px}.pi-price{font-weight:900;font-size:20px}.pi-price-label{font-size:10px;opacity:0.5}
+.pi-body{flex:1;padding:24px 28px;min-width:300px}
+.pi-desc{font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:14px}
+.pi-section-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+.pi-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}.pi-tag{font-size:11px;padding:4px 10px;border-radius:6px;background:var(--accent-bg);color:var(--accent);font-weight:500}
+@media(max-width:768px){.pi-visual{width:100%}}
+
+/* ═══ SOLUTION CARDS ═══ */
+.sol-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.sol-nav-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px 20px;cursor:pointer;transition:var(--trans);text-align:center}
+.sol-nav-card:hover{border-color:var(--accent);box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.sn-icon{font-size:36px;margin-bottom:10px}.sn-title{font-weight:700;font-size:15px;color:var(--text);margin-bottom:6px}.sn-desc{font-size:12px;color:var(--text3);line-height:1.6}
+@media(max-width:1024px){.sol-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.sol-grid{grid-template-columns:1fr}}
+
+/* ═══ BLOG / KB LAYOUT ═══ */
+.blog-layout{display:grid;grid-template-columns:1fr 320px;gap:24px}
+.blog-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px 24px;transition:var(--trans);cursor:pointer}
+.blog-card:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+.bc-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:12px}
+.bc-title{font-size:16px;font-weight:700;color:var(--text);line-height:1.4}
+.bc-title:hover{color:var(--accent)}
+.bc-category{font-size:11px;padding:3px 10px;border-radius:100px;background:var(--accent-bg);color:var(--accent);font-weight:600;white-space:nowrap;flex-shrink:0}
+.bc-excerpt{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:12px}
+.bc-meta{display:flex;align-items:center;gap:16px;font-size:12px;color:var(--text3)}
+.bc-stat{display:flex;align-items:center;gap:4px}.bc-author{font-weight:600;color:var(--text2)}
+.bc-tags{display:flex;gap:6px;margin-top:8px}.bc-tags span{font-size:10px;color:var(--accent);font-weight:500;background:var(--accent-bg);padding:2px 8px;border-radius:4px}
+@media(max-width:768px){.blog-layout{grid-template-columns:1fr}}
+
+/* ═══ ASK FORM ═══ */
+.ask-form{background:var(--surface);border:2px dashed var(--border2);border-radius:var(--radius-lg);padding:20px 24px}
+.af-title{font-weight:700;font-size:15px;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.ask-form input,.ask-form textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;color:var(--text);outline:none;transition:var(--trans);margin-bottom:10px;background:var(--surface)}
+.ask-form input:focus,.ask-form textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
+.ask-form textarea{resize:vertical;min-height:80px}
+
+/* ═══ DATA TABLE ═══ */
+.data-table{width:100%;font-size:13px;border-collapse:collapse}
+.data-table th,.data-table td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+.data-table th{font-weight:600;color:var(--text3);font-size:11px;text-transform:uppercase;letter-spacing:0.5px;background:var(--surface2)}
+.data-table tr:hover{background:var(--surface2)}
+
+/* ═══ BADGES ═══ */
+.badge{display:inline-block;padding:2px 10px;border-radius:100px;font-size:11px;font-weight:600}
+.badge-green{background:var(--success-bg);color:var(--success)}.badge-yellow{background:var(--warning-bg);color:var(--warning)}
+.badge-red{background:var(--danger-bg);color:var(--danger)}.badge-blue{background:var(--info-bg);color:var(--info)}
+.badge-purple{background:var(--accent-bg);color:var(--accent)}
+
+/* ═══ FEED LIST ═══ */
+.feed-list{display:flex;flex-direction:column;gap:0}
+.feed-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);font-size:13px;align-items:flex-start}
+.feed-item:last-child{border-bottom:none}
+.fi-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.fi-dot.purple{background:var(--accent)}.fi-dot.gold{background:var(--gold)}.fi-dot.success{background:var(--success)}.fi-dot.info{background:var(--info)}
+.fi-content{flex:1}.fi-title{font-weight:600;color:var(--text);margin-bottom:2px}.fi-desc{color:var(--text2);font-size:12px}.fi-time{font-size:11px;color:var(--text3);margin-top:2px}
+
+/* ═══ KPI ROW ═══ */
+.kpi-row{display:flex;gap:16px;margin-bottom:24px}
+.kpi-card{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 22px;text-align:center;transition:var(--trans)}
+.kpi-card:hover{box-shadow:var(--shadow-md)}.kpi-val{font-size:30px;font-weight:800;color:var(--text);line-height:1}.kpi-label{font-size:11px;color:var(--text3);margin-top:4px;text-transform:uppercase;letter-spacing:0.5px}
+@media(max-width:768px){.kpi-row{flex-wrap:wrap}}
+
+/* ═══ FORM GRID ═══ */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:7px;font-size:13px;font-family:inherit;color:var(--text);outline:none;transition:var(--trans);background:var(--surface)}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
+.form-group textarea{resize:vertical;min-height:80px}
+@media(max-width:640px){.form-grid{grid-template-columns:1fr}}
+
+/* ═══ TAB NAV ═══ */
+.tab-nav{display:flex;gap:4px;margin-bottom:24px;border-bottom:2px solid var(--border);padding-bottom:0}
+.tab-item{padding:10px 20px;font-size:13px;font-weight:600;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:var(--trans)}
+.tab-item:hover{color:var(--text)}.tab-item.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* ═══ EMPTY STATE ═══ */
+.empty-state{text-align:center;padding:48px 20px;color:var(--text3)}
+.es-icon{font-size:48px;margin-bottom:12px}.es-title{font-weight:700;font-size:16px;color:var(--text);margin-bottom:6px}.es-desc{font-size:13px;margin-bottom:16px}
+
+/* ═══ POST DETAIL ═══ */
+.post-detail{padding:8px 0}
+.pd-meta{display:flex;gap:20px;font-size:12px;color:var(--text3);margin-bottom:20px}
+.pd-content{font-size:14px;color:var(--text);line-height:1.9}
+
+/* ═══ LOGIN ═══ */
+.login-overlay{position:fixed;inset:0;z-index:3000;background:rgba(15,23,42,0.94);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px)}
+.login-overlay.hidden{display:none}
+.login-box{background:var(--surface);border-radius:var(--radius-xl);padding:40px 36px;width:420px;max-width:94vw;box-shadow:0 24px 80px rgba(0,0,0,0.35)}
+.lb-brand{text-align:center;margin-bottom:24px}
+.lb-logo{width:48px;height:48px;margin:0 auto 12px;background:#1E2330;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:800}
+.lb-brand h3{font-size:18px;font-weight:700;margin-bottom:4px}.lb-sub{font-size:12px;color:var(--text3);margin-bottom:16px}
+.lb-tabs{display:flex;gap:0;margin-bottom:20px;border-bottom:1px solid var(--border)}
+.lb-tabs span{flex:1;text-align:center;padding:8px 0;cursor:pointer;font-size:12px;font-weight:600;color:var(--text3);border-bottom:2px solid transparent;transition:var(--trans)}
+.lb-tabs span.active{color:var(--accent);border-bottom-color:var(--accent)}
+.login-box label{display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:3px}
+.login-box input,.login-box select,.login-box textarea{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:7px;font-size:13px;font-family:inherit;color:var(--text);outline:none;transition:var(--trans);margin-bottom:10px;background:var(--surface)}
+.login-box input:focus,.login-box select:focus,.login-box textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
+.login-box input.error{border-color:var(--danger);background:var(--danger-bg)}
+.lb-err{color:var(--danger);font-size:11px;margin:-6px 0 8px;display:none}.lb-err.show{display:block}
+.lb-btn{width:100%;padding:10px;border-radius:7px;font-size:14px;font-weight:600;color:#fff;background:var(--accent);border:none;cursor:pointer;font-family:inherit;transition:var(--trans)}
+.lb-btn:hover{background:var(--accent-light)}
+.lb-link{text-align:center;margin-top:10px;font-size:11px;color:var(--accent);cursor:pointer;display:block}
+.lb-link:hover{text-decoration:underline}.lb-link.skip{color:var(--success);font-weight:600}
+
+.lb-cap-display{font-weight:800;font-size:14px;color:var(--accent);background:var(--accent-bg);padding:5px 14px;border-radius:7px;letter-spacing:1px;text-align:center;min-width:100px}
+.lb-cap-refresh{font-size:16px;cursor:pointer;user-select:none;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:var(--trans)}
+.lb-cap-refresh:hover{background:var(--surface2)}
+
+/* ═══ MODAL ═══ */
+.modal-overlay{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay.hidden{display:none}
+.modal-box{background:var(--surface);border-radius:var(--radius-xl);padding:32px;width:680px;max-width:94vw;max-height:85vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.25)}
+
+/* ═══ TOAST ═══ */
+.toast{position:fixed;top:20px;right:20px;padding:12px 22px;border-radius:8px;color:#fff;font-weight:500;font-size:13px;z-index:9999;animation:toastIn 0.3s ease;box-shadow:0 8px 24px rgba(0,0,0,0.15)}
+.toast.success{background:var(--success)}.toast.error{background:var(--danger)}
+@keyframes toastIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
+
+.file-item{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--surface2);border-radius:6px;margin-bottom:4px;font-size:12px}.file-item a{color:var(--accent)}.file-item .remove{cursor:pointer;color:var(--danger);font-weight:700}
+</style>
+</head>
+<body>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+<symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+<symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></symbol>
+<symbol id="i-build" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/></symbol>
+<symbol id="i-search2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.5" cy="10.5" r="7.5"/><line x1="21" y1="21" x2="15.8" y2="15.8"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><circle cx="19" cy="7" r="4"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></symbol>
+<symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+<symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></symbol>
+<symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+<symbol id="i-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+<symbol id="i-pie" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
+<symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+<symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+<symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></symbol>
+<symbol id="i-car" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"/><circle cx="6.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></symbol>
+<symbol id="i-cpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+</svg>
+
+<div class="login-overlay hidden" id="loginOverlay"><div class="login-box" id="loginBox"></div></div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><div class="sb-logo">安</div><div><div class="sb-title">软安科技</div><div class="sb-sub">华南营销 · 专业专注</div></div></div>
+    <div class="sidebar-user" style="display:none"><div class="u-avatar" id="sbAvatar"></div><div><div class="u-name" id="sbName"></div><div class="u-role" id="sbRole"></div></div></div>
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+    <div class="sidebar-footer" id="sidebarFooter"></div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="tb-left"><div class="tb-breadcrumb" id="tbBreadcrumb">🏠 工作台</div></div>
+      <div class="tb-right">
+        <span style="font-size:12px;color:var(--text3)" id="userBadge"></span>
+        <button class="tb-btn primary" id="tbLoginBtn" onclick="showLogin('login')">登录</button>
+      </div>
+    </header>
+    <div class="main-content" id="app"></div>
+  </div>
+</div>
+<script>
+/* ═══════════════════════════════════════
+   营销管理工作台 - 核心脚本
+   ═══════════════════════════════════════ */
+var API='http://localhost:8081';
+var authToken=localStorage.getItem('selector_token')||'';
+var authUser=null;
+
+var page='home';
+
+/* ── API ── */
+async function api(m,u,b){
+  var o={method:m,headers:{}};
+  if(authToken)o.headers['Authorization']='Bearer '+authToken;
+  if(b){if(b instanceof FormData)o.body=b;else{o.headers['Content-Type']='application/x-www-form-urlencoded';o.body=b;}}
+  var r=await fetch(API+u,o);var d=await r.json();
+  if(!r.ok)throw new Error(d.detail||'请求失败');return d;
+}
+function fd(o){var f=new FormData();for(var k in o)f.append(k,String(o[k]));return f;}
+
+/* ── AUTH ── */
+function showLogin(tab){
+  tab=tab||'login';
+  var h='<div class="lb-brand"><div class="lb-logo">安</div><h3>软安科技·华南</h3><div class="lb-sub">营销管理工作台</div></div>';
+  h+='<div class="lb-tabs"><span class="'+(tab==='login'?'active':'')+'" onclick="showLogin(\'login\')">登录</span><span class="'+(tab==='forgot'?'active':'')+'" onclick="showLogin(\'forgot\')">忘记密码</span></div>';
+  if(tab==='forgot'){
+    h+='<p style="font-size:12px;color:var(--text3);margin-bottom:12px">输入用户名和邮箱，系统将重置密码</p>';
+    h+='<label>用户名 *</label><input id="fgUser"><label>邮箱 *</label><input id="fgEmail">';
+    h+='<button class="lb-btn" onclick="doForgot()">重置密码</button><div class="lb-link" onclick="showLogin(\'login\')">返回登录</div>';
+  }else{
+    h+='<label>用户名</label><input id="lu" placeholder="请输入用户名">';
+    h+='<label>密码</label><input id="lp" type="password" placeholder="请输入密码" onkeydown="if(event.key==\'Enter\')doLogin()">';
+    h+='<button class="lb-btn" onclick="doLogin()">登录</button>';
+  }
+  h+='<a href="/" style="display:block;text-align:center;margin-top:12px;font-size:14px;font-weight:600;color:#fff;background:#1E2330;padding:10px;border-radius:8px;text-decoration:none">← 返回平台首页</a>';
+  h+='<div class="lb-err" id="loginErr" style="text-align:center"></div>';
+  document.getElementById('loginBox').innerHTML=h;
+  document.getElementById('loginOverlay').classList.remove('hidden');
+  if(tab==='login'){document.getElementById('lu').focus();}
+}
+function hideLogin(){document.getElementById('loginOverlay').classList.add('hidden');}
+function showErr(m){var e=document.getElementById('loginErr');e.textContent=m;e.classList.add('show');setTimeout(function(){e.classList.remove('show');},3000);}
+function skipLogin(){authUser={username:'guest',role:'guest'};hideLogin();updateAll();}
+async function doLogin(){
+  var u=document.getElementById('lu').value.trim(),p=document.getElementById('lp').value.trim();
+  if(!u||!p){showErr('请输入用户名和密码');return;}
+  try{var d=await api('POST','/api/login','username='+encodeURIComponent(u)+'&password='+encodeURIComponent(p));authToken=d.token;authUser=d;localStorage.setItem('selector_token',authToken);hideLogin();updateAll();toast('登录成功');}catch(e){showErr(e.message);}
+}
+async function doRegister(){
+  var u=document.getElementById('regUser').value.trim(),p=document.getElementById('regPwd').value.trim(),em=document.getElementById('regEmail').value.trim(),ph=document.getElementById('regPhone').value.trim(),cp=document.getElementById('regCompany').value.trim(),rl=document.getElementById('regRole').value;
+  if(!/^[a-zA-Z0-9_一-龥]{4,20}$/.test(u)){document.getElementById('regUserErr').classList.add('show');return;}else document.getElementById('regUserErr').classList.remove('show');
+  if(p.length<8||!/[A-Za-z]/.test(p)||!/[0-9]/.test(p)){document.getElementById('regPwdErr').classList.add('show');return;}else document.getElementById('regPwdErr').classList.remove('show');
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){document.getElementById('regEmailErr').classList.add('show');return;}else document.getElementById('regEmailErr').classList.remove('show');
+  try{var d=await api('POST','/api/register',fd({username:u,password:p,email:em,phone:ph,company:cp,role:rl}));authToken=d.token;authUser=d;localStorage.setItem('selector_token',authToken);hideLogin();updateAll();toast('注册成功！');}catch(e){showErr(e.message);}
+}
+async function doForgot(){
+  var u=document.getElementById('fgUser').value.trim(),em=document.getElementById('fgEmail').value.trim();
+  if(!u||!em){showErr('请填写用户名和邮箱');return;}
+  try{var d=await api('POST','/api/forgot-password','username='+encodeURIComponent(u)+'&email='+encodeURIComponent(em));alert(d.message);showLogin('login');}catch(e){showErr(e.message);}
+}
+function doLogout(){authToken='';authUser=null;localStorage.removeItem('selector_token');updateAll();nav('home');toast('已退出登录');}
+
+/* ── NAVIGATION ── */
+function updateAll(){updateSidebar();updateTopbar();}
+function updateTopbar(){
+  var badge=document.getElementById('userBadge');
+  var btn=document.getElementById('tbLoginBtn');
+  if(authUser){badge.textContent='👤 '+authUser.username;btn.textContent='退出';btn.className='tb-btn ghost';btn.onclick=doLogout;}else{badge.textContent='';btn.textContent='登录';btn.className='tb-btn primary';btn.onclick=function(){showLogin('login');};}
+}
+function updateSidebar(){
+  var sbAvatar=document.getElementById('sbAvatar'),sbName=document.getElementById('sbName'),sbRole=document.getElementById('sbRole');
+  if(authUser){document.getElementById('sidebar').querySelector('.sidebar-user').style.display='';sbAvatar.textContent=authUser.username[0].toUpperCase();sbName.textContent=authUser.username;sbRole.textContent=authUser.role==='admin'?'管理员':authUser.role==='partner'?'合作伙伴':'用户';}else{document.getElementById('sidebar').querySelector('.sidebar-user').style.display='none';}
+
+  var nav=[];
+  nav.push({section:'业务'});
+  nav.push({href:'home',label:'工作台',emoji:'🏠',icon:'i-home'});
+  nav.push({href:'products',label:'产品中心',emoji:'📦',icon:'i-box'});
+  nav.push({href:'solutions',label:'行业解决方案',emoji:'🏭',icon:'i-build'});
+  nav.push({href:'selector',label:'用户需求匹配',emoji:'🎯',icon:'i-search2'});
+  nav.push({href:'contact',label:'联系销售',emoji:'📞',icon:'i-phone'});
+  nav.push({section:'营销'});
+  nav.push({href:'insights',label:'行业洞察',emoji:'📊',icon:'i-pie'});
+  nav.push({href:'partner',label:'合作伙伴',emoji:'🤝',icon:'i-users'});
+  nav.push({section:'支持'});
+  nav.push({href:'blog',label:'客户成功技术支持中心',emoji:'💡',icon:'i-book'});
+  nav.push({section:'培训'});
+  nav.push({href:'training',label:'员工培训中心',emoji:'🎓',icon:'i-book'});
+  if(authUser&&authUser.role==='admin'){nav.push({section:'管理'});nav.push({href:'admin',label:'管理后台',emoji:'⚙️',icon:'i-settings'});}
+
+  var h='';
+  for(var i=0;i<nav.length;i++){
+    var n=nav[i];
+    if(n.section){h+='<div class="sn-section">'+n.section+'</div>';continue;}
+    h+='<a class="'+(page===n.href?'active':'')+'" onclick="nav(\''+n.href+'\')"><span class="nav-icon">'+n.emoji+'</span><span>'+n.label+'</span></a>';
+  }
+  document.getElementById('sidebarNav').innerHTML=h;
+
+  // Footer
+  var fh='';
+  if(authUser){fh='<a onclick="doLogout()">退出登录</a>';}else{fh='<a onclick="showLogin(\'login\')">登录工作台</a>';}
+  document.getElementById('sidebarFooter').innerHTML=fh;
+
+  // Breadcrumb
+  var labels={home:'工作台',products:'产品中心',solutions:'行业解决方案',selector:'用户需求匹配',contact:'联系销售',insights:'行业洞察',partner:'合作伙伴',blog:'客户成功技术支持中心',training:'员工培训中心',admin:'管理后台'};
+  document.getElementById('tbBreadcrumb').innerHTML=(nav.find(function(x){return x.href===page;})||{}).emoji+' '+(labels[page]||'工作台');
+}
+
+function nav(p){
+  page=p;window.location.hash='#'+p;
+  updateSidebar();updateTopbar();
+  var app=document.getElementById('app');
+  if(PAGES[p])app.innerHTML=PAGES[p]();else app.innerHTML='';
+}
+
+/* ── TOAST ── */
+function toast(msg,t){var d=document.createElement('div');d.className='toast '+(t||'success');d.textContent=msg;document.body.appendChild(d);setTimeout(function(){d.remove();},3000);}
+
+/* ── PAGES ── */
+var PAGES={};
+
+// ═══ DASHBOARD ═══
+PAGES.home=function(){
+  var h='';
+  h+='<div style="text-align:center;padding:40px 20px 48px"><h1 style="font-size:42px;font-weight:900;color:var(--brand);letter-spacing:8px;margin-bottom:24px;line-height:1.2">软安科技华南区域营销管理平台</h1><div style="font-size:18px;color:var(--text2);line-height:2.4;letter-spacing:2px"><p style="margin:0">随时随地，<span style="color:var(--accent);font-weight:700">安全检测</span>，<span style="color:var(--accent);font-weight:700">软安科技</span> 帮您高效交付</p><p style="margin:8px 0 0;font-size:15px;color:var(--text3);letter-spacing:4px">让 AI 生态更安全 · 华南营销 专业专注</p></div></div>';
+
+  // Quick actions
+  h+='<div class="qaction-grid">';
+  h+='<div class="qaction-card" onclick="nav(\'selector\')"><div class="qa-icon purple">🔬</div><div class="qa-body"><div class="qa-title">用户需求匹配</div><div class="qa-desc">AI分析 + 自主选型 + 快速联系</div></div></div>';
+  h+='<div class="qaction-card" onclick="nav(\'products\')"><div class="qa-icon gold">📦</div><div class="qa-body"><div class="qa-title">产品中心</div><div class="qa-desc">了解7款核心安全产品</div></div></div>';
+  h+='<div class="qaction-card" onclick="nav(\'solutions\')"><div class="qa-icon success">🏭</div><div class="qa-body"><div class="qa-title">行业方案</div><div class="qa-desc">9大行业深度解决方案</div></div></div>';
+  h+='<div class="qaction-card" onclick="window.open(\'/support\')"><div class="qa-icon info">💡</div><div class="qa-body"><div class="qa-title">客户成功技术支持中心</div><div class="qa-desc">知识库与问答社区（客户独立登录）</div></div></div>';
+  h+='</div>';
+
+  // Stats
+  h+='<div class="stat-grid" id="dashStats">';
+  h+='<div class="stat-card accent"><div class="stat-label">软件产品</div><div class="stat-value">7</div><div class="stat-change up">全自研</div></div>';
+  h+='<div class="stat-card gold"><div class="stat-label">行业方案</div><div class="stat-value">9</div><div class="stat-change up">深度定制</div></div>';
+  h+='<div class="stat-card success"><div class="stat-label">客户案例</div><div class="stat-value">200+</div><div class="stat-change up">持续增长</div></div>';
+  h+='<div class="stat-card info"><div class="stat-label">测试服务</div><div class="stat-value">10</div><div class="stat-change up">全品类覆盖</div></div>';
+  h+='</div>';
+
+  // Two columns: recent activity + product overview
+  h+='<div class="grid-2-1">';
+  // Left: activity feed
+  h+='<div class="card"><div class="card-header"><div class="ch-title">📰 动态与快讯</div><a class="ch-action" onclick="nav(\'insights\')">查看全部 →</a></div><div class="feed-list" id="feedList"><div class="feed-item"><div class="fi-dot purple"></div><div class="fi-content"><div class="fi-title">欧盟 CRA 网络韧性法案正式实施</div><div class="fi-desc">对软件产品网络安全提出强制性要求，涵盖设计、开发、交付全生命周期。</div><div class="fi-time">2026-06-10</div></div></div><div class="feed-item"><div class="fi-dot gold"></div><div class="fi-content"><div class="fi-title">汽车软件安全合规路径解读</div><div class="fi-desc">从 UN R155 到 GB 44495，梳理全球汽车网络安全法规体系。</div><div class="fi-time">2026-06-05</div></div></div><div class="feed-item"><div class="fi-dot info"></div><div class="fi-content"><div class="fi-title">开源供应链安全治理实践</div><div class="fi-desc">基于 Log4j 等重大漏洞教训，总结企业开源组件管理的 5 个关键措施。</div><div class="fi-time">2026-05-28</div></div></div></div></div>';
+  // Right: quick stats
+  h+='<div class="card"><div class="card-header"><div class="ch-title">🚀 快捷入口</div></div>';
+  h+='<div style="display:flex;flex-direction:column;gap:6px">';
+  h+='<a onclick="nav(\'partner\')" style="padding:10px 0;font-size:13px;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:8px;transition:var(--trans)" onmouseover="this.style.color=var(--accent)" onmouseout="this.style.color=var(--text2)">🤝 合作伙伴入驻与商机报备</a>';
+  h+='<a onclick="nav(\'selector\')" style="padding:10px 0;font-size:13px;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:8px;transition:var(--trans)" onmouseover="this.style.color=var(--accent)" onmouseout="this.style.color=var(--text2)">🎯 潜在客户需求匹配</a>';
+  h+='<a onclick="nav(\'blog\')" style="padding:10px 0;font-size:13px;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:8px;transition:var(--trans)" onmouseover="this.style.color=var(--accent)" onmouseout="this.style.color=var(--text2)">💡 客户技术支持与知识库</a>';
+  h+='</div></div></div>';
+
+  // Featured products mini
+  h+='<div class="card" style="margin-top:24px"><div class="card-header"><div class="ch-title">🔧 核心产品概览</div><a class="ch-action" onclick="nav(\'products\')">产品中心 →</a></div><div class="grid-4">';
+  var prodMini=['SAST','SCA','BAT','FUZZ','MST','CodingHawk','GuardFox'];
+  var prodNames={SAST:'静态代码检测',SCA:'软件成分分析',BAT:'二进制安全检测',FUZZ:'协议模糊测试',MST:'大模型安全检测',CodingHawk:'智能代码审计',GuardFox:'AI漏洞分析'};
+  for(var i=0;i<7;i++){
+    var pid=prodMini[i];
+    h+='<div style="text-align:center;padding:16px 12px;cursor:pointer;border-radius:var(--radius);transition:var(--trans);border:1px solid var(--border);font-size:12px" onclick="nav(\'products\')" onmouseover="this.style.borderColor=var(--accent)" onmouseout="this.style.borderColor=var(--border)">';
+    h+='<div style="font-size:26px;margin-bottom:6px">'+(i===0?'🔍':i===1?'📦':i===2?'🔐':i===3?'🎯':i===4?'🤖':i===5?'✨':'🦊')+'</div>';
+    h+='<div style="font-weight:700;margin-bottom:2px">'+pid+'</div><div style="font-size:11px;color:var(--text3)">'+prodNames[pid]+'</div></div>';
+  }
+  h+='</div></div>';
+  return h;
+};
+
+// ═══ PRODUCTS ═══
+function _viewProductDetail(pid){
+  var prods=[{id:'SAST',name:'软安SAST',sub:'静兮 · 静态代码质量与安全检测',price:'50万/年',desc:'编译型检测引擎，18+语言支持',features:['18+语言','C/C++误报<10%','跨文件跨函数','AI智能修复','增量扫描','MISRA/CERT/GJB','CI/CD集成','中文合规报告'],color:'purple',icon:'🔍'},{id:'SCA',name:'软安SCA',sub:'源兮 · 源代码软件成分分析',price:'50万/年',desc:'20+语言，100T+顶级组件数据库',features:['20+语言','Java 0%误报','100T+数据库','AI智能助手','SBOM自动生成','许可证合规','投毒检测','SPDX/CycloneDX'],color:'gold',icon:'📦'},{id:'BAT',name:'软安BAT',sub:'固兮 · 二进制安全检测',price:'50万/年',desc:'100+格式解包引擎，无需源码即可深度安全分析',features:['100+格式','通信安全','IAC安全','敏感数据','加密算法','AI助手','成分分析','漏洞挖掘'],color:'blue',icon:'🔐'},{id:'FUZZ',name:'软安Fuzz',sub:'侦兮 · 黑盒协议模糊测试',price:'50万/年',desc:'50+协议覆盖，国外顶级安全团队研发',features:['50+协议','CAN/CANFD','汽车以太网','蓝牙/5G','Modbus/MQTT','文件Fuzz','ISO 21434','GB 44495'],color:'teal',icon:'🎯'},{id:'MST',name:'软安MST',sub:'智兮 · 大模型安全检测',price:'50万/年',desc:'大模型全生命周期安全',features:['基座溯源','漏洞检测','知识产权','Skill安全','智能体安全','权限控制','内容安全','合规评估'],color:'purple',icon:'🤖'},{id:'CodingHawk',name:'Coding Review',sub:'Hawk · 代码审计智能体',price:'0.8万/用户/月',desc:'SAST底座+大模型引擎',features:['SAST+大模型','智能审计','自动修复','C/C++突出','自然语言','跨文件检测','安全助手','私有化'],color:'gold',icon:'✨'},{id:'GuardFox',name:'GuardFox',sub:'洞兮 · AI漏洞分析验证',price:'另议',desc:'CVE自动化验证+POC生成',features:['CVE验证','POC生成','POC验证','优先级评估','漏洞复现','提效','工单集成','报告导出'],color:'teal',icon:'🦊'}];
+  api('GET','/api/product-pages/'+pid).then(function(page){
+    var p=prods.find(function(x){return x.id===pid})||{};
+    var h='';
+    h+='<button class="btn btn-ghost btn-sm" onclick="nav(\'products\')" style="margin-bottom:12px">← 返回产品中心</button>';
+    h+='<div class="prod-item" style="cursor:default"><div class="pi-visual '+p.color+'"><div class="pi-icon">'+p.icon+'</div><div class="pi-name">'+p.name+'</div><div class="pi-sub">'+p.sub+'</div><div class="pi-price">'+p.price+'</div></div><div class="pi-body">';
+    if(page.intro){h+='<div class="pi-desc">'+page.intro+'</div>';}
+    if(page.detail){h+='<div style="font-size:14px;line-height:1.9;color:var(--text2);margin-top:12px">'+page.detail+'</div>';}
+    if(!page.intro&&!page.detail){h+='<div class="pi-desc">'+p.desc+'</div><div class="pi-section-title">核心能力</div><div class="pi-tags">'+p.features.map(function(f){return '<span class="pi-tag">'+f+'</span>';}).join('')+'</div><p style="font-size:12px;color:var(--text3);margin-top:12px">管理员可在 管理后台→产品内容 中自定义此产品详情</p>';}
+    h+='</div></div>';
+    document.getElementById('app').innerHTML=h;
+  });
+}
+PAGES.products=function(){
+  var h='';
+  h+='<div class="page-header center"><div class="ph-eyebrow">Product Center</div><h1 class="ph-title">产品中心</h1><p class="ph-sub">7款自主研发的软件安全检测产品，覆盖代码、供应链、固件、协议、AI安全全链路</p></div>';
+  var prods=[
+    {id:'SAST',name:'软安SAST',sub:'静兮 · 静态代码质量与安全检测',price:'50万/年',desc:'编译型检测引擎，18+语言支持。C/C++误报率<10%，跨文件跨函数分析，内置AI智能修复。支持增量秒级扫描，MISRA/CERT/GJB多重编码规范合规。',features:['18+语言','C/C++误报<10%','跨文件跨函数','AI智能修复','增量扫描','MISRA/CERT/GJB','CI/CD集成','中文合规报告'],color:'purple',icon:'🔍'},
+    {id:'SCA',name:'软安SCA',sub:'源兮 · 源代码软件成分分析',price:'50万/年',desc:'20+语言，100T+顶级组件数据库。Java误报率趋近0%，一键生成SPDX/CycloneDX标准SBOM。AI智能助手加速漏洞排查与修复建议。',features:['20+语言','Java 0%误报','100T+数据库','AI智能助手','SBOM自动生成','许可证合规','投毒检测','SPDX/CycloneDX'],color:'gold',icon:'📦'},
+    {id:'BAT',name:'软安BAT',sub:'固兮 · 二进制安全检测',price:'50万/年',desc:'100+格式解包引擎，无需源码即可深度安全分析。覆盖通信安全、IAC安全、敏感数据识别、加密算法识别，支持AI辅助成分分析。',features:['100+格式','通信安全','IAC安全','敏感数据','加密算法','AI助手','成分分析','漏洞挖掘'],color:'blue',icon:'🔐'},
+    {id:'FUZZ',name:'软安Fuzz',sub:'侦兮 · 黑盒协议模糊测试',price:'50万/年',desc:'50+协议覆盖，国外顶级安全团队研发。CAN/CANFD、汽车以太网、蓝牙/5G、Modbus/MQTT全覆盖，10万+预置用例。',features:['50+协议','CAN/CANFD','汽车以太网','蓝牙/WiFi/5G','Modbus/MQTT','文件Fuzz','ISO 21434','GB 44495'],color:'teal',icon:'🎯'},
+    {id:'MST',name:'软安MST',sub:'智兮 · 大模型安全检测',price:'50万/年',desc:'大模型全生命周期安全：基座溯源、安全漏洞、知识产权、Skill安全、智能体链路。满足生成式AI管理办法、等保大模型扩展要求。',features:['基座溯源','漏洞检测','知识产权','Skill安全','智能体安全','权限控制','内容安全','合规评估'],color:'purple',icon:'🤖'},
+    {id:'CodingHawk',name:'Coding Review',sub:'Hawk · 代码审计智能体',price:'0.8万/用户/月',desc:'SAST底座+大模型引擎，C/C++表现突出。自然语言查询代码安全状况，AI自动生成修复建议，按用户弹性扩展。',features:['SAST+大模型','智能审计','自动修复','C/C++突出','自然语言','跨文件检测','安全助手','私有化'],color:'gold',icon:'✨'},
+    {id:'GuardFox',name:'GuardFox',sub:'洞兮 · AI漏洞分析验证',price:'另议',desc:'CVE自动化验证+POC生成，漏洞优先级评估。帮助安全团队从海量告警中聚焦关键风险，提升分析效率。',features:['CVE验证','POC生成','POC验证','优先级评估','漏洞复现','提效','工单集成','报告导出'],color:'teal',icon:'🦊'}
+  ];
+  for(var i=0;i<prods.length;i++){
+    var p=prods[i];
+    h+='<div class="prod-item" style="cursor:pointer" onclick="_viewProductDetail(\''+p.id+'\')"><div class="pi-visual '+p.color+'"><div class="pi-icon">'+p.icon+'</div><div class="pi-name">'+p.name+'</div><div class="pi-sub">'+p.sub+'</div><div class="pi-price">'+p.price+'</div><div class="pi-price-label">参考价格</div></div><div class="pi-body"><div class="pi-desc">'+p.desc+'</div><div class="pi-section-title">核心能力</div><div class="pi-tags">'+p.features.map(function(f){return '<span class="pi-tag">'+f+'</span>';}).join('')+'</div></div></div>';
+  }
+  return h;
+};
+
+// ═══ SOLUTIONS ═══
+PAGES.contact=function(){
+  var h='';
+  h+='<div class="page-header"><h1 class="ph-title">📞 联系销售</h1><p class="ph-sub">留下信息，我们的销售团队将尽快与您联系</p></div>';
+  h+='<div class="card"><div class="form-grid"><div class="form-group"><label>公司名称 *</label><input id="ctCompany" placeholder="请输入公司全称"></div><div class="form-group"><label>姓名 *</label><input id="ctName" placeholder="请输入联系人姓名"></div></div><div class="form-grid"><div class="form-group"><label>联系方式 *</label><input id="ctPhone" placeholder="请输入手机号"></div><div class="form-group"><label>希望何时联系</label><select id="ctTime"><option value="">请选择</option><option>工作日 9:00-12:00</option><option>工作日 14:00-18:00</option><option>随时均可</option></select></div></div><div class="form-group"><label>大致需求描述</label><textarea id="ctDesc" placeholder="请描述您的需求，如产品类型、项目规模、预算范围等"></textarea></div><button class="btn btn-primary btn-lg" onclick="_submitContact()" style="width:100%;justify-content:center">提交</button></div>';
+  return h;
+};
+function _submitContact(){
+  var co=document.getElementById("ctCompany")?.value.trim();
+  var na=document.getElementById("ctName")?.value.trim();
+  var ph=document.getElementById("ctPhone")?.value.trim();
+  var ti=document.getElementById("ctTime")?.value;
+  var de=document.getElementById("ctDesc")?.value.trim();
+  if(!co||!na||!ph){toast("请填写必填项","error");return}
+  api("POST","/api/leads",fd({company:co,contact:na,phone:ph,title:ti,custom_pain:de,type:"联系销售"})).then(function(){
+    toast("已提交！我们将尽快联系您");
+    document.querySelector(".card").innerHTML='<div style="text-align:center;padding:40px"><div style="font-size:48px">✅</div><h3>提交成功</h3><p style="color:var(--text2)">销售团队将尽快与您联系</p></div>';
+  }).catch(function(e){toast(e.message,"error")});
+}
+
+PAGES.solutions=function(){
+  var h='';
+  h+='<div class="page-header center"><div class="ph-eyebrow">Industry Solutions</div><h1 class="ph-title">行业解决方案</h1><p class="ph-sub">为9大核心行业深度定制，每个方案深入行业场景、法规要求和安全痛点</p></div>';
+  var sols={汽车:{icon:'🚗',color:'purple',desc:'满足全球汽车网络安全法规体系',regs:'UN R155 · ISO 21434 · GB 44495 · ASPICE',pain:'OEM严格审计Tier1/2供应商，单车代码超1亿行。R155合规+OTA安全+ASPICE多重压力。',products:'SAST · SCA · BAT · FUZZ · CodingHawk · GuardFox',features:['OEM准入审计通过率100%','CAN/车载以太网Fuzz测试','ECU固件批量审计+SBOM交付','AUTOSAR安全扫描','OTA升级包安全检测','功能安全代码验证'],cases:[{title:'头部新能源车企Tier1准入',desc:'3个月完成全ECU检测+SBOM，审计通过率100%',video:true},{title:'合资车企OTA安全合规',desc:'为12款车型建立OTA升级安全检测体系'}]},芯片半导体:{icon:'🔲',color:'blue',desc:'流片前最后一道安全防线',regs:'FIPS 140 · GB/T 18336 · 商用密码 · NIST',pain:'流片后BootROM漏洞无法修复。GPU/CUDA安全审计需求激增。RISC-V生态工具不成熟。',products:'BAT · SAST · SCA · FUZZ',features:['100+芯片平台解包','BootROM安全启动链审计','GPU驱动+AI计算完整性','FIPS 140/国密密评','x86/ARM/RISC-V全架构','流片前固件漏洞挖掘'],cases:[{title:'GPU芯片厂商流片前审计',desc:'发现并修复3个BootROM高危漏洞',video:true},{title:'车载SoC功能安全验证',desc:'ISO 26262 ASIL-D代码验证，助力车规认证'}]},金融:{icon:'🏦',color:'gold',desc:'金融监管合规+开源治理+AI安全',regs:'等保2.0 · 关基保护条例 · PCI DSS',pain:'监管持续收紧。Log4j级漏洞需72h应急响应。大模型安全成为新监管重点。',products:'SAST · SCA · MST · CodingHawk · GuardFox',features:['72h开源组件应急响应','外包开发源码安全审计','金融AI大模型安全评估','等保三级合规支撑','关基供应链安全审查','监管标准化报告'],cases:[{title:'大型银行Log4j应急响应',desc:'48h完成3000+系统排查',video:true},{title:'证券公司信创安全评估',desc:'300+系统的信创环境安全检测'}]},军工:{icon:'🛡',color:'purple',desc:'涉密离线全栈部署+遗留代码AI治理',regs:'GJB 8114 · GJB 5369 · 三员分立',pain:'必须离线。大量C/C++/汇编遗留代码缺乏文档。国产化需全自主可控。',products:'SAST · BAT · CodingHawk · GuardFox · MST',features:['涉密环境离线全栈部署','三员分立安全管理','C/C++遗留代码AI审计','GJB 8114/5369双合规','国产CPU+OS适配','离线规则更新'],cases:[{title:'JF单位涉密离线部署',desc:'物理隔离环境完整工具链',video:false},{title:'遗留代码批量审计',desc:'AI驱动审计20年+老代码'}]},政府:{icon:'🏛',color:'blue',desc:'信创适配+供应链安全+大模型备案',regs:'等保2.0 · 关基 · 密码法 · 数据安全法',pain:'信创环境工具匮乏。政务外包开发需源码审计。AI应用需安全评估备案。',products:'SAST · SCA · BAT · MST · GuardFox',features:['国产CPU+OS全适配','外包源码安全审计','大模型安全备案','等保2.0合规','信创SBOM生成','数据安全合规'],cases:[{title:'省级政务平台审计',desc:'60+系统信创环境安全检测'},{title:'AI政务应用安全评估',desc:'大模型备案安全评估和合规审查'}]},智能设备:{icon:'📱',color:'teal',desc:'IoT固件+SDK供应链+CRA合规',regs:'EU CRA · 个人信息保护法 · GDPR',pain:'迭代快(2-4周)，安全测试被压缩。SDK和开源组件泛滥。CRA要求SBOM。',products:'SAST · SCA · BAT · FUZZ · CodingHawk · GuardFox',features:['快速迭代安全检测','第三方SDK审查','IoT固件批量审计','CRA SBOM+安全声明','DevSecOps集成','多平台统一检测'],cases:[{title:'手机厂商CRA合规',desc:'出口欧盟SBOM一次性通过'},{title:'安防摄像头批量审计',desc:'50+款摄像头固件安全审计'}]},能源:{icon:'⚡',color:'gold',desc:'关基保护+工控安全+SCADA审计',regs:'等保2.0 · 关基 · 电力16号令 · NERC CIP',pain:'关基面临高级威胁。SCADA/ICS漏洞频发。新能源供应链缺安全标准。',products:'SAST · SCA · BAT · FUZZ · MST · GuardFox',features:['电力16号令代码合规','SCADA/PLC/RTU审计','工控协议Fuzz','关基供应链审查','新能源安全评估','国产化替代'],cases:[{title:'电力集团关基合规审计',desc:'全量代码安全审查，满足16号令'}]},国央企:{icon:'🏭',color:'purple',desc:'多业态覆盖+信创替代+集团治理',regs:'关基 · 等保2.0 · 密码法 · 信创目录',pain:'业务多元层级复杂。信创替代需大量安全评估。统一采购需多业态覆盖。',products:'SAST · SCA · BAT · MST · GuardFox',features:['多业态统一平台','信创代码安全评估','集团级SBOM治理','国产化全栈适配','关基统一审查','多层级部署'],cases:[{title:'央企集团供应链治理',desc:'统一平台覆盖能源/制造/金融'}]},互联网:{icon:'🌐',color:'teal',desc:'出海合规+云原生+SDK治理',regs:'EU CRA · GDPR · 个人信息保护法',pain:'代码迭代极快、SDK众多。出海面临CRA/GDPR合规。云原生架构治理复杂度高。',products:'SAST · SCA · CodingHawk · GuardFox',features:['快速迭代安全检测','出海SBOM+安全声明','SDK安全审查','云原生容器安全','游戏引擎审计','大促安全保障'],cases:[{title:'头部游戏出海合规',desc:'欧盟CRA SBOM一次性通过'}]}};
+  var inds=Object.keys(sols);
+  // Sub-nav
+  h+='<div class="sol-grid">';
+  for(var i=0;i<inds.length;i++){var k=inds[i],s=sols[k];h+='<div class="sol-nav-card" onclick="switchSol(\''+k+'\')"><div class="sn-icon">'+s.icon+'</div><div class="sn-title">'+k+'</div><div class="sn-desc">'+s.desc+'</div></div>';}
+  h+='</div><div id="solDetail"></div>';
+  setTimeout(function(){window._sols=sols;},50);
+  return h;
+};
+
+function switchSol(key){
+  var sol=window._sols[key];if(!sol)return;
+  var h='';
+  h+='<div style="background:var(--brand);color:#fff;border-radius:var(--radius-lg);padding:32px;margin-top:24px;display:flex;flex-wrap:wrap;gap:24px;align-items:center">';
+  h+='<div style="flex:1;min-width:260px"><div style="font-size:40px;margin-bottom:8px">'+sol.icon+'</div><h2 style="font-size:24px;font-weight:800;margin-bottom:10px">'+key+'行业解决方案</h2><p style="font-size:14px;opacity:0.8;line-height:1.8">'+sol.desc+'</p></div>';
+  h+='<div style="background:rgba(255,255,255,0.08);border-radius:var(--radius);padding:18px;min-width:200px"><div style="font-size:10px;opacity:0.5;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">涉及法规标准</div><div style="font-size:13px;font-weight:600;line-height:1.8">'+sol.regs+'</div></div></div>';
+  h+='<div class="grid-2" style="margin-top:20px"><div class="card"><h3 style="font-size:15px;font-weight:700;margin-bottom:8px">🔍 行业痛点</h3><p style="font-size:13px;color:var(--text2);line-height:1.8">'+sol.pain+'</p></div><div class="card"><h3 style="font-size:15px;font-weight:700;margin-bottom:8px">🔧 推荐产品组合</h3><p style="font-size:15px;font-weight:700;color:var(--accent);margin-bottom:8px">'+sol.products+'</p><p style="font-size:11px;color:var(--text3)">基于行业法规和场景自动匹配</p></div></div>';
+  h+='<div class="card" style="margin-top:16px"><h3 style="font-size:15px;font-weight:700;margin-bottom:14px">📋 方案核心能力</h3><div class="grid-3">';
+  for(var j=0;j<sol.features.length;j++)h+='<div style="padding:12px 14px;background:var(--surface2);border-radius:var(--radius);display:flex;align-items:center;gap:8px"><span style="color:var(--success);font-weight:700">✓</span><span style="font-size:13px;color:var(--text)">'+sol.features[j]+'</span></div>';
+  h+='</div></div>';
+  h+='<div class="card" style="margin-top:16px"><h3 style="font-size:15px;font-weight:700;margin-bottom:14px">🎬 案例与视频</h3><div class="grid-2">';
+  for(var k=0;k<sol.cases.length;k++){var cs=sol.cases[k];h+='<div style="border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden"><div style="height:160px;background:linear-gradient(135deg,var(--brand),var(--accent));display:flex;align-items:center;justify-content:center">'+(cs.video?'<div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center"><svg width="16" height="16"><use href="#i-play"/></svg></div>':'<svg width="28" height="28" style="color:rgba(255,255,255,0.4)"><use href="#i-file"/></svg>')+'</div><div style="padding:16px"><div style="font-weight:700;font-size:13px;margin-bottom:4px">'+cs.title+'</div><div style="font-size:11px;color:var(--text2);line-height:1.5">'+cs.desc+'</div></div></div>';}
+  h+='</div></div>';
+  document.getElementById('solDetail').innerHTML=h;
+}
+
+// ═══ SELECTOR (simplified, link to full selector page) ═══
+PAGES.selector=function(){
+  var h='';
+  h+='<div class="page-header center"><div class="ph-eyebrow">Demand Matching</div><h1 class="ph-title">用户需求匹配</h1><p class="ph-sub">基于行业、场景、研发画像的多维智能匹配引擎，5分钟帮你找到最优产品组合和报价方案</p></div>';
+  h+='<div style="text-align:center;padding:48px 0"><div style="font-size:60px;margin-bottom:16px">🔬</div><h3 style="font-size:18px;font-weight:700;margin-bottom:8px">选型引擎需要完整交互上下文</h3><p style="font-size:14px;color:var(--text2);margin-bottom:20px">8步引导式选型流程，精准匹配产品与报价</p><button class="btn btn-primary btn-lg" onclick="window.open(\'/selector\',\'_blank\')">🚀 用户自主选型助手</button><p style="font-size:12px;color:var(--text3);margin-top:12px"></p></div>';
+  return h;
+};
+
+// ═══ INSIGHTS ═══
+PAGES.insights=function(){
+  var h='';
+  h+='<div class="page-header"><div class="ph-eyebrow">Market Insights</div><h1 class="ph-title">行业洞察</h1><p class="ph-sub">法规解读、技术趋势、最佳实践——随时掌握软件安全领域最新动态</p></div>';
+  h+='<div style="display:flex;gap:10px;margin-bottom:20px"><input id="insSearch" placeholder="搜索文章..." style="flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;outline:none" onkeydown="if(event.key==\'Enter\')searchInsights()"><button class="btn btn-primary" onclick="searchInsights()">搜索</button></div>';
+  h+='<div id="insList"><div class="empty-state"><div class="es-icon">📰</div><div class="es-title">加载中...</div></div></div>';
+  setTimeout(function(){loadInsights();},100);
+  return h;
+};
+function searchInsights(){loadInsights(document.getElementById('insSearch')?.value||'');}
+function loadInsights(search){
+  var q=search?'?search='+encodeURIComponent(search)+'&limit=50':'?limit=50';
+  api('GET','/api/articles'+q).then(function(articles){
+    var list=document.getElementById('insList');if(!list)return;
+    if(articles&&articles.length){
+      list.innerHTML='<div style="display:flex;flex-direction:column;gap:12px">'+articles.map(function(a){return '<div class="blog-card" onclick="viewPost('+a.id+')"><div class="bc-header"><div class="bc-title">'+a.title+'</div><span class="bc-category">'+(a.category||'行业洞察')+'</span></div><div class="bc-excerpt">'+(a.summary||a.content||'').substring(0,200)+'</div><div class="bc-meta"><span>'+(a.created_at||'').substring(0,10)+'</span></div>'+(a.tags?'<div class="bc-tags">'+a.tags.split(',').map(function(t){return '<span>'+t.trim()+'</span>';}).join('')+'</div>':'')+'</div>';}).join('')+'</div>';
+    }else{
+      var demo=[{created_at:'2026-06-10',title:'欧盟 CRA 正式实施：中国企业出海合规指南',summary:'CRA 对软件产品的网络安全提出强制性要求，涵盖设计、开发、交付全生命周期。本文解读核心条款及对中国软件出口企业的影响。',tags:'CRA,出海合规',category:'法规解读'},{created_at:'2026-06-05',title:'汽车软件安全：从 UN R155 到 GB 44495',summary:'梳理全球汽车网络安全法规体系，分析 OEM 和 Tier1 的核心挑战，提出可落地的合规路线图。',tags:'汽车安全,法规',category:'行业研究'},{created_at:'2026-05-28',title:'开源供应链安全治理的 5 个最佳实践',summary:'基于 Log4j 等重大漏洞教训，总结开源组件管理的 5 个关键措施：SBOM 自动化、漏洞优先级、许可证合规...',tags:'开源治理,SCA',category:'最佳实践'}];
+      list.innerHTML='<div style="display:flex;flex-direction:column;gap:12px">'+demo.map(function(a){return '<div class="blog-card"><div class="bc-header"><div class="bc-title">'+a.title+'</div><span class="bc-category">'+a.category+'</span></div><div class="bc-excerpt">'+a.summary+'</div><div class="bc-meta"><span>'+a.created_at+'</span></div><div class="bc-tags">'+a.tags.split(',').map(function(t){return '<span>'+t.trim()+'</span>';}).join('')+'</div></div>';}).join('')+'</div>';
+    }
+  }).catch(function(e){});
+}
+
+// ═══ BLOG (客户成功技术支持中心) ═══
+PAGES.blog=function(){
+  window.location.href='/support';
+  return '<div class="empty-state"><div class="es-icon">💡</div><div class="es-title">正在跳转到客户成功技术支持中心...</div></div>';
+};
+
+// ═══ PARTNER ═══
+PAGES.partner=function(){
+  var h='';
+  h+='<div class="page-header"><div class="ph-eyebrow">Partner Workbench</div><h1 class="ph-title">合作伙伴</h1><p class="ph-sub">商机报备 · POC测试 · 营销物料下载 · 培训认证——合作伙伴一站式工作台</p></div>';
+  if(!authUser){h+='<div class="empty-state"><div class="es-icon">🤝</div><div class="es-title">请先登录</div><div class="es-desc">登录后可访问合作伙伴工作台，进行商机报备和管理</div><button class="btn btn-primary" onclick="showLogin()">登录</button></div>';return h;}
+
+  // KPI row
+  h+='<div class="kpi-row"><div class="kpi-card"><div class="kpi-val" id="kpiOpps">-</div><div class="kpi-label">报备商机</div></div><div class="kpi-card"><div class="kpi-val" id="kpiSigned">-</div><div class="kpi-label">已签约</div></div><div class="kpi-card"><div class="kpi-val" id="kpiMats">-</div><div class="kpi-label">营销物料</div></div></div>';
+
+  // Quick actions
+  h+='<div class="grid-3" style="margin-bottom:24px">';
+  h+='<div class="card" style="text-align:center;cursor:pointer" onclick="openOppModal()"><div style="font-size:32px;margin-bottom:8px">⚡</div><div style="font-weight:700;font-size:14px">报备商机</div><div style="font-size:11px;color:var(--text3);margin-top:4px">在线报备，原厂保护</div></div>';
+  h+='<div class="card" style="text-align:center;cursor:pointer" onclick="nav(\'blog\')"><div style="font-size:32px;margin-bottom:8px">💡</div><div style="font-weight:700;font-size:14px">技术支持</div><div style="font-size:11px;color:var(--text3);margin-top:4px">知识库+专家回复</div></div>';
+  h+='<div class="card" style="text-align:center;cursor:pointer" onclick="loadMats()"><div style="font-size:32px;margin-bottom:8px">📥</div><div style="font-weight:700;font-size:14px">物料下载</div><div style="font-size:11px;color:var(--text3);margin-top:4px">白皮书/彩页/案例集</div></div></div>';
+
+  // Opportunity list
+  h+='<div class="card"><div class="card-header"><div class="ch-title">📋 我的商机</div></div><div id="oppTable"></div></div>';
+  setTimeout(function(){loadOpps();loadMatsCount();},100);
+  return h;
+};
+async function loadOpps(){
+  try{var opps=await api('GET','/api/opportunities');var t=document.getElementById('oppTable'),k=document.getElementById('kpiOpps'),ks=document.getElementById('kpiSigned');
+  if(k)k.textContent=opps.length;if(ks)ks.textContent=opps.filter(function(o){return o.stage==='签约'||o.stage==='赢单';}).length;
+  if(!opps.length){t.innerHTML='<div class="empty-state"><div class="es-icon">📋</div><div class="es-title">暂无商机</div></div>';return;}
+  t.innerHTML='<table class="data-table"><tr><th>客户</th><th>行业</th><th>产品</th><th>金额</th><th>阶段</th><th>日期</th></tr>'+opps.map(function(o){var stageCls=o.stage==='签约'||o.stage==='赢单'?'badge-green':o.stage==='输单'?'badge-red':'badge-yellow';return '<tr><td>'+o.customer_name+'</td><td>'+o.industry+'</td><td>'+o.products_interested+'</td><td>'+o.estimated_amount+'</td><td><span class="badge '+stageCls+'">'+o.stage+'</span></td><td>'+(o.created_at||'').substring(0,10)+'</td></tr>';}).join('')+'</table>';}catch(e){}
+}
+async function loadMatsCount(){try{var m=await api('GET','/api/materials');var k=document.getElementById('kpiMats');if(k)k.textContent=m.length;}catch(e){}}
+function openOppModal(){
+  var m=document.createElement('div');m.className='modal-overlay';m.onclick=function(e){if(e.target===m)m.remove();};
+  m.innerHTML='<div class="modal-box"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h3 style="font-size:18px;font-weight:700">报备商机</h3><svg width="20" height="20" style="cursor:pointer" onclick="this.closest(\'.modal-overlay\').remove()"><use href="#i-x"/></svg></div><div class="form-grid"><div class="form-group"><label>客户名称 *</label><input id="oppCust"></div><div class="form-group"><label>行业</label><input id="oppInd"></div></div><div class="form-grid"><div class="form-group"><label>预估金额</label><input id="oppAmt" placeholder="如：50万-100万"></div><div class="form-group"><label>关注产品</label><input id="oppProd" placeholder="如：SAST、SCA"></div></div><div class="form-group"><label>备注</label><textarea id="oppNote"></textarea></div><button class="btn btn-primary btn-lg" onclick="submitOpp(this)" style="width:100%;justify-content:center">提交</button></div>';
+  document.body.appendChild(m);
+}
+async function submitOpp(btn){
+  var c=document.getElementById('oppCust')?.value.trim();if(!c){toast('请填写客户名称','error');return;}
+  try{await api('POST','/api/opportunities',fd({customer_name:c,industry:document.getElementById('oppInd')?.value||'',estimated_amount:document.getElementById('oppAmt')?.value||'',products_interested:document.getElementById('oppProd')?.value||'',notes:document.getElementById('oppNote')?.value||''}));toast('✅ 商机报备成功！');btn.closest('.modal-overlay').remove();loadOpps();}catch(e){toast(e.message,'error');}
+}
+async function loadMats(){
+  try{var mats=await api('GET','/api/materials');var m=document.createElement('div');m.className='modal-overlay';m.onclick=function(e){if(e.target===m)m.remove();};
+  var h='<div class="modal-box"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h3 style="font-size:18px;font-weight:700">营销物料</h3><svg width="20" height="20" style="cursor:pointer" onclick="this.closest(\'.modal-overlay\').remove()"><use href="#i-x"/></svg></div>';
+  if(mats.length){for(var i=0;i<mats.length;i++)h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border:1px solid var(--border);border-radius:8px;margin-bottom:8px"><div><div style="font-weight:600;font-size:14px">📄 '+mats[i].title+'</div><div style="font-size:11px;color:var(--text3)">'+mats[i].description+'</div></div><span class="badge badge-purple">'+mats[i].category+'</span></div>';}else{h+='<p style="color:var(--text3);text-align:center;padding:20px">暂无物料</p>';}
+  h+='</div>';m.innerHTML=h;document.body.appendChild(m);}catch(e){toast('加载失败','error');}
+}
+
+function aTab(t,chip){
+  if(chip){var cs=document.querySelectorAll('.tab-item');for(var i=0;i<cs.length;i++)cs[i].classList.remove('active');chip.classList.add('active');}
+  var ct=document.getElementById('aContent');if(!ct)return;ct.innerHTML='<div class="empty-state"><div class="es-icon">⏳</div><div class="es-title">加载中...</div></div>';
+  if(t==='articles'){api('GET','/api/articles?limit=200').then(function(a){if(a.length){ct.innerHTML='<button class="btn btn-primary btn-sm" onclick="openArtForm()" style="margin-bottom:12px">+ 新增</button><table class="data-table"><tr><th>ID</th><th>标题</th><th>分类</th><th>日期</th><th>操作</th></tr>'+a.map(function(x){return '<tr><td>'+x.id+'</td><td>'+x.title+'</td><td>'+x.category+'</td><td>'+(x.created_at||'').substring(0,10)+'</td><td><button class="btn btn-sm btn-outline" onclick="openArtForm('+x.id+')">编辑</button> <button class="btn btn-sm" style="color:var(--danger)" onclick="delArt('+x.id+')">删除</button></td></tr>';}).join('')+'</table>';}else{ct.innerHTML='<button class="btn btn-primary btn-sm" onclick="openArtForm()" style="margin-bottom:12px">+ 新增</button><div class="empty-state"><div class="es-icon">📰</div><div class="es-title">暂无文章</div></div>';}}).catch(function(){})}
+  else if(t==='cases'){api('GET','/api/cases?limit=200').then(function(a){if(a.length){ct.innerHTML='<button class="btn btn-primary btn-sm" onclick="openCaseForm()" style="margin-bottom:12px">+ 新增</button><table class="data-table"><tr><th>ID</th><th>标题</th><th>行业</th><th>操作</th></tr>'+a.map(function(x){return '<tr><td>'+x.id+'</td><td>'+x.title+'</td><td>'+x.industry+'</td><td><button class="btn btn-sm btn-outline" onclick="openCaseForm('+x.id+')">编辑</button> <button class="btn btn-sm" style="color:var(--danger)" onclick="delCase('+x.id+')">删除</button></td></tr>';}).join('')+'</table>';}else{ct.innerHTML='<button class="btn btn-primary btn-sm" onclick="openCaseForm()" style="margin-bottom:12px">+ 新增</button><div class="empty-state"><div class="es-icon">🎬</div><div class="es-title">暂无案例</div></div>';}}).catch(function(){})}
+  else if(t==='partners'){api('GET','/api/admin/partners').then(function(a){if(a.length){ct.innerHTML='<table class="data-table"><tr><th>公司</th><th>联系人</th><th>手机</th><th>状态</th><th>操作</th></tr>'+a.map(function(x){return '<tr><td>'+x.company+'</td><td>'+x.contact+'</td><td>'+x.phone+'</td><td><span class="badge '+(x.status==='approved'?'badge-green':'badge-yellow')+'">'+(x.status==='approved'?'已通过':'待审核')+'</span></td><td>'+(x.status==='pending'?'<button class="btn btn-sm btn-outline" onclick="updPartner('+x.id+',\'approved\')">通过</button> <button class="btn btn-sm" style="color:var(--danger)" onclick="updPartner('+x.id+',\'rejected\')">拒绝</button>':'')+'</td></tr>';}).join('')+'</table>';}else{ct.innerHTML='<div class="empty-state"><div class="es-icon">🤝</div><div class="es-title">暂无申请</div></div>';}}).catch(function(){})}
+  else if(t==='tickets'){api('GET','/api/tickets?status=open').then(function(a){if(a.length){ct.innerHTML='<table class="data-table"><tr><th>用户</th><th>主题</th><th>分类</th><th>操作</th></tr>'+a.map(function(x){return '<tr><td>'+x.username+'</td><td>'+x.subject+'</td><td>'+x.category+'</td><td><button class="btn btn-sm btn-outline" onclick="replyT('+x.id+')">回复</button> <button class="btn btn-sm" style="color:var(--danger)" onclick="closeT('+x.id+')">关闭</button></td></tr>';}).join('')+'</table>';}else{ct.innerHTML='<div class="empty-state"><div class="es-icon">✅</div><div class="es-title">无待处理工单</div></div>';}}).catch(function(){})}
+  else if(t==='training'){
+    var ct2=document.getElementById('aContent');
+    ct2.innerHTML='<button class="btn btn-primary btn-sm" onclick="_openTmForm()" style="margin-bottom:8px;margin-right:6px">+ 新增模块</button><button class="btn btn-outline btn-sm" onclick="_openTqForm()" style="margin-bottom:8px;margin-right:6px">+ 新增考题</button><button class="btn btn-ghost btn-sm" onclick="aTab("training")" style="margin-bottom:8px">刷新</button><div id="tmList"><div class="empty-state"><div class="es-icon">⏳</div><div class="es-title">加载中...</div></div></div>';
+    _loadTmAdmin();
+  }else if(t==='kb'){
+    api('GET','/api/kb/articles?limit=100').then(function(a){
+      var ct3=document.getElementById('aContent');
+      if(a.length){ct3.innerHTML='<button class="btn btn-primary btn-sm" onclick="_openKbForm()" style="margin-bottom:12px">+ 新增KB文章</button><table class="data-table"><tr><th>ID</th><th>标题</th><th>分类</th><th>产品</th><th>阅读</th><th>操作</th></tr>'+a.map(function(x){return '<tr><td>'+x.id+'</td><td>'+x.title+'</td><td>'+x.category+'</td><td>'+x.product_id+'</td><td>'+x.view_count+'</td><td><button class="btn btn-sm btn-outline" onclick="_openKbForm('+x.id+')">编辑</button> <button class="btn btn-sm" style="color:var(--danger)" onclick="_delKb('+x.id+')">删除</button></td></tr>';}).join('')+'</table>';}else{ct3.innerHTML='<button class="btn btn-primary btn-sm" onclick="_openKbForm()" style="margin-bottom:12px">+ 新增KB文章</button><div class="empty-state"><div class="es-icon">📰</div><div class="es-title">暂无KB文章</div></div>';}
+    }).catch(function(){});
+  }else if(t==='customers'){
+    api('GET','/api/customer/admin/users').then(function(a){
+      var ct4=document.getElementById('aContent');
+      if(a.length){ct4.innerHTML='<table class="data-table"><tr><th>ID</th><th>用户名</th><th>邮箱</th><th>公司</th><th>产品</th><th>状态</th><th>注册时间</th><th>操作</th></tr>'+a.map(function(x){return '<tr><td>'+x.id+'</td><td>'+x.username+'</td><td>'+x.email+'</td><td>'+x.company+'</td><td>'+x.product_purchased+'</td><td><span class="badge '+(x.status==='frozen'?'badge-red':'badge-green')+'">'+(x.status==='frozen'?'已冻结':'正常')+'</span></td><td>'+(x.created_at||'').substring(0,10)+'</td><td><button class="btn btn-sm btn-outline" data-action="csResetPwd" data-param="'+x.id+'">重置密码</button> <button class="btn btn-sm" style="color:var(--warning)" data-action="csToggle" data-param="'+x.id+','+x.status+'"">'+(x.status==='frozen'?'解冻':'冻结')+'</button> <button class="btn btn-sm" style="color:var(--danger)" data-action="csDel" data-param="'+x.id+'">删除</button></td></tr>';}).join('')+'</table>';}else{ct4.innerHTML='<div class="empty-state"><div class="es-icon">👥</div><div class="es-title">暂无客户</div></div>';}
+    }).catch(function(){});
+  }else if(t==='users'){api('GET','/api/admin/users').then(function(a){if(a.length){ct.innerHTML='<button class="btn btn-primary btn-sm" onclick="addUser()" style="margin-bottom:12px">+ 新增用户</button><table class="data-table"><tr><th>用户名</th><th>邮箱</th><th>公司</th><th>角色</th><th>操作</th></tr>'+a.map(function(x){return '<tr><td>'+x.username+'</td><td>'+x.email+'</td><td>'+x.company+'</td><td>'+x.role+'</td><td><button class="btn btn-sm btn-outline" onclick="resetPwd('+x.id+')">重置密码</button> <button class="btn btn-sm" style="color:var(--danger)" onclick="delUser('+x.id+')">删除</button></td></tr>';}).join('')+'</table>';}else{ct.innerHTML='<div class="empty-state"><div class="es-icon">👥</div><div class="es-title">暂无用户</div></div>';}}).catch(function(){})}
+}
+// Admin CRUD helpers
+function openArtForm(id){var m=document.createElement('div');m.className='modal-overlay';m.onclick=function(e){if(e.target===m)m.remove()};var f='<div class="form-group"><label>标题 *</label><input id="aTitle"></div><div class="form-grid"><div class="form-group"><label>分类</label><input id="aCat" value="行业洞察"></div><div class="form-group"><label>标签</label><input id="aTags"></div></div><div class="form-group"><label>摘要</label><textarea id="aSummary"></textarea></div><div class="form-group"><label>内容</label><textarea id="aContent" style="min-height:200px"></textarea></div><button class="btn btn-primary btn-lg" onclick="saveArt('+(id||0)+',this)" style="width:100%;justify-content:center">保存</button>';if(id){api('GET','/api/articles/'+id).then(function(a){document.getElementById('aTitle').value=a.title;document.getElementById('aCat').value=a.category;document.getElementById('aTags').value=a.tags;document.getElementById('aSummary').value=a.summary||'';document.getElementById('aContent').value=a.content||'';}).catch(function(){})}m.innerHTML='<div class="modal-box"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h3>'+(id?'编辑':'新增')+'文章</h3><svg width="20" height="20" style="cursor:pointer" onclick="this.closest(\'.modal-overlay\').remove()"><use href="#i-x"/></svg></div>'+f+'</div>';document.body.appendChild(m)}
+async function saveArt(id,btn){var t=document.getElementById('aTitle')?.value.trim();if(!t){toast('请填写标题','error');return}var d=fd({title:t,content:document.getElementById('aContent')?.value||'',summary:document.getElementById('aSummary')?.value||'',category:document.getElementById('aCat')?.value||'行业洞察',tags:document.getElementById('aTags')?.value||''});try{if(id)await api('PUT','/api/articles/'+id,d);else await api('POST','/api/articles',d);toast(id?'已更新':'已创建');btn.closest('.modal-overlay').remove();aTab('articles')}catch(e){toast(e.message,'error')}}
+async function delArt(id){if(!confirm('确定删除？'))return;try{await api('DELETE','/api/articles/'+id);toast('已删除');aTab('articles')}catch(e){toast(e.message,'error')}}
+function openCaseForm(id){var m=document.createElement('div');m.className='modal-overlay';m.onclick=function(e){if(e.target===m)m.remove()};m.innerHTML='<div class="modal-box"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h3>'+(id?'编辑':'新增')+'案例</h3><svg width="20" height="20" style="cursor:pointer" onclick="this.closest(\'.modal-overlay\').remove()"><use href="#i-x"/></svg></div><div class="form-group"><label>标题 *</label><input id="cTitle"></div><div class="form-grid"><div class="form-group"><label>行业</label><input id="cInd"></div><div class="form-group"><label>标签</label><input id="cTag"></div></div><div class="form-group"><label>描述</label><textarea id="cDesc"></textarea></div><div class="form-group"><label>成果指标</label><input id="cMetric"></div><button class="btn btn-primary btn-lg" onclick="saveCase('+(id||0)+',this)" style="width:100%;justify-content:center">保存</button></div>';document.body.appendChild(m)}
+async function saveCase(id,btn){var t=document.getElementById('cTitle')?.value.trim();if(!t){toast('请填写标题','error');return}var d=fd({title:t,industry:document.getElementById('cInd')?.value||'',tag:document.getElementById('cTag')?.value||'',description:document.getElementById('cDesc')?.value||'',metric:document.getElementById('cMetric')?.value||''});try{if(id)await api('PUT','/api/cases/'+id,d);else await api('POST','/api/cases',d);toast(id?'已更新':'已创建');btn.closest('.modal-overlay').remove();aTab('cases')}catch(e){toast(e.message,'error')}}
+async function delCase(id){if(!confirm('确定删除？'))return;try{await api('DELETE','/api/cases/'+id);toast('已删除');aTab('cases')}catch(e){toast(e.message,'error')}}
+async function updPartner(id,status){try{await api('PUT','/api/admin/partners/'+id,fd({status:status}));toast('已更新');aTab('partners')}catch(e){toast(e.message,'error')}}
+function replyT(id){var r=prompt('回复内容:');if(!r)return;api('PUT','/api/tickets/'+id+'/reply','reply='+encodeURIComponent(r)).then(function(){toast('已回复');aTab("tickets")}).catch(function(e){toast(e.message,'error')})}
+async function closeT(id){try{await api('PUT','/api/tickets/'+id+'/close','');toast('已关闭');aTab("tickets")}catch(e){toast(e.message,'error')}}
+function addUser(){var u=prompt('用户名:');if(!u)return;var p=prompt('密码:');if(!p)return;var e=prompt('邮箱:')||'';var r=prompt('角色(user/partner/admin):')||'user';api('POST','/api/admin/users',fd({username:u,password:p,email:e,role:r})).then(function(){toast('已创建');aTab('users')}).catch(function(er){toast(er.message,'error')})}
+function resetPwd(id){var p=prompt('新密码:');if(!p)return;api('PUT','/api/admin/users/'+id+'/reset-password',fd({new_password:p})).then(function(){toast('已重置')}).catch(function(e){toast(e.message,'error')})}
+async function delUser(id){if(!confirm('确定删除？'))return;try{await api('DELETE','/api/admin/users/'+id);toast('已删除');aTab('users')}catch(e){toast(e.message,'error')}}
+
+// ── Training admin helpers ──
+
+/* ═══ INIT ═══ */
+if(authToken){api('GET','/api/me').then(function(u){if(u.role!=='guest'){authUser=u;updateAll();}else{authToken='';localStorage.removeItem('selector_token');}var h=window.location.hash.replace('#','');nav(h&&PAGES[h]?h:'home');}).catch(function(){authToken='';localStorage.removeItem('selector_token');var h=window.location.hash.replace('#','');nav(h&&PAGES[h]?h:'home');})}else{var h=window.location.hash.replace('#','');nav(h&&PAGES[h]?h:'home')}
+window.onhashchange=function(){var h=window.location.hash.replace('#','');if(PAGES[h])nav(h);};
+</script>
+<style>
+
+<style>/* Exam styles */
+.qp-dots{display:flex;gap:6px;margin-bottom:16px}
+.qp-dot{width:24px;height:4px;border-radius:2px;background:var(--border)}
+.qp-dot.done{background:var(--success)}
+.qp-dot.wrong{background:var(--danger)}
+.qp-dot.cur{background:var(--accent)}
+.exam-opt{padding:14px 18px;border:2px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:var(--trans);font-size:15px;font-weight:500}
+.exam-opt:hover{border-color:var(--accent);background:var(--accent-bg)}
+.exam-opt.selected{border-color:var(--accent);background:var(--accent-bg2);color:var(--accent);font-weight:600}
+</style>
+<script>
+/* ═══════════════════════════════════════
+   培训中心 & 管理扩展
+   ═══════════════════════════════════════ */
+
+// ═══ EVENT DELEGATION for training/admin actions ═══
+document.addEventListener('click', function(e) {
+  var el = e.target.closest('[data-action]');
+  if (!el) return;
+  var act = el.getAttribute('data-action');
+  var prm = el.getAttribute('data-param') || '';
+
+  if (act === 'trainingTab') _tTab(prm, el);
+  else if (act === 'filterTP') _filterTP(prm);
+  else if (act === 'toggleModule') _toggleModule(el);
+  else if (act === 'selectAnswer') { var p = prm.split(','); _selectAnswer(parseInt(p[0]), parseInt(p[1]), el); }
+  else if (act === 'prevQ') _prevQ();
+  else if (act === 'nextQ') _nextQ();
+  else if (act === 'resetExam') _resetExam();
+  else if (act === 'startExam') _startExam();
+  else if (act === 'openTmForm') { if (prm) _openTmForm(parseInt(prm)); else _openTmForm(); }
+  else if (act === 'openTqForm') { if (prm) _openTqForm(parseInt(prm)); else _openTqForm(); }
+  else if (act === 'openKbForm') { if (prm) _openKbForm(parseInt(prm)); else _openKbForm(); }
+  else if (act === 'delTm') _delTm(parseInt(prm));
+  else if (act === 'delTq') _delTq(parseInt(prm));
+  else if (act === 'delKb') _delKb(parseInt(prm));
+  else if (act === 'csResetPwd') _csResetPwd(parseInt(prm));
+  else if (act === 'csDel') _csDel(parseInt(prm));
+  else if (act === 'csToggle') { var cs = prm.split(','); _csToggle(parseInt(cs[0]), cs[1]); }
+});
+
+// ═══ TRAINING STATE ═══
+var _trainingState = { tab: 'study', productId: '', exam: null, modules: [], questions: [] };
+
+// ═══ PAGES.training ═══
+PAGES.training = function() {
+  if(!authUser) return '<div class="empty-state" style="padding:60px 20px"><div class="es-icon">🔒</div><div class="es-title">请先登录</div><p style="color:var(--text2);font-size:13px;margin-top:8px">员工培训中心需要登录后使用</p><button class="btn btn-primary btn-lg" onclick="showLogin(\'login\')" style="margin-top:16px">登录工作台</button></div>';
+  var h = '';
+  h += '<div class="page-header"><div class="ph-eyebrow">Training</div><h1 class="ph-title">员工培训中心</h1><p class="ph-sub">产品知识库学习与考核 · 提升专业能力</p></div>';
+  h += '<div class="tab-nav"><div class="tab-item active" data-action="trainingTab" data-param="study">📚 产品知识库</div><div class="tab-item" data-action="trainingTab" data-param="exam">📝 考核中心</div></div>';
+  h += '<div id="trainingContent"></div>';
+  setTimeout(function() { _tTab('study'); }, 100);
+  return h;
+};
+
+function _tTab(t, chip) {
+  _trainingState.tab = t;
+  if (chip) {
+    var tabs = document.querySelectorAll('#mainContent .tab-item');
+    for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
+    chip.classList.add('active');
+  }
+  var ct = document.getElementById('trainingContent');
+  if (!ct) return;
+  if (t === 'study') _renderStudy(ct);
+  else _renderExam(ct);
+}
+
+function _renderStudy(ct) {
+  var products = [
+    { id: 'SAST', name: 'SAST 静态分析', icon: '🔍' },
+    { id: 'SCA', name: 'SCA 成分分析', icon: '📦' },
+    { id: 'BAT', name: 'BAT 二进制', icon: '🔐' },
+    { id: 'FUZZ', name: 'Fuzz 模糊测试', icon: '🎯' },
+    { id: 'MST', name: 'MST 大模型', icon: '🤖' },
+    { id: 'CodingHawk', name: 'CodingHawk AI审计', icon: '✨' },
+    { id: 'GuardFox', name: 'GuardFox 漏洞', icon: '🦊' }
+  ];
+  var h = '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px">';
+  h += '<div class="inline-tag' + (!_trainingState.productId ? ' selected' : '') + '" data-action="filterTP" data-param="" style="cursor:pointer">全部产品</div>';
+  for (var i = 0; i < products.length; i++) {
+    var p = products[i];
+    h += '<div class="inline-tag' + (_trainingState.productId === p.id ? ' selected' : '') + '" data-action="filterTP" data-param="' + p.id + '" style="cursor:pointer">' + p.icon + ' ' + p.name + '</div>';
+  }
+  h += '</div>';
+  h += '<div id="moduleList"><div class="empty-state"><div class="es-icon">⏳</div><div class="es-title">加载中...</div></div></div>';
+  ct.innerHTML = h;
+  _loadModules();
+}
+
+function _filterTP(pid) {
+  _trainingState.productId = pid;
+  var tags = document.querySelectorAll('#trainingContent .inline-tag');
+  for (var i = 0; i < tags.length; i++) {
+    var t = tags[i];
+    var tp = t.getAttribute('data-param') || '';
+    if (tp === pid) t.classList.add('selected');
+    else t.classList.remove('selected');
+  }
+  _loadModules();
+}
+
+function _loadModules() {
+  var url = API + '/api/training/modules';
+  if (_trainingState.productId) url += '?product_id=' + _trainingState.productId;
+  fetch(url).then(function(r) { return r.json(); }).then(function(mods) {
+    _trainingState.modules = mods;
+    var ml = document.getElementById('moduleList');
+    if (!ml) return;
+    if (!mods.length) { ml.innerHTML = '<div class="empty-state"><div class="es-icon">📚</div><div class="es-title">暂无培训模块</div></div>'; return; }
+    var h = '';
+    for (var i = 0; i < mods.length; i++) {
+      var m = mods[i];
+      h += '<div class="card" style="margin-bottom:12px;cursor:pointer" data-action="toggleModule">';
+      h += '<div style="display:flex;justify-content:space-between;align-items:center">';
+      h += '<div style="font-weight:700;font-size:15px">📖 ' + m.title + '</div>';
+      h += '<span class="badge badge-purple">' + m.product_id + '</span>';
+      h += '</div>';
+      h += '<div id="_modBody' + m.id + '" style="display:none;margin-top:12px;padding-top:16px;border-top:1px solid var(--border);font-size:14px;line-height:2;color:var(--text2)">' + (m.content||'').replace(/<h3>/g,'<h3 style="font-size:15px;font-weight:700;color:var(--text);margin:12px 0 6px">').replace(/<p>/g,'<p style="margin:4px 0">').replace(/<li>/g,'<li style="margin:2px 0">') + (m.file_urls?'<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)"><b>📎 附件：</b>'+m.file_urls.split(',').map(function(u){return '<a href="'+u+'" target="_blank" style="color:var(--accent)">'+u.split('/').pop()+'</a>'}).join(' &nbsp;')+'</div>':'') + '</div>';
+      h += '</div>';
+    }
+    ml.innerHTML = h;
+  }).catch(function() {});
+}
+
+function _toggleModule(el) {
+  var body = el.querySelector('[id^="_modBody"]');
+  if (!body) return;
+  body.style.display = body.style.display === 'none' ? 'block' : 'none';
+}
+
+function _renderExam(ct) {
+  if (_trainingState.exam) { _renderExamQuestion(ct); return; }
+  var h = '<div class="card" style="text-align:center;padding:48px 24px">';
+  h += '<div style="font-size:48px;margin-bottom:16px">📝</div>';
+  h += '<h3 style="margin-bottom:8px">产品知识考核</h3>';
+  h += '<p style="color:var(--text2);font-size:14px;margin-bottom:20px">共8道选择题，系统自动判分 · 满分100分 · 80分以上为优秀</p>';
+  h += '<button class="btn btn-primary btn-lg" data-action="startExam">开始考试</button>';
+  h += '</div>';
+  h += '<div id="examRecords" style="margin-top:16px"><div class="empty-state"><div class="es-icon">⏳</div><div class="es-title">加载历史记录...</div></div></div>';
+  ct.innerHTML = h;
+  _loadRecords();
+}
+
+function _loadRecords() {
+  fetch(API + '/api/training/my-records', { headers: authToken ? { 'Authorization': 'Bearer ' + authToken } : {} })
+    .then(function(r) { return r.json(); })
+    .then(function(records) {
+      var er = document.getElementById('examRecords');
+      if (!er) return;
+      if (!records.length) { er.innerHTML = '<div class="empty-state"><div class="es-icon">📋</div><div class="es-title">暂无考试记录</div></div>'; return; }
+      var h = '<div class="card"><h4 style="margin-bottom:12px">📊 历史成绩</h4><table class="data-table"><tr><th>日期</th><th>得分</th><th>总分</th><th>正确率</th><th>等级</th></tr>';
+      for (var i = 0; i < records.length; i++) {
+        var r = records[i];
+        var pct = r.total > 0 ? Math.round(r.score * 100 / r.total) : 0;
+        var grade = pct >= 80 ? '优秀' : (pct >= 60 ? '合格' : '需加强');
+        var color = pct >= 80 ? 'badge-green' : (pct >= 60 ? 'badge-yellow' : 'badge-red');
+        h += '<tr><td>' + (r.created_at || '').substring(0, 16) + '</td><td>' + r.score + '</td><td>' + r.total + '</td><td>' + pct + '%</td><td><span class="badge ' + color + '">' + grade + '</span></td></tr>';
+      }
+      h += '</table></div>';
+      er.innerHTML = h;
+    }).catch(function() {});
+}
+
+function _startExam() {
+  fetch(API + '/api/training/questions?question_type=mcq')
+    .then(function(r) { return r.json(); })
+    .then(function(qs) {
+      if (!qs.length) { toast('暂无考题，请联系管理员', 'error'); return; }
+      for (var i = qs.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = qs[i]; qs[i] = qs[j]; qs[j] = t; }
+      qs = qs.slice(0, Math.min(8, qs.length));
+      _trainingState.exam = { questions: qs, idx: 0, answers: {} };
+      _trainingState.questions = qs;
+      var ct = document.getElementById('trainingContent');
+      if (ct) _renderExamQuestion(ct);
+    }).catch(function(e) { toast('加载考题失败', 'error'); });
+}
+
+function _renderExamQuestion(ct) {
+  var exam = _trainingState.exam;
+  var qs = exam.questions;
+  if (exam.idx >= qs.length) { _submitExam(ct); return; }
+  var q = qs[exam.idx];
+  var opts = [];
+  try { opts = JSON.parse(q.options); } catch(e) { opts = []; }
+
+  var dots = '';
+  for (var i = 0; i < qs.length; i++) {
+    var cls = i < exam.idx ? (exam.answers[qs[i].id] !== undefined ? 'done' : 'wrong') : (i === exam.idx ? 'cur' : '');
+    dots += '<div class="qp-dot ' + cls + '"></div>';
+  }
+
+  var h = '<div class="card">';
+  h += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px"><div style="font-weight:600;font-size:14px;color:var(--text2)">第 ' + (exam.idx + 1) + ' / ' + qs.length + ' 题</div><button class="btn btn-ghost btn-sm" data-action="resetExam">退出考试</button></div>';
+  h += '<div class="qp-dots">' + dots + '</div>';
+  h += '<h3 style="font-size:18px;font-weight:700;margin:16px 0 20px">' + q.question_text + '</h3>';
+  h += '<div style="display:flex;flex-direction:column;gap:10px">';
+  for (var j = 0; j < opts.length; j++) {
+    var sel = exam.answers[q.id] === j;
+    h += '<div class="exam-opt' + (sel ? ' selected' : '') + '" data-action="selectAnswer" data-param="' + q.id + ',' + j + '">' + String.fromCharCode(65 + j) + '. ' + opts[j] + '</div>';
+  }
+  h += '</div>';
+  h += '<div style="margin-top:20px;display:flex;gap:10px;justify-content:center">';
+  if (exam.idx > 0) h += '<button class="btn btn-outline" data-action="prevQ">上一题</button>';
+  if (exam.answers[q.id] !== undefined) h += '<button class="btn btn-primary" data-action="nextQ">' + (exam.idx < qs.length - 1 ? '下一题' : '提交考试') + '</button>';
+  h += '</div>';
+  h += '</div>';
+  ct.innerHTML = h;
+}
+
+function _selectAnswer(qid, optIdx, el) {
+  _trainingState.exam.answers[qid] = optIdx;
+  var opts = el.parentElement.querySelectorAll('.exam-opt');
+  for (var i = 0; i < opts.length; i++) opts[i].classList.remove('selected');
+  el.classList.add('selected');
+}
+
+function _nextQ() { _trainingState.exam.idx++; var ct = document.getElementById('trainingContent'); if (ct) _renderExamQuestion(ct); }
+function _prevQ() { if (_trainingState.exam.idx > 0) _trainingState.exam.idx--; var ct = document.getElementById('trainingContent'); if (ct) _renderExamQuestion(ct); }
+function _resetExam() { _trainingState.exam = null; var ct = document.getElementById('trainingContent'); if (ct) _renderExam(ct); }
+
+function _submitExam(ct) {
+  var answers = JSON.stringify(_trainingState.exam.answers);
+  fetch(API + '/api/training/submit-exam', {
+    method: 'POST',
+    headers: Object.assign({ 'Content-Type': 'application/x-www-form-urlencoded' }, authToken ? { 'Authorization': 'Bearer ' + authToken } : {}),
+    body: 'answers=' + encodeURIComponent(answers)
+  }).then(function(r) { return r.json(); })
+  .then(function(result) {
+    var gradeColor = result.percentage >= 80 ? 'var(--success)' : (result.percentage >= 60 ? 'var(--warning)' : 'var(--danger)');
+    var h = '<div class="card" style="text-align:center;padding:40px 24px">';
+    h += '<div style="font-size:48px;margin-bottom:16px">' + (result.percentage >= 80 ? '🎉' : (result.percentage >= 60 ? '📖' : '💪')) + '</div>';
+    h += '<h2 style="margin-bottom:8px">考试完成</h2>';
+    h += '<div style="font-size:48px;font-weight:800;color:' + gradeColor + ';margin:12px 0">' + result.percentage + '分</div>';
+    h += '<div style="font-size:16px;color:var(--text2);margin-bottom:8px">正确 ' + result.score + ' / ' + result.total + ' 题 · 等级：<span class="badge ' + (result.percentage >= 80 ? 'badge-green' : (result.percentage >= 60 ? 'badge-yellow' : 'badge-red')) + '">' + result.grade + '</span></div>';
+    h += '<div style="display:flex;gap:10px;justify-content:center;margin-top:16px">';
+    h += '<button class="btn btn-outline" data-action="resetExam">重新考试</button>';
+    h += '<button class="btn btn-primary" data-action="trainingTab" data-param="study">返回学习</button>';
+    h += '</div></div>';
+    ct.innerHTML = h;
+    _trainingState.exam = null;
+    _loadRecords();
+  }).catch(function(e) { toast('提交失败: ' + e.message, 'error'); });
+}
+
+// ═══ ADMIN TAB EXTENSIONS ═══
+// Override aTab to handle new tabs
+var _originalATab = aTab;
+aTab = function(t, chip) {
+  if (t === 'training') {
+    if (chip) { var cs = document.querySelectorAll('.tab-item'); for (var i = 0; i < cs.length; i++) cs[i].classList.remove('active'); chip.classList.add('active'); }
+    var ct2 = document.getElementById('aContent');
+    if (!ct2) return;
+    ct2.innerHTML = '<button class="btn btn-primary btn-sm" data-action="openTmForm" style="margin-bottom:8px;margin-right:6px">+ 新增模块</button><button class="btn btn-outline btn-sm" data-action="openTqForm" style="margin-bottom:8px;margin-right:6px">+ 新增考题</button><button class="btn btn-ghost btn-sm" onclick="aTab("training")" style="margin-bottom:8px">刷新</button><div id="tmList"><div class="empty-state"><div class="es-icon">⏳</div><div class="es-title">加载中...</div></div></div>';
+    _loadTmAdmin();
+  } else if (t === 'kb') {
+    if (chip) { var cs = document.querySelectorAll('.tab-item'); for (var i = 0; i < cs.length; i++) cs[i].classList.remove('active'); chip.classList.add('active'); }
+    api('GET', '/api/kb/articles?limit=100').then(function(a) {
+      var ct3 = document.getElementById('aContent');
+      if (!ct3) return;
+      if (a.length) {
+        ct3.innerHTML = '<button class="btn btn-primary btn-sm" data-action="openKbForm" style="margin-bottom:12px">+ 新增KB文章</button><table class="data-table"><tr><th>ID</th><th>标题</th><th>分类</th><th>产品</th><th>阅读</th><th>操作</th></tr>' + a.map(function(x) { return '<tr><td>' + x.id + '</td><td>' + x.title + '</td><td>' + x.category + '</td><td>' + x.product_id + '</td><td>' + x.view_count + '</td><td><button class="btn btn-sm btn-outline" data-action="openKbForm" data-param="' + x.id + '">编辑</button> <button class="btn btn-sm" style="color:var(--danger)" data-action="delKb" data-param="' + x.id + '">删除</button></td></tr>'; }).join('') + '</table>';
+      } else {
+        ct3.innerHTML = '<button class="btn btn-primary btn-sm" data-action="openKbForm" style="margin-bottom:12px">+ 新增KB文章</button><div class="empty-state"><div class="es-icon">📰</div><div class="es-title">暂无KB文章</div></div>';
+      }
+    }).catch(function() {});
+  } else if (t === 'customers') {
+    if (chip) { var cs = document.querySelectorAll('.tab-item'); for (var i = 0; i < cs.length; i++) cs[i].classList.remove('active'); chip.classList.add('active'); }
+    api('GET', '/api/customer/admin/users').then(function(a) {
+      var ct4 = document.getElementById('aContent');
+      if (!ct4) return;
+      if (a.length) {
+        ct4.innerHTML = '<table class="data-table"><tr><th>ID</th><th>用户名</th><th>邮箱</th><th>公司</th><th>产品</th><th>状态</th><th>注册时间</th><th>操作</th></tr>' + a.map(function(x) { return '<tr><td>' + x.id + '</td><td>' + x.username + '</td><td>' + x.email + '</td><td>' + x.company + '</td><td>' + x.product_purchased + '</td><td><span class="badge ' + (x.status === 'frozen' ? 'badge-red' : 'badge-green') + '">' + (x.status === 'frozen' ? '已冻结' : '正常') + '</span></td><td>' + (x.created_at || '').substring(0, 10) + '</td><td><button class="btn btn-sm btn-outline" data-action="csResetPwd" data-param="' + x.id + '">重置密码</button> <button class="btn btn-sm" style="color:var(--warning)" data-action="csToggle" data-param="' + x.id + ',' + x.status + '">' + (x.status === 'frozen' ? '解冻' : '冻结') + '</button> <button class="btn btn-sm" style="color:var(--danger)" data-action="csDel" data-param="' + x.id + '">删除</button></td></tr>'; }).join('') + '</table>';
+      } else {
+        ct4.innerHTML = '<div class="empty-state"><div class="es-icon">👥</div><div class="es-title">暂无客户</div></div>';
+      }
+    }).catch(function() {});
+  } else {
+    _originalATab(t, chip);
+  }
+};
+
+// Extend admin tabs
+var _origAdmin = PAGES.admin;
+PAGES.admin = function() {
+  if (!authUser || authUser.role !== 'admin') return '<div class="empty-state"><div class="es-icon">🔒</div><div class="es-title">需要管理员权限</div></div>';
+  var h = '';
+  h += '<div class="page-header"><div class="ph-eyebrow">Admin</div><h1 class="ph-title">管理后台</h1></div>';
+  h += '<div class="stat-grid" id="adminStats"><div class="stat-card accent"><div class="stat-label">内部用户</div><div class="stat-value" id="sUsers">-</div></div><div class="stat-card gold"><div class="stat-label">客户账号</div><div class="stat-value" id="sCustomers">-</div></div><div class="stat-card success"><div class="stat-label">合作伙伴</div><div class="stat-value" id="sPartners">-</div></div><div class="stat-card info"><div class="stat-label">待处理工单</div><div class="stat-value" id="sTickets">-</div></div></div>';
+  h += '<div class="tab-nav"><div class="tab-item active" onclick="aTab(\'users\',this)">内部用户</div><div class="tab-item" onclick="aTab(\'customers\',this)">客户账号</div><div class="tab-item" onclick="aTab(\'partners\',this)">合作伙伴</div><div class="tab-item" onclick="aTab(\'articles\',this)">文章管理</div><div class="tab-item" onclick="aTab(\'cases\',this)">案例管理</div><div class="tab-item" onclick="aTab(\'tickets\',this)">工单管理</div><div class="tab-item" onclick="aTab(\'training\',this)">培训管理</div><div class="tab-item" onclick="aTab(\'kb\',this)">KB管理</div><div class="tab-item" onclick="aTab(\'audit\',this)">审计日志</div></div><div id="aContent"></div>';
+  setTimeout(function() {
+    api('GET', '/api/admin/stats').then(function(s) {
+      document.getElementById('sUsers').textContent = s.users || 0;
+      document.getElementById('sCustomers').textContent = s.customer_users || 0;
+      document.getElementById('sPartners').textContent = s.partners || 0;
+      document.getElementById('sTickets').textContent = s.tickets_open || 0;
+    }).catch(function() {});
+    aTab('users');
+  }, 100);
+  return h;
+};
+
+function _renderProdContent(){
+  api("GET","/api/product-pages").then(function(pages){
+    var ct=document.getElementById("aContent");if(!ct)return;
+    var h="<p style='font-size:13px;color:var(--text2);margin-bottom:16px'>为每个产品设置简介（产品卡片展示）和详细介绍（点击后独立页面）</p>";
+    var prods=["SAST","SCA","BAT","FUZZ","MST","CodingHawk","GuardFox"];
+    for(var i=0;i<prods.length;i++){
+      var pid=prods[i],page=pages.find(function(p){return p.product_id===pid})||{intro:"",detail:""};
+      h+="<div class='card' style='margin-bottom:10px'><div style='display:flex;justify-content:space-between;align-items:center'><span style='font-weight:700'>"+pid+"</span><button class='btn btn-sm btn-outline' onclick='_editProdPage(\""+pid+"\")'>编辑</button></div>";
+      h+="<div style='font-size:12px;color:var(--text3);margin-top:4px'>简介: "+(page.intro||"未设置").substring(0,60)+"</div></div>";
+    }
+    ct.innerHTML=h;
+  }).catch(function(){});
+}
+function _editProdPage(pid){
+  api("GET","/api/product-pages/"+pid).then(function(page){
+    var m=document.createElement("div");m.className="modal-overlay";m.onclick=function(e){if(e.target===m)m.remove()};
+    m.innerHTML="<div class='modal-box' style='max-width:800px'><h3 style='margin-bottom:16px'>编辑 "+pid+" 产品内容</h3><div class='form-group'><label>简介（产品卡片展示，简短描述）</label><textarea id='ppIntro' rows='3' style='width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:inherit;font-size:13px;resize:vertical'>"+(page.intro||"")+"</textarea></div><div class='form-group'><label>详细介绍（点击产品后的独立页面，支持HTML）</label><textarea id='ppDetail' rows='15' style='width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:12px;resize:vertical'>"+(page.detail||"")+"</textarea></div><button class='btn btn-primary btn-lg' onclick='_saveProdPage(\""+pid+"\",this)' style='width:100%;justify-content:center'>保存</button></div>";
+    document.body.appendChild(m);
+  });
+}
+async function _saveProdPage(pid,btn){
+  var intro=document.getElementById("ppIntro")?.value||"";
+  var detail=document.getElementById("ppDetail")?.value||"";
+  try{
+    await api("POST","/api/product-pages",fd({product_id:pid,intro:intro,detail:detail}));
+    toast("已保存");btn.closest(".modal-overlay").remove();_renderProdContent();
+  }catch(e){toast(e.message,"error")}
+}
+
+// ═══ ADMIN HELPERS ═══
+
+// ── Internal Users ──
+function _renderUsers() {
+  api('GET', '/api/admin/users').then(function(a) {
+    var ct = document.getElementById('aContent');
+    if (!ct) return;
+    var h = '<button class="btn btn-primary btn-sm" onclick="_openUserForm()" style="margin-bottom:12px;margin-right:6px">+ 新增内部用户</button>';
+    if (a.length) {
+      h += '<table class="data-table"><tr><th>ID</th><th>用户名</th><th>邮箱</th><th>公司</th><th>角色</th><th>注册时间</th><th>操作</th></tr>' + a.map(function(x) {
+        return '<tr><td>' + x.id + '</td><td>' + x.username + '</td><td>' + x.email + '</td><td>' + (x.company||'-') + '</td><td><span class="badge ' + (x.role==='admin'?'badge-red':x.role==='partner'?'badge-purple':'badge-green') + '">' + x.role + '</span></td><td>' + (x.created_at||'').substring(0,10) + '</td><td><button class="btn btn-sm btn-outline" onclick="_resetInternalPwd(' + x.id + ')">重置密码</button> <button class="btn btn-sm" style="color:var(--danger)" onclick="_delInternal(' + x.id + ')">删除</button></td></tr>';
+      }).join('') + '</table>';
+    } else { h += '<div class="empty-state"><div class="es-icon">👥</div><div class="es-title">暂无用户</div></div>'; }
+    ct.innerHTML = h;
+  }).catch(function() {});
+}
+
+function _openUserForm() {
+  var m = document.createElement('div'); m.className = 'modal-overlay'; m.onclick = function(e) { if (e.target === m) m.remove(); };
+  m.innerHTML = '<div class="modal-box"><h3 style="margin-bottom:16px">新增内部用户</h3><div class="form-grid"><div class="form-group"><label>用户名 *</label><input id="iuUser"></div><div class="form-group"><label>密码 *</label><input id="iuPwd" type="password"></div></div><div class="form-grid"><div class="form-group"><label>邮箱</label><input id="iuEmail"></div><div class="form-group"><label>角色</label><select id="iuRole"><option value="user">普通用户</option><option value="partner">合作伙伴</option><option value="admin">管理员</option></select></div></div><div class="form-group"><label>公司</label><input id="iuCompany"></div><button class="btn btn-primary btn-lg" onclick="_saveInternal(this)" style="width:100%;justify-content:center;margin-top:8px">创建</button></div>';
+  document.body.appendChild(m);
+}
+async function _saveInternal(btn) {
+  var u = document.getElementById('iuUser')?.value.trim(), p = document.getElementById('iuPwd')?.value.trim();
+  if (!u || !p) { toast('请填写用户名和密码', 'error'); return; }
+  try {
+    await api('POST', '/api/admin/users', fd({ username: u, password: p, email: document.getElementById('iuEmail')?.value || '', role: document.getElementById('iuRole')?.value || 'user', company: document.getElementById('iuCompany')?.value || '' }));
+    toast('已创建'); btn.closest('.modal-overlay').remove(); aTab('users');
+  } catch(e) { toast(e.message, 'error'); }
+}
+function _resetInternalPwd(id) { var p = prompt('新密码（8位以上，含字母和数字）:'); if (!p) return; api('PUT', '/api/admin/users/' + id + '/reset-password', fd({ new_password: p })).then(function() { toast('已重置'); }).catch(function(e) { toast(e.message, 'error'); }); }
+async function _delInternal(id) { if (!confirm('确定删除此用户？')) return; try { await api('DELETE', '/api/admin/users/' + id); toast('已删除'); aTab('users'); } catch(e) { toast(e.message, 'error'); } }
+
+// ── Customer Accounts ──
+function _renderCustomers() {
+  api('GET', '/api/customer/admin/users').then(function(a) {
+    var ct = document.getElementById('aContent');
+    if (!ct) return;
+    var h = '<button class="btn btn-primary btn-sm" onclick="_openCustForm()" style="margin-bottom:12px">+ 新增客户账号</button>';
+    if (a.length) {
+      h += '<table class="data-table"><tr><th>ID</th><th>用户名</th><th>客户名称</th><th>姓名</th><th>邮箱</th><th>产品</th><th>行业</th><th>有效期至</th><th>状态</th><th>操作</th></tr>' + a.map(function(x) {
+        var expire = '-';
+        if (x.valid_from && x.valid_days) { try { var vf = new Date(x.valid_from); vf.setDate(vf.getDate() + parseInt(x.valid_days)); expire = vf.toISOString().substring(0, 10); } catch(e) {} }
+        var frozen = x.status === 'frozen';
+        return '<tr><td>' + x.id + '</td><td>' + x.username + '</td><td>' + (x.company||'-') + '</td><td>' + (x.contact_name||'-') + '</td><td>' + (x.email||'-') + '</td><td>' + (x.product_purchased||'-') + '</td><td>' + (x.industry||'-') + '</td><td>' + expire + '</td><td><span class="badge ' + (frozen?'badge-red':'badge-green') + '">' + (frozen?'已冻结':'正常') + '</span></td><td><button class="btn btn-sm btn-outline" onclick="_resetCustPwd(' + x.id + ')">重置密码</button> <button class="btn btn-sm" style="color:var(--warning)" onclick="_toggleCust(' + x.id + ',\'' + x.status + '\')">' + (frozen?'解冻':'冻结') + '</button> <button class="btn btn-sm" style="color:var(--danger)" onclick="_delCust(' + x.id + ')">删除</button></td></tr>';
+      }).join('') + '</table>';
+    } else { h += '<div class="empty-state"><div class="es-icon">👥</div><div class="es-title">暂无客户账号</div></div>'; }
+    ct.innerHTML = h;
+  }).catch(function() {});
+}
+
+function _openCustForm() {
+  var today = new Date().toISOString().substring(0, 10);
+  var m = document.createElement('div'); m.className = 'modal-overlay'; m.onclick = function(e) { if (e.target === m) m.remove(); };
+  m.innerHTML = '<div class="modal-box"><h3 style="margin-bottom:16px">新增客户账号</h3><div class="form-grid"><div class="form-group"><label>用户名 *</label><input id="cuUser"></div><div class="form-group"><label>密码 *</label><input id="cuPwd" type="password"></div></div><div class="form-grid"><div class="form-group"><label>客户名称 *</label><input id="cuCompany" placeholder="公司全称"></div><div class="form-group"><label>客户姓名 *</label><input id="cuName" placeholder="联系人姓名"></div></div><div class="form-grid"><div class="form-group"><label>邮箱 *</label><input id="cuEmail" type="email"></div><div class="form-group"><label>职位</label><input id="cuPos" placeholder="如：信息安全总监"></div></div><div class="form-grid"><div class="form-group"><label>电话</label><input id="cuPhone"></div><div class="form-group"><label>购买产品</label><select id="cuProd"><option value="">请选择</option><option value="SAST">SAST</option><option value="SCA">SCA</option><option value="BAT">BAT</option><option value="FUZZ">FUZZ</option><option value="MST">MST</option><option value="CodingHawk">CodingHawk</option><option value="GuardFox">GuardFox</option><option value="多产品">多产品组合</option></select></div></div><div class="form-grid"><div class="form-group"><label>行业属性</label><select id="cuIndustry"><option value="">请选择</option><option value="汽车行业">汽车行业</option><option value="军工行业">军工行业</option><option value="智能设备">智能设备</option><option value="芯片半导体">芯片半导体</option><option value="金融行业">金融行业</option><option value="政教行业">政教行业</option><option value="国央企">国央企</option><option value="互联网">互联网</option><option value="测评认证">测评认证</option></select></div><div class="form-group"><label>生效日期</label><input id="cuValidFrom" type="date" value="' + today + '"></div></div><div class="form-group"><label>有效期（天）</label><select id="cuValidDays"><option value="90">90天</option><option value="180">180天</option><option value="365" selected>365天（1年）</option><option value="730">730天（2年）</option><option value="1825">1825天（5年）</option></select></div><button class="btn btn-primary btn-lg" onclick="_saveCust(this)" style="width:100%;justify-content:center;margin-top:8px">创建客户账号</button></div>';
+  document.body.appendChild(m);
+}
+async function _saveCust(btn) {
+  var u = document.getElementById('cuUser')?.value.trim(), p = document.getElementById('cuPwd')?.value.trim(), co = document.getElementById('cuCompany')?.value.trim(), na = document.getElementById('cuName')?.value.trim(), em = document.getElementById('cuEmail')?.value.trim();
+  if (!u || !p || !co || !na || !em) { toast('请填写所有必填项', 'error'); return; }
+  try {
+    await api('POST', '/api/customer/admin/users', fd({ username: u, password: p, company: co, contact_name: na, email: em, position: document.getElementById('cuPos')?.value || '', phone: document.getElementById('cuPhone')?.value || '', product_purchased: document.getElementById('cuProd')?.value || '', industry: document.getElementById('cuIndustry')?.value || '', valid_from: document.getElementById('cuValidFrom')?.value || '', valid_days: document.getElementById('cuValidDays')?.value || 365 }));
+    toast('客户账号已创建'); btn.closest('.modal-overlay').remove(); aTab('customers');
+  } catch(e) { toast(e.message, 'error'); }
+}
+function _loadTmAdmin(){
+  api('GET','/api/training/modules').then(function(mods){
+    api('GET','/api/training/questions').then(function(qs){
+      var h='<h4 style="margin-top:16px;margin-bottom:8px">培训模块 ('+mods.length+')</h4>';
+      if(mods.length){h+='<table class="data-table"><tr><th>ID</th><th>产品</th><th>标题</th><th>操作</th></tr>'+mods.map(function(m){return '<tr><td>'+m.id+'</td><td>'+m.product_id+'</td><td>'+m.title+'</td><td><button class="btn btn-sm btn-outline" onclick="_openTmForm('+m.id+')">编辑</button> <button class="btn btn-sm" style="color:var(--danger)" onclick="_delTm('+m.id+')">删除</button></td></tr>';}).join('')+'</table>';}else{h+='<div class="empty-state"><div class="es-icon">📚</div><div class="es-title">暂无培训模块</div></div>';}
+      h+='<h4 style="margin-top:20px;margin-bottom:8px">考题库 ('+qs.length+')</h4>';
+      if(qs.length){h+='<table class="data-table"><tr><th>ID</th><th>模块</th><th>类型</th><th>题目</th><th>操作</th></tr>'+qs.map(function(q){return '<tr><td>'+q.id+'</td><td>'+q.module_id+'</td><td>'+(q.question_type==='mcq'?'选择':'问答')+'</td><td>'+q.question_text.substring(0,40)+'...</td><td><button class="btn btn-sm btn-outline" onclick="_openTqForm('+q.id+')">编辑</button> <button class="btn btn-sm" style="color:var(--danger)" onclick="_delTq('+q.id+')">删除</button></td></tr>';}).join('')+'</table>';}else{h+='<div class="empty-state"><div class="es-icon">📝</div><div class="es-title">暂无考题</div></div>';}
+      document.getElementById('tmList').innerHTML=h;
+    });
+  }).catch(function(){});
+}
+function _openTmForm(id){
+  var m=document.createElement('div');m.className='modal-overlay';m.onclick=function(e){if(e.target===m)m.remove()};
+  m.innerHTML='<div class="modal-box" style="max-width:800px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h3>'+(id?'编辑':'新增')+'培训模块</h3><svg width="20" height="20" style="cursor:pointer" onclick="this.closest(\'.modal-overlay\').remove()"><use href="#i-x"/></svg></div>'
+    +'<div class="form-grid"><div class="form-group"><label>产品ID *</label><select id="tmPid"><option value="SAST">SAST</option><option value="SCA">SCA</option><option value="BAT">BAT</option><option value="FUZZ">FUZZ</option><option value="MST">MST</option><option value="CodingHawk">CodingHawk</option><option value="GuardFox">GuardFox</option></select></div><div class="form-group"><label>模块标题 *</label><input id="tmTitle" placeholder="如：SAST产品知识培训"></div></div>'
+    +'<div class="form-group"><label>产品概述</label><textarea id="tmOverview" rows="3" placeholder="一段话概括产品定位和核心价值"></textarea></div>'
+    +'<div class="form-group"><label>核心能力</label><textarea id="tmCapability" rows="4" placeholder="每行一项能力，如：18+语言支持：C/C++、Java、C#、Python、Go等"></textarea></div>'
+    +'<div class="form-group"><label>竞争优势</label><textarea id="tmAdvantage" rows="3" placeholder="每行一项竞争优势，如：对标Coverity，C/C++误报率<10%"></textarea></div>'
+    +'<div class="form-group"><label>适用场景</label><textarea id="tmScenario" rows="3" placeholder="每行一项适用场景，如：汽车软件满足ISO 26262/ASPICE功能安全"></textarea></div>'
+    +'<div class="form-group"><label>附件文档</label><div id="tmFiles"></div><input type="file" id="tmFileInput" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt" style="display:none" onchange="_uploadTmFile(this.files)"><button class="btn btn-outline btn-sm" onclick="document.getElementById(\'tmFileInput\').click()">📎 上传培训文档</button><span style="font-size:11px;color:var(--text3);margin-left:8px">支持 PDF/Word/PPT/TXT，每文件≤10MB</span></div>'
+    +'<button class="btn btn-primary btn-lg" onclick="_saveTm('+(id||0)+',this)" style="width:100%;justify-content:center;margin-top:12px">保存</button></div>';
+  document.body.appendChild(m);
+  window._tmUploadedFiles=[];
+  if(id){api('GET','/api/training/modules/'+id).then(function(x){
+    document.getElementById('tmPid').value=x.product_id;
+    document.getElementById('tmTitle').value=x.title;
+    var c=x.content||'';
+    document.getElementById('tmOverview').value=_extractSection(c,'产品概述');
+    document.getElementById('tmCapability').value=_extractSection(c,'核心能力');
+    document.getElementById('tmAdvantage').value=_extractSection(c,'竞争优势');
+    document.getElementById('tmScenario').value=_extractSection(c,'适用场景');
+    // Show existing files if any
+    if(x.file_urls){window._tmUploadedFiles=x.file_urls.split(',').filter(Boolean).map(function(u){return {name:u.split('/').pop(),url:u}});_renderTmFiles();}
+  }).catch(function(){})}
+}
+
+function _extractSection(html, title){
+  var m=html.match(new RegExp('<h3>'+title+'</h3>([\\s\\S]*?)(?=<h3>|$)','i'));
+  if(!m)return'';
+  return m[1].replace(/<[^>]+>/g,'').replace(/<li>/g,'').replace(/<\/li>/g,'\n').replace(/<br\s*\/?>/gi,'\n').replace(/&nbsp;/g,' ').trim();
+}
+function _uploadTmFile(files){
+  for(var i=0;i<files.length;i++){(function(file){
+    if(file.size>10*1024*1024){toast(file.name+' 超过10MB限制','error');return}
+    var fd2=new FormData();fd2.append('file',file);
+    fetch(API+'/api/upload',{method:'POST',headers:{'Authorization':'Bearer '+authToken},body:fd2})
+      .then(function(r){return r.json()}).then(function(d){window._tmUploadedFiles.push({name:d.filename,url:d.url});_renderTmFiles()})
+      .catch(function(e){toast('上传失败: '+e.message,'error')});
+  })(files[i])}
+  document.getElementById('tmFileInput').value='';
+}
+function _renderTmFiles(){
+  var el=document.getElementById('tmFiles');if(!el)return;
+  if(!window._tmUploadedFiles.length){el.innerHTML='';return}
+  el.innerHTML=window._tmUploadedFiles.map(function(f,i){return '<div class="file-item">📎 <a href="'+f.url+'" target="_blank" style="color:var(--accent)">'+f.name+'</a> <span class="remove" style="cursor:pointer;color:var(--danger)" onclick="window._tmUploadedFiles.splice('+i+',1);_renderTmFiles()">×</span></div>'}).join('');
+}
+async function _saveTm(id,btn){
+  var pid=document.getElementById('tmPid')?.value;var ti=document.getElementById('tmTitle')?.value.trim();
+  if(!pid||!ti){toast('请填写产品ID和标题','error');return}
+  var overview=document.getElementById('tmOverview')?.value.trim()||'';
+  var capability=document.getElementById('tmCapability')?.value.trim()||'';
+  var advantage=document.getElementById('tmAdvantage')?.value.trim()||'';
+  var scenario=document.getElementById('tmScenario')?.value.trim()||'';
+  // Build clean HTML content
+  var content='';
+  if(overview) content+='<h3>产品概述</h3><p>'+overview.replace(/\n/g,'<br>')+'</p>';
+  if(capability) content+='<h3>核心能力</h3><ul>'+capability.split('\n').filter(Boolean).map(function(l){return '<li>'+l+'</li>'}).join('')+'</ul>';
+  if(advantage) content+='<h3>竞争优势</h3><ul>'+advantage.split('\n').filter(Boolean).map(function(l){return '<li>'+l+'</li>'}).join('')+'</ul>';
+  if(scenario) content+='<h3>适用场景</h3><ul>'+scenario.split('\n').filter(Boolean).map(function(l){return '<li>'+l+'</li>'}).join('')+'</ul>';
+  var fileUrls=(window._tmUploadedFiles||[]).map(function(f){return f.url}).join(',');
+  var d=fd({product_id:pid,title:ti,content:content});
+  if(fileUrls) d.append('file_urls',fileUrls);
+  try{if(id)await api('PUT','/api/training/modules/'+id,d);else await api('POST','/api/training/modules',d);toast(id?'已更新':'已创建');btn.closest('.modal-overlay').remove();aTab("training")}catch(e){toast(e.message,'error')}
+}
+async function _delTm(id){if(!confirm('确定删除？'))return;try{await api('DELETE','/api/training/modules/'+id);toast('已删除');aTab("training")}catch(e){toast(e.message,'error')}}
+function _openTqForm(id){
+  var m=document.createElement('div');m.className='modal-overlay';m.onclick=function(e){if(e.target===m)m.remove()};
+  m.innerHTML='<div class="modal-box"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h3>'+(id?'编辑':'新增')+'考题</h3><svg width="20" height="20" style="cursor:pointer" onclick="this.closest(\'.modal-overlay\').remove()"><use href="#i-x"/></svg></div><div class="form-grid"><div class="form-group"><label>模块ID</label><input id="tqMid" type="number"></div><div class="form-group"><label>类型</label><select id="tqType"><option value="mcq">选择题</option><option value="essay">问答题</option></select></div></div><div class="form-group"><label>题目 *</label><input id="tqText"></div><div class="form-group"><label>选项JSON (仅选择题)</label><input id="tqOpts" placeholder=\'["A","B","C","D"]\'></div><div class="form-group"><label>正确答案 (选择填索引0-3, 问答填参考答案)</label><input id="tqAns"></div><div class="form-group"><label>解析</label><textarea id="tqExp"></textarea></div><button class="btn btn-primary btn-lg" onclick="_saveTq('+(id||0)+',this)" style="width:100%;justify-content:center">保存</button></div>';
+  document.body.appendChild(m);
+  if(id){api('GET','/api/training/questions?module_id=0').then(function(qs){var q=qs.find(function(x){return x.id===id});if(q){document.getElementById('tqMid').value=q.module_id;document.getElementById('tqType').value=q.question_type;document.getElementById('tqText').value=q.question_text;document.getElementById('tqOpts').value=q.options;document.getElementById('tqAns').value=q.correct_answer;document.getElementById('tqExp').value=q.explanation||'';}}).catch(function(){})}
+}
+async function _saveTq(id,btn){
+  var t=document.getElementById('tqText')?.value.trim();if(!t){toast('请填写题目','error');return}
+  var d=fd({module_id:document.getElementById('tqMid')?.value||0,question_type:document.getElementById('tqType')?.value||'mcq',question_text:t,options:document.getElementById('tqOpts')?.value||'[]',correct_answer:document.getElementById('tqAns')?.value||'',explanation:document.getElementById('tqExp')?.value||''});
+  try{if(id)await api('PUT','/api/training/questions/'+id,d);else await api('POST','/api/training/questions',d);toast(id?'已更新':'已创建');btn.closest('.modal-overlay').remove();aTab("training")}catch(e){toast(e.message,'error')}
+}
+async function _delTq(id){if(!confirm('确定删除？'))return;try{await api('DELETE','/api/training/questions/'+id);toast('已删除');aTab("training")}catch(e){toast(e.message,'error')}}
+
+// ── KB admin helpers ──
+function _openKbForm(id){
+  var m=document.createElement('div');m.className='modal-overlay';m.onclick=function(e){if(e.target===m)m.remove()};
+  m.innerHTML='<div class="modal-box"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h3>'+(id?'编辑':'新增')+'KB文章</h3><svg width="20" height="20" style="cursor:pointer" onclick="this.closest(\'.modal-overlay\').remove()"><use href="#i-x"/></svg></div><div class="form-group"><label>标题 *</label><input id="kbTitle"></div><div class="form-grid"><div class="form-group"><label>分类</label><select id="kbCat"><option value="产品文档">产品文档</option><option value="培训教程">培训教程</option><option value="使用技巧">使用技巧</option><option value="最佳实践">最佳实践</option></select></div><div class="form-group"><label>关联产品</label><select id="kbPid"><option value="">通用</option><option value="SAST">SAST</option><option value="SCA">SCA</option><option value="BAT">BAT</option><option value="FUZZ">FUZZ</option><option value="MST">MST</option><option value="CodingHawk">CodingHawk</option><option value="GuardFox">GuardFox</option></select></div></div><div class="form-group"><label>摘要</label><textarea id="kbSummary"></textarea></div><div class="form-group"><label>内容 (HTML)</label><textarea id="kbContent" style="min-height:200px"></textarea></div><button class="btn btn-primary btn-lg" onclick="_saveKb('+(id||0)+',this)" style="width:100%;justify-content:center">保存</button></div>';
+  document.body.appendChild(m);
+  if(id){api('GET','/api/kb/articles/'+id).then(function(x){document.getElementById('kbTitle').value=x.title;document.getElementById('kbCat').value=x.category;document.getElementById('kbPid').value=x.product_id;document.getElementById('kbSummary').value=x.summary||'';document.getElementById('kbContent').value=x.content||'';}).catch(function(){})}
+}
+async function _saveKb(id,btn){
+  var t=document.getElementById('kbTitle')?.value.trim();if(!t){toast('请填写标题','error');return}
+  var d=fd({title:t,content:document.getElementById('kbContent')?.value||'',summary:document.getElementById('kbSummary')?.value||'',category:document.getElementById('kbCat')?.value||'产品文档',product_id:document.getElementById('kbPid')?.value||''});
+  try{if(id)await api('PUT','/api/kb/articles/'+id,d);else await api('POST','/api/kb/articles',d);toast(id?'已更新':'已创建');btn.closest('.modal-overlay').remove();aTab("kb")}catch(e){toast(e.message,'error')}
+}
+async function _delKb(id){if(!confirm('确定删除？'))return;try{await api('DELETE','/api/kb/articles/'+id);toast('已删除');aTab("kb")}catch(e){toast(e.message,'error')}}
+
+// ── Customer admin helpers ──
+
+function _resetCustPwd(id) { var p = prompt('新密码（8位以上，含字母和数字）:'); if (!p) return; api('PUT', '/api/customer/admin/users/' + id + '/reset-password', fd({ new_password: p })).then(function() { toast('已重置'); }).catch(function(e) { toast(e.message, 'error'); }); }
+function _toggleCust(id, status) { var ns = status === 'frozen' ? 'active' : 'frozen'; var la = ns === 'frozen' ? '冻结' : '解冻'; if (!confirm('确定' + la + '此账号？')) return; api('PUT', '/api/customer/admin/users/' + id + '/status', fd({ status: ns })).then(function() { toast('已' + la); aTab('customers'); }).catch(function(e) { toast(e.message, 'error'); }); }
+async function _delCust(id) { if (!confirm('确定删除此客户账号？')) return; try { await api('DELETE', '/api/customer/admin/users/' + id); toast('已删除'); aTab('customers'); } catch(e) { toast(e.message, 'error'); } }
+
+// ── Audit Log ──
+function _renderAudit() {
+  api('GET', '/api/admin/audit-logs?limit=200').then(function(logs) {
+    var ct = document.getElementById('aContent');
+    if (!ct) return;
+    var h = '<button class="btn btn-ghost btn-sm" onclick="aTab("audit")" style="margin-bottom:12px">刷新</button>';
+    if (logs.length) {
+      h += '<table class="data-table"><tr><th>时间</th><th>类型</th><th>用户名</th><th>IP</th><th>结果</th><th>详情</th></tr>' + logs.map(function(l) {
+        return '<tr><td>' + (l.created_at||'') + '</td><td><span class="badge ' + (l.user_type==='internal'?'badge-purple':'badge-green') + '">' + (l.user_type==='internal'?'内部':'客户') + '</span></td><td>' + l.username + '</td><td>' + (l.ip||'-') + '</td><td>' + (l.success?'✅':'❌') + '</td><td>' + (l.detail||'-') + '</td></tr>';
+      }).join('') + '</table>';
+    } else { h += '<div class="empty-state"><div class="es-icon">📋</div><div class="es-title">暂无日志</div></div>'; }
+    ct.innerHTML = h;
+  }).catch(function() {});
+}
+
+// ── aTab dispatcher ──
+// original aTab restored from block1
+var _origATab2 = aTab;
+aTab = function(t, chip) {
+  if (chip) { var cs = document.querySelectorAll('.tab-item'); for (var i = 0; i < cs.length; i++) cs[i].classList.remove('active'); chip.classList.add('active'); }
+  if (t === 'users') { _renderUsers(); }
+  else if (t === 'customers') { _renderCustomers(); }
+  else if (t === 'audit') { _renderAudit(); }
+  else if (t === 'prodcontent') { _renderProdContent(); }
+  else if (t === 'training') {
+    var ct2 = document.getElementById('aContent');
+    ct2.innerHTML = '<button class="btn btn-primary btn-sm" data-action="openTmForm" style="margin-bottom:8px;margin-right:6px">+ 新增模块</button><button class="btn btn-outline btn-sm" data-action="openTqForm" style="margin-bottom:8px;margin-right:6px">+ 新增考题</button><button class="btn btn-ghost btn-sm" onclick="aTab("training")" style="margin-bottom:8px">刷新</button><div id="tmList"><div class="empty-state"><div class="es-icon">⏳</div><div class="es-title">加载中...</div></div></div>';
+    _loadTmAdmin();
+  }
+  else if (t === 'kb') {
+    api('GET', '/api/kb/articles?limit=100').then(function(a) {
+      var ct3 = document.getElementById('aContent');
+      if (a.length) { ct3.innerHTML = '<button class="btn btn-primary btn-sm" data-action="openKbForm" style="margin-bottom:12px">+ 新增KB文章</button><table class="data-table"><tr><th>ID</th><th>标题</th><th>分类</th><th>产品</th><th>阅读</th><th>操作</th></tr>' + a.map(function(x) { return '<tr><td>' + x.id + '</td><td>' + x.title + '</td><td>' + x.category + '</td><td>' + x.product_id + '</td><td>' + x.view_count + '</td><td><button class="btn btn-sm btn-outline" data-action="openKbForm" data-param="' + x.id + '">编辑</button> <button class="btn btn-sm" style="color:var(--danger)" data-action="delKb" data-param="' + x.id + '">删除</button></td></tr>'; }).join('') + '</table>'; } else { ct3.innerHTML = '<button class="btn btn-primary btn-sm" data-action="openKbForm" style="margin-bottom:12px">+ 新增KB文章</button><div class="empty-state"><div class="es-icon">📰</div><div class="es-title">暂无KB文章</div></div>'; }
+    }).catch(function() {});
+  }
+  else if (t === 'tickets') {
+    var ct4 = document.getElementById('aContent');
+    if (!ct4) return;
+    ct4.innerHTML = '<div class="empty-state"><div class="es-icon">⏳</div><div class="es-title">加载中...</div></div>';
+    api('GET', '/api/tickets?status=open').then(function(a) {
+      if (a.length) { ct4.innerHTML = '<table class="data-table"><tr><th>用户</th><th>主题</th><th>分类</th><th>操作</th></tr>' + a.map(function(x) { return '<tr><td>' + x.username + '</td><td>' + x.subject + '</td><td>' + x.category + '</td><td><button class="btn btn-sm btn-outline" onclick="_replyTicket(' + x.id + ')">回复</button> <button class="btn btn-sm" style="color:var(--danger)" onclick="_closeTicket(' + x.id + ')">关闭</button></td></tr>'; }).join('') + '</table>'; } else { ct4.innerHTML = '<div class="empty-state"><div class="es-icon">✅</div><div class="es-title">无待处理工单</div></div>'; }
+    }).catch(function() {});
+  }
+  else { _origATab2(t, chip); }
+};
+
+function _replyTicket(id) { var r = prompt('回复内容:'); if (!r) return; api('PUT', '/api/tickets/' + id + '/reply', 'reply=' + encodeURIComponent(r)).then(function() { toast('已回复'); aTab("tickets"); }).catch(function(e) { toast(e.message, 'error'); }); }
+async function _closeTicket(id) { try { await api('PUT', '/api/tickets/' + id + '/close', ''); toast('已关闭'); aTab("tickets"); } catch(e) { toast(e.message, 'error'); } }
+
+</script>
+</body>
+</html>

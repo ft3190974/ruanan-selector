@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>软安科技 · 客户技术支持门户</title>
+<style>
+/* ═══ DESIGN SYSTEM (reuse marketing platform tokens) ═══ */
+:root{
+  --brand:#1E2330;--brand-light:#2A3140;--brand-dark:#141820;
+  --accent:#5C3D99;--accent-light:#7B5CB8;--accent-bg:rgba(92,61,153,0.06);--accent-bg2:rgba(92,61,153,0.12);
+  --gold:#C8921A;--gold-light:#E5AA2C;--gold-bg:rgba(200,146,26,0.08);
+  --success:#059669;--success-bg:rgba(5,150,105,0.08);
+  --danger:#DC2626;--danger-bg:rgba(220,38,38,0.08);
+  --warning:#D97706;--warning-bg:rgba(217,119,6,0.08);
+  --info:#2563EB;--info-bg:rgba(37,99,235,0.08);
+  --text:#1E293B;--text2:#475569;--text3:#94A3B8;
+  --bg:#F1F5F9;--surface:#FFFFFF;--surface2:#F8FAFC;
+  --border:#E2E8F0;--border2:#CBD5E1;
+  --radius:10px;--radius-sm:6px;--radius-lg:14px;--radius-xl:18px;
+  --shadow:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 16px rgba(0,0,0,0.06);--shadow-lg:0 12px 36px rgba(0,0,0,0.08);
+  --trans:0.2s cubic-bezier(0.4,0,0.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;height:100vh;overflow:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}svg{display:block}
+
+/* ═══ LOGIN OVERLAY ═══ */
+.login-overlay{position:fixed;inset:0;z-index:1000;background:linear-gradient(135deg,#0B1A30,#13294B,#0D1F3C);display:flex;align-items:center;justify-content:center}
+.login-overlay::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(92,61,153,.15) 0%,transparent 60%),radial-gradient(ellipse at 80% 50%,rgba(5,150,105,.08) 0%,transparent 60%)}
+.login-box{position:relative;z-index:1;background:var(--surface);border-radius:var(--radius-xl);padding:36px 32px;width:400px;max-width:94vw;box-shadow:0 24px 80px rgba(0,0,0,.35)}
+.login-box .brand{text-align:center;margin-bottom:20px}
+.login-box .brand .logo{width:48px;height:48px;margin:0 auto 12px;background:#1E2330;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:800}
+.login-box .brand h2{font-size:18px;font-weight:700;letter-spacing:-.3px}
+.login-tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:1px solid var(--border)}
+.login-tabs span{flex:1;text-align:center;padding:8px 0;cursor:pointer;font-size:13px;font-weight:600;color:var(--text3);border-bottom:2px solid transparent;transition:var(--trans)}
+.login-tabs span.active{color:var(--accent);border-bottom-color:var(--accent)}
+.login-box label{display:block;font-size:12px;font-weight:600;margin-bottom:3px}
+.login-box input,.login-box select{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;outline:none;transition:var(--trans);margin-bottom:10px}
+.login-box input:focus,.login-box select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
+.login-btn{width:100%;padding:11px;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;color:#fff;background:var(--accent);transition:var(--trans);font-family:inherit}
+.login-btn:hover{background:var(--accent-light)}
+.login-link{text-align:center;margin-top:10px;font-size:12px;color:var(--accent);cursor:pointer;transition:var(--trans)}
+.login-link:hover{opacity:.8}
+.login-err{color:var(--danger);font-size:12px;text-align:center;margin-top:8px;display:none}
+.login-err.show{display:block}
+
+/* ═══ LAYOUT ═══ */
+.layout{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:240px;background:var(--brand);color:#fff;display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;z-index:100}
+.sb-brand{padding:20px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0}
+.sb-logo{width:34px;height:34px;border-radius:8px;background:#1E2330;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;flex-shrink:0}
+.sb-title{font-weight:700;font-size:14px;letter-spacing:-.2px}
+.sb-sub{font-size:10px;color:rgba(255,255,255,.4)}
+
+.sb-user{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px;font-size:12px;color:rgba(255,255,255,.7);flex-shrink:0}
+.sb-avatar{width:30px;height:30px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0}
+
+.sb-nav{flex:1;padding:10px;overflow-y:auto}
+.sb-section{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.25);padding:14px 8px 6px;font-weight:700}
+.sb-section:first-child{padding-top:2px}
+.sb-nav a{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;font-size:13px;font-weight:500;color:rgba(255,255,255,.55);transition:var(--trans);cursor:pointer;margin-bottom:2px}
+.sb-nav a:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.8)}
+.sb-nav a.active{background:var(--accent);color:#fff;font-weight:600}
+
+.sb-footer{padding:10px;border-top:1px solid rgba(255,255,255,.06);flex-shrink:0}
+.sb-footer a{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;font-size:12px;color:rgba(255,255,255,.4);cursor:pointer;transition:var(--trans)}
+.sb-footer a:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.7)}
+
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:50}
+.tb-breadcrumb{font-size:13px;color:var(--text2)}
+.tb-right{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text3)}
+.main-content{flex:1;padding:20px 24px 32px;max-width:1100px}
+
+@media(max-width:768px){.sidebar{width:64px}.sb-brand .sb-title,.sb-brand .sb-sub,.sb-user,.sb-section,.sb-nav a span:not(.nav-emoji){display:none}.sb-brand{padding:14px;justify-content:center}.sb-nav a{justify-content:center;padding:10px}}
+@media(max-width:480px){.sidebar{display:none}.main-content{padding:14px 10px 24px}}
+
+/* ═══ PAGE HEADER ═══ */
+.page-header{margin-bottom:22px}
+.ph-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:4px}
+.ph-title{font-size:24px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px}
+.ph-sub{font-size:13px;color:var(--text2)}
+
+/* ═══ CARDS ═══ */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px 26px;box-shadow:var(--shadow);margin-bottom:14px;transition:var(--trans)}
+.card:hover{box-shadow:var(--shadow-md)}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+
+/* ═══ BUTTONS ═══ */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;border:1px solid transparent;transition:var(--trans);font-family:inherit;white-space:nowrap}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent-light)}
+.btn-outline{background:var(--surface);color:var(--text2);border-color:var(--border)}.btn-outline:hover{background:var(--surface2)}
+.btn-ghost{background:transparent;color:var(--text2);border:none}.btn-ghost:hover{background:var(--surface2)}
+.btn-sm{padding:5px 12px;font-size:12px;border-radius:6px}.btn-lg{padding:12px 26px;font-size:15px;border-radius:10px}
+
+/* ═══ TAGS ═══ */
+.inline-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.inline-tag{border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 14px;cursor:pointer;font-size:12px;font-weight:500;transition:var(--trans);background:var(--surface);color:var(--text2)}
+.inline-tag:hover{border-color:var(--accent);color:var(--text)}
+.inline-tag.selected{border-color:var(--accent);background:var(--accent-bg);color:var(--accent);font-weight:600}
+
+/* ═══ BADGES ═══ */
+.badge{font-size:11px;padding:3px 10px;border-radius:100px;font-weight:600;display:inline-block}
+.badge-purple{background:var(--accent-bg);color:var(--accent)}
+.badge-green{background:var(--success-bg);color:var(--success)}
+.badge-red{background:var(--danger-bg);color:var(--danger)}
+.badge-yellow{background:var(--warning-bg);color:var(--warning)}
+
+/* ═══ KB CARDS ═══ */
+.kb-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;cursor:pointer;transition:var(--trans);margin-bottom:10px}
+.kb-card:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+.kb-card .kc-title{font-size:15px;font-weight:700;margin-bottom:4px}
+.kb-card .kc-summary{font-size:12px;color:var(--text2);margin-bottom:8px;line-height:1.5}
+.kb-card .kc-meta{display:flex;align-items:center;gap:14px;font-size:11px;color:var(--text3)}
+
+/* ═══ Q&A ═══ */
+.qa-item{border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:10px;background:var(--surface);transition:var(--trans)}
+.qa-item:hover{border-color:var(--border2)}
+.qa-title{font-size:15px;font-weight:700;margin-bottom:4px;cursor:pointer}
+.qa-title:hover{color:var(--accent)}
+.qa-meta{font-size:11px;color:var(--text3);margin-bottom:6px}
+.qa-preview{font-size:12px;color:var(--text2);line-height:1.5}
+
+/* ═══ FORMS ═══ */
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;font-weight:600;margin-bottom:3px}
+.form-group input,.form-group select,.form-group textarea{width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-size:14px;font-family:inherit;outline:none;transition:var(--trans)}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
+.form-group textarea{resize:vertical;min-height:100px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.form-grid{grid-template-columns:1fr}}
+
+/* ═══ TABLES ═══ */
+.data-table{width:100%;font-size:13px;border-collapse:collapse}
+.data-table th,.data-table td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--border)}
+.data-table th{font-weight:600;color:var(--text3);font-size:11px;text-transform:uppercase;letter-spacing:.5px;background:var(--surface2)}
+.data-table tr:hover{background:var(--surface2)}
+
+/* ═══ EMPTY STATE ═══ */
+.empty-state{text-align:center;padding:40px 20px}
+.es-icon{font-size:40px;margin-bottom:10px}
+.es-title{font-size:14px;color:var(--text3)}
+
+/* ═══ TOAST ═══ */
+.toast{position:fixed;top:20px;right:20px;padding:10px 20px;border-radius:8px;color:#fff;font-weight:500;font-size:13px;z-index:999;animation:toastIn .3s ease;box-shadow:0 6px 20px rgba(0,0,0,.15)}
+.toast.success{background:var(--success)}.toast.error{background:var(--danger)}
+@keyframes toastIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+
+/* ═══ FILE UPLOAD ═══ */
+.file-item{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--surface2);border-radius:6px;margin-bottom:4px;font-size:12px}
+.file-item .remove{color:var(--danger);cursor:pointer;font-weight:700}
+
+/* ═══ MODAL ═══ */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);z-index:990;display:flex;align-items:center;justify-content:center}
+.modal-box{background:var(--surface);border-radius:var(--radius-lg);padding:28px 32px;max-width:700px;width:92vw;max-height:85vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN OVERLAY ═══ -->
+<div class="login-overlay" id="loginOverlay"><div class="login-box" id="loginBox"></div></div>
+
+<!-- ═══ LAYOUT ═══ -->
+<div class="layout" id="appLayout" style="display:none">
+  <aside class="sidebar">
+    <div class="sb-brand"><div class="sb-logo">软</div><div><div class="sb-title">软安科技</div><div class="sb-sub">客户技术支持</div></div></div>
+    <div class="sb-user"><div class="sb-avatar" id="sbAvatar">?</div><div><div id="sbName">未登录</div></div></div>
+    <nav class="sb-nav" id="sidebarNav"></nav>
+    <div class="sb-footer" id="sidebarFooter"></div>
+  </aside>
+  <div class="main">
+    <header class="topbar"><div class="tb-breadcrumb" id="tbBreadcrumb"></div><div class="tb-right" id="tbRight"></div></header>
+    <div class="main-content" id="app"></div>
+  </div>
+</div>
+
+<script>
+var API='http://localhost:8081';
+var customerToken=localStorage.getItem('customer_token')||'';
+var customerUser=null;
+
+var page='kb';
+
+// ═══ API ═══
+async function api(method,url,body){
+  var opts={method,headers:{}};
+  if(customerToken) opts.headers['Authorization']='Bearer '+customerToken;
+  if(body){
+    if(body instanceof FormData){opts.body=body;}
+    else{opts.headers['Content-Type']='application/x-www-form-urlencoded';opts.body=body;}
+  }
+  var r=await fetch(API+url,opts);
+  var d=await r.json();
+  if(!r.ok) throw new Error(d.detail||'请求失败');
+  return d;
+}
+function fd(o){var f=new FormData();for(var k in o)f.append(k,String(o[k]));return f;}
+
+// ═══ AUTH ═══
+function showLogin(tab){
+  tab=tab||'login';
+  var h='<div class="brand"><div class="logo">软</div><h2>软安科技 · 客户技术支持</h2></div>';
+  h+='<div class="login-tabs"><span class="'+(tab==='login'?'active':'')+'" onclick="showLogin(\'login\')">登录</span><span class="'+(tab==='forgot'?'active':'')+'" onclick="showLogin(\'forgot\')">忘记密码</span></div>';
+  if(tab==='forgot'){
+    h+='<p style="font-size:12px;color:var(--text2);margin-bottom:12px">输入注册时使用的用户名和邮箱，系统将重置密码</p>';
+    h+='<label>用户名 *</label><input id="fgUser" placeholder="请输入用户名"><label>邮箱 *</label><input id="fgEmail" placeholder="请输入注册邮箱">';
+    h+='<button class="login-btn" onclick="doForgot()">重置密码</button>';
+    h+='<div class="login-link" onclick="showLogin(\'login\')">返回登录</div>';
+  }else{
+    h+='<label>用户名</label><input id="lu" placeholder="请输入用户名"><label>密码</label><input id="lp" type="password" placeholder="请输入密码" onkeydown="if(event.key===\'Enter\')doLogin()">';
+    h+='<button class="login-btn" onclick="doLogin()">登 录</button>';
+  }
+  h+='<a href="/" style="display:block;text-align:center;margin-top:16px;font-size:14px;font-weight:600;color:#fff;background:#1E2330;padding:10px;border-radius:8px;text-decoration:none">← 返回平台首页</a>';
+  h+='<div class="login-err" id="loginErr"></div>';
+  document.getElementById('loginBox').innerHTML=h;
+  if(tab==='login'){document.getElementById('lu').focus();}
+}
+
+  
+
+function showErr(m){var e=document.getElementById('loginErr');e.textContent=m;e.classList.add('show');setTimeout(function(){e.classList.remove('show')},3000);}
+
+async function doLogin(){
+  var u=document.getElementById('lu').value.trim(),p=document.getElementById('lp').value.trim();
+  if(!u||!p){showErr('请输入用户名和密码');return;}
+  
+  try{
+    var d=await api('POST','/api/customer/login','username='+encodeURIComponent(u)+'&password='+encodeURIComponent(p));
+    customerToken=d.token;customerUser={username:d.username,id:d.id,role:'customer'};
+    localStorage.setItem('customer_token',customerToken);
+    document.getElementById('loginOverlay').style.display='none';
+    document.getElementById('appLayout').style.display='flex';
+    updateUI();nav('kb');
+  }catch(e){showErr(e.message);}
+}
+
+async function doForgot(){
+  var u=document.getElementById('fgUser').value.trim(),em=document.getElementById('fgEmail').value.trim();
+  if(!u||!em){showErr('请填写用户名和邮箱');return;}
+  try{var d=await api('POST','/api/customer/forgot-password','username='+encodeURIComponent(u)+'&email='+encodeURIComponent(em));alert(d.message||'密码已重置');showLogin('login');}
+  catch(e){showErr(e.message);}
+}
+
+function doLogout(){customerToken='';customerUser=null;localStorage.removeItem('customer_token');document.getElementById('loginOverlay').style.display='flex';document.getElementById('appLayout').style.display='none';updateUI();showLogin('login');}
+
+// ═══ UI ═══
+function updateUI(){
+  document.getElementById('sbAvatar').textContent=customerUser?customerUser.username[0].toUpperCase():'?';
+  document.getElementById('sbName').textContent=customerUser?customerUser.username:'未登录';
+  document.getElementById('tbRight').innerHTML=(customerUser?'👤 '+customerUser.username+' ':'')+'<a href="/" style="color:var(--accent);font-size:12px;font-weight:600">← 平台首页</a>';
+  // Sidebar nav
+  var nav=[];
+  nav.push({section:'知识库'});
+  nav.push({href:'kb',label:'浏览知识库',emoji:'📚'});
+  nav.push({section:'社区'});
+  nav.push({href:'ask',label:'提交问题',emoji:'💬'});
+  nav.push({href:'myq',label:'我的问题',emoji:'📋'});
+  nav.push({href:'community',label:'浏览社区',emoji:'🌐'});
+  nav.push({href:'_back',label:'🏠 返回平台首页',emoji:'←'});
+  var h='';
+  for(var i=0;i<nav.length;i++){
+    var n=nav[i];
+    if(n.section){h+='<div class="sb-section">'+n.section+'</div>';continue;}
+    h+='<a class="'+(page===n.href?'active':'')+'" onclick="nav(\''+n.href+'\')"><span class="nav-emoji">'+n.emoji+'</span><span>'+n.label+'</span></a>';
+  }
+  document.getElementById('sidebarNav').innerHTML=h;
+  var labels={kb:'浏览知识库',ask:'提交问题',myq:'我的问题',community:'浏览社区',_back:'返回平台首页'};
+  document.getElementById('tbBreadcrumb').innerHTML=labels[page]||'';
+  // Footer
+  document.getElementById('sidebarFooter').innerHTML=(customerUser?'<a onclick="doLogout()">退出登录</a>':'')+'<a href="/" style="margin-top:8px;color:#fff;font-weight:600;font-size:13px;background:rgba(255,255,255,0.1);padding:8px 10px;border-radius:6px;display:block">🏠 返回平台首页</a>';
+}
+
+function nav(p){
+  if(p==='_back'){window.location.href='/';return;}
+  page=p;updateUI();
+  var app=document.getElementById('app');
+  if(p==='kb') app.innerHTML=rKB();
+  else if(p==='ask') app.innerHTML=rAsk();
+  else if(p==='myq') app.innerHTML=rMyQuestions();
+  else if(p==='community') app.innerHTML=rCommunity();
+}
+
+// ═══ SEARCH STATE ═══
+var kbSearch='',kbProductId='',qaSearch='',qaCategory='';
+
+// ═══ KNOWLEDGE BASE ═══
+function rKB(){
+  var h='<div class="page-header"><h1 class="ph-title">📚 知识库</h1><p class="ph-sub">产品文档 · 培训教程 · 使用技巧 · 最佳实践</p></div>';
+  h+='<div style="display:flex;gap:10px;margin-bottom:16px"><input id="kbSearch" placeholder="搜索知识库..." style="flex:1;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none" onkeyup="kbSearch=this.value;loadKB()" value="'+kbSearch+'"><button class="btn btn-outline" onclick="kbSearch=\'\';kbProductId=\'\';loadKB();renderKB()">清除</button></div>';
+  var products=[{id:'',name:'全部'},{id:'SAST',name:'SAST 静态分析'},{id:'SCA',name:'SCA 成分分析'},{id:'BAT',name:'BAT 二进制'},{id:'FUZZ',name:'Fuzz 模糊测试'},{id:'MST',name:'MST 大模型'},{id:'CodingHawk',name:'CodingHawk'},{id:'GuardFox',name:'GuardFox'}];
+  h+='<div class="inline-tags">';
+  for(var i=0;i<products.length;i++){
+    var p=products[i];
+    h+='<div class="inline-tag'+(kbProductId===p.id?' selected':'')+'" onclick="kbProductId=\''+p.id+'\';loadKB();renderKB()">'+p.name+'</div>';
+  }
+  h+='</div>';
+  h+='<div id="kbList"><div class="empty-state"><div class="es-icon">⏳</div><div class="es-title">加载中...</div></div></div>';
+  h+='<div id="kbDetail" style="display:none"></div>';
+  setTimeout(function(){loadKB();},50);
+  return h;
+}
+function renderKB(){var app=document.getElementById('app');if(app&&page==='kb')app.innerHTML=rKB();}
+function loadKB(){
+  var url=API+'/api/kb/articles?limit=50';
+  if(kbSearch) url+='&search='+encodeURIComponent(kbSearch);
+  if(kbProductId) url+='&product_id='+kbProductId;
+  fetch(url).then(function(r){return r.json()}).then(function(articles){
+    var list=document.getElementById('kbList');
+    if(!list) return;
+    if(!articles.length){list.innerHTML='<div class="empty-state"><div class="es-icon">📭</div><div class="es-title">暂无相关文章</div></div>';return;}
+    var h='';
+    for(var i=0;i<articles.length;i++){
+      var a=articles[i];
+      h+='<div class="kb-card" onclick="viewKB('+a.id+')">';
+      h+='<div class="kc-title">'+a.title+'</div>';
+      h+='<div class="kc-summary">'+a.summary+'</div>';
+      h+='<div class="kc-meta"><span class="badge badge-purple">'+a.category+'</span>';
+      if(a.product_id) h+='<span>'+a.product_id+'</span>';
+      h+='<span>👁 '+a.view_count+'</span><span>📅 '+(a.created_at||'').substring(0,10)+'</span></div>';
+      h+='</div>';
+    }
+    list.innerHTML=h;
+  }).catch(function(){});
+}
+function viewKB(id){
+  fetch(API+'/api/kb/articles/'+id).then(function(r){return r.json()}).then(function(a){
+    var detail=document.getElementById('kbDetail'),list=document.getElementById('kbList');
+    if(!detail) return;
+    var h='<button class="btn btn-ghost btn-sm" onclick="document.getElementById(\'kbDetail\').style.display=\'none\';document.getElementById(\'kbList\').style.display=\'block\'" style="margin-bottom:12px">← 返回列表</button>';
+    h+='<div class="card"><h2 style="font-size:20px;font-weight:800;margin-bottom:8px">'+a.title+'</h2>';
+    h+='<div style="display:flex;gap:10px;margin-bottom:16px;font-size:12px;color:var(--text3)"><span class="badge badge-purple">'+a.category+'</span>'+ (a.product_id?'<span>产品: '+a.product_id+'</span>':'')+'<span>✍️ '+a.author+'</span><span>👁 '+a.view_count+'</span><span>📅 '+(a.created_at||'').substring(0,10)+'</span></div>';
+    h+='<div style="font-size:14px;line-height:1.9;color:var(--text2)">'+a.content+'</div></div>';
+    detail.innerHTML=h;
+    list.style.display='none';detail.style.display='block';
+    detail.scrollIntoView({behavior:'smooth'});
+  }).catch(function(){});
+}
+
+// ═══ ASK QUESTION ═══
+function rAsk(){
+  if(!customerUser) return '<div class="empty-state"><div class="es-icon">🔒</div><div class="es-title">请先登录</div></div>';
+  var h='<div class="page-header"><h1 class="ph-title">💬 提交问题</h1><p class="ph-sub">请详细描述您遇到的问题，我们会尽快回复</p></div>';
+  h+='<div class="card"><div class="form-group"><label>问题标题 *</label><input id="qaSubject" placeholder="简练概括您的问题"></div>';
+  h+='<div class="form-group"><label>问题分类 *</label><select id="qaCat"><option value="产品使用问题">产品使用问题</option><option value="产品BUG提交">产品BUG提交</option><option value="产品技巧问题">产品技巧问题</option><option value="产品数据问题">产品数据问题</option><option value="业务流程咨询">业务流程咨询</option><option value="其他">其他</option></select></div>';
+  h+='<div class="form-group"><label>详细描述 *</label><textarea id="qaDesc" placeholder="请详细描述问题现象、操作步骤、期望结果等"></textarea></div>';
+  h+='<div class="form-group"><label>上传附件</label><div id="fileList"></div><input type="file" id="fileInput" multiple accept=".doc,.docx,.png,.jpg,.jpeg,.gif,.pdf,.txt,.bmp,.webp" style="display:none" onchange="uploadFiles(this.files)"><button class="btn btn-outline btn-sm" onclick="document.getElementById(\'fileInput\').click()">📎 选择文件 (Word/图片/PDF，每文件≤10MB)</button></div>';
+  h+='<button class="btn btn-primary btn-lg" onclick="submitQuestion()" style="width:100%;justify-content:center">提交问题</button></div>';
+  return h;
+}
+
+var uploadedFiles=[];
+function uploadFiles(files){
+  for(var i=0;i<files.length;i++){
+    (function(file){
+      if(file.size>10*1024*1024){toast(file.name+' 超过10MB限制','error');return;}
+      var fd2=new FormData();fd2.append('file',file);
+      fetch(API+'/api/upload',{method:'POST',headers:{'Authorization':'Bearer '+customerToken},body:fd2})
+        .then(function(r){return r.json()})
+        .then(function(d){uploadedFiles.push({name:d.filename,url:d.url});renderFiles();})
+        .catch(function(e){toast('上传失败: '+e.message,'error')});
+    })(files[i]);
+  }
+  document.getElementById('fileInput').value='';
+}
+function renderFiles(){
+  var el=document.getElementById('fileList');
+  if(!el) return;
+  if(!uploadedFiles.length){el.innerHTML='';return;}
+  var h='';
+  for(var i=0;i<uploadedFiles.length;i++){
+    var f=uploadedFiles[i];
+    h+='<div class="file-item">📎 <a href="'+f.url+'" target="_blank" style="color:var(--accent)">'+f.name+'</a> <span class="remove" onclick="uploadedFiles.splice('+i+',1);renderFiles()">×</span></div>';
+  }
+  el.innerHTML=h;
+}
+async function submitQuestion(){
+  if(!customerUser){toast('请先登录','error');return;}
+  var s=document.getElementById('qaSubject')?.value.trim(),d=document.getElementById('qaDesc')?.value.trim(),c=document.getElementById('qaCat')?.value;
+  if(!s||!d){toast('请填写标题和描述','error');return;}
+  try{
+    var urls=uploadedFiles.map(function(f){return f.url}).join(',');
+    await api('POST','/api/qa/questions',fd({subject:s,description:d,category:c,file_urls:urls}));
+    toast('问题已提交！');uploadedFiles=[];nav('myq');
+  }catch(e){toast(e.message,'error');}
+}
+
+// ═══ MY QUESTIONS ═══
+function rMyQuestions(){
+  if(!customerUser) return '<div class="empty-state"><div class="es-icon">🔒</div><div class="es-title">请先登录</div></div>';
+  var h='<div class="page-header"><h1 class="ph-title">📋 我的问题</h1></div>';
+  h+='<div id="myQList"><div class="empty-state"><div class="es-icon">⏳</div><div class="es-title">加载中...</div></div></div>';
+  h+='<div id="qDetail" style="display:none"></div>';
+  setTimeout(function(){loadMyQuestions();},50);
+  return h;
+}
+function loadMyQuestions(){
+  fetch(API+'/api/qa/questions?limit=100').then(function(r){return r.json()}).then(function(qs){
+    qs=qs.filter(function(q){return q.customer_id===customerUser.id;});
+    var list=document.getElementById('myQList');
+    if(!list) return;
+    if(!qs.length){list.innerHTML='<div class="empty-state"><div class="es-icon">📭</div><div class="es-title">暂无问题</div></div>';return;}
+    var h='';
+    for(var i=0;i<qs.length;i++){
+      var q=qs[i],sc=q.status==='open'?'badge-yellow':q.status==='replied'?'badge-purple':'badge-green';
+      h+='<div class="qa-item"><div class="qa-title" onclick="viewQuestion('+q.id+')">'+q.subject+'</div>';
+      h+='<div class="qa-meta"><span class="badge '+sc+'">'+(q.status==='open'?'待处理':q.status==='replied'?'已回复':'已解决')+'</span> · '+q.category+' · '+(q.created_at||'').substring(0,10)+'</div>';
+      h+='<div class="qa-preview">'+(q.description||'').substring(0,100)+'...</div>';
+      h+='</div>';
+    }
+    list.innerHTML=h;
+  }).catch(function(){});
+}
+
+// ═══ COMMUNITY ═══
+function rCommunity(){
+  var h='<div class="page-header"><h1 class="ph-title">🌐 浏览社区</h1><p class="ph-sub">查看其他用户的问题和官方回复</p></div>';
+  h+='<div style="display:flex;gap:10px;margin-bottom:16px"><input id="qaSearch" placeholder="搜索问题..." style="flex:1;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none" onkeyup="qaSearch=this.value;loadCommunity()" value="'+qaSearch+'"><select id="qaCatFilter" onchange="qaCategory=this.value;loadCommunity()" style="padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px"><option value="">全部分类</option><option value="产品使用问题">产品使用问题</option><option value="产品BUG提交">产品BUG提交</option><option value="产品技巧问题">产品技巧问题</option><option value="产品数据问题">产品数据问题</option><option value="业务流程咨询">业务流程咨询</option><option value="其他">其他</option></select></div>';
+  h+='<div id="communityList"><div class="empty-state"><div class="es-icon">⏳</div><div class="es-title">加载中...</div></div></div>';
+  h+='<div id="qDetail" style="display:none"></div>';
+  setTimeout(function(){loadCommunity();},50);
+  return h;
+}
+function loadCommunity(){
+  var url=API+'/api/qa/questions?limit=50';
+  if(qaSearch) url+='&search='+encodeURIComponent(qaSearch);
+  if(qaCategory) url+='&category='+encodeURIComponent(qaCategory);
+  fetch(url).then(function(r){return r.json()}).then(function(qs){
+    var list=document.getElementById('communityList');
+    if(!list) return;
+    if(!qs.length){list.innerHTML='<div class="empty-state"><div class="es-icon">📭</div><div class="es-title">暂无匹配问题</div></div>';return;}
+    var h='';
+    for(var i=0;i<qs.length;i++){
+      var q=qs[i],sc=q.status==='open'?'badge-yellow':q.status==='replied'?'badge-purple':'badge-green';
+      h+='<div class="qa-item"><div class="qa-title" onclick="viewQuestion('+q.id+')">'+q.subject+'</div>';
+      h+='<div class="qa-meta"><span class="badge '+sc+'">'+(q.status==='open'?'待处理':q.status==='replied'?'已回复':'已解决')+'</span> · '+q.category+' · '+(q.customer_name||'匿名')+' · '+(q.created_at||'').substring(0,10)+'</div>';
+      h+='<div class="qa-preview">'+(q.description||'').substring(0,120)+'...</div>';
+      h+='</div>';
+    }
+    list.innerHTML=h;
+  }).catch(function(){});
+}
+
+// ═══ QUESTION DETAIL ═══
+function viewQuestion(id){
+  fetch(API+'/api/qa/questions/'+id).then(function(r){return r.json()}).then(function(q){
+    var detail=document.getElementById('qDetail');
+    if(!detail) return;
+    var list=document.getElementById('myQList')||document.getElementById('communityList');
+    if(list) list.style.display='none';
+    var sc=q.status==='open'?'badge-yellow':q.status==='replied'?'badge-purple':'badge-green';
+    var st=q.status==='open'?'待处理':q.status==='replied'?'已回复':'已解决';
+    var h='<button class="btn btn-ghost btn-sm" onclick="document.getElementById(\'qDetail\').style.display=\'none\';var l=document.getElementById(\'myQList\')||document.getElementById(\'communityList\');if(l)l.style.display=\'block\'" style="margin-bottom:12px">← 返回列表</button>';
+    h+='<div class="card"><h2 style="font-size:18px;font-weight:800;margin-bottom:8px">'+q.subject+'</h2>';
+    h+='<div style="display:flex;gap:10px;margin-bottom:12px;font-size:12px;color:var(--text3)"><span class="badge '+sc+'">'+st+'</span><span>'+q.category+'</span><span>提问: '+(q.customer_name||'匿名')+'</span><span>📅 '+(q.created_at||'').substring(0,10)+'</span></div>';
+    h+='<div style="font-size:14px;line-height:1.8;color:var(--text2);margin-bottom:16px;white-space:pre-wrap">'+q.description+'</div>';
+    if(q.file_urls){
+      var urls=q.file_urls.split(',');
+      h+='<div style="margin-bottom:12px;font-size:12px">📎 附件: ';
+      for(var i=0;i<urls.length;i++) h+='<a href="'+urls[i]+'" target="_blank" style="color:var(--accent);margin-right:8px">'+urls[i].split('/').pop()+'</a>';
+      h+='</div>';
+    }
+    // Answers
+    if(q.answers&&q.answers.length){
+      h+='<div style="border-top:1px solid var(--border);padding-top:12px;margin-top:12px"><h4 style="margin-bottom:8px">回复 ('+q.answers.length+')</h4>';
+      for(var j=0;j<q.answers.length;j++){
+        var a=q.answers[j];
+        h+='<div style="background:'+(a.is_staff?'var(--accent-bg)':'var(--surface2)')+';border-radius:8px;padding:12px 16px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-weight:700;font-size:13px">'+(a.is_staff?'🔧 软安技术支持':'👤 '+a.answerer_name)+'</span><span style="font-size:11px;color:var(--text3)">'+(a.created_at||'').substring(0,16)+'</span></div><div style="font-size:13px;line-height:1.7;white-space:pre-wrap">'+a.content+'</div></div>';
+      }
+      h+='</div>';
+    }
+    // Reply form
+    if(customerUser&&(customerUser.id===q.customer_id||q.status!=='resolved')){
+      h+='<div style="border-top:1px solid var(--border);padding-top:12px;margin-top:12px"><textarea id="replyContent" placeholder="补充说明或回复..." style="width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:inherit;font-size:13px;min-height:80px;resize:vertical"></textarea><button class="btn btn-primary btn-sm" onclick="submitReply('+q.id+')" style="margin-top:8px">提交回复</button></div>';
+    }
+    h+='</div>';
+    detail.innerHTML=h;detail.style.display='block';
+    detail.scrollIntoView({behavior:'smooth'});
+  }).catch(function(){});
+}
+async function submitReply(qid){
+  var c=document.getElementById('replyContent')?.value.trim();
+  if(!c){toast('请输入回复内容','error');return;}
+  try{
+    await api('POST','/api/qa/questions/'+qid+'/answers','content='+encodeURIComponent(c));
+    toast('回复已提交');viewQuestion(qid);
+  }catch(e){toast(e.message,'error');}
+}
+
+function toast(msg,t){
+  var d=document.createElement('div');
+  d.className='toast '+(t||'success');
+  d.textContent=msg;
+  document.body.appendChild(d);
+  setTimeout(function(){d.remove();},3000);
+}
+
+// ═══ INIT ═══
+if(customerToken){
+  api('GET','/api/customer/me').then(function(u){
+    if(u.role!=='guest'){customerUser=u;document.getElementById('loginOverlay').style.display='none';document.getElementById('appLayout').style.display='flex';updateUI();nav('kb');}
+    else{customerToken='';localStorage.removeItem('customer_token');showLogin('login');}
+  }).catch(function(){customerToken='';localStorage.removeItem('customer_token');showLogin('login')});
+}else{showLogin('login');}
+</script>
+</body>
+</html>
