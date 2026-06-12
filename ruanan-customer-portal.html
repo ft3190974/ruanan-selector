@@ -211,7 +211,7 @@ function showLogin(tab){
     h+='<label>用户名</label><input id="lu" placeholder="请输入用户名"><label>密码</label><input id="lp" type="password" placeholder="请输入密码" onkeydown="if(event.key===\'Enter\')doLogin()">';
     h+='<button class="login-btn" onclick="doLogin()">登 录</button>';
   }
-  h+='<a href="/" style="display:block;text-align:center;margin-top:16px;font-size:14px;font-weight:600;color:#fff;background:#1E2330;padding:10px;border-radius:8px;text-decoration:none">← 返回平台首页</a>';
+  h+='<a href="ruanan-marketing-platform.html" style="display:block;text-align:center;margin-top:16px;font-size:14px;font-weight:600;color:#fff;background:#1E2330;padding:10px;border-radius:8px;text-decoration:none">← 返回平台首页</a>';
   h+='<div class="login-err" id="loginErr"></div>';
   document.getElementById('loginBox').innerHTML=h;
   if(tab==='login'){document.getElementById('lu').focus();}
@@ -248,7 +248,7 @@ function doLogout(){customerToken='';customerUser=null;localStorage.removeItem('
 function updateUI(){
   document.getElementById('sbAvatar').textContent=customerUser?customerUser.username[0].toUpperCase():'?';
   document.getElementById('sbName').textContent=customerUser?customerUser.username:'未登录';
-  document.getElementById('tbRight').innerHTML=(customerUser?'👤 '+customerUser.username+' ':'')+'<a href="/" style="color:var(--accent);font-size:12px;font-weight:600">← 平台首页</a>';
+  document.getElementById('tbRight').innerHTML=(customerUser?'👤 '+customerUser.username+' ':'')+'<a href="ruanan-marketing-platform.html" style="color:var(--accent);font-size:12px;font-weight:600">← 平台首页</a>';
   // Sidebar nav
   var nav=[];
   nav.push({section:'知识库'});
@@ -268,7 +268,7 @@ function updateUI(){
   var labels={kb:'浏览知识库',ask:'提交问题',myq:'我的问题',community:'浏览社区',_back:'返回平台首页'};
   document.getElementById('tbBreadcrumb').innerHTML=labels[page]||'';
   // Footer
-  document.getElementById('sidebarFooter').innerHTML=(customerUser?'<a onclick="doLogout()">退出登录</a>':'')+'<a href="/" style="margin-top:8px;color:#fff;font-weight:600;font-size:13px;background:rgba(255,255,255,0.1);padding:8px 10px;border-radius:6px;display:block">🏠 返回平台首页</a>';
+  document.getElementById('sidebarFooter').innerHTML=(customerUser?'<a onclick="doLogout()">退出登录</a>':'')+'<a href="ruanan-marketing-platform.html" style="margin-top:8px;color:#fff;font-weight:600;font-size:13px;background:rgba(255,255,255,0.1);padding:8px 10px;border-radius:6px;display:block">🏠 返回平台首页</a>';
 }
 
 function nav(p){
