@@ -411,7 +411,8 @@ function updateSidebar(){
   for(var i=0;i<nav.length;i++){
     var n=nav[i];
     if(n.section){h+='<div class="sn-section">'+n.section+'</div>';continue;}
-    h+='<a class="'+(page===n.href?'active':'')+'" onclick="nav(\''+n.href+'\')"><span class="nav-icon">'+n.emoji+'</span><span>'+n.label+'</span></a>';
+    if(n.href==='partner'){h+='<a onclick="window.open(\'ruanan-partner-portal.html\',\'_blank\')"><span class="nav-icon">'+n.emoji+'</span><span>'+n.label+'</span></a>';}
+    else h+='<a class="'+(page===n.href?'active':'')+'" onclick="nav(\''+n.href+'\')"><span class="nav-icon">'+n.emoji+'</span><span>'+n.label+'</span></a>';
   }
   document.getElementById('sidebarNav').innerHTML=h;
 
