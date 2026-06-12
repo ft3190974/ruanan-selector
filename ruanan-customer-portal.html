@@ -259,7 +259,7 @@ function updateUI(){
   nav.push({href:'ask',label:'提交问题',emoji:'💬'});
   nav.push({href:'myq',label:'我的问题',emoji:'📋'});
   nav.push({href:'community',label:'浏览社区',emoji:'🌐'});
-  nav.push({href:'_back',label:'🏠 返回平台首页',emoji:'←'});
+
   var h='';
   for(var i=0;i<nav.length;i++){
     var n=nav[i];
@@ -267,14 +267,13 @@ function updateUI(){
     h+='<a class="'+(page===n.href?'active':'')+'" onclick="nav(\''+n.href+'\')"><span class="nav-emoji">'+n.emoji+'</span><span>'+n.label+'</span></a>';
   }
   document.getElementById('sidebarNav').innerHTML=h;
-  var labels={kb:'浏览知识库',ask:'提交问题',myq:'我的问题',community:'浏览社区',_back:'返回平台首页'};
+  var labels={kb:'浏览知识库',ask:'提交问题',myq:'我的问题',community:'浏览社区'};
   document.getElementById('tbBreadcrumb').innerHTML=labels[page]||'';
   // Footer
   document.getElementById('sidebarFooter').innerHTML=(customerUser?'<a onclick="_openCustChangePwd()">修改密码</a><a onclick="doLogout()">退出登录</a>':'')+'<a href="ruanan-marketing-platform.html" style="margin-top:8px;color:#fff;font-weight:600;font-size:13px;background:rgba(255,255,255,0.1);padding:8px 10px;border-radius:6px;display:block">🏠 返回平台首页</a>';
 }
 
 function nav(p){
-  if(p==='_back'){window.location.href='/';return;}
   page=p;updateUI();
   var app=document.getElementById('app');
   if(p==='kb') app.innerHTML=rKB();
@@ -407,7 +406,7 @@ function loadMyQuestions(){
       var q=qs[i],sc=q.status==='open'?'badge-yellow':q.status==='replied'?'badge-purple':'badge-green';
       h+='<div class="qa-item"><div class="qa-title" onclick="viewQuestion('+q.id+')">'+q.subject+'</div>';
       h+='<div class="qa-meta"><span class="badge '+sc+'">'+(q.status==='open'?'待处理':q.status==='replied'?'已回复':'已解决')+'</span> · '+q.category+' · '+(q.created_at||'').substring(0,10)+'</div>';
-      h+='<div class="qa-preview">'+(q.description||'').substring(0,100)+'...</div>';
+      h+='<div class="qa-preview" style="white-space:pre-wrap;overflow:hidden">'+(q.description||'').substring(0,100)+'...</div>';
       h+='</div>';
     }
     list.innerHTML=h;
@@ -423,6 +422,7 @@ function rCommunity(){
   setTimeout(function(){loadCommunity();},50);
   return h;
 }
+function escapeHtml(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 function loadCommunity(){
   var url=API+'/api/qa/questions?limit=50';
   if(qaSearch) url+='&search='+encodeURIComponent(qaSearch);
@@ -435,7 +435,7 @@ function loadCommunity(){
     for(var i=0;i<qs.length;i++){
       var q=qs[i],sc=q.status==='open'?'badge-yellow':q.status==='replied'?'badge-purple':'badge-green';
       h+='<div class="qa-item"><div class="qa-title" onclick="viewQuestion('+q.id+')">'+q.subject+'</div>';
-      h+='<div class="qa-meta"><span class="badge '+sc+'">'+(q.status==='open'?'待处理':q.status==='replied'?'已回复':'已解决')+'</span> · '+q.category+' · '+(q.customer_name||'匿名')+' · '+(q.created_at||'').substring(0,10)+'</div>';
+      h+='<div class="qa-meta"><span class="badge '+sc+'">'+(q.status==='open'?'待处理':q.status==='replied'?'已回复':'已解决')+'</span> · '+q.category+' · '+escapeHtml(q.customer_name||'匿名')+' · '+(q.created_at||'').substring(0,10)+'</div>';
       h+='<div class="qa-preview">'+(q.description||'').substring(0,120)+'...</div>';
       h+='</div>';
     }
@@ -453,9 +453,9 @@ function viewQuestion(id){
     var sc=q.status==='open'?'badge-yellow':q.status==='replied'?'badge-purple':'badge-green';
     var st=q.status==='open'?'待处理':q.status==='replied'?'已回复':'已解决';
     var h='<button class="btn btn-ghost btn-sm" onclick="document.getElementById(\'qDetail\').style.display=\'none\';var l=document.getElementById(\'myQList\')||document.getElementById(\'communityList\');if(l)l.style.display=\'block\'" style="margin-bottom:12px">← 返回列表</button>';
-    h+='<div class="card"><h2 style="font-size:18px;font-weight:800;margin-bottom:8px">'+q.subject+'</h2>';
+    h+='<div class="card"><h2 style="font-size:18px;font-weight:800;margin-bottom:8px">'+escapeHtml(q.subject)+'</h2>';
     h+='<div style="display:flex;gap:10px;margin-bottom:12px;font-size:12px;color:var(--text3)"><span class="badge '+sc+'">'+st+'</span><span>'+q.category+'</span><span>提问: '+(q.customer_name||'匿名')+'</span><span>📅 '+(q.created_at||'').substring(0,10)+'</span></div>';
-    h+='<div style="font-size:14px;line-height:1.8;color:var(--text2);margin-bottom:16px;white-space:pre-wrap">'+q.description+'</div>';
+    h+='<div style="font-size:14px;line-height:1.8;color:var(--text2);margin-bottom:16px;white-space:pre-wrap">'+escapeHtml(q.description)+'</div>';
     if(q.file_urls){
       var urls=q.file_urls.split(',');
       h+='<div style="margin-bottom:12px;font-size:12px">📎 附件: ';
@@ -467,7 +467,7 @@ function viewQuestion(id){
       h+='<div style="border-top:1px solid var(--border);padding-top:12px;margin-top:12px"><h4 style="margin-bottom:8px">回复 ('+q.answers.length+')</h4>';
       for(var j=0;j<q.answers.length;j++){
         var a=q.answers[j];
-        h+='<div style="background:'+(a.is_staff?'var(--accent-bg)':'var(--surface2)')+';border-radius:8px;padding:12px 16px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-weight:700;font-size:13px">'+(a.is_staff?'🔧 软安技术支持':'👤 '+a.answerer_name)+'</span><span style="font-size:11px;color:var(--text3)">'+(a.created_at||'').substring(0,16)+'</span></div><div style="font-size:13px;line-height:1.7;white-space:pre-wrap">'+a.content+'</div></div>';
+        h+='<div style="background:'+(a.is_staff?'var(--accent-bg)':'var(--surface2)')+';border-radius:8px;padding:12px 16px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-weight:700;font-size:13px">'+(a.is_staff?'🔧 软安技术支持':'👤 '+a.answerer_name)+'</span><span style="font-size:11px;color:var(--text3)">'+(a.created_at||'').substring(0,16)+'</span></div><div style="font-size:13px;line-height:1.7;white-space:pre-wrap">'+escapeHtml(a.content)+'</div></div>';
       }
       h+='</div>';
     }

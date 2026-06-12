@@ -411,7 +411,7 @@ function updateSidebar(){
   for(var i=0;i<nav.length;i++){
     var n=nav[i];
     if(n.section){h+='<div class="sn-section">'+n.section+'</div>';continue;}
-    if(n.href==='partner'){h+='<a onclick="window.open(\'ruanan-partner-portal.html\',\'_blank\')"><span class="nav-icon">'+n.emoji+'</span><span>'+n.label+'</span></a>';}
+    if(n.href==='partner'){h+='<a onclick="window.open(\'/partner\',\'_blank\')"><span class="nav-icon">'+n.emoji+'</span><span>'+n.label+'</span></a>';}
     else h+='<a class="'+(page===n.href?'active':'')+'" onclick="nav(\''+n.href+'\')"><span class="nav-icon">'+n.emoji+'</span><span>'+n.label+'</span></a>';
   }
   document.getElementById('sidebarNav').innerHTML=h;
@@ -658,7 +658,7 @@ function aTab(t,chip){
   else if(t==='tickets'){api('GET','/api/tickets?status=open').then(function(a){if(a.length){ct.innerHTML='<table class="data-table"><tr><th>用户</th><th>主题</th><th>分类</th><th>操作</th></tr>'+a.map(function(x){return '<tr><td>'+x.username+'</td><td>'+x.subject+'</td><td>'+x.category+'</td><td><button class="btn btn-sm btn-outline" onclick="replyT('+x.id+')">回复</button> <button class="btn btn-sm" style="color:var(--danger)" onclick="closeT('+x.id+')">关闭</button></td></tr>';}).join('')+'</table>';}else{ct.innerHTML='<div class="empty-state"><div class="es-icon">✅</div><div class="es-title">无待处理工单</div></div>';}}).catch(function(){})}
   else if(t==='training'){
     var ct2=document.getElementById('aContent');
-    ct2.innerHTML='<button class="btn btn-primary btn-sm" onclick="_openTmForm()" style="margin-bottom:8px;margin-right:6px">+ 新增模块</button><button class="btn btn-outline btn-sm" onclick="_openTqForm()" style="margin-bottom:8px;margin-right:6px">+ 新增考题</button><button class="btn btn-ghost btn-sm" onclick="aTab("training")" style="margin-bottom:8px">刷新</button><div id="tmList"><div class="empty-state"><div class="es-icon">⏳</div><div class="es-title">加载中...</div></div></div>';
+    ct2.innerHTML='<button class="btn btn-primary btn-sm" onclick="_openTmForm()" style="margin-bottom:8px;margin-right:6px">+ 新增模块</button><button class="btn btn-outline btn-sm" onclick="_openTqForm()" style="margin-bottom:8px;margin-right:6px">+ 新增考题</button><button class="btn btn-ghost btn-sm" data-action="aTab" data-param="training" style="margin-bottom:8px">刷新</button><div id="tmList"><div class="empty-state"><div class="es-icon">⏳</div><div class="es-title">加载中...</div></div></div>';
     _loadTmAdmin();
   }else if(t==='kb'){
     api('GET','/api/kb/articles?limit=100').then(function(a){
@@ -733,6 +733,7 @@ document.addEventListener('click', function(e) {
   else if (act === 'csResetPwd') _csResetPwd(parseInt(prm));
   else if (act === 'csDel') _csDel(parseInt(prm));
   else if (act === 'csToggle') { var cs = prm.split(','); _csToggle(parseInt(cs[0]), cs[1]); }
+  else if (act === 'aTab') aTab(prm);
 });
 
 // ═══ TRAINING STATE ═══
@@ -947,7 +948,7 @@ aTab = function(t, chip) {
     if (chip) { var cs = document.querySelectorAll('.tab-item'); for (var i = 0; i < cs.length; i++) cs[i].classList.remove('active'); chip.classList.add('active'); }
     var ct2 = document.getElementById('aContent');
     if (!ct2) return;
-    ct2.innerHTML = '<button class="btn btn-primary btn-sm" data-action="openTmForm" style="margin-bottom:8px;margin-right:6px">+ 新增模块</button><button class="btn btn-outline btn-sm" data-action="openTqForm" style="margin-bottom:8px;margin-right:6px">+ 新增考题</button><button class="btn btn-ghost btn-sm" onclick="aTab("training")" style="margin-bottom:8px">刷新</button><div id="tmList"><div class="empty-state"><div class="es-icon">⏳</div><div class="es-title">加载中...</div></div></div>';
+    ct2.innerHTML = '<button class="btn btn-primary btn-sm" data-action="openTmForm" style="margin-bottom:8px;margin-right:6px">+ 新增模块</button><button class="btn btn-outline btn-sm" data-action="openTqForm" style="margin-bottom:8px;margin-right:6px">+ 新增考题</button><button class="btn btn-ghost btn-sm" data-action="aTab" data-param="training" style="margin-bottom:8px">刷新</button><div id="tmList"><div class="empty-state"><div class="es-icon">⏳</div><div class="es-title">加载中...</div></div></div>';
     _loadTmAdmin();
   } else if (t === 'kb') {
     if (chip) { var cs = document.querySelectorAll('.tab-item'); for (var i = 0; i < cs.length; i++) cs[i].classList.remove('active'); chip.classList.add('active'); }
@@ -1208,7 +1209,7 @@ function _renderAudit() {
   api('GET', '/api/admin/audit-logs?limit=200').then(function(logs) {
     var ct = document.getElementById('aContent');
     if (!ct) return;
-    var h = '<button class="btn btn-ghost btn-sm" onclick="aTab("audit")" style="margin-bottom:12px">刷新</button>';
+    var h = '<button class="btn btn-ghost btn-sm" data-action="aTab" data-param="audit" style="margin-bottom:12px">刷新</button>';
     if (logs.length) {
       h += '<table class="data-table"><tr><th>时间</th><th>类型</th><th>用户名</th><th>IP</th><th>结果</th><th>详情</th></tr>' + logs.map(function(l) {
         return '<tr><td>' + (l.created_at||'') + '</td><td><span class="badge ' + (l.user_type==='internal'?'badge-purple':'badge-green') + '">' + (l.user_type==='internal'?'内部':'客户') + '</span></td><td>' + l.username + '</td><td>' + (l.ip||'-') + '</td><td>' + (l.success?'✅':'❌') + '</td><td>' + (l.detail||'-') + '</td></tr>';
@@ -1229,7 +1230,7 @@ aTab = function(t, chip) {
   else if (t === 'prodcontent') { _renderProdContent(); }
   else if (t === 'training') {
     var ct2 = document.getElementById('aContent');
-    ct2.innerHTML = '<button class="btn btn-primary btn-sm" data-action="openTmForm" style="margin-bottom:8px;margin-right:6px">+ 新增模块</button><button class="btn btn-outline btn-sm" data-action="openTqForm" style="margin-bottom:8px;margin-right:6px">+ 新增考题</button><button class="btn btn-ghost btn-sm" onclick="aTab("training")" style="margin-bottom:8px">刷新</button><div id="tmList"><div class="empty-state"><div class="es-icon">⏳</div><div class="es-title">加载中...</div></div></div>';
+    ct2.innerHTML = '<button class="btn btn-primary btn-sm" data-action="openTmForm" style="margin-bottom:8px;margin-right:6px">+ 新增模块</button><button class="btn btn-outline btn-sm" data-action="openTqForm" style="margin-bottom:8px;margin-right:6px">+ 新增考题</button><button class="btn btn-ghost btn-sm" data-action="aTab" data-param="training" style="margin-bottom:8px">刷新</button><div id="tmList"><div class="empty-state"><div class="es-icon">⏳</div><div class="es-title">加载中...</div></div></div>';
     _loadTmAdmin();
   }
   else if (t === 'kb') {

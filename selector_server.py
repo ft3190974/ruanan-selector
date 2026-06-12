@@ -15,6 +15,7 @@ UPLOAD_DIR.mkdir(exist_ok=True)
 STATIC_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-product-selector.html")
 MARKETING_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-marketing-platform.html")
 CUSTOMER_PORTAL_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-customer-portal.html")
+PARTNER_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-partner-portal.html")
 ADMIN_PWD = os.environ.get("ADMIN_PWD", secrets.token_hex(16))
 
 # ── 安全配置 ──
@@ -1631,6 +1632,9 @@ async def selector(): return FileResponse(str(STATIC_FILE))
 
 @app.get("/support")
 async def customer_portal(): return FileResponse(str(CUSTOMER_PORTAL_FILE))
+
+@app.get("/partner")
+async def partner_portal(): return FileResponse(str(PARTNER_FILE))
 
 @app.get("/")
 async def index(): return FileResponse(str(MARKETING_FILE))
