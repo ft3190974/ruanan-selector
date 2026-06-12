@@ -196,7 +196,9 @@ body{background:linear-gradient(135deg,#f0f4f8 0%,#e8edf2 100%);min-height:100vh
     <span class="step-arrow" id="stepArr4">›</span>
     <div class="step-item"><div class="step-num" id="stepNum5">5</div>优势匹配</div>
     <span class="step-arrow" id="stepArr5">›</span>
-    <div class="step-item"><div class="step-num" id="stepNum6">6</div>方案与报价</div>
+    <div class="step-item"><div class="step-num" id="stepNum6">6</div>软件解决方案</div>
+    <span class="step-arrow" id="stepArr6">›</span>
+    <div class="step-item"><div class="step-num" id="stepNum7">7</div>获取报价</div>
   </div>
   <div id="mainContent"></div>
 </div>
@@ -429,31 +431,30 @@ const BUDGET_RANGES = [
 ];
 
 // ===== State =====
-let state = {step:-1,userInfo:{company:'',address:'',contact:'',title:'',email:'',phone:''},industry:null,productNeeds:[],bizScenes:[],projectInfo:{scale:'',teamSize:'',languages:[],codeSize:'',focuses:[],replaceExisting:'',existingTool:''},selectedAdvantages:[],customPain:'',products:[]};
+let state = {step:0,userInfo:{company:'',address:'',contact:'',title:'',email:'',phone:''},industry:null,productNeeds:[],bizScenes:[],projectInfo:{scale:'',teamSize:'',languages:[],codeSize:'',focuses:[],replaceExisting:'',existingTool:''},selectedAdvantages:[],customPain:'',products:[]};
 
 // ===== Render Engine =====
 function render(){
   const app = document.getElementById('mainContent');
   const {step} = state;
   updateUI();
-  if(step===-1) app.innerHTML = rLanding();
-  else if(step===0) app.innerHTML = rStep0();
+  if(step===0) app.innerHTML = rStep0();
   else if(step===1) app.innerHTML = rStep1();
   else if(step===2) app.innerHTML = rStep2();
   else if(step===3) app.innerHTML = rStep3();
   else if(step===4) app.innerHTML = rStep4();
   else if(step===5) app.innerHTML = rStep5();
   else if(step===6) app.innerHTML = rStep6();
+  else if(step===7) app.innerHTML = rStep7();
 }
 
 function updateUI(){
-  if(state.step===-1){var pb=document.getElementById('progressBar');if(pb)pb.style.display='none';var sb=document.getElementById('stepsBar');if(sb)sb.style.display='none';return;}
   var pb=document.getElementById('progressBar');if(pb)pb.style.display='';var sb=document.getElementById('stepsBar');if(sb)sb.style.display='';
-  document.getElementById('progressBar').style.width = (state.step*14.3)+'%';
-  for(let i=0;i<=6;i++){
+  document.getElementById('progressBar').style.width = (state.step*12.5)+'%';
+  for(let i=0;i<=7;i++){
     const el=document.getElementById('stepNum'+i); if(!el) continue;
     el.className='step-num'+(i===state.step?' active':i<state.step?' done':'');
-    if(i<6){ const arr=document.getElementById('stepArr'+i); if(arr) arr.className='step-arrow'+(i<state.step?' done':''); };
+    if(i<7){ const arr=document.getElementById('stepArr'+i); if(arr) arr.className='step-arrow'+(i<state.step?' done':''); };
   }
 }
 
@@ -735,12 +736,12 @@ function rStep5(){
 
   h+='<div style="display:flex;gap:12px;justify-content:center">';
   h+='<button class="btn btn-outline btn-lg" data-action="goStep" data-param="4">← 返回项目信息</button>';
-  h+='<button class="btn btn-primary btn-lg" data-action="goNextCheck">下一步：生成方案与报价 →</button>';
+  h+='<button class="btn btn-primary btn-lg" data-action="goNextCheck">下一步：生成软件解决方案 →</button>';
   h+='</div>';
   return h;
 }
 
-// ===== Step 6: 方案与报价 =====
+// ===== Step 6: 软件解决方案 =====
 function rStep6(){
   var ind = INDUSTRIES[state.industry];
   var recommended = computeRecommendations();
@@ -748,7 +749,7 @@ function rStep6(){
   var advantages = generateAdvantages();
   var selected = advantages.filter(function(a){return state.selectedAdvantages.indexOf(a.id)>=0;});
 
-  var h='<div class="card"><div class="sec-label">STEP 6 · 方案与报价</div><h2 class="sec-title">'+ind.icon+' '+state.industry+'行业 · 智能推荐方案</h2><p class="sec-sub">基于行业、'+state.productNeeds.length+'个产品需求、'+state.bizScenes.length+'个业务场景、'+(info.languages||[]).length+'种开发语言综合分析</p>';
+  var h='<div class="card"><div class="sec-label">STEP 6 · 软件解决方案</div><h2 class="sec-title">'+ind.icon+' '+state.industry+'行业 · 智能推荐方案</h2><p class="sec-sub">基于行业、'+state.productNeeds.length+'个产品需求、'+state.bizScenes.length+'个业务场景、'+(info.languages||[]).length+'种开发语言综合分析</p>';
 
   // Selected advantages summary
   if(selected.length>0){
@@ -1020,7 +1021,7 @@ function togglePain(id){
   if(idx>=0) state.pains.splice(idx,1); else state.pains.push(id);
   render();
 }
-function resetAll(){ state={step:-1,userInfo:{company:'',address:'',contact:'',title:'',email:'',phone:''},industry:null,productNeeds:[],bizScenes:[],projectInfo:{scale:'',teamSize:'',languages:[],codeSize:'',focuses:[],replaceExisting:'',existingTool:''},selectedAdvantages:[],customPain:'',products:[]}; render(); }
+function resetAll(){ state={step:0,userInfo:{company:'',address:'',contact:'',title:'',email:'',phone:''},industry:null,productNeeds:[],bizScenes:[],projectInfo:{scale:'',teamSize:'',languages:[],codeSize:'',focuses:[],replaceExisting:'',existingTool:''},selectedAdvantages:[],customPain:'',products:[]}; render(); }
 
 function toast(msg,t){let d=document.createElement('div');d.className='toast '+(t||'success');d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),3000);}
 
@@ -1046,6 +1047,7 @@ document.addEventListener('click', function(e){
   else if (action === 'toggleFocus') toggleFocus(param);
   else if (action === 'toggleAdvantage') toggleAdvantage(param);
   else if (action === 'goNextCheck') goNextCheck();
+  else if (action === 'getQuote') { window.location.href = 'ruanan-marketing-platform.html#partner'; }
   else if (action === 'goStep') {
     if (savePain === 'true') state.customPain = document.getElementById('customPain')?.value || '';
     goStep(parseInt(param));
@@ -1086,4 +1088,22 @@ if(authToken){
 render();
 </script>
 </body>
-</html>
+</html
+// ===== Step 7: 获取报价 =====
+function rStep7(){
+  var h='';
+  h+='<div class="card" style="text-align:center;padding:48px 32px">';
+  h+='<div style="font-size:56px;margin-bottom:16px">📞</div>';
+  h+='<div class="sec-label">STEP 7 · 获取报价</div>';
+  h+='<h2 class="sec-title">获取专属报价方案</h2>';
+  h+='<p class="sec-sub">我们的解决方案专家将根据您的选型结果，为您提供详细的产品报价和实施建议</p>';
+  h+='<div style="margin-top:32px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap">';
+  h+='<button class="btn btn-primary btn-lg" data-action="getQuote">📋 获取详细报价</button>';
+  h+='<button class="btn btn-outline btn-lg" data-action="goStep" data-param="6">← 返回上一步</button>';
+  h+='</div>';
+  h+='<p style="margin-top:20px;font-size:12px;color:var(--text3)">点击"获取详细报价"将跳转到营销管理平台，联系销售团队获取专属报价</p>';
+  h+='</div>';
+  return h;
+}
+
+>
