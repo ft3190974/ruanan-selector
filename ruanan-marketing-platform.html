@@ -402,7 +402,7 @@ function updateSidebar(){
   nav.push({href:'insights',label:'行业洞察',emoji:'📊',icon:'i-pie'});
   nav.push({href:'partner',label:'合作伙伴',emoji:'🤝',icon:'i-users'});
   nav.push({section:'支持'});
-  nav.push({href:'blog',label:'客户成功技术支持中心',emoji:'💡',icon:'i-book'});
+  nav.push({href:'blog',label:'客户成功技术服务中心',emoji:'💡',icon:'i-book'});
   nav.push({section:'培训'});
   nav.push({href:'training',label:'员工培训中心',emoji:'🎓',icon:'i-book'});
   if(authUser&&authUser.role==='admin'){nav.push({section:'管理'});nav.push({href:'admin',label:'管理后台',emoji:'⚙️',icon:'i-settings'});}
@@ -421,7 +421,7 @@ function updateSidebar(){
   document.getElementById('sidebarFooter').innerHTML=fh;
 
   // Breadcrumb
-  var labels={home:'工作台',products:'产品中心',solutions:'行业解决方案',selector:'用户需求匹配',contact:'联系销售',insights:'行业洞察',partner:'合作伙伴',blog:'客户成功技术支持中心',training:'员工培训中心',admin:'管理后台'};
+  var labels={home:'工作台',products:'产品中心',solutions:'行业解决方案',selector:'用户需求匹配',contact:'联系销售',insights:'行业洞察',partner:'合作伙伴',blog:'客户成功技术服务中心',training:'员工培训中心',admin:'管理后台'};
   document.getElementById('tbBreadcrumb').innerHTML=(nav.find(function(x){return x.href===page;})||{}).emoji+' '+(labels[page]||'工作台');
 }
 
@@ -448,7 +448,7 @@ PAGES.home=function(){
   h+='<div class="qaction-card" onclick="nav(\'selector\')"><div class="qa-icon purple">🔬</div><div class="qa-body"><div class="qa-title">用户需求匹配</div><div class="qa-desc">AI分析 + 自主选型 + 快速联系</div></div></div>';
   h+='<div class="qaction-card" onclick="nav(\'products\')"><div class="qa-icon gold">📦</div><div class="qa-body"><div class="qa-title">产品中心</div><div class="qa-desc">了解7款核心安全产品</div></div></div>';
   h+='<div class="qaction-card" onclick="nav(\'solutions\')"><div class="qa-icon success">🏭</div><div class="qa-body"><div class="qa-title">行业方案</div><div class="qa-desc">9大行业深度解决方案</div></div></div>';
-  h+='<div class="qaction-card" onclick="window.open(\'/support\')"><div class="qa-icon info">💡</div><div class="qa-body"><div class="qa-title">客户成功技术支持中心</div><div class="qa-desc">知识库与问答社区（客户独立登录）</div></div></div>';
+  h+='<div class="qaction-card" onclick="window.open(\'/support\')"><div class="qa-icon info">💡</div><div class="qa-body"><div class="qa-title">客户成功技术服务中心</div><div class="qa-desc">知识库与问答社区（客户独立登录）</div></div></div>';
   h+='</div>';
 
   // Stats
@@ -599,10 +599,10 @@ function loadInsights(search){
   }).catch(function(e){});
 }
 
-// ═══ BLOG (客户成功技术支持中心) ═══
+// ═══ BLOG (客户成功技术服务中心) ═══
 PAGES.blog=function(){
   window.location.href='/support';
-  return '<div class="empty-state"><div class="es-icon">💡</div><div class="es-title">正在跳转到客户成功技术支持中心...</div></div>';
+  return '<div class="empty-state"><div class="es-icon">💡</div><div class="es-title">正在跳转到客户成功技术服务中心...</div></div>';
 };
 
 // ═══ PARTNER ═══
