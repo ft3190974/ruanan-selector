@@ -506,7 +506,7 @@ function renderResetRequests(){
   document.getElementById('resetCount').textContent=requests.filter(function(x){return x.status==='pending'}).length;
   document.getElementById('adminResetList').innerHTML=requests.sort(function(a,b){return b.createdAt.localeCompare(a.createdAt)}).map(function(r){
     var statusBadge=r.status==='pending'?'<span class="badge badge-pending">待处理</span>':r.status==='done'?'<span class="badge badge-approved">已重置</span>':'<span class="badge badge-rejected">已拒绝</span>';
-    return '<tr><td><b>'+esc(r.email)+'</b><br><span class="text-xs text-slate-400">'+esc(r.company)+' / '+esc(r.name)+'</span></td><td>'+r.createdAt.slice(0,16).replace('T',' ')+'</td><td>'+statusBadge+'</td><td>'+(r.status==='pending'?'<button class="btn btn-primary btn-sm" onclick="handleResetRequest(''+r.id+'','approve')">重置密码</button> <button class="btn btn-outline btn-sm" onclick="handleResetRequest(''+r.id+'','reject')" style="color:var(--red-500);border-color:var(--red-500)">拒绝</button>':'<span class="text-xs text-slate-400">已处理</span>')+'</td></tr>';
+    return '<tr><td><b>'+esc(r.email)+'</b><br><span class="text-xs text-slate-400">'+esc(r.company)+' / '+esc(r.name)+'</span></td><td>'+r.createdAt.slice(0,16).replace('T',' ')+'</td><td>'+statusBadge+'</td><td>'+(r.status==='pending'?'<button class="btn btn-primary btn-sm" onclick="handleResetRequest(\''+r.id+'\',\'approve\')">重置密码</button> <button class="btn btn-outline btn-sm" onclick="handleResetRequest(\''+r.id+'\',\'reject\')" style="color:var(--red-500);border-color:var(--red-500)">拒绝</button>':'<span class="text-xs text-slate-400">已处理</span>')+'</td></tr>';
   }).join('');
 }
 function handleResetRequest(id,action){
