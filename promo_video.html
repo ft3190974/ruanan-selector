@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>软安科技华南营销管理平台 · 介绍视频</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0e17;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'PingFang SC','Microsoft YaHei',sans-serif;overflow:hidden}
+#player{width:900px;height:506px;position:relative;border-radius:16px;overflow:hidden;box-shadow:0 0 80px rgba(37,99,235,0.3)}
+.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.6s;background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%)}
+.slide.active{opacity:1}
+.slide-inner{text-align:center;padding:40px 60px;max-width:800px}
+/* Brand colors */
+:root{--brand:#2563eb;--accent:#3b82f6;--success:#10b981;--gold:#f59e0b;--danger:#ef4444}
+.logo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#2563eb,#1d4ed8);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#fff}
+h1{font-size:36px;font-weight:900;color:#fff;margin-bottom:12px;letter-spacing:2px}
+h2{font-size:28px;font-weight:800;color:#fff;margin-bottom:10px}
+h3{font-size:22px;font-weight:700;color:#e2e8f0;margin-bottom:8px}
+p{font-size:16px;color:#94a3b8;line-height:1.8}
+.tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;margin:4px;background:rgba(37,99,235,0.2);color:#60a5fa}
+.tag.green{background:rgba(16,185,129,0.2);color:#34d399}
+.tag.gold{background:rgba(245,158,11,0.2);color:#fbbf24}
+.badge{position:absolute;top:20px;right:24px;font-size:12px;color:#475569;letter-spacing:1px}
+.progress{position:absolute;bottom:0;left:0;height:3px;background:var(--brand);transition:width 0.1s linear}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px;width:100%}
+.card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:20px 16px;text-align:center;transition:all 0.2s}
+.card .icon{font-size:32px;margin-bottom:8px}
+.card .title{font-size:14px;font-weight:700;color:#e2e8f0;margin-bottom:4px}
+.card .desc{font-size:11px;color:#64748b;line-height:1.5}
+.steps{display:flex;gap:4px;align-items:center;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.step{display:flex;align-items:center;gap:4px;font-size:12px;color:#94a3b8}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+.step-arrow{color:#475569}
+.fade-up{animation:fadeUp 0.6s ease-out}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.controls{position:absolute;bottom:12px;right:16px;display:flex;gap:8px;z-index:10}
+.controls button{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:#94a3b8;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;transition:all 0.2s}
+.controls button:hover{background:rgba(255,255,255,0.2);color:#fff}
+.num{font-size:48px;font-weight:900;color:var(--brand);margin-bottom:8px}
+.num.green{color:var(--success)}
+.num.gold{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<div id="player">
+  <!-- Slide 0: 片头 3s -->
+  <div class="slide" data-dur="3000">
+    <div class="slide-inner fade-up"><div class="logo">软</div>
+    <h1>软安科技 · 华南营销管理平台</h1><p>让 AI 生态更安全 · 专业专注</p></div>
+    <div class="badge">00:00</div>
+  </div>
+  <!-- Slide 1: 总览 5s -->
+  <div class="slide" data-dur="5000">
+    <div class="slide-inner fade-up"><h2>🔧 7大核心产品 · 一站式管理</h2>
+    <div class="grid"><div class="card"><div class="icon">🔍</div><div class="title">SAST 静态分析</div><div class="desc">18+语言 跨文件检测</div></div>
+    <div class="card"><div class="icon">📦</div><div class="title">SCA 成分分析</div><div class="desc">100T+漏洞数据库</div></div>
+    <div class="card"><div class="icon">🔐</div><div class="title">BAT 二进制检测</div><div class="desc">100+格式支持</div></div>
+    <div class="card"><div class="icon">🎯</div><div class="title">Fuzz 模糊测试</div><div class="desc">汽车行业全覆盖</div></div>
+    <div class="card"><div class="icon">🤖</div><div class="title">MST 大模型安全</div><div class="desc">全生命周期检测</div></div>
+    <div class="card"><div class="icon">✨</div><div class="title">CodingHawk AI审计</div><div class="desc">AI自动修复</div></div></div></div>
+    <div class="badge">00:03</div>
+  </div>
+  <!-- Slide 2: 用户选型 6s -->
+  <div class="slide" data-dur="6000">
+    <div class="slide-inner fade-up"><h2>🎯 用户自主选型助手</h2><p>基于行业、场景、研发画像的多维智能匹配引擎</p>
+    <div class="steps"><div class="step"><div class="step-num">0</div>信息登记</div><span class="step-arrow">→</span>
+    <div class="step"><div class="step-num">1</div>选择行业</div><span class="step-arrow">→</span>
+    <div class="step"><div class="step-num">2</div>产品需求</div><span class="step-arrow">→</span>
+    <div class="step"><div class="step-num">3</div>业务场景</div><span class="step-arrow">→</span>
+    <div class="step"><div class="step-num">4</div>项目信息</div><span class="step-arrow">→</span>
+    <div class="step"><div class="step-num">5</div>优势匹配</div><span class="step-arrow">→</span>
+    <div class="step"><div class="step-num">6</div>软件解决方案</div><span class="step-arrow">→</span>
+    <div class="step"><div class="step-num">7</div>获取报价</div></div>
+    <p style="margin-top:16px;font-size:14px">8步引导 · 精准匹配 · 自动生成方案</p></div>
+    <div class="badge">00:08</div>
+  </div>
+  <!-- Slide 3: 行业方案 5s -->
+  <div class="slide" data-dur="5000">
+    <div class="slide-inner fade-up"><h2>🏭 9大行业深度解决方案</h2>
+    <div class="grid"><div class="card"><div class="icon">🚗</div><div class="title">汽车行业</div><div class="desc">R155/R156合规</div></div>
+    <div class="card"><div class="icon">🛡️</div><div class="title">军工行业</div><div class="desc">GJB 8114/5369</div></div>
+    <div class="card"><div class="icon">🏦</div><div class="title">金融科技</div><div class="desc">等保2.0合规</div></div>
+    <div class="card"><div class="icon">🏛️</div><div class="title">政府行业</div><div class="desc">信创安全</div></div>
+    <div class="card"><div class="icon">🔲</div><div class="title">芯片半导体</div><div class="desc">BootROM审计</div></div>
+    <div class="card"><div class="icon">🎓</div><div class="title">高等教育</div><div class="desc">科研安全</div></div></div></div>
+    <div class="badge">00:14</div>
+  </div>
+  <!-- Slide 4: 培训中心 5s -->
+  <div class="slide" data-dur="5000">
+    <div class="slide-inner fade-up"><h2>📚 内部员工培训中心</h2>
+    <div class="grid"><div class="card"><div class="icon">📖</div><div class="title">产品知识库</div><div class="desc">7大产品深度学习</div></div>
+    <div class="card"><div class="icon">📝</div><div class="title">考核中心</div><div class="desc">自动判分 80分优秀</div></div>
+    <div class="card"><div class="icon">📊</div><div class="title">历史成绩</div><div class="desc">追踪学习进度</div></div></div>
+    <p style="margin-top:16px;font-size:14px">提升团队专业能力 · 系统化产品培训</p></div>
+    <div class="badge">00:19</div>
+  </div>
+  <!-- Slide 5: 伙伴门户 6s -->
+  <div class="slide" data-dur="6000">
+    <div class="slide-inner fade-up"><h2>🤝 华南合作伙伴管理中心</h2>
+    <div class="grid"><div class="card"><div class="icon">⚡</div><div class="title">商机报备</div><div class="desc">在线报备 原厂保护</div></div>
+    <div class="card"><div class="icon">🔬</div><div class="title">测试申请</div><div class="desc">POC在线申请</div></div>
+    <div class="card"><div class="icon">📥</div><div class="title">物料下载</div><div class="desc">白皮书/彩页/案例集</div></div>
+    <div class="card"><div class="icon">💰</div><div class="title">特价申请</div><div class="desc">专属价格支持</div></div>
+    <div class="card"><div class="icon">📋</div><div class="title">客户报备</div><div class="desc">锁定项目机会</div></div>
+    <div class="card"><div class="icon">📊</div><div class="title">营销物料库</div><div class="desc">12+专业资料</div></div></div></div>
+    <div class="badge">00:24</div>
+  </div>
+  <!-- Slide 6: 客户门户 5s -->
+  <div class="slide" data-dur="5000">
+    <div class="slide-inner fade-up"><h2>💡 客户成功技术服务中心</h2>
+    <div class="grid"><div class="card"><div class="icon">📚</div><div class="title">知识库</div><div class="desc">产品使用指南</div></div>
+    <div class="card"><div class="icon">💬</div><div class="title">问答社区</div><div class="desc">官方技术支持</div></div>
+    <div class="card"><div class="icon">📎</div><div class="title">附件上传</div><div class="desc">截图/日志上传</div></div></div>
+    <p style="margin-top:16px;font-size:14px">客户独立登录 · 知识库与社区一体化</p></div>
+    <div class="badge">00:30</div>
+  </div>
+  <!-- Slide 7: 管理后台 5s -->
+  <div class="slide" data-dur="5000">
+    <div class="slide-inner fade-up"><h2>⚙️ 管理后台 · 全局掌控</h2>
+    <div class="grid"><div class="card"><div class="icon">👥</div><div class="title">用户管理</div><div class="desc">内部/客户/伙伴</div></div>
+    <div class="card"><div class="icon">📰</div><div class="title">内容管理</div><div class="desc">文章/案例/物料</div></div>
+    <div class="card"><div class="icon">📋</div><div class="title">培训管理</div><div class="desc">模块/考题/成绩</div></div>
+    <div class="card"><div class="icon">📖</div><div class="title">KB管理</div><div class="desc">知识库文章</div></div>
+    <div class="card"><div class="icon">🎫</div><div class="title">工单管理</div><div class="desc">客户工单处理</div></div>
+    <div class="card"><div class="icon">📊</div><div class="title">审计日志</div><div class="desc">操作全记录</div></div></div></div>
+    <div class="badge">00:35</div>
+  </div>
+  <!-- Slide 8: 数据亮点 5s -->
+  <div class="slide" data-dur="5000">
+    <div class="slide-inner fade-up"><h2>📊 平台核心数据</h2>
+    <div class="grid">
+    <div class="card"><div class="num">7</div><div class="title">核心安全产品</div></div>
+    <div class="card"><div class="num">9</div><div class="title">行业解决方案</div></div>
+    <div class="card"><div class="num green">10</div><div class="title">测试咨询服务</div></div>
+    <div class="card"><div class="num">7</div><div class="title">培训模块</div></div>
+    <div class="card"><div class="num gold">12</div><div class="title">营销物料</div></div>
+    <div class="card"><div class="num">4</div><div class="title">独立门户</div></div></div>
+    <p style="margin-top:12px;font-size:14px">营销 · 选型 · 培训 · 伙伴 · 客户 全覆盖</p></div>
+    <div class="badge">00:40</div>
+  </div>
+  <!-- Slide 9: 收尾 4s -->
+  <div class="slide" data-dur="4000">
+    <div class="slide-inner fade-up">
+    <div class="logo" style="width:80px;height:80px;font-size:36px">软</div>
+    <h1 style="font-size:32px">软安科技</h1>
+    <p style="font-size:20px;color:#e2e8f0;margin-bottom:8px">让 AI 生态更安全</p>
+    <div style="margin-top:24px"><span class="tag">SAST</span><span class="tag">SCA</span><span class="tag green">BAT</span><span class="tag gold">FUZZ</span><span class="tag">MST</span><span class="tag green">CodingHawk</span><span class="tag gold">GuardFox</span></div>
+    <p style="margin-top:16px;font-size:13px;color:#475569">华南营销管理平台 · 专业专注</p></div>
+    <div class="badge">00:45</div>
+  </div>
+  <div class="progress" id="progressBar"></div>
+  <div class="controls">
+    <button onclick="togglePlay()" id="playBtn">⏸ 暂停</button>
+    <button onclick="restart()">↺ 重播</button>
+  </div>
+</div>
+
+<script>
+var slides = document.querySelectorAll('.slide');
+var current = 0;
+var playing = true;
+var timer = null;
+var totalTime = 0;
+
+slides.forEach(function(s){ totalTime += parseInt(s.dataset.dur); });
+
+function showSlide(i){
+  slides.forEach(function(s){ s.classList.remove('active'); });
+  slides[i].classList.add('active');
+  slides[i].querySelector('.fade-up') && slides[i].querySelector('.fade-up').classList.remove('fade-up');
+  void slides[i].offsetWidth;
+  var inner = slides[i].querySelector('.fade-up');
+  if(inner) inner.classList.add('fade-up');
+}
+
+function advance(){
+  current = (current + 1) % slides.length;
+  showSlide(current);
+  scheduleNext();
+}
+
+function scheduleNext(){
+  clearTimeout(timer);
+  if(!playing) return;
+  var dur = parseInt(slides[current].dataset.dur);
+  timer = setTimeout(advance, dur);
+}
+
+function updateProgress(){
+  if(!playing) return;
+  var elapsed = 0;
+  for(var i = 0; i < current; i++) elapsed += parseInt(slides[i].dataset.dur);
+  var pct = (elapsed / totalTime) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  requestAnimationFrame(function(){ setTimeout(updateProgress, 100); });
+}
+
+function togglePlay(){
+  playing = !playing;
+  document.getElementById('playBtn').textContent = playing ? '⏸ 暂停' : '▶ 播放';
+  if(playing){ scheduleNext(); updateProgress(); }
+  else clearTimeout(timer);
+}
+
+function restart(){ current = -1; playing = true; document.getElementById('playBtn').textContent = '⏸ 暂停'; advance(); updateProgress(); }
+
+showSlide(0);
+scheduleNext();
+updateProgress();
+</script>
+</body>
+</html>
