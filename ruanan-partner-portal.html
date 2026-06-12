@@ -356,17 +356,22 @@ async function register(e){
   if(!username||!pwd||!company||!name||!email||!phone||!pt){toast("请填写所有必填项","error");return}
   if(username.length<2||username.length>20||!/^[a-zA-Z]/.test(username)){toast("用户名需字母开头，2-20位","error");return}
   if(pwd.length<6){toast("密码至少6位","error");return}
-  var body="username="+encodeURIComponent(username)+"&password="+encodeURIComponent(pwd)+"&email="+encodeURIComponent(email)+"&phone="+encodeURIComponent(phone)+"&company="+encodeURIComponent(company)+"&role=partner";
-  try{
-    var r=await fetch(API+"/api/register",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:body});
-    var d=await r.json();
-    if(!r.ok){toast(d.detail||"注册失败","error");return}
-    var partners=g(PK);
-    var p={id:d.username||username,company:company,name:name,title:document.getElementById("regTitle").value.trim(),email:email,phone:phone,partnerType:pt,city:city,industry:industry,note:document.getElementById("regNote").value.trim(),status:"pending",createdAt:now(),username:username};
-    partners.push(p);s(PK,partners);
-    sendFeishu("🆕 新合作伙伴申请",[{l:"公司",v:company},{l:"用户名",v:username},{l:"联系人",v:name},{l:"邮箱",v:email},{l:"电话",v:phone},{l:"类型",v:ptLabel}]);
-    toast("申请已提交！管理员审核通过后即可登录");showLogin();
-  }catch(e){toast("网络错误，请稍后重试","error");}
+  // Try server API first, fall back to localStorage
+  if(API){
+    try{
+      var body="username="+encodeURIComponent(username)+"&password="+encodeURIComponent(pwd)+"&email="+encodeURIComponent(email)+"&phone="+encodeURIComponent(phone)+"&company="+encodeURIComponent(company)+"&role=partner";
+      var r=await fetch(API+"/api/register",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:body});
+      var d=await r.json();
+      if(!r.ok){toast(d.detail||"注册失败","error");return}
+    }catch(e){/* fall through to localStorage */}
+  }
+  // Always save locally
+  var partners=g(PK);
+  if(partners.find(function(x){return x.email===email||x.username===username})){toast("该邮箱或用户名已提交过申请","error");return}
+  var p={id:uid(),username:username,password:pwd,company:company,name:name,title:document.getElementById("regTitle").value.trim(),email:email,phone:phone,partnerType:pt,city:city,industry:industry,note:document.getElementById("regNote").value.trim(),status:"pending",createdAt:now()};
+  partners.push(p);s(PK,partners);
+  sendFeishu("🆕 新合作伙伴申请",[{l:"公司",v:company},{l:"用户名",v:username},{l:"联系人",v:name},{l:"邮箱",v:email},{l:"电话",v:phone},{l:"类型",v:ptLabel}]);
+  toast("申请已提交！管理员审核通过后即可登录");showLogin();
 }
 
 function togglePartnerFields(){var v=document.getElementById('regPartnerType').value;document.getElementById('regCityGroup').classList.toggle('hidden',v!=='city');document.getElementById('regIndustryGroup').classList.toggle('hidden',v!=='industry')}
@@ -375,20 +380,36 @@ async function login(e){
   e.preventDefault();
   var username=document.getElementById("loginUser").value.trim(),pwd=document.getElementById("loginPwd").value.trim();
   if(!username||!pwd){toast("请输入用户名和密码","error");return}
-  try{
-    var r=await fetch(API+"/api/login",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:"username="+encodeURIComponent(username)+"&password="+encodeURIComponent(pwd)});
-    var d=await r.json();
-    if(!r.ok){toast(d.detail||"登录失败","error");return}
-    var partners=g(PK),lp=partners.find(function(x){return x.username===username||x.email===username});
-    if(lp&&lp.status==="pending"){toast("账号审核中，请联系管理员","error");return}
-    if(lp&&lp.status==="rejected"){toast("账号已被拒绝","error");return}
-    var p={username:d.username||username,role:d.role,token:d.token,company:lp?lp.company:(d.company||""),name:lp?lp.name:(d.username||username),email:lp?lp.email:"",id:lp?lp.id:uid()};
-    localStorage.setItem(UK,JSON.stringify(p));
-    document.getElementById("sidebar").classList.add("show");document.getElementById("mainContent").classList.remove("full");
-    document.getElementById("sidebarName").textContent=p.name;document.getElementById("sidebarCompany").textContent=p.company;
-    document.getElementById("sidebarAvatar").textContent=p.name.charAt(0);document.getElementById("dashName").textContent=p.name;
-    refreshDashboard();goPage("dashboard");
-  }catch(e){toast("网络错误，请稍后重试","error");}
+  // Try server API first
+  if(API){
+    try{
+      var r=await fetch(API+"/api/login",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:"username="+encodeURIComponent(username)+"&password="+encodeURIComponent(pwd)});
+      var d=await r.json();
+      if(r.ok){
+        var partners=g(PK),lp=partners.find(function(x){return x.username===username||x.email===username});
+        if(lp&&lp.status==="pending"){toast("账号审核中，请联系管理员","error");return}
+        if(lp&&lp.status==="rejected"){toast("账号已被拒绝","error");return}
+        var p={username:d.username||username,role:d.role,token:d.token,company:lp?lp.company:(d.company||""),name:lp?lp.name:(d.username||username),email:lp?lp.email:"",id:lp?lp.id:uid()};
+        localStorage.setItem(UK,JSON.stringify(p));
+        document.getElementById("sidebar").classList.add("show");document.getElementById("mainContent").classList.remove("full");
+        document.getElementById("sidebarName").textContent=p.name;document.getElementById("sidebarCompany").textContent=p.company;
+        document.getElementById("sidebarAvatar").textContent=p.name.charAt(0);document.getElementById("dashName").textContent=p.name;
+        refreshDashboard();goPage("dashboard");
+        return;
+      }
+    }catch(e){/* fall through to localStorage */}
+
+  }
+  // Fallback: localStorage login
+  var partners=g(PK),p=partners.find(function(x){return (x.username===username||x.email===username)&&x.password===pwd});
+  if(!p){toast("用户名或密码错误","error");return}
+  if(p.status==="pending"){toast("账号审核中，请联系管理员","error");return}
+  if(p.status==="rejected"){toast("账号已被拒绝","error");return}
+  localStorage.setItem(UK,JSON.stringify(p));
+  document.getElementById("sidebar").classList.add("show");document.getElementById("mainContent").classList.remove("full");
+  document.getElementById("sidebarName").textContent=p.name;document.getElementById("sidebarCompany").textContent=p.company;
+  document.getElementById("sidebarAvatar").textContent=p.name.charAt(0);document.getElementById("dashName").textContent=p.name;
+  refreshDashboard();goPage("dashboard");
 }
 
 function logout(){
