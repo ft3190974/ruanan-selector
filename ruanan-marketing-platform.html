@@ -395,9 +395,9 @@ function updateSidebar(){
   nav.push({section:'业务'});
   nav.push({href:'home',label:'软安科技华南营销首页',emoji:'🏠',icon:'i-home'});
   nav.push({href:'products',label:'软安科技产品简介',emoji:'📦',icon:'i-box'});
-  nav.push({href:'solutions',label:'行业解决方案',emoji:'🏭',icon:'i-build'});
-  nav.push({href:'selector',label:'用户需求匹配',emoji:'🎯',icon:'i-search2'});
-  nav.push({href:'contact',label:'联系销售',emoji:'📞',icon:'i-phone'});
+  nav.push({href:'solutions',label:'行业解决方案介绍',emoji:'🏭',icon:'i-build'});
+  nav.push({href:'selector',label:'用户自主选型中心',emoji:'🎯',icon:'i-search2'});
+  nav.push({href:'contact',label:'联系销售/进一步技术交流',emoji:'📞',icon:'i-phone'});
   nav.push({section:'营销'});
   nav.push({href:'insights',label:'行业洞察与相关咨询',emoji:'📊',icon:'i-pie'});
   nav.push({href:'partner',label:'华南合作伙伴管理中心',emoji:'🤝',icon:'i-users'});
@@ -421,7 +421,7 @@ function updateSidebar(){
   document.getElementById('sidebarFooter').innerHTML=fh;
 
   // Breadcrumb
-  var labels={home:'软安科技华南营销首页',products:'软安科技产品简介',solutions:'行业解决方案',selector:'用户需求匹配',contact:'联系销售',insights:'行业洞察与相关咨询',partner:'华南合作伙伴管理中心',blog:'客户成功技术服务中心',training:'软安内部员工培训中心',admin:'管理后台'};
+  var labels={home:'软安科技华南营销首页',products:'软安科技产品简介',solutions:'行业解决方案介绍',selector:'用户自主选型中心',contact:'联系销售/进一步技术交流',insights:'行业洞察与相关咨询',partner:'华南合作伙伴管理中心',blog:'客户成功技术服务中心',training:'软安内部员工培训中心',admin:'管理后台'};
   document.getElementById('tbBreadcrumb').innerHTML=(nav.find(function(x){return x.href===page;})||{}).emoji+' '+(labels[page]||'工作台');
 }
 
@@ -541,7 +541,7 @@ function _submitContact(){
 
 PAGES.solutions=function(){
   var h='';
-  h+='<div class="page-header center"><div class="ph-eyebrow">Industry Solutions</div><h1 class="ph-title">行业解决方案</h1><p class="ph-sub">为9大核心行业深度定制，每个方案深入行业场景、法规要求和安全痛点</p></div>';
+  h+='<div class="page-header center"><div class="ph-eyebrow">Industry Solutions</div><h1 class="ph-title">行业解决方案介绍</h1><p class="ph-sub">为9大核心行业深度定制，每个方案深入行业场景、法规要求和安全痛点</p></div>';
   var sols={汽车:{icon:'🚗',color:'purple',desc:'满足全球汽车网络安全法规体系',regs:'UN R155 · ISO 21434 · GB 44495 · ASPICE',pain:'OEM严格审计Tier1/2供应商，单车代码超1亿行。R155合规+OTA安全+ASPICE多重压力。',products:'SAST · SCA · BAT · FUZZ · CodingHawk · GuardFox',features:['OEM准入审计通过率100%','CAN/车载以太网Fuzz测试','ECU固件批量审计+SBOM交付','AUTOSAR安全扫描','OTA升级包安全检测','功能安全代码验证'],cases:[{title:'头部新能源车企Tier1准入',desc:'3个月完成全ECU检测+SBOM，审计通过率100%',video:true},{title:'合资车企OTA安全合规',desc:'为12款车型建立OTA升级安全检测体系'}]},芯片半导体:{icon:'🔲',color:'blue',desc:'流片前最后一道安全防线',regs:'FIPS 140 · GB/T 18336 · 商用密码 · NIST',pain:'流片后BootROM漏洞无法修复。GPU/CUDA安全审计需求激增。RISC-V生态工具不成熟。',products:'BAT · SAST · SCA · FUZZ',features:['100+芯片平台解包','BootROM安全启动链审计','GPU驱动+AI计算完整性','FIPS 140/国密密评','x86/ARM/RISC-V全架构','流片前固件漏洞挖掘'],cases:[{title:'GPU芯片厂商流片前审计',desc:'发现并修复3个BootROM高危漏洞',video:true},{title:'车载SoC功能安全验证',desc:'ISO 26262 ASIL-D代码验证，助力车规认证'}]},金融:{icon:'🏦',color:'gold',desc:'金融监管合规+开源治理+AI安全',regs:'等保2.0 · 关基保护条例 · PCI DSS',pain:'监管持续收紧。Log4j级漏洞需72h应急响应。大模型安全成为新监管重点。',products:'SAST · SCA · MST · CodingHawk · GuardFox',features:['72h开源组件应急响应','外包开发源码安全审计','金融AI大模型安全评估','等保三级合规支撑','关基供应链安全审查','监管标准化报告'],cases:[{title:'大型银行Log4j应急响应',desc:'48h完成3000+系统排查',video:true},{title:'证券公司信创安全评估',desc:'300+系统的信创环境安全检测'}]},军工:{icon:'🛡',color:'purple',desc:'涉密离线全栈部署+遗留代码AI治理',regs:'GJB 8114 · GJB 5369 · 三员分立',pain:'必须离线。大量C/C++/汇编遗留代码缺乏文档。国产化需全自主可控。',products:'SAST · BAT · CodingHawk · GuardFox · MST',features:['涉密环境离线全栈部署','三员分立安全管理','C/C++遗留代码AI审计','GJB 8114/5369双合规','国产CPU+OS适配','离线规则更新'],cases:[{title:'JF单位涉密离线部署',desc:'物理隔离环境完整工具链',video:false},{title:'遗留代码批量审计',desc:'AI驱动审计20年+老代码'}]},政府:{icon:'🏛',color:'blue',desc:'信创适配+供应链安全+大模型备案',regs:'等保2.0 · 关基 · 密码法 · 数据安全法',pain:'信创环境工具匮乏。政务外包开发需源码审计。AI应用需安全评估备案。',products:'SAST · SCA · BAT · MST · GuardFox',features:['国产CPU+OS全适配','外包源码安全审计','大模型安全备案','等保2.0合规','信创SBOM生成','数据安全合规'],cases:[{title:'省级政务平台审计',desc:'60+系统信创环境安全检测'},{title:'AI政务应用安全评估',desc:'大模型备案安全评估和合规审查'}]},智能设备:{icon:'📱',color:'teal',desc:'IoT固件+SDK供应链+CRA合规',regs:'EU CRA · 个人信息保护法 · GDPR',pain:'迭代快(2-4周)，安全测试被压缩。SDK和开源组件泛滥。CRA要求SBOM。',products:'SAST · SCA · BAT · FUZZ · CodingHawk · GuardFox',features:['快速迭代安全检测','第三方SDK审查','IoT固件批量审计','CRA SBOM+安全声明','DevSecOps集成','多平台统一检测'],cases:[{title:'手机厂商CRA合规',desc:'出口欧盟SBOM一次性通过'},{title:'安防摄像头批量审计',desc:'50+款摄像头固件安全审计'}]},能源:{icon:'⚡',color:'gold',desc:'关基保护+工控安全+SCADA审计',regs:'等保2.0 · 关基 · 电力16号令 · NERC CIP',pain:'关基面临高级威胁。SCADA/ICS漏洞频发。新能源供应链缺安全标准。',products:'SAST · SCA · BAT · FUZZ · MST · GuardFox',features:['电力16号令代码合规','SCADA/PLC/RTU审计','工控协议Fuzz','关基供应链审查','新能源安全评估','国产化替代'],cases:[{title:'电力集团关基合规审计',desc:'全量代码安全审查，满足16号令'}]},国央企:{icon:'🏭',color:'purple',desc:'多业态覆盖+信创替代+集团治理',regs:'关基 · 等保2.0 · 密码法 · 信创目录',pain:'业务多元层级复杂。信创替代需大量安全评估。统一采购需多业态覆盖。',products:'SAST · SCA · BAT · MST · GuardFox',features:['多业态统一平台','信创代码安全评估','集团级SBOM治理','国产化全栈适配','关基统一审查','多层级部署'],cases:[{title:'央企集团供应链治理',desc:'统一平台覆盖能源/制造/金融'}]},互联网:{icon:'🌐',color:'teal',desc:'出海合规+云原生+SDK治理',regs:'EU CRA · GDPR · 个人信息保护法',pain:'代码迭代极快、SDK众多。出海面临CRA/GDPR合规。云原生架构治理复杂度高。',products:'SAST · SCA · CodingHawk · GuardFox',features:['快速迭代安全检测','出海SBOM+安全声明','SDK安全审查','云原生容器安全','游戏引擎审计','大促安全保障'],cases:[{title:'头部游戏出海合规',desc:'欧盟CRA SBOM一次性通过'}]}};
   var inds=Object.keys(sols);
   // Sub-nav
