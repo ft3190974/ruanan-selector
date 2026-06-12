@@ -16,6 +16,7 @@ STATIC_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-product-selecto
 MARKETING_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-marketing-platform.html")
 CUSTOMER_PORTAL_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-customer-portal.html")
 PARTNER_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-partner-portal.html")
+PROMO_VIDEO_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\promo_video.html")
 ADMIN_PWD = os.environ.get("ADMIN_PWD", "admin123")
 
 # ── 安全配置 ──
@@ -1649,6 +1650,9 @@ async def customer_file(): return FileResponse(str(CUSTOMER_PORTAL_FILE))
 
 @app.get("/ruanan-marketing-platform.html")
 async def marketing_file(): return FileResponse(str(MARKETING_FILE))
+
+@app.get("/promo_video.html")
+async def promo_video_file(): return FileResponse(str(PROMO_VIDEO_FILE))
 
 @app.on_event("startup")
 async def startup():
