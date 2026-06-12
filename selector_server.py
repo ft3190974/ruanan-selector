@@ -1591,6 +1591,38 @@ async def save_product_page(request: Request, product_id: str = Form(...), intro
         return {"ok":True}
     finally: await db.close()
 
+@app.post("/api/change-password")
+async def change_password(request: Request, old_password: str = Form(...), new_password: str = Form(...)):
+    user = await get_auth_user(request)
+    if not user: raise HTTPException(401, "请先登录")
+    pwd_err = validate_password_strength(new_password)
+    if pwd_err: raise HTTPException(400, pwd_err)
+    db = await get_db()
+    try:
+        old_ph = hashlib.sha256(old_password.encode()).hexdigest()
+        if old_ph != user["password_hash"]: raise HTTPException(400, "原密码错误")
+        new_ph = hashlib.sha256(new_password.encode()).hexdigest()
+        await db.execute("UPDATE users SET password_hash=? WHERE id=?", (new_ph, user["id"]))
+        await db.commit()
+        return {"ok": True, "message": "密码修改成功"}
+    finally: await db.close()
+
+@app.post("/api/customer/change-password")
+async def customer_change_password(request: Request, old_password: str = Form(...), new_password: str = Form(...)):
+    user = await get_customer_user(request)
+    if not user: raise HTTPException(401, "请先登录")
+    pwd_err = validate_password_strength(new_password)
+    if pwd_err: raise HTTPException(400, pwd_err)
+    db = await get_db()
+    try:
+        old_ph = hashlib.sha256(old_password.encode()).hexdigest()
+        if old_ph != user["password_hash"]: raise HTTPException(400, "原密码错误")
+        new_ph = hashlib.sha256(new_password.encode()).hexdigest()
+        await db.execute("UPDATE customer_users SET password_hash=? WHERE id=?", (new_ph, user["id"]))
+        await db.commit()
+        return {"ok": True, "message": "密码修改成功"}
+    finally: await db.close()
+
 # ═══════════════════════════════════════════════════
 # ROUTES
 # ═══════════════════════════════════════════════════

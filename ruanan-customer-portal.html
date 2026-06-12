@@ -242,6 +242,8 @@ async function doForgot(){
   catch(e){showErr(e.message);}
 }
 
+function _openCustChangePwd(){var m=document.createElement('div');m.className='modal-overlay';m.onclick=function(e){if(e.target===m)m.remove()};m.innerHTML='<div class=\"modal-box\" style=\"max-width:420px\"><h3 style=\"margin-bottom:16px\">修改密码</h3><p style=\"font-size:12px;color:var(--text3);margin-bottom:12px\">密码需8位以上，含字母和数字</p><div class=\"form-group\"><label>原密码</label><input id=\"cpOld\" type=\"password\"></div><div class=\"form-group\"><label>新密码</label><input id=\"cpNew\" type=\"password\"></div><div class=\"form-group\"><label>确认新密码</label><input id=\"cpNew2\" type=\"password\"></div><button class=\"btn btn-primary btn-lg\" onclick=\"_doCustChangePwd(this)\" style=\"width:100%;justify-content:center\">确认修改</button></div>';document.body.appendChild(m)}
+async function _doCustChangePwd(btn){var o=document.getElementById('cpOld')?.value,p=document.getElementById('cpNew')?.value,p2=document.getElementById('cpNew2')?.value;if(!o||!p){toast('请填写完整','error');return}if(p!==p2){toast('两次密码不一致','error');return}if(p.length<8||!/[A-Za-z]/.test(p)||!/[0-9]/.test(p)){toast('密码需8位以上，含字母和数字','error');return}try{await api('POST','/api/customer/change-password',fd({old_password:o,new_password:p}));toast('密码修改成功');btn.closest('.modal-overlay').remove()}catch(e){toast(e.message,'error')}}
 function doLogout(){customerToken='';customerUser=null;localStorage.removeItem('customer_token');document.getElementById('loginOverlay').style.display='flex';document.getElementById('appLayout').style.display='none';updateUI();showLogin('login');}
 
 // ═══ UI ═══
@@ -268,7 +270,7 @@ function updateUI(){
   var labels={kb:'浏览知识库',ask:'提交问题',myq:'我的问题',community:'浏览社区',_back:'返回平台首页'};
   document.getElementById('tbBreadcrumb').innerHTML=labels[page]||'';
   // Footer
-  document.getElementById('sidebarFooter').innerHTML=(customerUser?'<a onclick="doLogout()">退出登录</a>':'')+'<a href="ruanan-marketing-platform.html" style="margin-top:8px;color:#fff;font-weight:600;font-size:13px;background:rgba(255,255,255,0.1);padding:8px 10px;border-radius:6px;display:block">🏠 返回平台首页</a>';
+  document.getElementById('sidebarFooter').innerHTML=(customerUser?'<a onclick="_openCustChangePwd()">修改密码</a><a onclick="doLogout()">退出登录</a>':'')+'<a href="ruanan-marketing-platform.html" style="margin-top:8px;color:#fff;font-weight:600;font-size:13px;background:rgba(255,255,255,0.1);padding:8px 10px;border-radius:6px;display:block">🏠 返回平台首页</a>';
 }
 
 function nav(p){
