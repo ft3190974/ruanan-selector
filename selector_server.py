@@ -1639,6 +1639,19 @@ async def partner_portal(): return FileResponse(str(PARTNER_FILE))
 @app.get("/")
 async def index(): return FileResponse(str(MARKETING_FILE))
 
+# Static HTML files (also served by filename for GitHub Pages compatibility)
+@app.get("/ruanan-product-selector.html")
+async def selector_file(): return FileResponse(str(STATIC_FILE))
+
+@app.get("/ruanan-partner-portal.html")
+async def partner_file(): return FileResponse(str(PARTNER_FILE))
+
+@app.get("/ruanan-customer-portal.html")
+async def customer_file(): return FileResponse(str(CUSTOMER_PORTAL_FILE))
+
+@app.get("/ruanan-marketing-platform.html")
+async def marketing_file(): return FileResponse(str(MARKETING_FILE))
+
 @app.on_event("startup")
 async def startup():
     await init_db()

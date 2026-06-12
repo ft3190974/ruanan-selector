@@ -411,7 +411,7 @@ function updateSidebar(){
   for(var i=0;i<nav.length;i++){
     var n=nav[i];
     if(n.section){h+='<div class="sn-section">'+n.section+'</div>';continue;}
-    if(n.href==='partner'){h+='<a onclick="window.open(\'/partner\',\'_blank\')"><span class="nav-icon">'+n.emoji+'</span><span>'+n.label+'</span></a>';}
+    if(n.href==='partner'){h+='<a onclick="window.open(\'ruanan-partner-portal.html\',\'_blank\')"><span class="nav-icon">'+n.emoji+'</span><span>'+n.label+'</span></a>';}
     else h+='<a class="'+(page===n.href?'active':'')+'" onclick="nav(\''+n.href+'\')"><span class="nav-icon">'+n.emoji+'</span><span>'+n.label+'</span></a>';
   }
   document.getElementById('sidebarNav').innerHTML=h;
@@ -573,7 +573,7 @@ function switchSol(key){
 PAGES.selector=function(){
   var h='';
   h+='<div class="page-header center"><div class="ph-eyebrow">Demand Matching</div><h1 class="ph-title">用户需求匹配</h1><p class="ph-sub">基于行业、场景、研发画像的多维智能匹配引擎，5分钟帮你找到最优产品组合和报价方案</p></div>';
-  h+='<div style="text-align:center;padding:48px 0"><div style="font-size:60px;margin-bottom:16px">🔬</div><h3 style="font-size:18px;font-weight:700;margin-bottom:8px">选型引擎需要完整交互上下文</h3><p style="font-size:14px;color:var(--text2);margin-bottom:20px">8步引导式选型流程，精准匹配产品与报价</p><button class="btn btn-primary btn-lg" onclick="window.open(\'/selector\',\'_blank\')">🚀 用户自主选型助手</button><p style="font-size:12px;color:var(--text3);margin-top:12px"></p></div>';
+  h+='<div style="text-align:center;padding:48px 0"><div style="font-size:60px;margin-bottom:16px">🔬</div><h3 style="font-size:18px;font-weight:700;margin-bottom:8px">选型引擎需要完整交互上下文</h3><p style="font-size:14px;color:var(--text2);margin-bottom:20px">8步引导式选型流程，精准匹配产品与报价</p><button class="btn btn-primary btn-lg" onclick="window.open(\'ruanan-product-selector.html\',\'_blank\')">🚀 用户自主选型助手</button><p style="font-size:12px;color:var(--text3);margin-top:12px"></p></div>';
   return h;
 };
 
