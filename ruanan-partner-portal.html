@@ -116,28 +116,17 @@ tr:hover td{background:var(--slate-50)}
       <div class="form-group"><label>密码</label><input type="password" id="loginPwd" class="input" required placeholder="请输入密码"></div>
       <button type="submit" class="btn btn-primary w-full" style="padding:12px;justify-content:center;font-size:16px">登 录</button>
     </form>
-    <p class="text-center text-sm text-slate-400 mt-4">账号由管理员统一分配，请联系华南营销中心获取</p>
-	    <p class="text-center text-sm mt-2"><a href="#" onclick="showForgotPwd()" style="color:var(--slate-500);font-size:13px;text-decoration:none">忘记密码？</a></p>
-    <p class="text-center text-xs text-slate-400 mt-3" style="color:var(--slate-400)">演示账号: demo@partner.com / demo123 | 管理员: 右下角⚙</p>
-  </div>
+    <p class="text-center text-sm text-slate-400 mt-4">申请成为软安华南合作伙伴</p><p class="text-center mt-2"><a href="#" onclick="showRegister()" class="btn btn-outline btn-sm" style="color:var(--brand);font-weight:600;text-decoration:none;display:inline-block;padding:8px 24px">提交申请</a></p>
+	      </div>
 </div>
 
 <div class="page" id="page-register" style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px">
   <div class="card max-w-lg mx-auto" style="width:100%;padding:40px">
     <div class="text-center mb-6">
       <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#2563eb,#1d4ed8);display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:#fff;margin-bottom:12px">软</div>
-      <h1 style="font-size:20px;font-weight:800;color:var(--slate-900)">注册成为合作伙伴</h1>
+      <h1 style="font-size:20px;font-weight:800;color:var(--slate-900)">软安华南合作伙伴申请</h1>
     </div>
-    <form onsubmit="register(event)">
-      <div class="form-row"><div class="form-group"><label>公司名称 *</label><input type="text" id="regCompany" class="input" required></div><div class="form-group"><label>联系人 *</label><input type="text" id="regName" class="input" required></div></div>
-      <div class="form-row"><div class="form-group"><label>邮箱 *</label><input type="email" id="regEmail" class="input" required></div><div class="form-group"><label>手机号 *</label><input type="tel" id="regPhone" class="input" required></div></div>
-      <div class="form-group"><label>密码 *</label><input type="password" id="regPwd" class="input" required minlength="6" placeholder="至少6位"></div>
-      <div class="form-group"><label>合作类型 *</label><select id="regPartnerType" class="input" required onchange="togglePartnerFields()"><option value="">请选择</option><option value="city">城市代理商</option><option value="industry">行业代理商</option><option value="ecosystem">生态合作伙伴</option><option value="project">项目授权代理商</option></select></div>
-      <div class="form-group hidden" id="regCityGroup"><label>代理城市 *</label><input type="text" id="regCity" class="input" placeholder="请输入城市名称，如：深圳、广州"></div>
-      <div class="form-group hidden" id="regIndustryGroup"><label>专注行业 *</label><select id="regIndustry2" class="input"><option value="">请选择</option><option>汽车</option><option>芯片半导体</option><option>消费电子</option><option>军工</option><option>电子通信</option><option>金融</option><option>医疗</option><option>教育</option><option>政府</option><option>综合/其他</option></select></div>
-      <div class="form-group"><label>备注</label><textarea id="regNote" class="input" rows="2" placeholder="简要介绍贵司业务方向..."></textarea></div>
-      <button type="submit" class="btn btn-primary w-full" style="padding:12px;justify-content:center">提交注册申请</button>
-    </form>
+    <form onsubmit="register(event)"><div class="form-row"><div class="form-group"><label>公司全称 *</label><input type="text" id="regCompany" class="input" required></div><div class="form-group"><label>联系人 *</label><input type="text" id="regName" class="input" required></div></div><div class="form-row"><div class="form-group"><label>联系人职位 *</label><input type="text" id="regTitle" class="input" required placeholder="如：销售总监"></div><div class="form-group"><label>联系方式 *</label><input type="tel" id="regPhone" class="input" required placeholder="手机号"></div></div><div class="form-group"><label>联系人邮箱 *</label><input type="email" id="regEmail" class="input" required></div><div class="form-group"><label>申请合作伙伴类型 *</label><select id="regPartnerType" class="input" required><option value="">请选择</option><option value="city">城市级合作伙伴</option><option value="project">项目授权合作伙伴</option><option value="industry">行业级合作伙伴</option><option value="ecosystem">生态合作伙伴</option></select></div><div class="form-group"><label>备注</label><textarea id="regNote" class="input" rows="2" placeholder="简要介绍贵司业务方向..."></textarea></div><button type="submit" class="btn btn-primary w-full" style="padding:12px;justify-content:center">提交申请</button></form>
     <p class="text-center text-sm text-slate-400 mt-4">已有账号？<a href="#" onclick="showLogin()" style="color:var(--brand);font-weight:600;text-decoration:none">立即登录</a></p>
   </div>
 </div>
