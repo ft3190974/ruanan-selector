@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>软安科技 · 片尾</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:#0d1117;min-height:100vh;display:flex;align-items:center;justify-content:center;
+  font-family:'Fira Code','Consolas','Monaco',monospace;overflow:hidden
+}
+.wrapper{display:flex;gap:60px;align-items:center;max-width:1100px;padding:40px}
+/* 代码区域 */
+.code-panel{flex:1;min-width:500px}
+.code-header{
+  background:#161b22;border:1px solid #30363d;border-radius:10px 10px 0 0;
+  padding:10px 16px;display:flex;align-items:center;gap:8px
+}
+.code-dot{width:10px;height:10px;border-radius:50%}
+.code-dot.r{background:#ff5f57}.code-dot.y{background:#ffbd2e}.code-dot.g{background:#27c93f}
+.code-fname{color:#8b949e;font-size:12px;margin-left:8px}
+.code-body{
+  background:#0d1117;border:1px solid #30363d;border-top:none;border-radius:0 0 10px 10px;
+  padding:20px 24px;min-height:320px;overflow:hidden;position:relative
+}
+.line{display:flex;font-size:14px;line-height:1.8;color:#c9d1d9;white-space:pre}
+.line .num{color:#484f58;min-width:30px;text-align:right;margin-right:16px;user-select:none}
+.line .kw{color:#ff7b72}.line .fn{color:#d2a8ff}.line .str{color:#a5d6ff}
+.line .cm{color:#8b949e;font-style:italic}.line .op{color:#ff7b72}
+.line .var{color:#ffa657}.line .type{color:#79c0ff}.line .num{color:#79c0ff;text-align:right}
+.line .cls{color:#7ee787}
+.cursor{display:inline-block;width:8px;height:16px;background:#58a6ff;animation:blink 0.8s step-end infinite;vertical-align:text-bottom;margin-left:2px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* 右侧标语 */
+.slogan-panel{text-align:center;flex-shrink:0}
+.slogan-logo{
+  width:72px;height:72px;border-radius:18px;
+  background:linear-gradient(135deg,#1d4ed8,#2563eb);
+  margin:0 auto 24px;display:flex;align-items:center;justify-content:center;
+  font-size:32px;font-weight:900;color:#fff;font-family:'PingFang SC','Microsoft YaHei',sans-serif;
+  box-shadow:0 16px 48px rgba(37,99,235,0.3)
+}
+.slogan-text{
+  font-family:'PingFang SC','Microsoft YaHei',sans-serif;
+  font-size:28px;font-weight:800;color:#fff;letter-spacing:4px;
+  margin-bottom:12px;opacity:0;animation:fadeUp 0.8s 0.5s ease-out forwards
+}
+.slogan-sub{
+  font-family:'PingFang SC','Microsoft YaHei',sans-serif;
+  font-size:16px;color:rgba(255,255,255,0.5);letter-spacing:2px;
+  opacity:0;animation:fadeUp 0.8s 0.8s ease-out forwards
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="code-panel">
+    <div class="code-header">
+      <div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div>
+      <span class="code-fname">security_scan.py — 软安SAST引擎</span>
+    </div>
+    <div class="code-body" id="codeBody"></div>
+  </div>
+  <div class="slogan-panel">
+    <div class="slogan-logo">软</div>
+    <div class="slogan-text">您的代码</div>
+    <div class="slogan-text" style="animation-delay:0.7s">软安来保障</div>
+    <div class="slogan-sub" style="margin-top:24px">软安科技 · 华南营销中心</div>
+  </div>
+</div>
+<script>
+var lines = [
+  {text:'#!/usr/bin/env python3',cls:'cm'},
+  {text:'""" 软安SAST — 静态代码安全检测引擎 """',cls:'cm'},
+  {text:'',cls:''},
+  {text:'import',cls:'kw'},
+  {text:'    hashlib, re, ast, json',cls:''},
+  {text:'    from pathlib import Path',cls:''},
+  {text:'    from typing import List, Dict, Optional',cls:''},
+  {text:'',cls:''},
+  {text:'class',cls:'kw'},
+  {text:'    """AI驱动的静态代码分析器"""',cls:'cm'},
+  {text:'',cls:''},
+  {text:'    def',cls:'kw'},
+  {text:'        self.rules = self._load_rules()',cls:''},
+  {text:'        self.ai_model = AISecurityModel()',cls:''},
+  {text:'        self.vuln_db = VulnerabilityDatabase()',cls:''},
+  {text:'',cls:''},
+  {text:'    def',cls:'kw'},
+  {text:'        """加载18+语言安全规则集"""',cls:'cm'},
+  {text:'        rules = []',cls:''},
+  {text:'        rules.append(Rule(',cls:''},
+  {text:"            id='CWE-089',",cls:''},
+  {text:"            name='SQL注入检测',",cls:''},
+  {text:"            severity='CRITICAL',",cls:''},
+  {text:'        )',cls:''},
+  {text:'        return rules',cls:''},
+  {text:'',cls:''},
+  {text:'    def',cls:'kw'},
+  {text:'        """深度扫描源代码文件"""',cls:'cm'},
+  {text:'        findings = []',cls:''},
+  {text:'        ',cls:''},
+  {text:'        # 解析AST语法树',cls:'cm'},
+  {text:'        with open(file_path,',cls:''},
+  {text:"            tree = ast.parse(source)",cls:''},
+  {text:'            ',cls:''},
+  {text:'            # 遍历AST节点检测漏洞模式',cls:'cm'},
+  {text:'            for node in ast.walk(tree):',cls:''},
+  {text:'                if isinstance(node, ast.Call):',cls:''},
+  {text:'                    finding = self._check_call(node)',cls:''},
+  {text:'                    if finding:',cls:''},
+  {text:'                        findings.append(finding)',cls:''},
+  {text:'            ',cls:''},
+  {text:'            # AI二次验证 - 降低误报',cls:'cm'},
+  {text:'            findings = self.ai_model.verify(findings, source)',cls:''},
+  {text:'            ',cls:''},
+  {text:'        return findings',cls:''},
+  {text:'',cls:''},
+  {text:'    def',cls:'kw'},
+  {text:'        """生成安全审计报告"""',cls:'cm'},
+  {text:'        report = SecurityReport()',cls:''},
+  {text:'        report.title = f"软安SAST安全审计报告"',cls:''},
+  {text:'        report.findings = sorted(',cls:''},
+  {text:'            findings,',cls:''},
+  {text:'            key=lambda f: f.severity,',cls:''},
+  {text:'            reverse=True',cls:''},
+  {text:'        )',cls:''},
+  {text:'        report.accuracy = ',cls:''},
+  {text:'        return report.generate()',cls:''},
+  {text:'',cls:''},
+  {text:'if',cls:'kw'},
+  {text:'    scanner = RuanAnSAST()',cls:''},
+  {text:"    result = scanner.scan('app/main.py')",cls:''},
+  {text:"    print(f'[软安SAST] 扫描完成: {len(result)} 个问题')",cls:''},
+  {text:"    print(f'[软安SAST] 误报率 < 10%')",cls:''},
+  {text:"    print(f'[软安SAST] 您的代码，软安来保障')",cls:''},
+  {text:'',cls:''},
+];
+
+var i = 0;
+var ch = 0;
+var speed = 18; // ms per character
+var body = document.getElementById('codeBody');
+var currentLine = null;
+
+function typeNext(){
+  if(i >= lines.length){return;}
+  var line = lines[i];
+  if(ch === 0){
+    currentLine = document.createElement('div');
+    currentLine.className = 'line';
+    var num = document.createElement('span');
+    num.className = 'num';
+    num.textContent = (i+1);
+    currentLine.appendChild(num);
+    var code = document.createElement('span');
+    code.className = line.cls||'';
+    currentLine.appendChild(code);
+    body.appendChild(currentLine);
+    body.scrollTop = body.scrollHeight;
+  }
+  var codeSpan = currentLine.querySelector('span:last-child');
+  if(ch < line.text.length){
+    codeSpan.textContent += line.text[ch];
+    ch++;
+    setTimeout(typeNext, speed);
+  } else {
+    if(currentLine.querySelector('.cursor')){
+      currentLine.querySelector('.cursor').remove();
+    }
+    i++; ch = 0;
+    setTimeout(typeNext, speed * 3);
+  }
+}
+typeNext();
+</script>
+</body>
+</html>

@@ -18,6 +18,8 @@ CUSTOMER_PORTAL_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-custom
 PARTNER_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-partner-portal.html")
 PROMO_VIDEO_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\promo_video.html")
 OUTRO_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\outro.html")
+INTRO_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\intro.html")
+OUTRO_CODE_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\outro_code.html")
 ADMIN_PWD = os.environ.get("ADMIN_PWD", "admin123")
 
 # ── 安全配置 ──
@@ -1657,6 +1659,12 @@ async def promo_video_file(): return FileResponse(str(PROMO_VIDEO_FILE))
 
 @app.get("/outro.html")
 async def outro_file(): return FileResponse(str(OUTRO_FILE))
+
+@app.get("/intro.html")
+async def intro_file(): return FileResponse(str(INTRO_FILE))
+
+@app.get("/outro_code.html")
+async def outro_code_file(): return FileResponse(str(OUTRO_CODE_FILE))
 
 @app.on_event("startup")
 async def startup():
