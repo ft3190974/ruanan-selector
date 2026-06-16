@@ -18,6 +18,7 @@ CUSTOMER_PORTAL_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-custom
 PARTNER_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-partner-portal.html")
 PROMO_VIDEO_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\promo_video.html")
 OUTRO_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\outro.html")
+RECRUIT_VIDEO_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\recruit_video.html")
 INTRO_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\intro.html")
 OUTRO_CODE_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\outro_code.html")
 ADMIN_PWD = os.environ.get("ADMIN_PWD", "admin123")
@@ -245,7 +246,16 @@ async def init_db():
             valid_from TEXT DEFAULT '', valid_days INTEGER DEFAULT 365, status TEXT DEFAULT 'active',
             created_at TEXT DEFAULT(datetime('now','localtime'))
         );
-        CREATE TABLE IF NOT EXISTS login_logs( id INTEGER PRIMARY KEY AUTOINCREMENT, user_type TEXT DEFAULT "internal", username TEXT, ip TEXT, success INTEGER DEFAULT 1, detail TEXT DEFAULT "", created_at TEXT DEFAULT(datetime('now','localtime')) ); CREATE TABLE IF NOT EXISTS customer_tokens(
+        CREATE TABLE IF NOT EXISTS login_logs( id INTEGER PRIMARY KEY AUTOINCREMENT, user_type TEXT DEFAULT "internal", username TEXT, ip TEXT, success INTEGER DEFAULT 1, detail TEXT DEFAULT "", created_at TEXT DEFAULT(datetime('now','localtime')) );
+        CREATE TABLE IF NOT EXISTS selection_records(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_info TEXT DEFAULT '', industry TEXT DEFAULT '',
+            product_needs TEXT DEFAULT '', biz_scenes TEXT DEFAULT '',
+            project_info TEXT DEFAULT '', advantages TEXT DEFAULT '',
+            custom_pain TEXT DEFAULT '', products TEXT DEFAULT '',
+            quote_range TEXT DEFAULT '', created_at TEXT DEFAULT(datetime('now','localtime'))
+        );
+        CREATE TABLE IF NOT EXISTS customer_tokens(
             id INTEGER PRIMARY KEY AUTOINCREMENT, customer_id INTEGER,
             token TEXT UNIQUE, created_at TEXT DEFAULT(datetime('now','localtime'))
         );
@@ -273,10 +283,12 @@ async def init_db():
         CREATE TABLE IF NOT EXISTS product_pages(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             product_id TEXT NOT NULL UNIQUE,
+            product_name TEXT DEFAULT '',
             intro TEXT DEFAULT '',
             detail TEXT DEFAULT '',
             updated_at TEXT DEFAULT(datetime('now','localtime'))
         );
+        -- product_name column added in v3.1
         CREATE TABLE IF NOT EXISTS training_modules(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             product_id TEXT NOT NULL, title TEXT NOT NULL,
@@ -298,6 +310,9 @@ async def init_db():
             created_at TEXT DEFAULT(datetime('now','localtime'))
         );
     """)
+    # Run migrations
+    try: await db.execute("ALTER TABLE product_pages ADD COLUMN product_name TEXT DEFAULT ''")
+    except: pass
     # Create default admin (only if not exists)
     try:
         ph = hashlib.sha256(ADMIN_PWD.encode()).hexdigest()
@@ -832,6 +847,46 @@ async def update_opportunity(oid: int, request: Request, stage: str = Form(""),
             await db.commit()
     finally: await db.close()
     return {"ok": True}
+
+# ═══════════════════════════════════════════════════
+# SELECTIONS (选型记录)
+# ═══════════════════════════════════════════════════
+@app.post("/api/selections")
+async def save_selection(request: Request, user_info: str = Form(""), industry: str = Form(""),
+                         product_needs: str = Form(""), biz_scenes: str = Form(""),
+                         project_info: str = Form(""), advantages: str = Form(""),
+                         custom_pain: str = Form(""), products: str = Form(""),
+                         quote_range: str = Form("")):
+    db = await get_db()
+    try:
+        cur = await db.execute(
+            "INSERT INTO selection_records(user_info,industry,product_needs,biz_scenes,project_info,advantages,custom_pain,products,quote_range) VALUES(?,?,?,?,?,?,?,?,?)",
+            (safe_str(user_info,2000), safe_str(industry,100), safe_str(product_needs,2000),
+             safe_str(biz_scenes,2000), safe_str(project_info,2000), safe_str(advantages,2000),
+             safe_str(custom_pain,2000), safe_str(products,2000), safe_str(quote_range,100)))
+        await db.commit()
+        return {"id": cur.lastrowid, "ok": True}
+    finally: await db.close()
+
+@app.get("/api/admin/selections")
+async def list_selections(request: Request, limit: int = 50):
+    await require_admin(request)
+    db = await get_db()
+    try:
+        rows = await db_fetchall(db,
+            "SELECT * FROM selection_records ORDER BY created_at DESC LIMIT ?", (min(limit, 200),))
+        return [dict(r) for r in rows]
+    finally: await db.close()
+
+@app.delete("/api/admin/selections/{sid}")
+async def delete_selection(sid: int, request: Request):
+    await require_admin(request)
+    db = await get_db()
+    try:
+        await db.execute("DELETE FROM selection_records WHERE id=?", (sid,))
+        await db.commit()
+        return {"ok": True}
+    finally: await db.close()
 
 # ═══════════════════════════════════════════════════
 # TICKETS (技术支持工单)
@@ -1585,13 +1640,23 @@ async def get_product_page(pid: str):
     finally: await db.close()
 
 @app.post("/api/product-pages")
-async def save_product_page(request: Request, product_id: str = Form(...), intro: str = Form(""), detail: str = Form("")):
+async def save_product_page(request: Request, product_id: str = Form(...), intro: str = Form(""), detail: str = Form(""), product_name: str = Form("")):
     await require_admin(request)
     db = await get_db()
     try:
-        await db.execute("INSERT OR REPLACE INTO product_pages(product_id,intro,detail,updated_at) VALUES(?,?,?,datetime('now','localtime'))",(safe_str(product_id,50),safe_str(intro,5000),safe_str(detail,20000)))
+        await db.execute("INSERT OR REPLACE INTO product_pages(product_id,product_name,intro,detail,updated_at) VALUES(?,?,?,?,datetime('now','localtime'))",(safe_str(product_id,50),safe_str(product_name,200),safe_str(intro,5000),safe_str(detail,20000)))
         await db.commit()
         return {"ok":True}
+    finally: await db.close()
+
+@app.delete("/api/product-pages/{pid}")
+async def delete_product_page(pid: str, request: Request):
+    await require_admin(request)
+    db = await get_db()
+    try:
+        await db.execute("DELETE FROM product_pages WHERE product_id=?", (safe_str(pid,50),))
+        await db.commit()
+        return {"ok": True}
     finally: await db.close()
 
 @app.post("/api/change-password")
@@ -1659,6 +1724,9 @@ async def promo_video_file(): return FileResponse(str(PROMO_VIDEO_FILE))
 
 @app.get("/outro.html")
 async def outro_file(): return FileResponse(str(OUTRO_FILE))
+
+@app.get("/recruit_video.html")
+async def recruit_video_file(): return FileResponse(str(RECRUIT_VIDEO_FILE))
 
 @app.get("/intro.html")
 async def intro_file(): return FileResponse(str(INTRO_FILE))

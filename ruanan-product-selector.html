@@ -176,7 +176,7 @@ body{background:linear-gradient(135deg,#f0f4f8 0%,#e8edf2 100%);min-height:100vh
 </div>
 
 <header class="topbar">
-  <a class="logo" href="#"><div class="logo-icon">软</div>软安科技 · 用户自主选型助手</a>
+  <a class="logo" href="#"><div class="logo-icon">软</div>软安科技 · 快速获取解决方案与报价</a>
   <div class="hdr-actions">
     <button class="btn btn-ghost btn-sm" onclick="window.location.href='ruanan-marketing-platform.html'">🏠 返回首页</button>
     <span style="font-size:12px;color:var(--text)" id="loginUser"></span>
@@ -197,9 +197,9 @@ body{background:linear-gradient(135deg,#f0f4f8 0%,#e8edf2 100%);min-height:100vh
     <span class="step-arrow" id="stepArr3">›</span>
     <div class="step-item"><div class="step-num" id="stepNum4">4</div>项目信息</div>
     <span class="step-arrow" id="stepArr4">›</span>
-    <div class="step-item"><div class="step-num" id="stepNum5">5</div>优势匹配</div>
+    <div class="step-item"><div class="step-num" id="stepNum5">5</div>项目关注度选择</div>
     <span class="step-arrow" id="stepArr5">›</span>
-    <div class="step-item"><div class="step-num" id="stepNum6">6</div>软件解决方案</div>
+    <div class="step-item"><div class="step-num" id="stepNum6">6</div>需求汇总</div>
     <span class="step-arrow" id="stepArr6">›</span>
     <div class="step-item"><div class="step-num" id="stepNum7">7</div>获取报价</div>
   </div>
@@ -227,7 +227,7 @@ function fd(o){var f=new FormData();for(var k in o)f.append(k,o[k]);return f;}
 // Login UI
 function showLogin(tab){
   tab=tab||'login';
-  var h='<h2>🛡 软安科技 · 用户自主选型助手</h2><div class="sub">请登录或注册后使用</div>';
+  var h='<h2>🛡 软安科技 · 快速获取解决方案与报价</h2><div class="sub">请登录或注册后使用</div>';
   h+='<div class="login-tabs"><span class="'+(tab==='login'?'active':'')+'" onclick="showLogin(\'login\')">登录</span><span class="'+(tab==='register'?'active':'')+'" onclick="showLogin(\'register\')">注册</span><span class="'+(tab==='forgot'?'active':'')+'" onclick="showLogin(\'forgot\')">忘记密码</span></div>';
   if(tab==='register'){
     h+='<label>用户名 *</label><input id="regUser" placeholder="4-20位字母或数字"><div class="err-msg" id="regUserErr">用户名需4-20位字母或数字</div>';
@@ -378,23 +378,10 @@ const PRODUCTS = {
 };
 
 // ===== 行业数据 =====
-const INDUSTRIES = {
-  汽车:{icon:'🚗',reg:'UN R155/R156 · ISO/SAE 21434 · GB/T 44495 · ISO 26262 功能安全',pain:'整车厂商（OEM）严格审计Tier 1/2软件供应商，要求交付代码必须附带安全审计报告和SBOM。单辆高端车代码量超1亿行，需满足R155法规要求的全链路软件安全审计和OTA更新安全管理。ISO 26262对安全关键代码有功能安全验证强制要求。',rec:['SAST','SCA','FIRMWARE','AI_SAST']},
-  芯片半导体:{icon:'🔲',reg:'密评 · GB/T 18336 · NIST FIPS 140',pain:'安全启动链验证链路长，RISC-V生态工具不成熟，芯片流片前需完成BootROM安全审计以避免不可修复的硬件漏洞。',rec:['FIRMWARE','SAST','SCA']},
-  消费电子:{icon:'📱',reg:'等保2.0 · 个人信息保护法 · CCC认证 · EU CRA',pain:'产品迭代周期短（2-4周），安全测试常被压缩。智能设备大量使用开源组件和第三方SDK，供应链透明度低，用户隐私泄露风险高。欧盟CRA要求提供SBOM和软件安全自评估，出口产品需满足CRA合规。',rec:['SAST','SCA','FIRMWARE']},
-  金融:{icon:'🏦',reg:'等保2.0三级 · JR/T 0071 · PCI DSS',pain:'监管对软件供应链安全要求持续收紧，开源组件漏洞（如Log4j）需72小时内完成应急响应。AI大模型应用激增，大模型安全成为新兴监管重点。',rec:['SAST','SCA','LLM']},
-  军工:{icon:'🛡️',reg:'GJB 8114/5369 · 涉密信息系统安全保密规定',pain:'必须完全离线部署，无法使用联网工具。大量90年代至今的遗留C/C++/汇编代码缺乏文档和测试，人工审计效率极低。国产化替代要求所有工具来自国内供应商。',rec:['SAST','FIRMWARE','AI_SAST']},
-  政府:{icon:'🏛️',reg:'等保2.0 · 关基保护条例 · 信创目录 · 供应链安全审查 · 大模型备案',pain:'信创环境安全工具匮乏，关基软件供应链需自主可控。政务系统大量依赖外包开发，需源码级安全审计。开源软件需满足供应链安全审查要求，AI大模型应用需完成安全评估和备案。',rec:['SAST','SCA','LLM']},
-  医疗设备:{icon:'🏥',reg:'医疗器械网络安全注册审查 · IEC 62304 · FDA 510(k)/PMA · 个人信息保护法',pain:'医疗器械软件（SaMD）注册需提供安全审计报告，固件涉及患者安全。FDA强制要求上市前提交软件安全验证证据，NMPA注册同样要求代码安全审查。开源组件（DICOM库、通信栈）使用普遍需合规管理。',rec:['SAST','SCA','FIRMWARE']},
-  教育:{icon:'🎓',reg:'等保2.0 · 教育App备案管理办法',pain:'安全投入预算有限，但涉及大量学生个人信息。开源学习管理系统（Moodle等）部署广泛，需要高性价比的安全方案。',rec:['SAST','SCA']},
-  电子通信:{icon:'📡',reg:'3GPP SECAM · 关基保护条例 · 商用密码应用',pain:'5G网络设备软件化趋势下，基站和核心网设备固件/软件安全审计需求激增。通信设备供应链涉及全球数百家供应商，需满足运营商准入要求。',rec:['FIRMWARE','SAST','SCA']},
-  信创软件:{icon:'🇨🇳',reg:'信创目录 · 等保2.0 · 关基保护条例 · 密码法',pain:'国产化替代要求全链路自主可控，信创环境（国产CPU+OS）安全工具匮乏。需满足密码法和关基合规审计，大量迁移代码需要安全评估。',rec:['SAST','SCA','AI_SAST']},
-  具身智能:{icon:'🦾',reg:'EU CRA · 等保2.0 · 生成式AI管理办法 · ISO 26262 功能安全',pain:'具身智能设备集成了大模型推理、多模态感知、运动控制等，软硬件栈复杂。需满足欧盟CRA（网络韧性法案）网络安全要求，功能安全（如ISO 26262导出的SOTIF）对AI决策安全有严格标准。AI模型安全和嵌入式固件安全风险并存。',rec:['FIRMWARE','LLM','SAST']},
-  低空经济:{icon:'🛩️',reg:'民航适航审定 · DO-178C · UN R155 · 等保2.0',pain:'无人机和eVTOL等低空飞行器涉及飞行控制、通信导航、避障系统等安全关键软件，需满足适航软件安全标准。固件和通讯协议安全要求极高。',rec:['SAST','FIRMWARE','SCA']},
-  能源:{icon:'⚡',reg:'等保2.0 · 关基保护条例 · 电力监控系统安全防护 · NERC CIP',pain:'电力、石油、新能源等能源关键基础设施面临高级威胁，SCADA/ICS系统安全漏洞频发。电力监控系统需满足16号令要求，新能源电站软件供应链缺乏统一安全标准。',rec:['SAST','SCA','FIRMWARE']},
-  游戏互联网:{icon:'🎮',reg:'等保2.0 · 个人信息保护法 · 未成年人网络保护 · EU CRA · GDPR',pain:'游戏引擎和客户端代码量大、迭代快、外挂和逆向分析风险高。服务端涉及大量用户数据和支付信息，第三方SDK和开源组件使用广泛。欧盟CRA要求出口游戏/应用提供SBOM和软件安全声明，安全合规压力大。',rec:['SAST','SCA']},
-  智能硬件:{icon:'🔀',reg:'等保2.0 · CCC认证 · EU CRA · 商用密码应用',pain:'充电宝、交换机、安防摄像头、路由器和各类智能终端固件安全参差不齐。物联网设备量大面广，供应链组件复用度高，单个漏洞可影响海量设备。欧盟CRA要求物联网/智能硬件出口需提供完整SBOM和网络安全声明，固件级安全审计成为准入门槛。',rec:['FIRMWARE','SAST','SCA']},
-};
+const INDUSTRIES = {"汽车行业":{"icon":"🚗","subs":{"整车厂商":{"rec":["SAST","SCA","BAT","FUZZ","CodingHawk","GuardFox"],"reg":"UN R155/R156 · ISO/SAE 21434 · GB/T 44495"},"汽车供应链行业":{"rec":["SAST","SCA","BAT","FUZZ","CodingHawk","GuardFox"],"reg":"Tier1/2供应商审计 · 软件交付安全"},"汽车测评/咨询机构":{"rec":["SAST","SCA","BAT","FUZZ","GuardFox"],"reg":"测评机构合规 · 第三方安全评估"}}},"军工行业":{"icon":"🛡️","subs":{"军工客户":{"rec":["SAST","SCA","BAT","FUZZ","MST","GuardFox"],"reg":"GJB 8114/5369 · 涉密离线部署"},"军工测评机构":{"rec":["SAST","SCA","BAT","FUZZ","MST","GuardFox"],"reg":"GJB标准验证 · 涉密环境审计"}}},"智能设备行业":{"icon":"📱","subs":{"电子通信行业":{"rec":["SAST","SCA","BAT","FUZZ","CodingHawk","GuardFox"],"reg":"3GPP SECAM · 通信设备安全"},"消费电子行业":{"rec":["SAST","SCA","BAT","FUZZ","CodingHawk","GuardFox"],"reg":"等保2.0 · CCC认证 · EU CRA"},"具身智能行业":{"rec":["SAST","SCA","BAT","CodingHawk","GuardFox"],"reg":"功能安全 · AI安全 · EU CRA"},"低空经济行业":{"rec":["SAST","SCA","BAT"],"reg":"民航适航 · DO-178C · UN R155"},"安防行业":{"rec":["SAST","SCA","BAT","CodingHawk","GuardFox"],"reg":"等保2.0 · 物联网安全"}}},"芯片半导体行业":{"icon":"🔲","subs":{"数字计算芯片":{"rec":["SAST","SCA","BAT","CodingHawk","GuardFox"],"reg":"密评 · BootROM审计 · 安全启动"},"数字复合芯片":{"rec":["SAST","SCA","BAT","CodingHawk","GuardFox"],"reg":"芯片安全验证 · 硬件漏洞检测"},"存储数据电子元器件":{"rec":["SAST","SCA","BAT","CodingHawk","GuardFox"],"reg":"固件安全 · 数据保护合规"}}},"金融行业":{"icon":"🏦","subs":{"金融科技行业":{"rec":["SAST","SCA","CodingHawk","MST","GuardFox"],"reg":"等保2.0三级 · PCI DSS · 大模型安全"}}},"政教行业":{"icon":"🏛️","subs":{"政府行业":{"rec":["SAST","SCA","BAT","MST","GuardFox"],"reg":"关基保护 · 信创目录 · 大模型备案"},"高等教育行业":{"rec":["SAST","SCA","BAT","CodingHawk","MST","GuardFox"],"reg":"等保2.0 · 科研安全 · 学生隐私"}}},"国央企行业":{"icon":"🏢","subs":{"电信运营商":{"rec":["SAST","SCA","BAT","MST","GuardFox"],"reg":"关基保护 · 通信网络安全"},"能源行业":{"rec":["SAST","SCA","BAT","MST","GuardFox"],"reg":"关基保护 · 电力监控安全 · NERC CIP"},"央企集团":{"rec":["SAST","SCA","BAT","MST","GuardFox"],"reg":"信创国产化 · 供应链安全审查"}}},"互联网行业":{"icon":"🌐","subs":{"游戏制作商":{"rec":["SAST","SCA","CodingHawk","GuardFox"],"reg":"等保2.0 · EU CRA · 反外挂"},"云服务商":{"rec":["SAST","SCA","CodingHawk","GuardFox"],"reg":"DevSecOps · 云原生安全"},"电商平台":{"rec":["SAST","SCA","GuardFox"],"reg":"个人信息保护 · 支付安全"}}},"测评认证/咨询机构":{"icon":"📊","subs":{"第三方测评&认证":{"rec":["SAST","SCA","BAT","MST","GuardFox"],"reg":"CNAS · 测评标准 · 工具采购"},"IT咨询公司":{"rec":["SAST","SCA","BAT","MST","GuardFox"],"reg":"客户项目交付 · 多行业覆盖"}}}};
+function getIndustryData(){if(!state.industry||!state.subIndustry)return null;var l1=INDUSTRIES[state.industry];if(!l1)return null;return l1.subs[state.subIndustry]||null;}
+function getIndustryIcon(){var l1=INDUSTRIES[state.industry];return l1?l1.icon:"🏭";}
+
 
 // ===== 场景库 =====
 const SCENARIOS = {
@@ -434,7 +421,7 @@ const BUDGET_RANGES = [
 ];
 
 // ===== State =====
-let state = {step:0,userInfo:{company:'',address:'',contact:'',title:'',email:'',phone:''},industry:null,productNeeds:[],bizScenes:[],projectInfo:{scale:'',teamSize:'',languages:[],codeSize:'',focuses:[],replaceExisting:'',existingTool:''},selectedAdvantages:[],customPain:'',products:[]};
+let state = {step:0,subIndustry:null,userInfo:{company:'',address:'',contact:'',title:'',email:'',phone:''},industry:null,productNeeds:[],bizScenes:[],projectInfo:{scale:'',teamSize:'',languages:[],codeSize:'',focuses:[],replaceExisting:'',existingTool:''},selectedAdvantages:[],customPain:'',products:[]};
 
 // ===== Render Engine =====
 function render(){
@@ -489,23 +476,40 @@ function rStep0(){
 
 // ===== Step 1: 行业 =====
 function rStep1(){
-  let h=`<div class="card"><div class="sec-label">STEP 1 · 选择行业</div><h2 class="sec-title">选择客户所属行业</h2><p class="sec-sub">系统将根据行业自动匹配对应的法规要求和产品推荐策略</p><div class="grid3">`;
-  for(const [key,ind] of Object.entries(INDUSTRIES)){
-    h+=`<div class="ind-card${state.industry===key?' selected':''}" data-action="selectIndustry" data-param="${key}">
-      <div class="ind-icon">${ind.icon}</div>
-      <div class="ind-name">${key}</div>
-      <div class="ind-reg">${ind.reg}</div>
-    </div>`;
-  }
-  h+=`</div></div>`;
-  if(state.industry){
-    const ind=INDUSTRIES[state.industry];
-    h+=`<div class="card" style="border-left:4px solid var(--blue)"><div style="font-weight:700;color:var(--text-darker);margin-bottom:6px">📋 ${state.industry}行业 · 合规要求</div><div style="font-size:13px;color:var(--text);line-height:1.8">${ind.reg}</div></div>`;
-    h+=`<div style="display:flex;gap:12px;justify-content:center;margin-top:16px">
-      <button class="btn btn-outline btn-lg" data-action="goStep" data-param="0">← 返回修改信息</button>
-      <button class="btn btn-primary btn-lg" data-action="goStep" data-param="2">下一步：选择需求场景 →</button></div>`;
+  var h="";
+  if(!state.industry){
+    h+="<div class=\"card\"><div class=\"sec-label\">STEP 1 · 选择行业</div><h2 class=\"sec-title\">选择客户所属行业大类</h2><p class=\"sec-sub\">请先选择一级行业，再选择细分领域</p><div class=\"grid3\">";
+    for(var key in INDUSTRIES){
+      var ind=INDUSTRIES[key];
+      h+="<div class=\"ind-card\" data-action=\"selectIndustry\" data-param=\""+key+"\"><div class=\"ind-icon\">"+ind.icon+"</div><div class=\"ind-name\">"+key+"</div><div class=\"ind-reg\" style=\"font-size:11px;color:var(--text3)\">"+Object.keys(ind.subs).length+"个细分领域</div></div>";
+    }
+    h+="</div></div>";
+    h+="<div style=\"text-align:center;margin-top:8px\"><button class=\"btn btn-ghost btn-sm\" onclick=\"goStep(0)\">← 返回修改信息登记</button></div>";
+  }if(state.industry){
+    var ind=INDUSTRIES[state.industry];
+    h+="<div class=\"card\"><div class=\"sec-label\">STEP 1 · 选择细分行业</div><h2 class=\"sec-title\">"+ind.icon+" "+state.industry+"</h2><p class=\"sec-sub\">请选择具体的细分行业领域</p><div class=\"grid3\">";
+    for(var sk in ind.subs){
+      var sub=ind.subs[sk];
+      var sel=(state.subIndustry===sk);
+      h+="<div class=\"ind-card"+(sel?" selected":"")+"\" data-action=\"selectSubIndustry\" data-param=\""+sk+"\"><div style=\"font-size:24px;margin-bottom:8px\">"+ (sel?"✅":"📌") +"</div><div class=\"ind-name\">"+sk+"</div><div class=\"ind-reg\" style=\"font-size:11px\">"+sub.reg+"</div></div>";
+    }
+    h+="</div></div>";
+    h+="<div style=\"text-align:center;margin-top:8px\"><button class=\"btn btn-ghost btn-sm\" data-action=\"selectIndustry\" data-param=\"\">← 重新选择行业大类</button></div>";
+    if(state.subIndustry){
+      h+="<div style=\"display:flex;gap:12px;justify-content:center;margin-top:16px\"><button class=\"btn btn-outline btn-lg\" onclick=\"goStep(0)\">← 返回修改信息</button><button class=\"btn btn-primary btn-lg\" onclick=\"goStep(2)\">下一步：选择产品需求 →</button></div>";
+    }
   }
   return h;
+}
+function saveUserInfo(){
+  var c=document.getElementById('uCompany')?.value.trim();
+  var ct=document.getElementById('uContact')?.value.trim();
+  var t=document.getElementById('uTitle')?.value.trim();
+  var e=document.getElementById('uEmail')?.value.trim();
+  var p=document.getElementById('uPhone')?.value.trim();
+  if(!c||!ct||!t||!e||!p){toast('请填写所有必填项','error');return}
+  state.userInfo={company:c,address:document.getElementById('uAddress')?.value||'',contact:ct,title:t,email:e,phone:p};
+  goStep(1);
 }
 
 // ===== Step 2: 产品需求 =====
@@ -530,8 +534,8 @@ const PRODUCT_NEEDS = {
 };
 
 function rStep2(){
-  const ind = INDUSTRIES[state.industry];
-  let h='<div class="card"><div class="sec-label">STEP 2 · 产品需求</div><h2 class="sec-title">选择产品需求 <span style="font-size:14px;color:var(--text);font-weight:400">（多选）</span></h2><p class="sec-sub">'+ind.icon+' '+state.industry+'行业 · 请选择需要的工具产品与测试服务</p>';
+  var indIcon=getIndustryIcon();
+  let h='<div class="card"><div class="sec-label">STEP 2 · 产品需求</div><h2 class="sec-title">选择产品需求 <span style="font-size:14px;color:var(--text);font-weight:400">（多选）</span></h2><p class="sec-sub">'+indIcon+' '+state.industry+' · '+state.subIndustry+'行业 · 请选择需要的工具产品与测试服务</p>';
 
   h+='<div class="scene-group"><div class="scene-group-title"><span class="icon">🔧</span>工具需求</div><div class="scene-tags">';
   for(var i=0;i<PRODUCT_NEEDS.tools.length;i++){
@@ -558,10 +562,9 @@ function rStep2(){
 const BIZ_SCENES = {
   compliance:[
     {id:'bc1',title:'出海法规',desc:'满足欧盟CRA、GDPR等出海合规要求',icon:'🌍'},
-    {id:'bc2',title:'行业强标',desc:'ISO 26262/ISO 21434/DO-178C等行业强制标准',icon:'📏'},
-    {id:'bc3',title:'国内法规',desc:'等保/关基/信创/GB44495等国内法规',icon:'🇨🇳'},
-    {id:'bc4',title:'技术强标',desc:'MISRA C/C++、CERT、GJB等编码规范',icon:'⚡'},
-    {id:'bc5',title:'产品资质认证',desc:'TUV/ASPICE/CC EAL等产品认证',icon:'🏅'},
+    {id:'bc2',title:'行业强标',desc:'需满足各行业如汽车、军工、安可测评等行业标准',icon:'📏'},
+    {id:'bc3',title:'国内法规',desc:'需供应链安全国标等',icon:'🇨🇳'},
+        {id:'bc5',title:'产品资质认证',desc:'TUV/ASPICE/CC EAL等产品认证',icon:'🏅'},
     {id:'bc6',title:'下游客户供应链审查',desc:'应客户要求进行供应链安全审查',icon:'🔗'},
     {id:'bc7',title:'开源合规审计',desc:'扫描开源许可证冲突和传染性风险',icon:'📜'},
     {id:'bc8',title:'软件供应链审查',desc:'对软件项目的供应链安全进行全面审查',icon:'🔍'},
@@ -585,8 +588,8 @@ const BIZ_SCENES = {
 };
 
 function rStep3(){
-  const ind = INDUSTRIES[state.industry];
-  let h='<div class="card"><div class="sec-label">STEP 3 · 业务场景描述</div><h2 class="sec-title">选择业务场景 <span style="font-size:14px;color:var(--text);font-weight:400">（多选）</span></h2><p class="sec-sub">'+ind.icon+' '+state.industry+'行业 · 请根据实际业务需求选择对应的场景类别</p>';
+  var indIcon=getIndustryIcon();
+  let h='<div class="card"><div class="sec-label">STEP 3 · 业务场景描述</div><h2 class="sec-title">选择业务场景 <span style="font-size:14px;color:var(--text);font-weight:400">（多选）</span></h2><p class="sec-sub">'+indIcon+' '+state.industry+' · '+state.subIndustry+'行业 · 请根据实际业务需求选择对应的场景类别</p>';
 
   h+='<div class="scene-group"><div class="scene-group-title"><span class="icon">📋</span>第一类：合规驱动</div><div class="scene-tags">';
   for(var i=0;i<BIZ_SCENES.compliance.length;i++){
@@ -630,12 +633,12 @@ function rStep4(){
   var h='<div class="card"><div class="sec-label">STEP 4 · 项目基本信息描述</div><h2 class="sec-title">填写项目基本信息</h2><p class="sec-sub">以下信息将帮助我们精准匹配产品和报价方案</p>';
 
   // 1. 项目规模
-  h+='<div class="form-group"><label>1. 项目规模 *</label><select id="pScale" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit"><option value="">-- 请选择 --</option>';
+  h+='<div class="form-group"><label>1. 项目规模 *</label><select id="pScale" onchange="state.projectInfo.scale=this.value" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit"><option value="">-- 请选择 --</option>';
   for(var i=0;i<PROJECT_OPTIONS.scales.length;i++){h+='<option value="'+PROJECT_OPTIONS.scales[i]+'"'+(info.scale===PROJECT_OPTIONS.scales[i]?' selected':'')+'>'+PROJECT_OPTIONS.scales[i]+'</option>';}
   h+='</select></div>';
 
   // 2. 研发团队规模
-  h+='<div class="form-group"><label>2. 研发团队规模 *</label><select id="pTeamSize" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit"><option value="">-- 请选择 --</option>';
+  h+='<div class="form-group"><label>2. 研发团队规模 *</label><select id="pTeamSize" onchange="state.projectInfo.teamSize=this.value" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit"><option value="">-- 请选择 --</option>';
   for(var j=0;j<PROJECT_OPTIONS.teamSizes.length;j++){h+='<option value="'+PROJECT_OPTIONS.teamSizes[j]+'"'+(info.teamSize===PROJECT_OPTIONS.teamSizes[j]?' selected':'')+'>'+PROJECT_OPTIONS.teamSizes[j]+'</option>';}
   h+='</select></div>';
 
@@ -648,30 +651,37 @@ function rStep4(){
   h+='</div></div>';
 
   // 4. 被测项大小
-  h+='<div class="form-group"><label>4. 被测项大小 *</label><select id="pCodeSize" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit"><option value="">-- 请选择 --</option>';
+  h+='<div class="form-group"><label>4. 被测项大小 *</label><select id="pCodeSize" onchange="state.projectInfo.codeSize=this.value" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit"><option value="">-- 请选择 --</option>';
   for(var m=0;m<PROJECT_OPTIONS.codeSizes.length;m++){h+='<option value="'+PROJECT_OPTIONS.codeSizes[m]+'"'+(info.codeSize===PROJECT_OPTIONS.codeSizes[m]?' selected':'')+'>'+PROJECT_OPTIONS.codeSizes[m]+'</option>';}
   h+='</select></div>';
 
-  // 5. 项目关注度（多选）
-  h+='<div class="form-group"><label>5. 项目关注度（可多选）</label><div class="inline-tags">';
-  for(var n=0;n<PROJECT_OPTIONS.focuses.length;n++){
-    var focus=PROJECT_OPTIONS.focuses[n];
-    h+='<div class="inline-tag'+(info.focuses&&info.focuses.indexOf(focus)>=0?' selected':'')+'" data-action="toggleFocus" data-param="'+focus+'">'+focus+'</div>';
-  }
-  h+='</div></div>';
-
-  // 6. 是否替换现有产品
-  h+='<div class="form-group"><label>6. 是否替换现有产品 *</label><select id="pReplace" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit" onchange="toggleReplaceInput()"><option value="">-- 请选择 --</option><option value="是"'+(info.replaceExisting==='是'?' selected':'')+'>是</option><option value="否"'+(info.replaceExisting==='否'?' selected':'')+'>否</option></select></div>';
-  h+='<div class="form-group" id="replaceInput" style="display:'+(info.replaceExisting==='是'?'block':'none')+'"><label>现有工具名称</label><input id="pExistingTool" value="'+(info.existingTool||'')+'" placeholder="请填写当前使用的工具名称"></div>';
+  // 5. 是否替换现有产品
+  h+='<div class="form-group"><label>6. 是否替换现有产品 *</label><select id="pReplace" onchange="state.projectInfo.replaceExisting=this.value;toggleReplaceInput()" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit"><option value="">-- 请选择 --</option><option value="是"'+(info.replaceExisting==='是'?' selected':'')+'>是</option><option value="否"'+(info.replaceExisting==='否'?' selected':'')+'>否</option></select></div>';
+  h+='<div class="form-group" id="replaceInput" style="display:'+(info.replaceExisting==='是'?'block':'none')+'"><label>现有工具名称</label><input id="pExistingTool" value="'+(info.existingTool||'')+'" placeholder="请填写当前使用的工具名称" onchange="state.projectInfo.existingTool=this.value"></div>';
 
   h+='</div>';
   h+='<div style="display:flex;gap:12px;justify-content:center">';
   h+='<button class="btn btn-outline btn-lg" data-action="goStep" data-param="3">← 返回业务场景</button>';
-  h+='<button class="btn btn-primary btn-lg" data-action="saveProjectInfo">下一步：查看推荐方案 →</button>';
+  h+='<button class="btn btn-primary btn-lg" data-action="saveProjectInfo">下一步：选择项目关注度 →</button>';
   h+='</div>';
   return h;
 }
 function toggleReplaceInput(){var v=document.getElementById('pReplace').value;document.getElementById('replaceInput').style.display=v==='是'?'block':'none';}
+
+function saveProjectInfo(){
+  var scale=document.getElementById('pScale')?.value||'';
+  var teamSize=document.getElementById('pTeamSize')?.value||'';
+  var codeSize=document.getElementById('pCodeSize')?.value||'';
+  var replaceExisting=document.getElementById('pReplace')?.value||'';
+  var existingTool=document.getElementById('pExistingTool')?.value||'';
+  if(!scale||!teamSize||!codeSize||!replaceExisting){toast('请填写所有必填项','error');return}
+  state.projectInfo.scale=scale;
+  state.projectInfo.teamSize=teamSize;
+  state.projectInfo.codeSize=codeSize;
+  state.projectInfo.replaceExisting=replaceExisting;
+  state.projectInfo.existingTool=existingTool;
+  goStep(5);
+}
 
 // ===== Step 5: 优势匹配 =====
 function generateAdvantages(){
@@ -723,390 +733,158 @@ function generateAdvantages(){
   return advantages;
 }
 
+var USER_FOCUS_OPTIONS = ["检测工具精准度高，误报低","需要工具支持集成自动化，智能化","需要工具支持的规则丰富","需要检测报告与工具结果支撑合规需求","检测工具需具备对检测结果的进一步分析验证能力","被测项目很大很特殊需要特殊支持","需要具有同行业案例落地经验","需要完善的售后服务体系","产品要完全自主可控","检测工具需具备集合AI的方案能力","需要技术人员丰富的项目支持经验","需要提供完善的POC方案能力","需要提供能够落地的交付方案","需要提供有经验的项目管理人员"];
 function rStep5(){
-  var ind = INDUSTRIES[state.industry];
-  var advantages = generateAdvantages();
-  var h='<div class="card"><div class="sec-label">STEP 5 · 优势匹配</div><h2 class="sec-title">软安工具/服务优势匹配</h2><p class="sec-sub">'+ind.icon+' '+state.industry+'行业 · 基于您的项目信息，我们匹配了以下核心优势。请选择您最关注的项（多选）</p>';
-
+  var h='<div class="card"><div class="sec-label">STEP 5 · 项目关注度选择</div><h2 class="sec-title">选择您关注的方面</h2><p class="sec-sub">'+getIndustryIcon()+' '+state.industry+'行业 · 请选择您最关注的项（多选）</p>';
   h+='<div class="scene-tags" style="flex-direction:column;gap:8px">';
-  for(var i=0;i<advantages.length;i++){
-    var a=advantages[i];
-    h+='<div class="scene-tag'+(state.selectedAdvantages.indexOf(a.id)>=0?' selected':'')+'" data-action="toggleAdvantage" data-param="'+a.id+'" style="text-align:left;width:100%;padding:12px 16px">'+
-      '<div class="dot"></div><div style="flex:1"><div><b>'+a.icon+' '+a.title+'</b> <span style="font-size:10px;color:var(--blue);font-weight:600">['+a.product+']</span></div>'+
-      '<div class="desc">'+a.desc+'</div></div></div>';
+  for(var i=0;i<USER_FOCUS_OPTIONS.length;i++){
+    var fid='focus_'+i;
+    var sel=state.selectedAdvantages.indexOf(fid)>=0;
+    h+='<div class="scene-tag'+(sel?' selected':'')+'" data-action="toggleAdvantage" data-param="'+fid+'" style="text-align:left;width:100%;padding:12px 16px">'+
+      '<div class="dot"></div><div style="flex:1"><b>'+(i+1)+'. '+USER_FOCUS_OPTIONS[i]+'</b></div></div>';
   }
+  var fid15='focus_14';
+  var sel15=state.selectedAdvantages.indexOf(fid15)>=0;
+  h+='<div class="scene-tag'+(sel15?' selected':'')+'" data-action="toggleAdvantage" data-param="'+fid15+'" style="text-align:left;width:100%;padding:12px 16px">'+
+    '<div class="dot"></div><div style="flex:1"><b>15. 其他</b></div></div>';
+  h+='<div id="otherFocusWrap" style="margin-top:8px;display:'+(sel15?'block':'none')+'">'+
+    '<input id="otherFocusText" value="'+(state.customPain||'')+'" placeholder="请补充其他关注点..." style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit" onchange="state.customPain=this.value">'+
+    '</div>';
   h+='</div></div>';
-
   h+='<div style="display:flex;gap:12px;justify-content:center">';
   h+='<button class="btn btn-outline btn-lg" data-action="goStep" data-param="4">← 返回项目信息</button>';
-  h+='<button class="btn btn-primary btn-lg" data-action="goNextCheck">下一步：生成软件解决方案 →</button>';
+  h+='<button class="btn btn-primary btn-lg" data-action="goNextCheck">下一步：项目需求汇总 →</button>';
   h+='</div>';
   return h;
 }
 
-// ===== Step 6: 软件解决方案 =====
+// ===== Step 6: 项目需求汇总 =====
 function rStep6(){
-  var ind = INDUSTRIES[state.industry];
-  var recommended = computeRecommendations();
-  var info = state.projectInfo||{};
-  var advantages = generateAdvantages();
-  var selected = advantages.filter(function(a){return state.selectedAdvantages.indexOf(a.id)>=0;});
-
-  var h='<div class="card"><div class="sec-label">STEP 6 · 软件解决方案</div><h2 class="sec-title">'+ind.icon+' '+state.industry+'行业 · 智能推荐方案</h2><p class="sec-sub">基于行业、'+state.productNeeds.length+'个产品需求、'+state.bizScenes.length+'个业务场景、'+(info.languages||[]).length+'种开发语言综合分析</p>';
-
-  // Selected advantages summary
-  if(selected.length>0){
-    h+='<div style="margin-bottom:16px;padding:14px;background:#f8fdf9;border-radius:10px;border-left:4px solid var(--green)">';
-    h+='<b>✅ 您关注的优势项 ('+selected.length+'项)：</b> ';
-    h+=selected.map(function(a){return a.icon+' '+a.title;}).join(' · ');
-    h+='</div>';
+  var ui=state.userInfo||{},info=state.projectInfo||{};
+  var focusLabels=[];
+  for(var fi=0;fi<state.selectedAdvantages.length;fi++){
+    var fid=state.selectedAdvantages[fi];
+    var idx=parseInt(fid.replace('focus_',''));
+    if(idx>=0&&idx<14){focusLabels.push(USER_FOCUS_OPTIONS[idx]);}
+    else if(idx===14){focusLabels.push('其他: '+(state.customPain||''));}
   }
-
-  for(var i=0;i<recommended.length;i++){
-    var rec=recommended[i];
-    var kb=PRODUCT_KB[rec.id]; if(!kb)continue;
-    h+='<div class="rec-product"><div style="display:flex;justify-content:space-between;align-items:flex-start">'+
-      '<div style="flex:1"><div class="rec-name">'+kb.icon+' '+kb.name+'</div><div class="rec-brand">'+kb.brand+' · 得分:'+rec.score+'</div>'+
-      '<div style="font-size:12px;color:var(--text);line-height:1.6;margin-bottom:6px">'+kb.desc+'</div>'+
-      '<div style="font-size:11px;color:var(--green-dark);margin-bottom:6px">📊 '+kb.metrics+'</div>'+
-      '<div class="rec-features">'+kb.features.map(function(f){return'<span class="rec-feature">'+f+'</span>';}).join('')+'</div>'+
-      '<div style="font-size:11px;color:var(--text);margin-top:6px">🎯 推荐理由: '+(rec.reason||'基于行业与需求匹配')+'</div></div>'+
-      '<div class="rec-price-box"><div class="rec-price">'+kb.price+'</div><div class="rec-price-label">参考年费</div></div>'+
-    '</div></div>';
+  var pnLabels=[];
+  var allNeeds=[].concat(PRODUCT_NEEDS.tools,PRODUCT_NEEDS.services);
+  for(var pi=0;pi<state.productNeeds.length;pi++){
+    var pn=allNeeds.find(function(x){return x.id===state.productNeeds[pi]});
+    if(pn)pnLabels.push(pn.icon+' '+pn.title);
   }
-
-  var productCount=recommended.length;
-  var basePrice=0;
-  for(var j=0;j<recommended.length;j++){var kbi=PRODUCT_KB[recommended[j].id];basePrice+=kbi&&kbi.id==='AI_SAST'?20:50;}
-  var bundleDiscount=productCount>=3?0.85:productCount>=2?0.9:1.0;
-  var discountedBase=Math.round(basePrice*bundleDiscount);
-
-  // Team size multiplier
-  var teamMultiplier=1.0; var teamLabel='';
-  if(info.teamSize&&info.teamSize.indexOf('不涉及')>=0){teamMultiplier=0.6;teamLabel='服务型项目';}
-  else if(info.teamSize&&info.teamSize.indexOf('50人')>=0){teamMultiplier=0.8;teamLabel='小团队';}
-  else if(info.teamSize&&info.teamSize.indexOf('100-500')>=0){teamMultiplier=1.0;teamLabel='中型团队';}
-  else if(info.teamSize&&info.teamSize.indexOf('500-2000')>=0){teamMultiplier=1.3;teamLabel='大型团队';}
-  else if(info.teamSize&&info.teamSize.indexOf('2000')>=0){teamMultiplier=1.6;teamLabel='超大型团队';}
-
-  // Project scale multiplier
-  var scaleMultiplier=info.scale&&info.scale.indexOf('多个')>=0?1.2:1.0;
-
-  var finalPrice=Math.round(discountedBase*teamMultiplier*scaleMultiplier);
-  var priceMin=Math.round(finalPrice*0.85);
-  var priceMax=Math.round(finalPrice*1.15);
-
-  // Pricing breakdown
-  h+='<div class="card" style="margin-top:16px"><h2 class="sec-title">💰 报价区间（参考）</h2>'+
-    '<table style="width:100%;font-size:13px">'+
-    '<tr style="background:#f5f5f5"><td style="padding:8px;font-weight:600">报价组成</td><td style="padding:8px;text-align:right;font-weight:600">金额</td></tr>'+
-    '<tr><td style="padding:6px 8px">产品许可费（'+productCount+'产品 × 50万'+(productCount>=2?' × '+bundleDiscount.toFixed(2)+'折扣':'')+'）</td><td style="padding:6px 8px;text-align:right">'+discountedBase+'万/年</td></tr>'+
-    '<tr><td style="padding:6px 8px">团队规模系数（'+teamLabel+'，系数'+teamMultiplier.toFixed(1)+'）</td><td style="padding:6px 8px;text-align:right">×'+teamMultiplier.toFixed(1)+'</td></tr>'+
-    (scaleMultiplier>1?'<tr><td style="padding:6px 8px">多项目系数</td><td style="padding:6px 8px;text-align:right">×1.2</td></tr>':'')+
-    '<tr style="font-weight:700;background:#e8eaf6"><td style="padding:8px">参考报价区间</td><td style="padding:8px;text-align:right;font-size:16px;color:var(--blue)">'+priceMin+'万 - '+priceMax+'万/年</td></tr>'+
-    '</table>'+
-    '<div style="margin-top:10px;font-size:11px;color:var(--text)">*报价包含5用户1并发基础许可。正式报价将根据实际用户数、并发需求、定制开发、驻场服务等因素调整。此区间仅供参考。</div></div>';
-
-  // 场景匹配说明
-  // action options  // 行动选项
-  const optCardStyle = 'border:2px solid var(--border);border-radius:14px;padding:20px 24px;cursor:pointer;transition:all 0.25s;background:#fff;text-align:center;flex:1;min-width:200px';
-  const optHover = 'onmouseover="this.style.borderColor=this.dataset.color;this.style.background=this.dataset.bg" onmouseout="this.style.borderColor=this.dataset.defaultBorder;this.style.background=this.dataset.defaultBg"';
-  h+=`<div class="card"><h2 class="sec-title">📋 下一步选择</h2><p class="sec-sub">根据推荐方案，选择你需要的后续服务</p>`;
-  h+=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">`;
-  h+=`<div ${optHover} data-color="var(--blue)" data-bg="var(--blue-light)" data-default-border="var(--border)" data-default-bg="#fff" style="${optCardStyle}" data-action="selectOption" data-param="quote"><div style="font-size:32px;margin-bottom:8px">📋</div><div style="font-weight:700;color:var(--text-darker);margin-bottom:4px">生成报价与方案</div><div style="font-size:12px;color:var(--text)">生成正式报价单<br>和解决方案文档</div></div>`;
-  h+=`<div ${optHover} data-color="var(--green)" data-bg="var(--green-light)" data-default-border="var(--border)" data-default-bg="#fff" style="${optCardStyle}" data-action="selectOption" data-param="contact"><div style="font-size:32px;margin-bottom:8px">📞</div><div style="font-weight:700;color:var(--text-darker);margin-bottom:4px">联系销售</div><div style="font-size:12px;color:var(--text)">直接与我们的<br>商务经理对接</div></div>`;
-  h+=`<div ${optHover} data-color="var(--purple)" data-bg="#F8F4FC" data-default-border="var(--border)" data-default-bg="#fff" style="${optCardStyle}" data-action="selectOption" data-param="communicate"><div style="font-size:32px;margin-bottom:8px">💬</div><div style="font-weight:700;color:var(--text-darker);margin-bottom:4px">进一步交流</div><div style="font-size:12px;color:var(--text)">留下需求和联系<br>方式，深入沟通</div></div>`;
-  h+=`<div ${optHover} data-color="var(--teal)" data-bg="#E8F6F7" data-default-border="var(--border)" data-default-bg="#fff" style="${optCardStyle}" data-action="selectOption" data-param="poc"><div style="font-size:32px;margin-bottom:8px">🔬</div><div style="font-weight:700;color:var(--text-darker);margin-bottom:4px">申请POC测试</div><div style="font-size:12px;color:var(--text)">申请产品试用<br>概念验证测试</div></div>`;
-  h+=`</div></div>`;
-
-  // 表单区 - 默认隐藏，选择后展开
-  h+=`<div id="optionForm" style="display:none"><div class="card" id="optionFormContent"></div></div>`;
-
-  h+=`<div style="display:flex;gap:12px;justify-content:center;margin-top:16px">
-    <button class="btn btn-outline" data-action="goStep" data-param="4">← 调整痛点</button>
-    <button class="btn btn-outline" data-action="resetAll">🔄 重新选型</button>
-  </div>`;
+  var sceneNames=[].concat(BIZ_SCENES.compliance,BIZ_SCENES.service,BIZ_SCENES.product,BIZ_SCENES.toolchain,BIZ_SCENES.supplychain);
+  var bsLabels=[];
+  for(var bi=0;bi<state.bizScenes.length;bi++){
+    var bs=sceneNames.find(function(x){return x.id===state.bizScenes[bi]});
+    if(bs)bsLabels.push(bs.icon+' '+bs.title);
+  }
+  var h='';
+  var reqId='RASA-'+(ui.company||'未知客户')+'-'+new Date().toISOString().slice(0,10).replace(/-/g,'');
+  h+='<div class="card"><div class="sec-label">STEP 6 · 项目需求汇总</div><h2 class="sec-title">📋 需求确认</h2><p class="sec-sub">需求单号：<b style="color:var(--blue);font-size:16px">'+reqId+'</b> · 请核对以下信息，确认无误后进入下一步</p>';
+  h+='<div style="background:var(--surface2);border-radius:12px;padding:20px 24px;line-height:2;font-size:14px">';
+  h+='<table style="width:100%;border-collapse:collapse"><tbody>';
+  h+='<tr><td style="padding:8px 12px;color:var(--text2);width:120px;font-weight:600">👤 客户名称</td><td style="padding:8px 12px">'+(ui.company||'-')+'</td></tr>';
+  h+='<tr><td style="padding:8px 12px;color:var(--text2);font-weight:600">📞 联系人</td><td style="padding:8px 12px">'+(ui.contact||'-')+' · '+(ui.title||'')+' · '+(ui.email||'')+' · '+(ui.phone||'')+'</td></tr>';
+  h+='<tr><td style="padding:8px 12px;color:var(--text2);font-weight:600">🏭 行业</td><td style="padding:8px 12px">'+getIndustryIcon()+' '+(state.industry||'')+' · '+(state.subIndustry||'')+'</td></tr>';
+  h+='<tr><td style="padding:8px 12px;color:var(--text2);font-weight:600">🔧 产品需求</td><td style="padding:8px 12px">'+(pnLabels.length>0?pnLabels.join('<br>') : '未选择')+'</td></tr>';
+  h+='<tr><td style="padding:8px 12px;color:var(--text2);font-weight:600">📋 业务场景</td><td style="padding:8px 12px">'+(bsLabels.length>0?bsLabels.join('<br>') : '未选择')+'</td></tr>';
+  h+='<tr><td style="padding:8px 12px;color:var(--text2);font-weight:600">📊 项目信息</td><td style="padding:8px 12px">';
+  h+='规模：'+(info.scale||'-')+' · 团队：'+(info.teamSize||'-')+' · 被测项：'+(info.codeSize||'-')+'<br>';
+  h+='语言：'+((info.languages||[]).length>0?info.languages.join('、'):'-');
+  if(info.replaceExisting==='是')h+=' · 替换现有：'+(info.existingTool||'-');
+  h+='</td></tr>';
+  h+='<tr><td style="padding:8px 12px;color:var(--text2);font-weight:600">🎯 项目关注度</td><td style="padding:8px 12px">'+(focusLabels.length>0?focusLabels.join('<br>') : '未选择')+'</td></tr>';
+  h+='</tbody></table>';
+  h+='</div></div>';
+  h+='<div style="display:flex;gap:12px;justify-content:center">';
+  h+='<button class="btn btn-outline btn-lg" data-action="goStep" data-param="5">← 返回重新选择</button>';
+  h+='<button class="btn btn-primary btn-lg" onclick="goStep(7)">✅ 确认信息，获取报价</button>';
+  h+='</div>';
   return h;
 }
 
-// ===== Actions =====
-function saveUserInfo(){
-  var u=state.userInfo;
-  u.company=document.getElementById('uCompany')?.value.trim()||'';
-  u.address=document.getElementById('uAddress')?.value.trim()||'';
-  u.contact=document.getElementById('uContact')?.value.trim()||'';
-  u.title=document.getElementById('uTitle')?.value.trim()||'';
-  u.email=document.getElementById('uEmail')?.value.trim()||'';
-  u.phone=document.getElementById('uPhone')?.value.trim()||'';
-  // Required check
-  if(!u.company||!u.contact||!u.title||!u.email||!u.phone){
-    toast('所有字段均为必填，请完整填写','error'); return;
-  }
-  // Email validation
-  if(!validateEmail(u.email)){
-    toast('请输入有效的邮箱地址（如 example@company.com）','error');
-    document.getElementById('uEmail').style.borderColor='#c62828';
-    document.getElementById('uEmail').focus();
-    return;
-  }
-  // Phone validation
-  if(!validatePhone(u.phone)){
-    toast('请输入有效的11位手机号码','error');
-    document.getElementById('uPhone').style.borderColor='#c62828';
-    document.getElementById('uPhone').focus();
-    return;
-  }
-  // Company name validation
-  if(!validateCompany(u.company)){
-    toast('请输入有效的公司全称','error');
-    document.getElementById('uCompany').style.borderColor='#c62828';
-    document.getElementById('uCompany').focus();
-    return;
-  }
-  // Reset error styles
-  document.querySelectorAll('#uEmail,#uPhone,#uCompany').forEach(function(el){el.style.borderColor='';});
-  state.step=1; render(); window.scrollTo(0,0);
+function goStep(n){
+  state.step=n; if(n===0){state.industry=null;state.subIndustry=null;state.productNeeds=[];state.bizScenes=[];state.projectInfo={};state.selectedAdvantages=[];state.customPain='';}
+  state.products=[]; render(); window.scrollTo(0,0);
 }
-function selectIndustry(key){ state.industry=key; state.productNeeds=[]; state.bizScenes=[]; state.products=[]; state.customPain=""; render(); }
-function saveProjectInfo(){
-  var info=state.projectInfo||{};
-  info.scale=document.getElementById('pScale')?.value||'';
-  info.teamSize=document.getElementById('pTeamSize')?.value||'';
-  info.codeSize=document.getElementById('pCodeSize')?.value||'';
-  info.replaceExisting=document.getElementById('pReplace')?.value||'';
-  info.existingTool=document.getElementById('pExistingTool')?.value||'';
-  if(!info.scale||!info.teamSize||!info.languages||!info.languages.length||!info.codeSize||!info.replaceExisting){
-    toast('请填写所有必填项（项目规模/团队规模/开发语言/被测项大小/是否替换）','error'); return;
-  }
-  if(info.replaceExisting==='是'&&!info.existingTool){toast('请填写现有工具名称','error');return;}
-  state.projectInfo=info; state.step=5; render(); window.scrollTo(0,0);
-}
-
-function toggleLang(lang){
-  if(!state.projectInfo)state.projectInfo={};
-  if(!state.projectInfo.languages)state.projectInfo.languages=[];
-  var idx=state.projectInfo.languages.indexOf(lang);
-  if(idx>=0)state.projectInfo.languages.splice(idx,1);else state.projectInfo.languages.push(lang);
-  render();
-}
-function toggleFocus(focus){
-  if(!state.projectInfo)state.projectInfo={};
-  if(!state.projectInfo.focuses)state.projectInfo.focuses=[];
-  var idx=state.projectInfo.focuses.indexOf(focus);
-  if(idx>=0)state.projectInfo.focuses.splice(idx,1);else state.projectInfo.focuses.push(focus);
-  render();
-}
-function toggleProductNeed(id){ var idx=state.productNeeds.indexOf(id); if(idx>=0)state.productNeeds.splice(idx,1); else state.productNeeds.push(id); render(); }
-function toggleBizScene(id){ var idx=state.bizScenes.indexOf(id); if(idx>=0)state.bizScenes.splice(idx,1); else state.bizScenes.push(id); render(); }
-function toggleAdvantage(id){ var idx=state.selectedAdvantages.indexOf(id); if(idx>=0)state.selectedAdvantages.splice(idx,1); else state.selectedAdvantages.push(id); render(); }
 function goNextCheck(){
   if(state.step===2&&state.productNeeds.length===0){toast('请至少选择一个产品需求','error');return;}
   if(state.step===3&&state.bizScenes.length===0){toast('请至少选择一个业务场景','error');return;}
-  if(state.step===5&&state.selectedAdvantages.length===0){toast('请至少选择一项优势','error');return;}
+  if(state.step===5&&state.selectedAdvantages.length===0){toast('请至少选择一项关注点','error');return;}
   goStep(state.step+1);
 }
-function selectOption(opt){
-  const formEl = document.getElementById('optionForm');
-  const contentEl = document.getElementById('optionFormContent');
-  const ind = INDUSTRIES[state.industry];
-  const sceneNames = [...SCENARIOS.compliance,...SCENARIOS.tool,...SCENARIOS.service];
-  const sceneList = state.scenes.map(sid=>{const s=sceneNames.find(x=>x.id===sid);return s?s.title:sid}).join('、');
-
-  let title='', body='', btnText='', btnAction='';
-
-  if(opt==='quote'){
-    title='📋 生成报价与解决方案';
-    btnText='📩 生成正式报价方案';
-    btnAction='submitAction';
-    body=`<p class="sec-sub">我们将根据以下需求生成正式报价单和解决方案文档，请确认并补充联系方式</p>
-    <div class="quote-note"><b>需求摘要：</b><br>· 行业：${ind.icon} ${state.industry}<br>· 需求场景：${sceneList}<br>· 预算：${BUDGET_RANGES.find(b=>b.id===state.budget)?.range||'未选'}<br>· 痛点：${state.pains.join('、')||'未选'}</div>
-    <div class="form-row"><div class="form-group"><label>公司名称 *</label><input id="optCompany" placeholder="请输入公司全称"></div><div class="form-group"><label>联系人 *</label><input id="optName" placeholder="请输入联系人姓名"></div></div>
-    <div class="form-row"><div class="form-group"><label>手机号 *</label><input id="optPhone" type="tel" placeholder="请输入手机号"></div><div class="form-group"><label>邮箱</label><input id="optEmail" type="email" placeholder="请输入邮箱"></div></div>
-    <div class="form-group"><label>补充说明</label><textarea id="optNote" placeholder="项目背景、特殊需求、时间要求...">${state.customPain||''}</textarea></div>`;
-  }else if(opt==='contact'){
-    title='📞 联系销售';
-    btnText='📞 提交联系请求';
-    btnAction='submitAction';
-    body=`<p class="sec-sub">我们的商务经理将尽快与您联系，请留下联系方式</p>
-    <div class="form-row"><div class="form-group"><label>公司名称 *</label><input id="optCompany" placeholder="请输入公司全称"></div><div class="form-group"><label>联系人 *</label><input id="optName" placeholder="请输入联系人姓名"></div></div>
-    <div class="form-row"><div class="form-group"><label>手机号 *</label><input id="optPhone" type="tel" placeholder="请输入手机号"></div><div class="form-group"><label>邮箱</label><input id="optEmail" type="email" placeholder="请输入邮箱"></div></div>
-    <div class="form-group"><label>感兴趣的产品/服务</label><textarea id="optNote" placeholder="请简述你关注的产品或服务...">${sceneList}</textarea></div>`;
-  }else if(opt==='communicate'){
-    title='💬 进一步交流';
-    btnText='💬 提交需求信息';
-    btnAction='submitAction';
-    body=`<p class="sec-sub">请留下详细需求和联系方式，我们将安排资深技术专家与您深入沟通</p>
-    <div class="form-row"><div class="form-group"><label>公司名称 *</label><input id="optCompany" placeholder="请输入公司全称"></div><div class="form-group"><label>联系人 *</label><input id="optName" placeholder="请输入联系人姓名"></div></div>
-    <div class="form-row"><div class="form-group"><label>手机号 *</label><input id="optPhone" type="tel" placeholder="请输入手机号"></div><div class="form-group"><label>邮箱</label><input id="optEmail" type="email" placeholder="请输入邮箱"></div></div>
-    <div class="form-group"><label>期望交流的内容 *</label><textarea id="optNote" placeholder="请描述你希望了解的技术细节、关注的场景、现有的安全体系..."></textarea></div>
-    <div class="form-group"><label>方便沟通的时间</label><select id="optTime"><option value="">请选择</option><option>工作日 9:00-12:00</option><option>工作日 14:00-18:00</option><option>随时均可</option></select></div>`;
-  }else if(opt==='poc'){
-    title='🔬 申请POC测试';
-    btnText='🔬 提交POC申请';
-    btnAction='submitAction';
-    body=`<p class="sec-sub">申请产品试用和概念验证测试，我们将根据您的需求安排POC环境</p>
-    <div class="form-row"><div class="form-group"><label>公司名称 *</label><input id="optCompany" placeholder="请输入公司全称"></div><div class="form-group"><label>联系人 *</label><input id="optName" placeholder="请输入联系人姓名"></div></div>
-    <div class="form-row"><div class="form-group"><label>手机号 *</label><input id="optPhone" type="tel" placeholder="请输入手机号"></div><div class="form-group"><label>邮箱</label><input id="optEmail" type="email" placeholder="请输入邮箱"></div></div>
-    <div class="form-row"><div class="form-group"><label>期望测试产品</label><select id="optProduct" multiple style="min-height:100px"><option>SAST 静态代码分析</option><option>SCA 软件成分分析</option><option>固件安全测试</option><option>大模型安全测试</option><option>AI SAST 智能代码分析</option></select></div><div class="form-group"><label>部署方式</label><select id="optDeploy"><option value="">请选择</option><option>本地部署</option><option>私有云</option><option>涉密离线环境</option><option>SaaS试用</option></select></div></div>
-    <div class="form-group"><label>测试场景说明</label><textarea id="optNote" placeholder="请描述期望测试的代码类型、语言、规模等..."></textarea></div>
-    <div class="form-group"><label>期望测试时间</label><input id="optTestDate" type="date"></div>`;
-  }
-
-  contentEl.innerHTML = `<h2 class="sec-title">${title}</h2>${body}
-    <button class="btn btn-green btn-lg" data-action="${btnAction}" data-param="${opt}" style="width:100%;justify-content:center;margin-top:8px">${btnText}</button>`;
-  formEl.style.display = 'block';
-  formEl.scrollIntoView({behavior:'smooth'});
-}
-function submitActionForm(opt){
-  const c = document.getElementById('optCompany')?.value.trim();
-  const n = document.getElementById('optName')?.value.trim();
-  const p = document.getElementById('optPhone')?.value.trim();
-  if(!c||!n||!p){ toast('请填写公司名称、联系人和手机号','error'); return; }
-  // Save to API
-  var info=state.projectInfo||{};
-  apiCall('POST','/api/leads',fd({
-    company:c, contact:n, title:state.userInfo.title||'', email:document.getElementById('optEmail')?.value||'',
-    phone:p, address:state.userInfo.address||'',
-    industry:state.industry, scenes:state.scenes.join(','), budget:state.budget||'',
-    pains:state.pains.join(','), custom_pain:state.customPain||'',
-    project_budget:info.budget||'', team_size:info.teamSize||'', languages:info.languages||'', timeline:info.timeline||'',
-    type:opt, note:document.getElementById('optNote')?.value||''
-  })).then(function(){
-    const labels = {quote:'报价方案',contact:'销售联系',communicate:'需求交流',poc:'POC申请'};
-    toast('✅ '+labels[opt]+'请求已提交！我们将尽快联系您');
-    setTimeout(function(){resetAll();},2000);
-  }).catch(function(e){toast('提交失败: '+e.message,'error');});
-}
-function goStep(n){
-  state.step=n; if(n===0){state.industry=null;state.productNeeds=[];state.bizScenes=[];state.projectInfo={};state.selectedAdvantages=[];state.customPain='';}
-  state.products=[]; render(); window.scrollTo(0,0);
-}
-
-// ═══ ADMIN PANEL ═══
-async function showAdmin(){
+function selectIndustry(key){ state.industry=key; state.subIndustry=null; state.productNeeds=[]; state.bizScenes=[]; state.products=[]; state.customPain=""; render(); }
+function toggleProductNeed(id){ var idx=state.productNeeds.indexOf(id); if(idx>=0)state.productNeeds.splice(idx,1); else state.productNeeds.push(id); render(); }
+function toggleBizScene(id){ var idx=state.bizScenes.indexOf(id); if(idx>=0)state.bizScenes.splice(idx,1); else state.bizScenes.push(id); render(); }
+function toggleAdvantage(id){ var idx=state.selectedAdvantages.indexOf(id); if(idx>=0)state.selectedAdvantages.splice(idx,1); else state.selectedAdvantages.push(id); render(); }
+function toggleLang(lang){ var info=state.projectInfo;if(!info.languages)info.languages=[];var idx=info.languages.indexOf(lang);if(idx>=0)info.languages.splice(idx,1);else info.languages.push(lang);render();}
+function toggleFocus(focus){ var info=state.projectInfo;if(!info.focuses)info.focuses=[];var idx=info.focuses.indexOf(focus);if(idx>=0)info.focuses.splice(idx,1);else info.focuses.push(focus);render();}
+async function saveSelectionRecord(){
+  if(!API) return;
   try{
-    var users=await apiCall('GET','/api/admin/users');
-    var h='<div class="card"><h2 class="sec-title">⚙ 用户管理</h2>';
-    h+='<button class="btn btn-primary btn-sm" onclick="showAddUser()">+ 新增用户</button>';
-    h+='<table style="width:100%;margin-top:12px;font-size:12px"><tr style="background:#f5f5f5"><th>ID</th><th>用户名</th><th>邮箱</th><th>手机</th><th>公司</th><th>角色</th><th>注册时间</th><th>操作</th></tr>';
-    for(var i=0;i<users.length;i++){
-      var u=users[i];
-      h+='<tr><td>'+u.id+'</td><td>'+u.username+'</td><td>'+u.email+'</td><td>'+u.phone+'</td><td>'+u.company+'</td><td>'+u.role+'</td><td>'+u.created_at+'</td><td><button class="btn btn-sm btn-outline" onclick="resetUserPwd('+u.id+')">重置密码</button> <button class="btn btn-sm" style="color:#c62828" onclick="delUser('+u.id+')">删除</button></td></tr>';
-    }
-    h+='</table></div>';
-    var app=document.getElementById('mainContent');
-    app.innerHTML=h+'<button class="btn btn-outline" onclick="resetAll()" style="margin-top:12px">← 返回选型</button>';
-  }catch(e){toast('需要管理员权限','error');}
+    var body='user_info='+encodeURIComponent(JSON.stringify(state.userInfo||{}))+
+      '&industry='+encodeURIComponent((state.industry||'')+' / '+(state.subIndustry||''))+
+      '&product_needs='+encodeURIComponent(JSON.stringify(state.productNeeds||[]))+
+      '&biz_scenes='+encodeURIComponent(JSON.stringify(state.bizScenes||[]))+
+      '&project_info='+encodeURIComponent(JSON.stringify(state.projectInfo||{}))+
+      '&advantages='+encodeURIComponent(JSON.stringify(state.selectedAdvantages||[]))+
+      '&custom_pain='+encodeURIComponent(state.customPain||'')+
+      '&products='+encodeURIComponent(JSON.stringify(state.products||[]))+
+      '&quote_range='+encodeURIComponent((window._lastQuote||''));
+    await fetch(API+'/api/selections',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body});
+  }catch(e){}
 }
-function showAddUser(){
-  var pwd=prompt('新用户密码:');if(!pwd)return;
-  var un=prompt('用户名:');if(!un)return;
-  var em=prompt('邮箱:')||'';
-  apiCall('POST','/api/admin/users',fd({username:un,password:pwd,email:em})).then(function(){toast('用户已创建');showAdmin();}).catch(function(e){toast(e.message,'error');});
-}
-async function resetUserPwd(uid){
-  var pwd=prompt('新密码:');if(!pwd)return;
-  await apiCall('PUT','/api/admin/users/'+uid+'/reset-password',fd({new_password:pwd}));
-  toast('密码已重置');
-}
-async function delUser(uid){
-  if(!confirm('确定删除此用户？'))return;
-  await apiCall('DELETE','/api/admin/users/'+uid);
-  toast('已删除');showAdmin();
-}
-function toggleScene(id){
-  const idx=state.scenes.indexOf(id);
-  if(idx>=0) state.scenes.splice(idx,1); else state.scenes.push(id);
-  render();
-}
-function togglePain(id){
-  const idx=state.pains.indexOf(id);
-  if(idx>=0) state.pains.splice(idx,1); else state.pains.push(id);
-  render();
-}
-function resetAll(){ state={step:0,userInfo:{company:'',address:'',contact:'',title:'',email:'',phone:''},industry:null,productNeeds:[],bizScenes:[],projectInfo:{scale:'',teamSize:'',languages:[],codeSize:'',focuses:[],replaceExisting:'',existingTool:''},selectedAdvantages:[],customPain:'',products:[]}; render(); }
+function resetAll(){ state={step:0,subIndustry:null,userInfo:{company:'',address:'',contact:'',title:'',email:'',phone:''},industry:null,productNeeds:[],bizScenes:[],projectInfo:{scale:'',teamSize:'',languages:[],codeSize:'',focuses:[],replaceExisting:'',existingTool:''},selectedAdvantages:[],customPain:'',products:[]}; render(); }
 
-function toast(msg,t){let d=document.createElement('div');d.className='toast '+(t||'success');d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),3000);}
+// ===== Step 7: 获取报价 =====
+function rStep7(){
+  var reqId='RASA-'+(state.userInfo.company||'未知客户')+'-'+new Date().toISOString().slice(0,10).replace(/-/g,'');
+  var h='';
+  h+='<div class="card" style="text-align:center;padding:48px 32px">';
+  h+='<div style="font-size:56px;margin-bottom:16px">📞</div>';
+  h+='<div class="sec-label">STEP 7 · 获取解决方案和报价</div>';
+  h+='<p class="sec-sub" style="font-size:15px;color:var(--text2);max-width:580px;margin:0 auto 16px">30分钟以内您邮箱可获取一份解决方案与大概报价，若想要进一步联系与技术交流，可与区域负责人进行联系，信息如下：</p>';
+  h+='<div class="card" style="background:var(--surface2);border:2px solid var(--blue);text-align:left;max-width:520px;margin:20px auto;padding:24px 28px;display:flex;gap:24px;align-items:center;flex-wrap:wrap">';
+  h+='<div style="font-size:15px;line-height:2.4;flex:1;min-width:220px">';
+  h+='<div>👤 <b>姓名：</b>常乐</div>';
+  h+='<div>📱 <b>电话：</b>13692220639（可加微信）</div>';
+  h+='<div>📧 <b>邮箱：</b>changle@softsec-tech.cn</div>';
+  h+='<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">📋 <b>需求单号：</b><span style="color:var(--blue);font-weight:700">'+reqId+'</span></div>';
+  h+='<div style="font-size:12px;color:var(--text3);margin-top:4px">联系时请备注需求单号，以便快速处理</div>';
+  h+='</div>';
+  h+='<div style="text-align:center;flex-shrink:0">';
+  h+='<img src="qrcode.png" width="140" height="140" style="border-radius:8px;background:var(--surface2)" alt="微信二维码" onerror="this.style.display=\'none\'">';
+  h+='<div style="font-size:11px;color:var(--text3);margin-top:4px">微信扫码联系</div>';
+  h+='</div></div>';
+  h+='<div style="margin-top:16px">';
+  h+='<button class="btn btn-outline btn-lg" onclick="goStep(6)">← 返回需求汇总</button>';
+  h+='</div>';
+  h+='</div>';
+  return h;
+}
 
-function showAISection(){var el=document.getElementById("landingDetail");if(!el)return;el.innerHTML='<div class="card" style="border-left:4px solid var(--accent)"><h3>💬 需求录入</h3><p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">请描述您的项目需求、技术栈、安全合规要求等</p><div class="ai-input-wrap"><textarea id="aiDesc" placeholder="例如：我们是一家汽车Tier1供应商，主要做智能座舱域控制器..."></textarea></div><button class="btn btn-primary btn-lg" data-action="submitAI" style="margin-top:12px;width:100%;justify-content:center">🚀 分析并推荐方案</button><div id="aiResult"></div></div>';el.scrollIntoView({behavior:"smooth"})}
-function submitAI(){var d=document.getElementById("aiDesc")?.value.trim();if(!d){toast("请输入需求描述","error");return}var recs=[],scores={},t=d.toLowerCase();if(/c\/c\+\+|c语言|嵌入式|固件|底层/.test(t)){scores.SAST=(scores.SAST||0)+5;scores.BAT=(scores.BAT||0)+4}if(/java|python|开源|组件|sbom|许可证/.test(t)){scores.SCA=(scores.SCA||0)+5}if(/固件|二进制|芯片|boot|ecu|mcu/.test(t)){scores.BAT=(scores.BAT||0)+5}if(/can|canfd|以太网|蓝牙|协议|fuzz|模糊/.test(t)){scores.FUZZ=(scores.FUZZ||0)+5}if(/大模型|ai|llm|gpt|提示|越狱/.test(t)){scores.MST=(scores.MST||0)+5}if(/代码审计|review|代码质量|ai修复/.test(t)){scores.CodingHawk=(scores.CodingHawk||0)+5}if(/漏洞|cve|poc|验证|应急/.test(t)){scores.GuardFox=(scores.GuardFox||0)+5}if(/汽车|整车|tier|21434|r155/.test(t)){scores.SAST=(scores.SAST||0)+3;scores.BAT=(scores.BAT||0)+3;scores.FUZZ=(scores.FUZZ||0)+3}if(/金融|银行|证券|等保/.test(t)){scores.SAST=(scores.SAST||0)+3;scores.SCA=(scores.SCA||0)+3}if(/军工|涉密|离线|信创|国产化|gjb/.test(t)){scores.SAST=(scores.SAST||0)+4;scores.BAT=(scores.BAT||0)+3}for(var k in scores)recs.push({id:k,score:scores[k]});recs.sort(function(a,b){return b.score-a.score});recs=recs.slice(0,4);var el=document.getElementById("aiResult");if(!el)return;if(!recs.length){el.innerHTML="<p>未能匹配，建议通过用户自主选型获取推荐</p>";return}var h="<h4>📊 推荐结果</h4>";for(var i=0;i<recs.length;i++){var r=recs[i],p=PRODUCTS[r.id];if(!p)continue;h+="<div class=\"product-card\"><div class=\"prod-main\"><div class=\"prod-name\">"+p.name+"</div><div class=\"prod-brand\">"+p.brand+" · 匹配度："+r.score+"</div><div class=\"prod-desc\">"+p.desc+"</div><div class=\"prod-metrics\">📊 "+p.metrics+"</div></div><div class=\"prod-price-box\"><div class=\"prod-price\">"+p.price+"</div></div></div>"}h+="<div style=\"text-align:center;margin-top:12px\"><button class=\"btn btn-primary\" data-action=\"startSelector\">📋 进入自主选型 →</button></div>";el.innerHTML=h;el.scrollIntoView({behavior:"smooth"})}
-function startSelectorFlow(){state.step=0;render();window.scrollTo(0,0)}
-function showContactForm(){var el=document.getElementById("landingDetail");if(!el)return;el.innerHTML='<div class="card" style="border-left:4px solid var(--success)"><h3>📞 联系销售</h3><p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">留下信息，我们将尽快安排销售人员与您联系</p><div class="contact-form"><div class="form-group"><label>客户名称 *</label><input id="ctCompany"></div><div class="form-group"><label>企业邮箱 *</label><input id="ctEmail" type="email"></div><div class="form-group"><label>姓名 *</label><input id="ctName"></div><div class="form-group"><label>职位 *</label><input id="ctTitle"></div></div><div class="form-group"><label>具体需求 *</label><textarea id="ctDesc"></textarea></div><button class="btn btn-success btn-lg" data-action="submitContact" style="width:100%;justify-content:center;margin-top:8px">提交，请尽快联系我</button></div>';el.scrollIntoView({behavior:"smooth"})}
-async function submitContactForm(){var co=document.getElementById("ctCompany")?.value.trim();var em=document.getElementById("ctEmail")?.value.trim();var na=document.getElementById("ctName")?.value.trim();var ti=document.getElementById("ctTitle")?.value.trim();var de=document.getElementById("ctDesc")?.value.trim();if(!co||!em||!na||!ti||!de){toast("请填写全部必填项","error");return}try{await apiCall("POST","/api/leads",fd({company:co,contact:na,email:em,title:ti,custom_pain:de,type:"联系销售"}));toast("✅ 已提交！");document.getElementById("landingDetail").innerHTML="<div class=\"card\" style=\"text-align:center;padding:40px;border-left:4px solid var(--success)\"><div style=\"font-size:48px\">✅</div><h3>提交成功</h3></div>"}catch(e){toast("提交失败: "+e.message,"error")}}
-
-// ===== Event delegation =====
+// ═══ EVENT DELEGATION ═══
 document.addEventListener('click', function(e){
   const el = e.target.closest('[data-action]');
   if (!el) return;
   const action = el.getAttribute('data-action');
   const param = el.getAttribute('data-param');
-  const savePain = el.getAttribute('data-savepain');
   if (action === 'saveUserInfo') saveUserInfo();
   else if (action === 'saveProjectInfo') saveProjectInfo();
   else if (action === 'selectIndustry') selectIndustry(param);
+  else if (action === 'selectSubIndustry') { state.subIndustry = param; state.productNeeds = []; state.bizScenes = []; render(); }
   else if (action === 'toggleProductNeed') toggleProductNeed(param);
   else if (action === 'toggleBizScene') toggleBizScene(param);
   else if (action === 'toggleLang') toggleLang(param);
   else if (action === 'toggleFocus') toggleFocus(param);
   else if (action === 'toggleAdvantage') toggleAdvantage(param);
   else if (action === 'goNextCheck') goNextCheck();
-  else if (action === 'getQuote') { window.location.href = 'ruanan-marketing-platform.html#partner'; }
-  else if (action === 'goStep') {
-    if (savePain === 'true') state.customPain = document.getElementById('customPain')?.value || '';
-    goStep(parseInt(param));
-  }
+  else if (action === 'getQuote') { saveSelectionRecord().then(function(){ window.location.href = 'ruanan-marketing-platform.html#partner'; }); }
+  else if (action === 'goStep') { goStep(parseInt(param)); }
   else if (action === 'resetAll') resetAll();
-  else if (action === 'showAI') showAISection();
-  else if (action === 'startSelector') startSelectorFlow();
-  else if (action === 'showContact') showContactForm();
-  else if (action === 'submitAI') submitAI();
-  else if (action === 'submitContact') submitContactForm();
-  else if (action === 'submitQuote') submitQuote();
-  else if (action === 'selectOption') selectOption(param);
-  else if (action === 'submitAction') submitActionForm(param);
 });
 
-function submitQuote(){
-  const c=document.getElementById('fCompany')?.value.trim();
-  const n=document.getElementById('fName')?.value.trim();
-  const p=document.getElementById('fPhone')?.value.trim();
-  if(!c||!n||!p){toast('请填写公司名称、联系人和手机号','error');return}
-  const servicePriceMap={s1:'代码审计2万/次',s2:'固件测试1万/次',s3:'开源合规5万/次'};
-  const svcs=state.scenes.filter(s=>servicePriceMap[s]).map(s=>servicePriceMap[s]);
-  const data={company:c,name:n,phone:p,email:document.getElementById('fEmail')?.value.trim()||'',note:document.getElementById('fNote')?.value.trim()||'',industry:state.industry,scenes:state.scenes,services:svcs,budget:state.budget,pains:state.pains,customPain:state.customPain,deploy:state.deploy,time:new Date().toLocaleString('zh-CN')};
-  const leads=JSON.parse(localStorage.getItem('ruanan_leads')||'[]');leads.push(data);localStorage.setItem('ruanan_leads',JSON.stringify(leads));
-  console.log('选型提交:',data);
-  toast('✅ 方案已提交！商务经理将在1个工作日内联系您');
-  setTimeout(()=>resetAll(),2000);
-}
-
-// Auto login
-if(authToken){
-  apiCall('GET','/api/me').then(function(u){
-    authUser=u;
-    document.getElementById('loginOverlay').style.display='none';
-    updateUserUI();
-  }).catch(function(){authToken='';localStorage.removeItem('selector_token');});
-}
 render();
 </script>
-</body>
-</html
-// ===== Step 7: 获取报价 =====
-function rStep7(){
-  var h='';
-  h+='<div class="card" style="text-align:center;padding:48px 32px">';
-  h+='<div style="font-size:56px;margin-bottom:16px">📞</div>';
-  h+='<div class="sec-label">STEP 7 · 获取报价</div>';
-  h+='<h2 class="sec-title">获取专属报价方案</h2>';
-  h+='<p class="sec-sub">我们的解决方案专家将根据您的选型结果，为您提供详细的产品报价和实施建议</p>';
-  h+='<div style="margin-top:32px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap">';
-  h+='<button class="btn btn-primary btn-lg" data-action="getQuote">📋 获取详细报价</button>';
-  h+='<button class="btn btn-outline btn-lg" data-action="goStep" data-param="6">← 返回上一步</button>';
-  h+='</div>';
-  h+='<p style="margin-top:20px;font-size:12px;color:var(--text3)">点击"获取详细报价"将跳转到营销管理平台，联系销售团队获取专属报价</p>';
-  h+='</div>';
-  return h;
-}
-
->

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920,height=1080">
+<title>软安科技 · 渠道招商</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0e17;width:1920px;height:1080px;overflow:hidden;font-family:'PingFang SC','Microsoft YaHei',sans-serif;position:relative}
+.scene{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.5s}
+.scene.on{opacity:1;z-index:1}
+.inner{text-align:center;padding:40px 80px;max-width:1600px}
+
+/* Particles */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:10}
+.pt{position:absolute;border-radius:50%;animation:floatUp linear infinite}
+.pt:nth-child(1){left:8%;width:2px;height:2px;background:rgba(37,99,235,.5);animation-duration:7s}
+.pt:nth-child(2){left:20%;width:3px;height:3px;background:rgba(16,185,129,.4);animation-duration:9s;animation-delay:1s}
+.pt:nth-child(3){left:35%;width:1px;height:1px;background:rgba(245,158,11,.5);animation-duration:6s;animation-delay:2s}
+.pt:nth-child(4){left:50%;width:2px;height:2px;background:rgba(139,92,246,.4);animation-duration:8s}
+.pt:nth-child(5){left:65%;width:3px;height:3px;background:rgba(37,99,235,.3);animation-duration:10s;animation-delay:1.5s}
+.pt:nth-child(6){left:80%;width:1px;height:1px;background:rgba(16,185,129,.5);animation-duration:7s;animation-delay:3s}
+.pt:nth-child(7){left:90%;width:2px;height:2px;background:rgba(245,158,11,.4);animation-duration:9s}
+@keyframes floatUp{0%{bottom:-10px;opacity:0}20%{opacity:1}80%{opacity:1}100%{bottom:110%;opacity:0}}
+
+/* ===== SCENE 0: INTRO ===== */
+.logo{width:100px;height:100px;border-radius:24px;background:linear-gradient(135deg,#1d4ed8,#3b82f6);margin:0 auto 32px;display:flex;align-items:center;justify-content:center;font-size:48px;font-weight:900;color:#fff;box-shadow:0 24px 64px rgba(37,99,235,.35)}
+.s0 .title{font-size:44px;font-weight:900;color:#fff;letter-spacing:5px;margin-bottom:16px}
+.s0 .sub{font-size:22px;color:rgba(255,255,255,.6);letter-spacing:4px}
+.s0 .line-bar{width:180px;height:2px;margin:24px auto 0;background:linear-gradient(90deg,transparent,rgba(37,99,235,.6),transparent)}
+
+/* ===== SCENE 1: MARKET ===== */
+.s1 h2{font-size:36px;font-weight:900;color:#fff;margin-bottom:32px}
+.s1 .market-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1200px;margin:0 auto}
+.s1 .mc{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:24px 20px;text-align:center}
+.s1 .mc .mc-icon{font-size:36px;margin-bottom:12px}
+.s1 .mc .mc-title{font-size:18px;font-weight:700;color:#e2e8f0;margin-bottom:6px}
+.s1 .mc .mc-desc{font-size:13px;color:#64748b;line-height:1.6}
+.s1 .highlight{color:#3b82f6;font-weight:700}
+
+/* ===== SCENE 2: PRODUCTS ===== */
+.s2 h2{font-size:36px;font-weight:900;color:#fff;margin-bottom:8px}
+.s2 .subtitle{font-size:16px;color:#64748b;margin-bottom:28px}
+.s2 .prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1400px;margin:0 auto}
+.s2 .pc{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px 16px;text-align:center}
+.s2 .pc .pc-icon{font-size:32px;margin-bottom:8px}
+.s2 .pc .pc-name{font-size:14px;font-weight:700;color:#e2e8f0;margin-bottom:4px}
+.s2 .pc .pc-tag{font-size:10px;padding:2px 8px;border-radius:10px;display:inline-block;margin-bottom:8px}
+.s2 .pc .pc-desc{font-size:11px;color:#64748b;line-height:1.5}
+.tag-blue{background:rgba(37,99,235,.2);color:#60a5fa}
+.tag-green{background:rgba(16,185,129,.2);color:#34d399}
+.tag-gold{background:rgba(245,158,11,.2);color:#fbbf24}
+.tag-purple{background:rgba(139,92,246,.2);color:#a78bfa}
+
+/* ===== SCENE 3: INDUSTRIES ===== */
+.s3 h2{font-size:36px;font-weight:900;color:#fff;margin-bottom:28px}
+.s3 .ind-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:1100px;margin:0 auto}
+.s3 .ic{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:18px 24px;display:flex;align-items:center;gap:16px}
+.s3 .ic .ic-icon{font-size:28px;width:48px;text-align:center}
+.s3 .ic .ic-name{font-size:16px;font-weight:700;color:#e2e8f0}
+.s3 .ic .ic-note{font-size:11px;color:#64748b;margin-top:2px}
+.s3 .counter{display:flex;gap:40px;justify-content:center;margin-top:28px}
+.s3 .cn{text-align:center}
+.s3 .cn .cn-num{font-size:36px;font-weight:900;color:#3b82f6}
+.s3 .cn .cn-label{font-size:13px;color:#64748b;margin-top:4px}
+
+/* ===== SCENE 4: EMPOWER ===== */
+.s4 h2{font-size:36px;font-weight:900;color:#fff;margin-bottom:32px}
+.s4 .emp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1200px;margin:0 auto}
+.s4 .ec{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:28px 24px;text-align:center;position:relative;overflow:hidden}
+.s4 .ec::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#2563eb,#10b981)}
+.s4 .ec:nth-child(2)::before{background:linear-gradient(90deg,#f59e0b,#ef4444)}
+.s4 .ec:nth-child(3)::before{background:linear-gradient(90deg,#8b5cf6,#3b82f6)}
+.s4 .ec:nth-child(4)::before{background:linear-gradient(90deg,#10b981,#06b6d4)}
+.s4 .ec:nth-child(5)::before{background:linear-gradient(90deg,#ec4899,#f59e0b)}
+.s4 .ec:nth-child(6)::before{background:linear-gradient(90deg,#6366f1,#8b5cf6)}
+.s4 .ec .ec-icon{font-size:32px;margin-bottom:12px}
+.s4 .ec .ec-title{font-size:18px;font-weight:700;color:#e2e8f0;margin-bottom:8px}
+.s4 .ec .ec-desc{font-size:13px;color:#64748b;line-height:1.6}
+
+/* ===== SCENE 5: MODELS ===== */
+.s5 h2{font-size:36px;font-weight:900;color:#fff;margin-bottom:32px}
+.s5 .model-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1300px;margin:0 auto}
+.s5 .mod{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:28px 20px;text-align:center}
+.s5 .mod .mod-icon{font-size:36px;margin-bottom:12px}
+.s5 .mod .mod-title{font-size:20px;font-weight:800;color:#fff;margin-bottom:8px}
+.s5 .mod .mod-desc{font-size:13px;color:#94a3b8;line-height:1.6;margin-bottom:12px}
+.s5 .mod .mod-highlight{font-size:12px;color:#3b82f6;font-weight:600;padding:6px 14px;background:rgba(37,99,235,.1);border-radius:20px;display:inline-block}
+
+/* ===== SCENE 6: OUTRO ===== */
+.s6 .outro-logo{width:90px;height:90px;border-radius:22px;background:linear-gradient(135deg,#1d4ed8,#3b82f6);margin:0 auto 28px;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:900;color:#fff;box-shadow:0 20px 60px rgba(37,99,235,.3)}
+.s6 .outro-title{font-size:40px;font-weight:900;color:#fff;letter-spacing:4px;margin-bottom:20px}
+.s6 .outro-sub{font-size:20px;color:rgba(255,255,255,.6);letter-spacing:2px;margin-bottom:32px}
+.s6 .outro-action{font-size:24px;font-weight:700;color:#3b82f6;letter-spacing:3px}
+
+/* Glow bg */
+.glow{position:fixed;top:50%;left:50%;width:600px;height:600px;background:radial-gradient(circle,rgba(37,99,235,.06),transparent 70%);transform:translate(-50%,-50%);pointer-events:none;z-index:0}
+
+/* Progress bar */
+.progress-bar{position:fixed;bottom:0;left:0;height:3px;background:linear-gradient(90deg,#2563eb,#10b981);z-index:100;transition:width 0.1s}
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="particles"><div class="pt"></div><div class="pt"></div><div class="pt"></div><div class="pt"></div><div class="pt"></div><div class="pt"></div><div class="pt"></div></div>
+<div class="progress-bar" id="pb"></div>
+
+<!-- SCENE 0: INTRO -->
+<div class="scene on s0" id="s0">
+<div class="inner">
+<div class="logo">软</div>
+<div class="title">软安科技华南区域</div>
+<div class="sub">渠道合作伙伴招募</div>
+<div class="line-bar"></div>
+</div></div>
+
+<!-- SCENE 1: MARKET -->
+<div class="scene s1" id="s1">
+<div class="inner">
+<h2>🌊 软件供应链安全 · 百亿级赛道</h2>
+<div class="market-grid">
+<div class="mc"><div class="mc-icon">🇪🇺</div><div class="mc-title">欧盟 CRA</div><div class="mc-desc">网络安全韧性法案<br>强制合规要求</div></div>
+<div class="mc"><div class="mc-icon">🇨🇳</div><div class="mc-title">GB 44495</div><div class="mc-desc">汽车软件安全<br>国家标准落地</div></div>
+<div class="mc"><div class="mc-icon">🚗</div><div class="mc-title">UN R155</div><div class="mc-desc">全球汽车网络安全<br>强制认证</div></div>
+<div class="mc"><div class="mc-icon">📈</div><div class="mc-title">市场规模</div><div class="mc-desc">软件供应链安全<br><span class="highlight">年增速 20%+</span></div></div>
+</div>
+<div style="margin-top:28px;font-size:18px;color:#94a3b8;letter-spacing:2px">华南区域 — 制造业与科技创新高地 — 万亿级市场机遇</div>
+</div></div>
+
+<!-- SCENE 2: PRODUCTS -->
+<div class="scene s2" id="s2">
+<div class="inner">
+<h2>🛡️ 七大核心产品 · 全生命周期覆盖</h2>
+<div class="subtitle">从源代码到二进制 · 从传统软件到AI大模型</div>
+<div class="prod-grid">
+<div class="pc"><div class="pc-icon">🔍</div><div class="pc-name">SAST 静态分析</div><span class="pc-tag tag-blue">18+语言</span><div class="pc-desc">跨文件跨函数检测<br>误报率低于10%</div></div>
+<div class="pc"><div class="pc-icon">📦</div><div class="pc-name">SCA 成分分析</div><span class="pc-tag tag-green">100T+数据库</span><div class="pc-desc">开源漏洞追踪<br>许可证合规管理</div></div>
+<div class="pc"><div class="pc-icon">🔐</div><div class="pc-name">BAT 二进制检测</div><span class="pc-tag tag-gold">100+格式</span><div class="pc-desc">固件解包引擎<br>加密算法识别</div></div>
+<div class="pc"><div class="pc-icon">🎯</div><div class="pc-name">Fuzz 模糊测试</div><span class="pc-tag tag-purple">50+协议</span><div class="pc-desc">汽车行业全覆盖<br>CAN/以太网测试</div></div>
+<div class="pc"><div class="pc-icon">🤖</div><div class="pc-name">MST 大模型安全</div><span class="pc-tag tag-blue">全生命周期</span><div class="pc-desc">基座溯源·漏洞检测<br>智能体安全评估</div></div>
+<div class="pc"><div class="pc-icon">✨</div><div class="pc-name">CodingHawk</div><span class="pc-tag tag-green">AI审计</span><div class="pc-desc">大模型辅助审计<br>自动修复建议</div></div>
+<div class="pc"><div class="pc-icon">🦊</div><div class="pc-name">GuardFox</div><span class="pc-tag tag-purple">CVE验证</span><div class="pc-desc">漏洞优先级评估<br>POC自动生成</div></div>
+<div class="pc"><div class="pc-icon">🔧</div><div class="pc-name">10项测试服务</div><span class="pc-tag tag-blue">咨询+测试</span><div class="pc-desc">渗透测试·代码审计<br>SBOM·开源许可</div></div>
+</div>
+</div></div>
+
+<!-- SCENE 3: INDUSTRIES -->
+<div class="scene s3" id="s3">
+<div class="inner">
+<h2>🏭 九大行业深耕 · 实战验证</h2>
+<div class="ind-grid">
+<div class="ic"><div class="ic-icon">🚗</div><div><div class="ic-name">汽车行业</div><div class="ic-note">整车厂商 + 供应链 · R155/GB44495</div></div></div>
+<div class="ic"><div class="ic-icon">🛡️</div><div><div class="ic-name">军工行业</div><div class="ic-note">GJB 8114/5369 · 涉密离线部署</div></div></div>
+<div class="ic"><div class="ic-icon">🔲</div><div><div class="ic-name">芯片半导体</div><div class="ic-note">BootROM审计 · 安全启动链验证</div></div></div>
+<div class="ic"><div class="ic-icon">🏦</div><div><div class="ic-name">金融科技</div><div class="ic-note">等保2.0 · 开源合规治理</div></div></div>
+<div class="ic"><div class="ic-icon">🏛️</div><div><div class="ic-name">政府行业</div><div class="ic-note">信创安全 · 国产化适配</div></div></div>
+<div class="ic"><div class="ic-icon">📡</div><div><div class="ic-name">电子通信</div><div class="ic-note">5G安全 · 3GPP SECAM审计</div></div></div>
+<div class="ic"><div class="ic-icon">🎓</div><div><div class="ic-name">高等教育</div><div class="ic-note">科研安全 · 学术合规</div></div></div>
+<div class="ic"><div class="ic-icon">⚡</div><div><div class="ic-name">能源行业</div><div class="ic-note">关键基础设施安全</div></div></div>
+<div class="ic"><div class="ic-icon">🌐</div><div><div class="ic-name">互联网行业</div><div class="ic-note">云原生安全 · DevSecOps</div></div></div>
+</div>
+<div class="counter">
+<div class="cn"><div class="cn-num">9</div><div class="cn-label">深耕行业</div></div>
+<div class="cn"><div class="cn-num">200+</div><div class="cn-label">服务客户</div></div>
+<div class="cn"><div class="cn-num">7</div><div class="cn-label">核心产品</div></div>
+<div class="cn"><div class="cn-num">10</div><div class="cn-label">测试服务</div></div>
+</div>
+</div></div>
+
+<!-- SCENE 4: EMPOWER -->
+<div class="scene s4" id="s4">
+<div class="inner">
+<h2>🚀 全方位伙伴赋能体系</h2>
+<div class="emp-grid">
+<div class="ec"><div class="ec-icon">🎓</div><div class="ec-title">培训认证</div><div class="ec-desc">产品知识库 + 考核中心<br>系统化培训，快速上手</div></div>
+<div class="ec"><div class="ec-icon">📥</div><div class="ec-title">营销物料</div><div class="ec-desc">白皮书 · 彩页 · 案例集<br>竞品对比 · 行业方案</div></div>
+<div class="ec"><div class="ec-icon">🛡️</div><div class="ec-title">商机保护</div><div class="ec-desc">严格报备机制<br>原厂项目保护</div></div>
+<div class="ec"><div class="ec-icon">🔧</div><div class="ec-title">技术支持</div><div class="ec-desc">POC全程配合<br>售前售后一体化</div></div>
+<div class="ec"><div class="ec-icon">💰</div><div class="ec-title">利润空间</div><div class="ec-desc">灵活折扣体系<br>有竞争力的利润</div></div>
+<div class="ec"><div class="ec-icon">📊</div><div class="ec-title">数字工具</div><div class="ec-desc">选型助手 · 伙伴门户<br>商机管理 · 在线报备</div></div>
+</div>
+</div></div>
+
+<!-- SCENE 5: MODELS -->
+<div class="scene s5" id="s5">
+<div class="inner">
+<h2>🤝 四种合作模式 · 灵活选择</h2>
+<div class="model-grid">
+<div class="mod"><div class="mod-icon">🏙️</div><div class="mod-title">城市级合作伙伴</div><div class="mod-desc">区域独家保护<br>深耕本地市场</div><div class="mod-highlight">🏆 最高级别</div></div>
+<div class="mod"><div class="mod-icon">📋</div><div class="mod-title">项目授权合作伙伴</div><div class="mod-desc">按项目灵活合作<br>零门槛启动</div><div class="mod-highlight">⚡ 快速上手</div></div>
+<div class="mod"><div class="mod-icon">🏭</div><div class="mod-title">行业级合作伙伴</div><div class="mod-desc">专注垂直行业<br>做深做透做强</div><div class="mod-highlight">🎯 行业深耕</div></div>
+<div class="mod"><div class="mod-icon">🔗</div><div class="mod-title">生态合作伙伴</div><div class="mod-desc">技术互补融合<br>联合创新共赢</div><div class="mod-highlight">🌐 开放生态</div></div>
+</div>
+<div style="margin-top:28px;font-size:16px;color:#94a3b8;letter-spacing:1px">无论您是安全服务商、系统集成商，还是行业咨询机构——总有一种适合您</div>
+</div></div>
+
+<!-- SCENE 6: OUTRO -->
+<div class="scene s6" id="s6">
+<div class="inner">
+<div class="outro-logo">软</div>
+<div class="outro-title">软安科技 · 华南区域</div>
+<div class="outro-sub">软件供应链安全的黄金十年 · 邀您携手同行</div>
+<div class="outro-action">立即联系渠道经理 →</div>
+<div style="margin-top:20px;font-size:14px;color:#475569">您的代码 · 软安来保障</div>
+</div></div>
+
+<script>
+var scenes = ['s0','s1','s2','s3','s4','s5','s6'];
+var durations = [5000, 17000, 20000, 13000, 20000, 15000, 10000]; // ms
+var total = durations.reduce(function(a,b){return a+b;},0);
+var current = -1;
+var startTime = 0;
+
+function show(i){
+  if(current >= 0) document.getElementById(scenes[current]).classList.remove('on');
+  if(i >= scenes.length) return;
+  current = i;
+  document.getElementById(scenes[i]).classList.add('on');
+  document.getElementById('pb').style.width = (durations.slice(0,i+1).reduce(function(a,b){return a+b;},0) / total * 100) + '%';
+  setTimeout(function(){ show(i+1); }, durations[i]);
+}
+
+// Start after 500ms for page to render
+setTimeout(function(){ show(0); startTime = Date.now(); }, 500);
+</script>
+</body>
+</html>

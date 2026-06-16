@@ -399,7 +399,7 @@ function updateSidebar(){
   nav.push({href:'home',label:'软安科技华南营销首页',emoji:'🏠',icon:'i-home'});
   nav.push({href:'products',label:'软安科技产品简介',emoji:'📦',icon:'i-box'});
   nav.push({href:'solutions',label:'行业解决方案介绍',emoji:'🏭',icon:'i-build'});
-  nav.push({href:'selector',label:'用户自主选型中心',emoji:'🎯',icon:'i-search2'});
+  nav.push({href:'selector',label:'快速获取解决方案与报价',emoji:'🎯',icon:'i-search2'});
   nav.push({href:'contact',label:'联系销售/进一步技术交流',emoji:'📞',icon:'i-phone'});
   nav.push({section:'营销'});
   nav.push({href:'insights',label:'行业洞察与相关咨询',emoji:'📊',icon:'i-pie'});
@@ -425,7 +425,7 @@ function updateSidebar(){
   document.getElementById('sidebarFooter').innerHTML=fh;
 
   // Breadcrumb
-  var labels={home:'软安科技华南营销首页',products:'软安科技产品简介',solutions:'行业解决方案介绍',selector:'用户自主选型中心',contact:'联系销售/进一步技术交流',insights:'行业洞察与相关咨询',partner:'华南合作伙伴管理中心',blog:'客户成功技术服务中心',training:'软安内部员工培训中心',admin:'管理后台'};
+  var labels={home:'软安科技华南营销首页',products:'软安科技产品简介',solutions:'行业解决方案介绍',selector:'快速获取解决方案与报价',contact:'联系销售/进一步技术交流',insights:'行业洞察与相关咨询',partner:'华南合作伙伴管理中心',blog:'客户成功技术服务中心',training:'软安内部员工培训中心',admin:'管理后台'};
   document.getElementById('tbBreadcrumb').innerHTML=(nav.find(function(x){return x.href===page;})||{}).emoji+' '+(labels[page]||'工作台');
 }
 
@@ -449,7 +449,7 @@ PAGES.home=function(){
 
   // Quick actions
   h+='<div class="qaction-grid">';
-  h+='<div class="qaction-card" onclick="nav(\'selector\')"><div class="qa-icon purple">🔬</div><div class="qa-body"><div class="qa-title">用户需求匹配</div><div class="qa-desc">AI分析 + 自主选型 + 快速联系</div></div></div>';
+  h+='<div class="qaction-card" onclick="nav(\'selector\')"><div class="qa-icon purple">🔬</div><div class="qa-body"><div class="qa-title">快速获取解决方案与报价</div><div class="qa-desc">8步引导式需求描述，30分钟出方案</div></div></div>';
   h+='<div class="qaction-card" onclick="nav(\'products\')"><div class="qa-icon gold">📦</div><div class="qa-body"><div class="qa-title">产品中心</div><div class="qa-desc">了解7款核心安全产品</div></div></div>';
   h+='<div class="qaction-card" onclick="nav(\'solutions\')"><div class="qa-icon success">🏭</div><div class="qa-body"><div class="qa-title">行业方案</div><div class="qa-desc">9大行业深度解决方案</div></div></div>';
   h+='<div class="qaction-card" onclick="window.open(\'ruanan-customer-portal.html\')"><div class="qa-icon info">💡</div><div class="qa-body"><div class="qa-title">客户成功技术服务中心</div><div class="qa-desc">知识库与问答社区（客户独立登录）</div></div></div>';
@@ -575,8 +575,8 @@ function switchSol(key){
 // ═══ SELECTOR (simplified, link to full selector page) ═══
 PAGES.selector=function(){
   var h='';
-  h+='<div class="page-header center"><div class="ph-eyebrow">Demand Matching</div><h1 class="ph-title">用户需求匹配</h1><p class="ph-sub">基于行业、场景、研发画像的多维智能匹配引擎，5分钟帮你找到最优产品组合和报价方案</p></div>';
-  h+='<div style="text-align:center;padding:48px 0"><div style="font-size:60px;margin-bottom:16px">🔬</div><h3 style="font-size:18px;font-weight:700;margin-bottom:8px">选型引擎需要完整交互上下文</h3><p style="font-size:14px;color:var(--text2);margin-bottom:20px">8步引导式选型流程，精准匹配产品与报价</p><button class="btn btn-primary btn-lg" onclick="window.open(\'ruanan-product-selector.html\',\'_blank\')">🚀 用户自主选型助手</button><p style="font-size:12px;color:var(--text3);margin-top:12px"></p></div>';
+  h+='<div class="page-header center"><div class="ph-eyebrow">Demand Matching</div><h1 class="ph-title">用户需求匹配</h1><p class="ph-sub">用户可导入精准的行业与需求信息，30分钟以内快速提供解决方案与初步报价</p></div>';
+  h+='<div style="text-align:center;padding:48px 0"><div style="font-size:60px;margin-bottom:16px">🔬</div><p style="font-size:14px;color:var(--text2);margin-bottom:20px">8步引导式需求描述，精准匹配软安方案</p><button class="btn btn-primary btn-lg" onclick="window.open(\'ruanan-product-selector.html\',\'_blank\')">🚀 点击后进入需求描述引导环节</button><p style="font-size:12px;color:var(--text3);margin-top:12px"></p></div>';
   return h;
 };
 
@@ -741,6 +741,7 @@ document.addEventListener('click', function(e) {
   else if (act === 'csResetPwd') _csResetPwd(parseInt(prm));
   else if (act === 'csDel') _csDel(parseInt(prm));
   else if (act === 'csToggle') { var cs = prm.split(','); _csToggle(parseInt(cs[0]), cs[1]); }
+  else if (act === 'delSel') _delSel(parseInt(prm));
   else if (act === 'aTab') aTab(prm);
 });
 
@@ -992,7 +993,7 @@ PAGES.admin = function() {
   var h = '';
   h += '<div class="page-header"><div class="ph-eyebrow">Admin</div><h1 class="ph-title">管理后台</h1></div>';
   h += '<div class="stat-grid" id="adminStats"><div class="stat-card accent"><div class="stat-label">内部用户</div><div class="stat-value" id="sUsers">-</div></div><div class="stat-card gold"><div class="stat-label">客户账号</div><div class="stat-value" id="sCustomers">-</div></div><div class="stat-card success"><div class="stat-label">华南合作伙伴</div><div class="stat-value" id="sPartners">-</div></div><div class="stat-card info"><div class="stat-label">待处理工单</div><div class="stat-value" id="sTickets">-</div></div></div>';
-  h += '<div class="tab-nav"><div class="tab-item active" onclick="aTab(\'users\',this)">内部用户</div><div class="tab-item" onclick="aTab(\'customers\',this)">客户账号</div><div class="tab-item" onclick="aTab(\'partners\',this)">合作伙伴</div><div class="tab-item" onclick="aTab(\'articles\',this)">文章管理</div><div class="tab-item" onclick="aTab(\'cases\',this)">案例管理</div><div class="tab-item" onclick="aTab(\'tickets\',this)">工单管理</div><div class="tab-item" onclick="aTab(\'training\',this)">培训管理</div><div class="tab-item" onclick="aTab(\'kb\',this)">KB管理</div><div class="tab-item" onclick="aTab(\'audit\',this)">审计日志</div></div><div id="aContent"></div>';
+  h += '<div class="tab-nav"><div class="tab-item active" onclick="aTab(\'users\',this)">内部用户</div><div class="tab-item" onclick="aTab(\'customers\',this)">客户账号</div><div class="tab-item" onclick="aTab(\'partners\',this)">合作伙伴</div><div class="tab-item" onclick="aTab(\'articles\',this)">文章管理</div><div class="tab-item" onclick="aTab(\'cases\',this)">案例管理</div><div class="tab-item" onclick="aTab(\'tickets\',this)">工单管理</div><div class="tab-item" onclick="aTab(\'training\',this)">培训管理</div><div class="tab-item" onclick="aTab(\'kb\',this)">KB管理</div><div class="tab-item" onclick="aTab(\'audit\',this)">审计日志</div><div class="tab-item" onclick="aTab(\'selections\',this)">选型记录</div></div><div id="aContent"></div>';
   setTimeout(function() {
     api('GET', '/api/admin/stats').then(function(s) {
       document.getElementById('sUsers').textContent = s.users || 0;
@@ -1008,30 +1009,49 @@ PAGES.admin = function() {
 function _renderProdContent(){
   api("GET","/api/product-pages").then(function(pages){
     var ct=document.getElementById("aContent");if(!ct)return;
-    var h="<p style='font-size:13px;color:var(--text2);margin-bottom:16px'>为每个产品设置简介（产品卡片展示）和详细介绍（点击后独立页面）</p>";
-    var prods=["SAST","SCA","BAT","FUZZ","MST","CodingHawk","GuardFox"];
-    for(var i=0;i<prods.length;i++){
-      var pid=prods[i],page=pages.find(function(p){return p.product_id===pid})||{intro:"",detail:""};
-      h+="<div class='card' style='margin-bottom:10px'><div style='display:flex;justify-content:space-between;align-items:center'><span style='font-weight:700'>"+pid+"</span><button class='btn btn-sm btn-outline' onclick='_editProdPage(\""+pid+"\")'>编辑</button></div>";
-      h+="<div style='font-size:12px;color:var(--text3);margin-top:4px'>简介: "+(page.intro||"未设置").substring(0,60)+"</div></div>";
+    var h="<p style='font-size:13px;color:var(--text2);margin-bottom:16px'>自定义产品简介（产品卡片展示）和详细介绍（独立页面），支持HTML</p>";
+    h+="<button class='btn btn-primary btn-sm' onclick='_editProdPage(\"\")' style='margin-bottom:12px;margin-right:6px'>+ 新增产品简介</button>";
+    if(!pages||!pages.length){
+      h+="<div class='empty-state'><div class='es-icon'>📦</div><div class='es-title'>暂无产品简介</div></div>";
+    }else{
+      for(var i=0;i<pages.length;i++){
+        var p=pages[i];
+        h+="<div class='card' style='margin-bottom:10px'><div style='display:flex;justify-content:space-between;align-items:center'><span style='font-weight:700'>"+p.product_id+"</span><div><button class='btn btn-sm btn-outline' onclick='_editProdPage(\""+p.product_id+"\")' style='margin-right:4px'>编辑</button><button class='btn btn-sm' style='color:var(--danger)' onclick='_delProdPage(\""+p.product_id+"\")'>删除</button></div></div>";
+        h+="<div style='font-size:12px;color:var(--text3);margin-top:4px'>"+(p.intro||"未设置").substring(0,80)+"</div></div>";
+      }
     }
     ct.innerHTML=h;
   }).catch(function(){});
 }
 function _editProdPage(pid){
-  api("GET","/api/product-pages/"+pid).then(function(page){
+  var isNew=!pid;
+  if(isNew){
     var m=document.createElement("div");m.className="modal-overlay";m.onclick=function(e){if(e.target===m)m.remove()};
-    m.innerHTML="<div class='modal-box' style='max-width:800px'><h3 style='margin-bottom:16px'>编辑 "+pid+" 产品内容</h3><div class='form-group'><label>简介（产品卡片展示，简短描述）</label><textarea id='ppIntro' rows='3' style='width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:inherit;font-size:13px;resize:vertical'>"+(page.intro||"")+"</textarea></div><div class='form-group'><label>详细介绍（点击产品后的独立页面，支持HTML）</label><textarea id='ppDetail' rows='15' style='width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:12px;resize:vertical'>"+(page.detail||"")+"</textarea></div><button class='btn btn-primary btn-lg' onclick='_saveProdPage(\""+pid+"\",this)' style='width:100%;justify-content:center'>保存</button></div>";
+    m.innerHTML="<div class='modal-box' style='max-width:800px'><h3 style='margin-bottom:16px'>新增产品简介</h3><div class='form-group'><label>产品ID *</label><input id='ppId' placeholder='如：SAST、SCA、BAT' style='width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit'></div><div class='form-group'><label>产品名称</label><input id='ppName' placeholder='如：软安SAST 静态代码质量与安全检测' style='width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit'></div><div class='form-group'><label>简介（卡片展示）</label><textarea id='ppIntro' rows='3' style='width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:inherit;font-size:13px;resize:vertical'></textarea></div><div class='form-group'><label>详细介绍（支持HTML）</label><textarea id='ppDetail' rows='15' style='width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:12px;resize:vertical'></textarea></div><button class='btn btn-primary btn-lg' onclick='_saveProdPage(\"\",this)' style='width:100%;justify-content:center'>创建</button></div>";
     document.body.appendChild(m);
-  });
+  }else{
+    api("GET","/api/product-pages/"+pid).then(function(page){
+      var m=document.createElement("div");m.className="modal-overlay";m.onclick=function(e){if(e.target===m)m.remove()};
+      m.innerHTML="<div class='modal-box' style='max-width:800px'><h3 style='margin-bottom:16px'>编辑 "+pid+" 产品内容</h3><div class='form-group'><label>产品名称</label><input id='ppName' value='"+(page?page.product_name||"":"")+"' style='width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit'></div><div class='form-group'><label>简介（卡片展示）</label><textarea id='ppIntro' rows='3' style='width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:inherit;font-size:13px;resize:vertical'>"+(page?page.intro||"":"")+"</textarea></div><div class='form-group'><label>详细介绍（支持HTML）</label><textarea id='ppDetail' rows='15' style='width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:12px;resize:vertical'>"+(page?page.detail||"":"")+"</textarea></div><button class='btn btn-primary btn-lg' onclick='_saveProdPage(\""+pid+"\",this)' style='width:100%;justify-content:center'>保存</button></div>";
+      document.body.appendChild(m);
+    });
+  }
 }
 async function _saveProdPage(pid,btn){
+  var newId=pid||document.getElementById("ppId")?.value.trim();
+  if(!newId){toast("请输入产品ID","error");return}
   var intro=document.getElementById("ppIntro")?.value||"";
   var detail=document.getElementById("ppDetail")?.value||"";
+  var pname=document.getElementById("ppName")?.value||"";
   try{
-    await api("POST","/api/product-pages",fd({product_id:pid,intro:intro,detail:detail}));
-    toast("已保存");btn.closest(".modal-overlay").remove();_renderProdContent();
+    await api("POST","/api/product-pages",fd({product_id:newId,intro:intro,detail:detail,product_name:pname}));
+    toast(pid?"已更新":"已创建");btn.closest(".modal-overlay").remove();_renderProdContent();
   }catch(e){toast(e.message,"error")}
+}
+async function _delProdPage(pid){
+  if(!confirm("确定删除 "+pid+" 产品简介？"))return;
+  try{await api("DELETE","/api/product-pages/"+pid);toast("已删除");_renderProdContent();}
+  catch(e){toast(e.message,"error")}
 }
 
 // ═══ ADMIN HELPERS ═══
@@ -1255,11 +1275,61 @@ aTab = function(t, chip) {
       if (a.length) { ct4.innerHTML = '<table class="data-table"><tr><th>用户</th><th>主题</th><th>分类</th><th>操作</th></tr>' + a.map(function(x) { return '<tr><td>' + x.username + '</td><td>' + x.subject + '</td><td>' + x.category + '</td><td><button class="btn btn-sm btn-outline" onclick="_replyTicket(' + x.id + ')">回复</button> <button class="btn btn-sm" style="color:var(--danger)" onclick="_closeTicket(' + x.id + ')">关闭</button></td></tr>'; }).join('') + '</table>'; } else { ct4.innerHTML = '<div class="empty-state"><div class="es-icon">✅</div><div class="es-title">无待处理工单</div></div>'; }
     }).catch(function() {});
   }
+  else if (t === 'selections') { _renderSelections(); }
   else { _origATab2(t, chip); }
 };
 
+function _renderSelections(){
+  api('GET','/api/admin/selections?limit=100').then(function(a){
+    var ct=document.getElementById('aContent');if(!ct)return;
+    var h='<button class="btn btn-ghost btn-sm" data-action="aTab" data-param="selections" style="margin-bottom:12px">刷新</button>';
+    if(a.length){
+      h+='<table class="data-table"><tr><th>时间</th><th>公司</th><th>联系人</th><th>行业</th><th>产品需求</th><th>报价区间</th><th>操作</th></tr>';
+      for(var i=0;i<a.length;i++){
+        var r=a[i],ui={};try{ui=JSON.parse(r.user_info||'{}')}catch(e){}
+        var pn=[];try{pn=JSON.parse(r.product_needs||'[]')}catch(e){}
+        h+='<tr><td>'+(r.created_at||'').substring(0,16)+'</td><td>'+(ui.company||'-')+'</td><td>'+(ui.contact||'-')+'</td><td>'+r.industry+'</td><td>'+pn.join(', ')+'</td><td>'+r.quote_range+'</td>';
+        h+='<td><button class="btn btn-sm btn-outline" onclick="_viewSelection('+r.id+')">详情</button> <button class="btn btn-sm" style="color:var(--danger)" data-action="delSel" data-param="'+r.id+'">删除</button></td></tr>';
+      }
+      h+='</table>';
+    }else{h+='<div class="empty-state"><div class="es-icon">📋</div><div class="es-title">暂无选型记录</div></div>';}
+    ct.innerHTML=h;
+  }).catch(function(){});
+}
+function _viewSelection(id){
+  api('GET','/api/admin/selections?limit=100').then(function(a){
+    var r=a.find(function(x){return x.id===id});if(!r)return;
+    var ui={};try{ui=JSON.parse(r.user_info||'{}')}catch(e){}
+    var pn=[];try{pn=JSON.parse(r.product_needs||'[]')}catch(e){}
+    var bs=[];try{bs=JSON.parse(r.biz_scenes||'[]')}catch(e){}
+    var pi={};try{pi=JSON.parse(r.project_info||'{}')}catch(e){}
+    var adv=[];try{adv=JSON.parse(r.advantages||'[]')}catch(e){}
+    var prd=[];try{prd=JSON.parse(r.products||'[]')}catch(e){}
+    var m=document.createElement('div');m.className='modal-overlay';m.onclick=function(e){if(e.target===m)m.remove()};
+    var h='<div class="modal-box" style="max-width:700px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h3>选型详情 #'+r.id+'</h3><svg width="20" height="20" style="cursor:pointer" onclick="this.closest(\'.modal-overlay\').remove()"><use href="#i-x"/></svg></div>';
+    h+='<div style="font-size:13px;line-height:2;max-height:70vh;overflow-y:auto">';
+    h+='<b>时间：</b>'+(r.created_at||'')+'<br>';
+    h+='<b>公司：</b>'+(ui.company||'-')+'<br>';
+    h+='<b>联系人：</b>'+(ui.contact||'-')+' · '+(ui.title||'')+'<br>';
+    h+='<b>邮箱：</b>'+(ui.email||'-')+' · 电话：'+(ui.phone||'-')+'<br>';
+    h+='<b>行业：</b>'+r.industry+'<br>';
+    h+='<b>产品需求：</b>'+pn.join('、')+'<br>';
+    h+='<b>业务场景：</b>'+bs.join('、')+'<br>';
+    h+='<b>开发语言：</b>'+(pi.languages||[]).join('、')+'<br>';
+    h+='<b>团队规模：</b>'+(pi.teamSize||'-')+'<br>';
+    h+='<b>代码规模：</b>'+(pi.codeSize||'-')+'<br>';
+    h+='<b>关注点：</b>'+(pi.focuses||[]).join('、')+'<br>';
+    h+='<b>优势匹配：</b>'+adv.join('、')+'<br>';
+    h+='<b>自定义痛点：</b>'+(r.custom_pain||'-')+'<br>';
+    h+='<b>推荐产品：</b>'+prd.join('、')+'<br>';
+    h+='<b>报价区间：</b>'+r.quote_range+'<br>';
+    h+='</div></div>';
+    m.innerHTML=h;document.body.appendChild(m);
+  });
+}
 function _replyTicket(id) { var r = prompt('回复内容:'); if (!r) return; api('PUT', '/api/tickets/' + id + '/reply', 'reply=' + encodeURIComponent(r)).then(function() { toast('已回复'); aTab("tickets"); }).catch(function(e) { toast(e.message, 'error'); }); }
 async function _closeTicket(id) { try { await api('PUT', '/api/tickets/' + id + '/close', ''); toast('已关闭'); aTab("tickets"); } catch(e) { toast(e.message, 'error'); } }
+async function _delSel(id){if(!confirm('确定删除此选型记录？'))return;try{await api('DELETE','/api/admin/selections/'+id);toast('已删除');_renderSelections();}catch(e){toast(e.message,'error');}}
 
 </script>
 </body>
