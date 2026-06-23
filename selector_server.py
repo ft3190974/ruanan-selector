@@ -1,7 +1,8 @@
 """软安科技华南营销管理平台 — 统一后端 API v3.0"""
-import hashlib, secrets, os, json, time, re
+import hashlib, secrets, os, json, time, re, html
 from datetime import datetime, timedelta
 from pathlib import Path
+import bcrypt
 import aiosqlite
 from fastapi import FastAPI, Form, HTTPException, Request, UploadFile, File
 from fastapi.responses import FileResponse
@@ -12,16 +13,67 @@ BASE_DIR = Path(__file__).parent
 DB_PATH = BASE_DIR / "selector.db"
 UPLOAD_DIR = BASE_DIR / "uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)
-STATIC_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-product-selector.html")
-MARKETING_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-marketing-platform.html")
-CUSTOMER_PORTAL_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-customer-portal.html")
-PARTNER_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\ruanan-partner-portal.html")
-PROMO_VIDEO_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\promo_video.html")
-OUTRO_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\outro.html")
-RECRUIT_VIDEO_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\recruit_video.html")
-INTRO_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\intro.html")
-OUTRO_CODE_FILE = Path(r"C:\Users\常乐\Desktop\软安科技\outro_code.html")
+STATIC_FILE = BASE_DIR / "ruanan-product-selector.html"
+MARKETING_FILE = BASE_DIR / "ruanan-marketing-platform.html"
+CUSTOMER_PORTAL_FILE = BASE_DIR / "ruanan-customer-portal.html"
+PARTNER_FILE = BASE_DIR / "ruanan-partner-portal.html"
+PROMO_VIDEO_FILE = BASE_DIR / "promo_video.html"
+OUTRO_FILE = BASE_DIR / "outro.html"
+RECRUIT_VIDEO_FILE = BASE_DIR / "recruit_video.html"
+INTRO_FILE = BASE_DIR / "intro.html"
+OUTRO_CODE_FILE = BASE_DIR / "outro_code.html"
+
+# ── 安全配置 ──
 ADMIN_PWD = os.environ.get("ADMIN_PWD", "admin123")
+# 已知不安全密码：首次启动若命中且未显式放行则拒绝
+INSECURE_PASSWORDS = {"admin123", "123456", "password", "admin", "", "12345678"}
+ALLOW_INSECURE_ADMIN_PWD = os.environ.get("ALLOW_INSECURE_ADMIN_PWD", "").lower() in ("1", "true", "yes")
+if ADMIN_PWD in INSECURE_PASSWORDS and not ALLOW_INSECURE_ADMIN_PWD:
+    raise RuntimeError(
+        "拒绝启动：ADMIN_PWD 为弱密码。请通过环境变量设置强密码（至少8位含字母数字），"
+        "或设 ALLOW_INSECURE_ADMIN_PWD=true 仅用于本地演示。"
+    )
+
+# CORS 白名单：生产环境应指定具体域名，逗号分隔。设为 * 时强制关闭 credentials。
+CORS_ORIGINS = [o.strip() for o in os.environ.get("CORS_ORIGINS", "*").split(",") if o.strip()]
+CORS_IS_WILDCARD = "*" in CORS_ORIGINS
+
+
+# ── 密码哈希：bcrypt（带盐 + 慢哈希，替代无盐 SHA-256）──
+def hash_password(plain: str) -> str:
+    """生成 bcrypt 哈希（含随机盐），返回 str 便于存 SQLite TEXT 字段。"""
+    return bcrypt.hashpw(plain.encode(), bcrypt.gensalt(rounds=12)).decode()
+
+
+def verify_password(plain: str, hashed: str) -> bool:
+    """校验明文密码与 bcrypt 哈希是否匹配。兼容旧 SHA-256 哈希（迁移期）。"""
+    if not hashed:
+        return False
+    # bcrypt 哈希以 $2 开头
+    if hashed.startswith("$2"):
+        try:
+            return bcrypt.checkpw(plain.encode(), hashed.encode())
+        except Exception:
+            return False
+    # 兼容旧 SHA-256 无盐哈希（迁移期，校验通过后应触发重哈希）
+    return hashlib.sha256(plain.encode()).hexdigest() == hashed
+
+
+def needs_rehash(hashed: str) -> bool:
+    """判断是否需要重哈希（旧 SHA-256 哈希需升级为 bcrypt）。"""
+    return not hashed.startswith("$2")
+
+
+# ── XSS 防护：输出统一 HTML 转义 ──
+def sanitize_output(obj):
+    """递归对 dict/list/str 做 HTML 实体转义，防存储 XSS 反射到前端。"""
+    if isinstance(obj, dict):
+        return {k: sanitize_output(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [sanitize_output(v) for v in obj]
+    if isinstance(obj, str):
+        return html.escape(obj, quote=True)
+    return obj
 
 # ── 安全配置 ──
 MIN_PASSWORD_LENGTH = 8
@@ -58,6 +110,18 @@ async def log_login(user_type, username, ip, success, detail=""):
     db = await get_db()
     try:
         await db.execute("INSERT INTO login_logs(user_type,username,ip,success,detail) VALUES(?,?,?,?,?)",(user_type,username,ip,1 if success else 0,detail))
+        await db.commit()
+    except: pass
+    finally: await db.close()
+
+
+async def log_action(actor: str, action: str, target: str, target_id: int = 0, detail: str = ""):
+    """通用审计日志：记录写操作（创建/更新/删除）便于追溯。"""
+    db = await get_db()
+    try:
+        await db.execute(
+            "INSERT INTO audit_logs(actor,action,target,target_id,detail) VALUES(?,?,?,?,?)",
+            (safe_str(actor, 50), safe_str(action, 20), safe_str(target, 50), target_id, safe_str(detail, 500)))
         await db.commit()
     except: pass
     finally: await db.close()
@@ -155,8 +219,44 @@ def verify_captcha(captcha_id: str, user_answer: str) -> bool:
     except (ValueError, TypeError): return False
 
 app = FastAPI(title="软安华南营销平台", version="3.0.0")
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(CORSMiddleware,
+                   allow_origins=["*"] if CORS_IS_WILDCARD else CORS_ORIGINS,
+                   allow_credentials=not CORS_IS_WILDCARD,
+                   allow_methods=["*"], allow_headers=["*"])
 app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
+
+
+# ── XSS 防护中间件：对所有 JSON API 响应的字符串字段做 HTML 实体转义 ──
+# 前端多处用 innerHTML 渲染后端数据，统一在出口转义可防存储 XSS。
+@app.middleware("http")
+async def xss_protection_middleware(request: Request, call_next):
+    response = await call_next(request)
+    # 只处理 /api/ 路径的 JSON 响应，跳过静态文件/HTML 页面/流式响应
+    if not request.url.path.startswith("/api/"):
+        return response
+    ctype = response.headers.get("content-type", "")
+    if "application/json" not in ctype:
+        return response
+    # StreamingResponse 没有 .body，需收集 chunks
+    body_chunks = []
+    async for chunk in response.body_iterator:
+        body_chunks.append(chunk)
+    body = b"".join(body_chunks)
+    # 复制 headers 但移除 content-length（新 body 长度变了，让框架重算）
+    new_headers = {k: v for k, v in response.headers.items()
+                   if k.lower() not in ("content-length", "content-encoding", "transfer-encoding")}
+    try:
+        data = json.loads(body)
+        sanitized = sanitize_output(data)
+        new_body = json.dumps(sanitized, ensure_ascii=False).encode()
+        from starlette.responses import Response as StarletteResponse
+        return StarletteResponse(content=new_body, media_type="application/json",
+                                 status_code=response.status_code, headers=new_headers)
+    except Exception:
+        from starlette.responses import Response as StarletteResponse
+        return StarletteResponse(content=body, media_type=ctype,
+                                 status_code=response.status_code, headers=new_headers)
+
 
 async def get_db():
     db = await aiosqlite.connect(str(DB_PATH))
@@ -247,6 +347,7 @@ async def init_db():
             created_at TEXT DEFAULT(datetime('now','localtime'))
         );
         CREATE TABLE IF NOT EXISTS login_logs( id INTEGER PRIMARY KEY AUTOINCREMENT, user_type TEXT DEFAULT "internal", username TEXT, ip TEXT, success INTEGER DEFAULT 1, detail TEXT DEFAULT "", created_at TEXT DEFAULT(datetime('now','localtime')) );
+        CREATE TABLE IF NOT EXISTS audit_logs( id INTEGER PRIMARY KEY AUTOINCREMENT, actor TEXT, action TEXT, target TEXT, target_id INTEGER DEFAULT 0, detail TEXT DEFAULT "", created_at TEXT DEFAULT(datetime('now','localtime')) );
         CREATE TABLE IF NOT EXISTS selection_records(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_info TEXT DEFAULT '', industry TEXT DEFAULT '',
@@ -315,10 +416,15 @@ async def init_db():
     except: pass
     # Create default admin (only if not exists)
     try:
-        ph = hashlib.sha256(ADMIN_PWD.encode()).hexdigest()
+        ph = hash_password(ADMIN_PWD)
         existing = await db_fetchone(db, "SELECT id FROM users WHERE username='admin'")
         if not existing:
             await db.execute("INSERT INTO users(username,password_hash,role,email) VALUES(?,?,'admin','admin@ruanan.com')", ('admin', ph))
+        else:
+            # 迁移：若 admin 仍是旧 SHA-256 哈希，升级为 bcrypt
+            row = await db_fetchone(db, "SELECT password_hash FROM users WHERE username='admin'")
+            if row and needs_rehash(row["password_hash"]):
+                await db.execute("UPDATE users SET password_hash=? WHERE username='admin'", (ph,))
     except: pass
     # Migrate: add status column to customer_users if missing
     try:
@@ -504,9 +610,14 @@ async def login(request: Request, username: str = Form(...), password: str = For
     if not username or not password: raise HTTPException(400, "用户名和密码不能为空")
     db = await get_db()
     try:
-        ph = hashlib.sha256(password.encode()).hexdigest()
-        row = await db_fetchone(db, "SELECT * FROM users WHERE username=? AND password_hash=?", (username, ph))
-        if not row: raise HTTPException(401, "用户名或密码错误")
+        row = await db_fetchone(db, "SELECT * FROM users WHERE username=?", (username,))
+        if not row or not verify_password(password, row["password_hash"]):
+            raise HTTPException(401, "用户名或密码错误")
+        # 迁移：旧 SHA-256 哈希校验通过后升级为 bcrypt
+        if needs_rehash(row["password_hash"]):
+            new_ph = hash_password(password)
+            await db.execute("UPDATE users SET password_hash=? WHERE id=?", (new_ph, row["id"]))
+            await db.commit()
         token = secrets.token_hex(32)
         await db.execute("INSERT INTO api_tokens(user_id,token) VALUES(?,?)", (row["id"], token))
         await db.commit()
@@ -529,7 +640,7 @@ async def register(username: str = Form(...), password: str = Form(...), email: 
     try:
         existing = await db_fetchone(db, "SELECT id FROM users WHERE username=?", (username,))
         if existing: raise HTTPException(400, "用户名已存在")
-        ph = hashlib.sha256(password.encode()).hexdigest()
+        ph = hash_password(password)
         cur = await db.execute(
             "INSERT INTO users(username,password_hash,email,phone,company,role) VALUES(?,?,?,?,?,?)",
             (username, ph, email, phone, company, r))
@@ -537,6 +648,7 @@ async def register(username: str = Form(...), password: str = Form(...), email: 
         token = secrets.token_hex(32)
         await db.execute("INSERT INTO api_tokens(user_id,token) VALUES(?,?)", (uid, token))
         await db.commit()
+        await log_action(username, "CREATE", "user", uid, f"role={r}")
         return {"token": token, "username": username, "role": r}
     except HTTPException: raise
     except Exception as e:
@@ -553,7 +665,7 @@ async def forgot_password(username: str = Form(...), email: str = Form(...)):
         row = await db_fetchone(db, "SELECT * FROM users WHERE username=? AND email=?", (username, email))
         if not row: raise HTTPException(404, "未找到匹配的用户名和邮箱")
         new_pwd = secrets.token_hex(10)
-        ph = hashlib.sha256(new_pwd.encode()).hexdigest()
+        ph = hash_password(new_pwd)
         await db.execute("UPDATE users SET password_hash=? WHERE id=?", (ph, row["id"]))
         await db.commit()
         return {"message": "密码已重置，新密码为: " + new_pwd + "。请使用新密码登录后立即修改密码。"}
@@ -596,8 +708,19 @@ async def list_leads(request: Request):
 # ARTICLES (public read, admin write)
 # ═══════════════════════════════════════════════════
 @app.get("/api/articles")
-async def list_articles(category: str = "", search: str = "", limit: int = 20):
+async def list_articles(category: str = "", search: str = "", limit: int = 10, offset: int = 0):
     db = await get_db()
+    # Get total count for pagination
+    count_sql = "SELECT COUNT(*) FROM articles WHERE published=1"
+    count_params = []
+    if category:
+        count_sql += " AND category=?"; count_params.append(category)
+    if search:
+        count_sql += " AND (title LIKE ? OR content LIKE ? OR tags LIKE ?)"
+        count_params.extend([f"%{search}%", f"%{search}%", f"%{search}%"])
+    total_row = await db_fetchone(db, count_sql, count_params)
+    total = total_row[0] if total_row else 0
+
     sql = "SELECT * FROM articles WHERE published=1"
     params = []
     if category:
@@ -605,10 +728,10 @@ async def list_articles(category: str = "", search: str = "", limit: int = 20):
     if search:
         sql += " AND (title LIKE ? OR content LIKE ? OR tags LIKE ?)"
         params.extend([f"%{search}%", f"%{search}%", f"%{search}%"])
-    sql += " ORDER BY created_at DESC LIMIT ?"; params.append(limit)
+    sql += " ORDER BY created_at DESC LIMIT ? OFFSET ?"; params.extend([limit, offset])
     rows = await db_fetchall(db, sql, params)
     await db.close()
-    return [dict(r) for r in rows]
+    return {"articles": [dict(r) for r in rows], "total": total, "limit": limit, "offset": offset}
 
 @app.get("/api/articles/{aid}")
 async def get_article(aid: int):
@@ -659,10 +782,11 @@ async def update_article(aid: int, request: Request, title: str = Form(""), cont
 
 @app.delete("/api/articles/{aid}")
 async def delete_article(aid: int, request: Request):
-    await require_admin(request)
+    user = await require_admin(request)
     db = await get_db()
     await db.execute("DELETE FROM articles WHERE id=?", (aid,))
     await db.commit()
+    await log_action(user["username"], "DELETE", "article", aid)
     await db.close()
     return {"ok": True}
 
@@ -1027,11 +1151,20 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
         file_path = UPLOAD_DIR / safe_name
         with open(file_path, "wb") as f: f.write(content)
         return {"url": f"/uploads/{safe_name}", "filename": file.filename, "size": len(content)}
-    # Admin uploads - no restrictions
-    ext = Path(file.filename).suffix or ".bin"
+    # Admin uploads - 同样限制后缀（防可执行文件上传），但放宽大小
+    allowed_admin = {'.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx',
+                     '.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp', '.svg',
+                     '.pdf', '.txt', '.csv', '.md', '.json', '.xml', '.yml', '.yaml',
+                     '.zip', '.tar', '.gz', '.mp4', '.mp3', '.wav',
+                     '.html', '.css', '.js', '.py'}
+    ext = Path(file.filename).suffix.lower() or ".bin"
+    if ext not in allowed_admin:
+        raise HTTPException(400, f"不支持的文件格式: {ext}")
+    content = await file.read()
+    if len(content) > 100 * 1024 * 1024:
+        raise HTTPException(400, "文件大小不能超过100MB")
     safe_name = secrets.token_hex(16) + ext
     file_path = UPLOAD_DIR / safe_name
-    content = await file.read()
     with open(file_path, "wb") as f: f.write(content)
     return {"url": f"/uploads/{safe_name}", "filename": file.filename, "size": len(content)}
 
@@ -1060,7 +1193,7 @@ async def admin_create_user(request: Request, username: str = Form(...), passwor
     await require_admin(request)
     db = await get_db()
     try:
-        ph = hashlib.sha256(password.encode()).hexdigest()
+        ph = hash_password(password)
         cur = await db.execute(
             "INSERT INTO users(username,password_hash,email,phone,company,role) VALUES(?,?,?,?,?,?)",
             (username, ph, email, phone, company, role))
@@ -1103,7 +1236,7 @@ async def admin_reset_password(uid: int, request: Request, new_password: str = F
     try:
         admin = await get_auth_user(request)
         if uid == admin["id"]: raise HTTPException(400, "不能重置自己的密码")
-        ph = hashlib.sha256(new_password.encode()).hexdigest()
+        ph = hash_password(new_password)
         await db.execute("UPDATE users SET password_hash=? WHERE id=?", (ph, uid))
         await db.commit()
         return {"ok": True}
@@ -1160,7 +1293,7 @@ async def customer_register_admin(username: str = Form(...), password: str = For
     company = safe_str(company, 200)
     db = await get_db()
     try:
-        ph = hashlib.sha256(password.encode()).hexdigest()
+        ph = hash_password(password)
         cur = await db.execute(
             "INSERT INTO customer_users(username,password_hash,email,phone,company,product_purchased) VALUES(?,?,?,?,?,?)",
             (username, ph, email, phone, company, safe_str(product_purchased, 200)))
@@ -1184,10 +1317,16 @@ async def customer_login(request: Request, username: str = Form(...), password: 
     if not username or not password: raise HTTPException(400, "用户名和密码不能为空")
     db = await get_db()
     try:
-        ph = hashlib.sha256(password.encode()).hexdigest()
-        user = await db_fetchone(db, "SELECT * FROM customer_users WHERE username=? AND password_hash=?", (username, ph))
-        if not user: await log_login("internal", username, client_ip, False, "密码错误"); raise HTTPException(400, "用户名或密码错误")
+        user = await db_fetchone(db, "SELECT * FROM customer_users WHERE username=?", (username,))
+        if not user or not verify_password(password, user["password_hash"]):
+            await log_login("internal", username, client_ip, False, "密码错误")
+            raise HTTPException(400, "用户名或密码错误")
         user = dict(user)
+        # 迁移：旧 SHA-256 哈希校验通过后升级为 bcrypt
+        if needs_rehash(user["password_hash"]):
+            new_ph = hash_password(password)
+            await db.execute("UPDATE customer_users SET password_hash=? WHERE id=?", (new_ph, user["id"]))
+            await db.commit()
         # Check if frozen
         if user.get("status") == "frozen": raise HTTPException(400, "账号已被冻结，请联系管理员")
         # Check expiration
@@ -1223,7 +1362,7 @@ async def customer_forgot_password(username: str = Form(...), email: str = Form(
         if not user: raise HTTPException(400, "用户名或邮箱不匹配")
         import random, string
         new_pwd = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
-        ph = hashlib.sha256(new_pwd.encode()).hexdigest()
+        ph = hash_password(new_pwd)
         await db.execute("UPDATE customer_users SET password_hash=? WHERE id=?", (ph, user["id"]))
         await db.commit()
         return {"message": "密码已重置，新密码为: " + new_pwd + "。请使用新密码登录后立即修改密码。"}
@@ -1241,7 +1380,7 @@ async def customer_admin_create_user(request: Request, username: str = Form(...)
     if pwd_err: raise HTTPException(400, pwd_err)
     db = await get_db()
     try:
-        ph = hashlib.sha256(password.encode()).hexdigest()
+        ph = hash_password(password)
         cur = await db.execute("INSERT INTO customer_users(username,password_hash,email,phone,company,contact_name,position,product_purchased,industry,valid_from,valid_days) VALUES(?,?,?,?,?,?,?,?,?,?,?)",(safe_str(username,50),ph,safe_str(email,200),safe_str(phone,30),safe_str(company,200),safe_str(contact_name,100),safe_str(position,100),safe_str(product_purchased,200),safe_str(industry,100),safe_str(valid_from,20),valid_days))
         await db.commit(); uid = cur.lastrowid
         return {"id":uid,"ok":True}
@@ -1265,7 +1404,7 @@ async def customer_admin_reset_password(uid: int, request: Request, new_password
     await require_admin(request)
     db = await get_db()
     try:
-        ph = hashlib.sha256(new_password.encode()).hexdigest()
+        ph = hash_password(new_password)
         await db.execute("UPDATE customer_users SET password_hash=? WHERE id=?", (ph, uid))
         await db.commit()
         return {"ok": True}
@@ -1667,11 +1806,12 @@ async def change_password(request: Request, old_password: str = Form(...), new_p
     if pwd_err: raise HTTPException(400, pwd_err)
     db = await get_db()
     try:
-        old_ph = hashlib.sha256(old_password.encode()).hexdigest()
-        if old_ph != user["password_hash"]: raise HTTPException(400, "原密码错误")
-        new_ph = hashlib.sha256(new_password.encode()).hexdigest()
+        if not verify_password(old_password, user["password_hash"]):
+            raise HTTPException(400, "原密码错误")
+        new_ph = hash_password(new_password)
         await db.execute("UPDATE users SET password_hash=? WHERE id=?", (new_ph, user["id"]))
         await db.commit()
+        await log_action(user["username"], "CHANGE_PWD", "user", user["id"])
         return {"ok": True, "message": "密码修改成功"}
     finally: await db.close()
 
@@ -1683,11 +1823,12 @@ async def customer_change_password(request: Request, old_password: str = Form(..
     if pwd_err: raise HTTPException(400, pwd_err)
     db = await get_db()
     try:
-        old_ph = hashlib.sha256(old_password.encode()).hexdigest()
-        if old_ph != user["password_hash"]: raise HTTPException(400, "原密码错误")
-        new_ph = hashlib.sha256(new_password.encode()).hexdigest()
+        if not verify_password(old_password, user["password_hash"]):
+            raise HTTPException(400, "原密码错误")
+        new_ph = hash_password(new_password)
         await db.execute("UPDATE customer_users SET password_hash=? WHERE id=?", (new_ph, user["id"]))
         await db.commit()
+        await log_action(user["username"], "CHANGE_PWD", "customer", user["id"])
         return {"ok": True, "message": "密码修改成功"}
     finally: await db.close()
 

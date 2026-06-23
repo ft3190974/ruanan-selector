@@ -402,7 +402,7 @@ function updateSidebar(){
   nav.push({href:'selector',label:'快速获取解决方案与报价',emoji:'🎯',icon:'i-search2'});
   nav.push({href:'contact',label:'联系销售/进一步技术交流',emoji:'📞',icon:'i-phone'});
   nav.push({section:'营销'});
-  nav.push({href:'insights',label:'行业洞察与相关咨询',emoji:'📊',icon:'i-pie'});
+  nav.push({href:'insights',label:'行业洞察和软件供应链安全资讯',emoji:'📊',icon:'i-pie'});
   nav.push({href:'partner',label:'华南合作伙伴管理中心',emoji:'🤝',icon:'i-users'});
   nav.push({section:'支持'});
   nav.push({href:'blog',label:'客户成功技术服务中心',emoji:'💡',icon:'i-book'});
@@ -425,7 +425,7 @@ function updateSidebar(){
   document.getElementById('sidebarFooter').innerHTML=fh;
 
   // Breadcrumb
-  var labels={home:'软安科技华南营销首页',products:'软安科技产品简介',solutions:'行业解决方案介绍',selector:'快速获取解决方案与报价',contact:'联系销售/进一步技术交流',insights:'行业洞察与相关咨询',partner:'华南合作伙伴管理中心',blog:'客户成功技术服务中心',training:'软安内部员工培训中心',admin:'管理后台'};
+  var labels={home:'软安科技华南营销首页',products:'软安科技产品简介',solutions:'行业解决方案介绍',selector:'快速获取解决方案与报价',contact:'联系销售/进一步技术交流',insights:'行业洞察和软件供应链安全资讯','insight-detail':'文章详情',partner:'华南合作伙伴管理中心',blog:'客户成功技术服务中心',training:'软安内部员工培训中心',admin:'管理后台'};
   document.getElementById('tbBreadcrumb').innerHTML=(nav.find(function(x){return x.href===page;})||{}).emoji+' '+(labels[page]||'工作台');
 }
 
@@ -445,7 +445,7 @@ var PAGES={};
 // ═══ DASHBOARD ═══
 PAGES.home=function(){
   var h='';
-  h+='<div style="text-align:center;padding:40px 20px 48px"><h1 style="font-size:42px;font-weight:900;color:var(--brand);letter-spacing:8px;margin-bottom:24px;line-height:1.2">软安科技华南区域营销管理平台</h1><div style="font-size:18px;color:var(--text2);line-height:2.4;letter-spacing:2px"><p style="margin:0">随时随地，<span style="color:var(--accent);font-weight:700">安全检测</span>，<span style="color:var(--accent);font-weight:700">软安科技</span> 帮您高效交付</p><p style="margin:8px 0 0;font-size:15px;color:var(--text3);letter-spacing:4px">让 AI 生态更安全 · 华南营销 专业专注</p></div></div>';
+  h+='<div style="text-align:center;padding:12px 20px 48px"><h1 style="font-size:42px;font-weight:900;color:var(--brand);letter-spacing:8px;margin-bottom:20px;line-height:1.2">软安科技华南区域营销管理平台</h1><p style="margin:0;font-size:22px;font-weight:700;color:#2d3748;letter-spacing:3px;line-height:1.4">随时随地，安全检测，软安科技 帮您高效交付</p><p style="margin:8px 0 0;font-size:17px;font-weight:600;color:#4a5568;letter-spacing:4px;line-height:1.5">让 AI 生态更安全，让软件交付更合规</p></div>';
 
   // Quick actions
   h+='<div class="qaction-grid">';
@@ -466,7 +466,7 @@ PAGES.home=function(){
   // Two columns: recent activity + product overview
   h+='<div class="grid-2-1">';
   // Left: activity feed
-  h+='<div class="card"><div class="card-header"><div class="ch-title">📰 动态与快讯</div><a class="ch-action" onclick="nav(\'insights\')">查看全部 →</a></div><div class="feed-list" id="feedList"><div class="feed-item"><div class="fi-dot purple"></div><div class="fi-content"><div class="fi-title">欧盟 CRA 网络韧性法案正式实施</div><div class="fi-desc">对软件产品网络安全提出强制性要求，涵盖设计、开发、交付全生命周期。</div><div class="fi-time">2026-06-10</div></div></div><div class="feed-item"><div class="fi-dot gold"></div><div class="fi-content"><div class="fi-title">汽车软件安全合规路径解读</div><div class="fi-desc">从 UN R155 到 GB 44495，梳理全球汽车网络安全法规体系。</div><div class="fi-time">2026-06-05</div></div></div><div class="feed-item"><div class="fi-dot info"></div><div class="fi-content"><div class="fi-title">开源供应链安全治理实践</div><div class="fi-desc">基于 Log4j 等重大漏洞教训，总结企业开源组件管理的 5 个关键措施。</div><div class="fi-time">2026-05-28</div></div></div></div></div>';
+  h+='<div class="card"><div class="card-header"><div class="ch-title">📰 动态与快讯</div><a class="ch-action" onclick="nav(\'insights\')">查看全部 →</a></div><div class="feed-list" id="feedList"><div class="feed-item"><div class="fi-dot" style="background:var(--text3)"></div><div class="fi-content"><div class="fi-title" style="color:var(--text3)">加载中...</div></div></div></div></div>';
   // Right: quick stats
   h+='<div class="card"><div class="card-header"><div class="ch-title">🚀 快捷入口</div></div>';
   h+='<div style="display:flex;flex-direction:column;gap:6px">';
@@ -486,6 +486,15 @@ PAGES.home=function(){
     h+='<div style="font-weight:700;margin-bottom:2px">'+pid+'</div><div style="font-size:11px;color:var(--text3)">'+prodNames[pid]+'</div></div>';
   }
   h+='</div></div>';
+  // Dynamic feed from API
+  setTimeout(function(){
+    api('GET','/api/articles?limit=5').then(function(result){
+      var articles=result.articles||result;
+      var el=document.getElementById('feedList');if(!el||!articles.length)return;
+      var dots=['purple','gold','info','accent','success'];
+      el.innerHTML=articles.map(function(a,i){return '<div class="feed-item" onclick="viewPost('+a.id+')" style="cursor:pointer"><div class="fi-dot '+dots[i%5]+'"></div><div class="fi-content"><div class="fi-title">'+a.title+'</div><div class="fi-desc">'+(a.summary||'').substring(0,80)+'</div><div class="fi-time">'+(a.created_at||'').substring(0,10)+'</div></div></div>';}).join('');
+    }).catch(function(){});
+  },200);
   return h;
 };
 
@@ -583,25 +592,75 @@ PAGES.selector=function(){
 // ═══ INSIGHTS ═══
 PAGES.insights=function(){
   var h='';
-  h+='<div class="page-header"><div class="ph-eyebrow">Market Insights</div><h1 class="ph-title">行业洞察与相关咨询</h1><p class="ph-sub">法规解读、技术趋势、最佳实践——随时掌握软件安全领域最新动态</p></div>';
+  h+='<div class="page-header"><div class="ph-eyebrow">Market Insights</div><h1 class="ph-title">行业洞察和软件供应链安全资讯</h1><p class="ph-sub">法规解读、技术趋势、最佳实践——随时掌握软件安全领域最新动态</p></div>';
   h+='<div style="display:flex;gap:10px;margin-bottom:20px"><input id="insSearch" placeholder="搜索文章..." style="flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;outline:none" onkeydown="if(event.key==\'Enter\')searchInsights()"><button class="btn btn-primary" onclick="searchInsights()">搜索</button></div>';
   h+='<div id="insList"><div class="empty-state"><div class="es-icon">📰</div><div class="es-title">加载中...</div></div></div>';
   setTimeout(function(){loadInsights();},100);
   return h;
 };
-function searchInsights(){loadInsights(document.getElementById('insSearch')?.value||'');}
-function loadInsights(search){
-  var q=search?'?search='+encodeURIComponent(search)+'&limit=50':'?limit=50';
-  api('GET','/api/articles'+q).then(function(articles){
+var _insPage=0,_insSearch='';
+function searchInsights(){_insPage=0;_insSearch=document.getElementById('insSearch')?.value||'';loadInsights();}
+function loadInsights(){
+  var search=_insSearch,page=_insPage||0,limit=8,offset=page*limit;
+  var q='?limit='+limit+'&offset='+offset;
+  if(search)q+='&search='+encodeURIComponent(search);
+  api('GET','/api/articles'+q).then(function(result){
+    var articles=result.articles||result,total=result.total||articles.length;
     var list=document.getElementById('insList');if(!list)return;
     if(articles&&articles.length){
-      list.innerHTML='<div style="display:flex;flex-direction:column;gap:12px">'+articles.map(function(a){return '<div class="blog-card" onclick="viewPost('+a.id+')"><div class="bc-header"><div class="bc-title">'+a.title+'</div><span class="bc-category">'+(a.category||'行业洞察')+'</span></div><div class="bc-excerpt">'+(a.summary||a.content||'').substring(0,200)+'</div><div class="bc-meta"><span>'+(a.created_at||'').substring(0,10)+'</span></div>'+(a.tags?'<div class="bc-tags">'+a.tags.split(',').map(function(t){return '<span>'+t.trim()+'</span>';}).join('')+'</div>':'')+'</div>';}).join('')+'</div>';
+      var h='<div style="display:flex;flex-direction:column;gap:12px">';
+      h+=articles.map(function(a){return '<div class="blog-card" onclick="viewPost('+a.id+')" style="cursor:pointer"><div class="bc-header"><div class="bc-title">'+a.title+'</div><span class="bc-category">'+(a.category||'行业洞察')+'</span></div><div class="bc-excerpt">'+(a.summary||a.content||'').substring(0,200)+'</div><div class="bc-meta"><span>'+(a.created_at||'').substring(0,10)+'</span></div>'+(a.tags?'<div class="bc-tags">'+a.tags.split(',').map(function(t){return '<span>'+t.trim()+'</span>';}).join('')+'</div>':'')+'</div>';}).join('');
+      h+='</div>';
+      // Pagination
+      var totalPages=Math.ceil(total/limit);
+      if(totalPages>1){
+        h+='<div style="display:flex;justify-content:center;gap:8px;margin-top:24px;flex-wrap:wrap">';
+        h+='<button class="btn btn-sm btn-ghost" onclick="_insPage=0;loadInsights()" '+(page===0?'disabled':'')+' style="min-width:36px">«</button>';
+        h+='<button class="btn btn-sm btn-ghost" onclick="_insPage=Math.max(0,'+(page-1)+');loadInsights()" '+(page===0?'disabled':'')+' style="min-width:36px">‹</button>';
+        for(var i=0;i<totalPages;i++){
+          if(i===page)h+='<button class="btn btn-sm btn-primary" style="min-width:36px">'+(i+1)+'</button>';
+          else h+='<button class="btn btn-sm btn-ghost" onclick="_insPage='+i+';loadInsights()" style="min-width:36px">'+(i+1)+'</button>';
+        }
+        h+='<button class="btn btn-sm btn-ghost" onclick="_insPage=Math.min('+(totalPages-1)+','+(page+1)+');loadInsights()" '+(page>=totalPages-1?'disabled':'')+' style="min-width:36px">›</button>';
+        h+='<button class="btn btn-sm btn-ghost" onclick="_insPage='+(totalPages-1)+';loadInsights()" '+(page>=totalPages-1?'disabled':'')+' style="min-width:36px">»</button>';
+        h+='</div>';
+      }
+      list.innerHTML=h;
     }else{
       var demo=[{created_at:'2026-06-10',title:'欧盟 CRA 正式实施：中国企业出海合规指南',summary:'CRA 对软件产品的网络安全提出强制性要求，涵盖设计、开发、交付全生命周期。本文解读核心条款及对中国软件出口企业的影响。',tags:'CRA,出海合规',category:'法规解读'},{created_at:'2026-06-05',title:'汽车软件安全：从 UN R155 到 GB 44495',summary:'梳理全球汽车网络安全法规体系，分析 OEM 和 Tier1 的核心挑战，提出可落地的合规路线图。',tags:'汽车安全,法规',category:'行业研究'},{created_at:'2026-05-28',title:'开源供应链安全治理的 5 个最佳实践',summary:'基于 Log4j 等重大漏洞教训，总结开源组件管理的 5 个关键措施：SBOM 自动化、漏洞优先级、许可证合规...',tags:'开源治理,SCA',category:'最佳实践'}];
       list.innerHTML='<div style="display:flex;flex-direction:column;gap:12px">'+demo.map(function(a){return '<div class="blog-card"><div class="bc-header"><div class="bc-title">'+a.title+'</div><span class="bc-category">'+a.category+'</span></div><div class="bc-excerpt">'+a.summary+'</div><div class="bc-meta"><span>'+a.created_at+'</span></div><div class="bc-tags">'+a.tags.split(',').map(function(t){return '<span>'+t.trim()+'</span>';}).join('')+'</div></div>';}).join('')+'</div>';
+      list.innerHTML+='<p style="text-align:center;color:var(--text3);margin-top:16px;font-size:12px">以上为示例内容，请连接服务器获取最新资讯</p>';
     }
   }).catch(function(e){});
 }
+function viewPost(id){_currentInsightId=id;nav('insight-detail');}
+var _currentInsightId=null;
+PAGES['insight-detail']=function(){
+  if(!_currentInsightId)return '<div class="empty-state"><div class="es-icon">📰</div><div class="es-title">未指定文章</div><button class="btn btn-primary" onclick="nav(\'insights\')">返回资讯列表</button></div>';
+  var h='<div id="insightDetail"><div class="empty-state"><div class="es-icon">📰</div><div class="es-title">加载中...</div></div></div>';
+  setTimeout(function(){
+    api('GET','/api/articles/'+_currentInsightId).then(function(a){
+      var ct=document.getElementById('insightDetail');if(!ct)return;
+      var html='';
+      // Back button + meta
+      html+='<button class="btn btn-ghost btn-sm" onclick="nav(\'insights\')" style="margin-bottom:20px">← 返回资讯列表</button>';
+      html+='<div class="page-header"><div class="ph-eyebrow">'+(a.category||'行业洞察')+'</div><h1 class="ph-title" style="font-size:28px;line-height:1.5">'+a.title+'</h1></div>';
+      html+='<div style="display:flex;gap:16px;align-items:center;margin-bottom:24px;font-size:13px;color:var(--text3);border-bottom:1px solid var(--border);padding-bottom:16px"><span>🕐 '+(a.created_at||'').substring(0,10)+'</span><span>✍️ '+ (a.author||'软安科技')+'</span></div>';
+      if(a.tags){
+        html+='<div class="bc-tags" style="margin-bottom:24px">'+a.tags.split(',').map(function(t){return '<span style="font-size:12px">'+t.trim()+'</span>';}).join('')+'</div>';
+      }
+      // Content with proper formatting
+      var content=(a.content||a.summary||'').replace(/\n/g,'<br>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/^## (.+)$/gm,'<h3 style="margin-top:24px;margin-bottom:12px;font-size:18px;font-weight:700;color:var(--text)">$1</h3>').replace(/^# (.+)$/gm,'<h2 style="margin-top:28px;margin-bottom:14px;font-size:22px;font-weight:800;color:var(--text)">$1</h2>').replace(/^- (.+)$/gm,'<li style="margin-left:20px;color:var(--text2)">$1</li>');
+      html+='<div class="card" style="padding:32px;line-height:2.2;font-size:15px;color:var(--text);word-break:break-word">'+content+'</div>';
+      // Source attribution
+      html+='<div style="margin-top:24px;padding:16px;background:var(--bg2);border-radius:8px;font-size:12px;color:var(--text3);line-height:1.8"><strong>声明：</strong>本文内容来源于公开安全资讯，仅供学习参考。原文版权归原作者所有，如有侵权请联系我们删除。</div>';
+      ct.innerHTML=html;
+      // Scroll to top
+      window.scrollTo(0,0);
+    }).catch(function(e){document.getElementById('insightDetail').innerHTML='<div class="empty-state"><div class="es-icon">❌</div><div class="es-title">文章加载失败</div><button class="btn btn-primary" onclick="nav(\'insights\')">返回资讯列表</button></div>';});
+  },50);
+  return h;
+};
 
 // ═══ BLOG (客户成功技术服务中心) ═══
 PAGES.blog=function(){
