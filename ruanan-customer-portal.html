@@ -211,7 +211,11 @@ function showLogin(tab){
     h+='<button class="login-btn" onclick="doForgot()">重置密码</button>';
     h+='<div class="login-link" onclick="showLogin(\'login\')">返回登录</div>';
   }else{
-    h+='<label>用户名</label><input id="lu" placeholder="请输入用户名"><label>密码</label><input id="lp" type="password" placeholder="请输入密码" onkeydown="if(event.key===\'Enter\')doLogin()">';
+    var savedU=localStorage.getItem('ra_cust_saved_user')||'';
+    var savedP=localStorage.getItem('ra_cust_saved_pwd')||'';
+    var savedR=localStorage.getItem('ra_cust_remember')==='1';
+    h+='<label>用户名</label><input id="lu" placeholder="请输入用户名" autocomplete="off" value="'+savedU+'"><label>密码</label><input id="lp" type="password" placeholder="请输入密码" autocomplete="new-password" value="'+savedP+'" onkeydown="if(event.key===\'Enter\')doLogin()">';
+    h+='<label style="display:flex;align-items:center;gap:6px;font-size:12px;opacity:0.7;cursor:pointer"><input type="checkbox" id="lremember" '+(savedR?'checked':'')+' style="width:auto"> 记住账号密码</label>';
     h+='<button class="login-btn" onclick="doLogin()">登 录</button>';
   }
   h+='<a href="ruanan-marketing-platform.html" style="display:block;text-align:center;margin-top:16px;font-size:14px;font-weight:600;color:#fff;background:#1E2330;padding:10px;border-radius:8px;text-decoration:none">← 返回平台首页</a>';
@@ -227,12 +231,15 @@ function showErr(m){var e=document.getElementById('loginErr');e.textContent=m;e.
 async function doLogin(){
   var u=document.getElementById('lu').value.trim(),p=document.getElementById('lp').value.trim();
   if(!u||!p){showErr('请输入用户名和密码');return;}
-  
+
   try{
     var d=await api('POST','/api/customer/login','username='+encodeURIComponent(u)+'&password='+encodeURIComponent(p));
     customerToken=d.token;customerUser={username:d.username,id:d.id,role:'customer'};
     localStorage.setItem('customer_token',customerToken);
-    localStorage.setItem('customer_saved_user',u);
+    // 记住账号密码
+    var rem=document.getElementById('lremember');
+    if(rem&&rem.checked){localStorage.setItem('ra_cust_saved_user',u);localStorage.setItem('ra_cust_saved_pwd',p);localStorage.setItem('ra_cust_remember','1');}
+    else{localStorage.removeItem('ra_cust_saved_user');localStorage.removeItem('ra_cust_saved_pwd');localStorage.removeItem('ra_cust_remember');}
     document.getElementById('loginOverlay').style.display='none';
     document.getElementById('appLayout').style.display='flex';
     updateUI();nav('kb');

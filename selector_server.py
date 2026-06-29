@@ -410,6 +410,37 @@ async def init_db():
             answers TEXT DEFAULT '{}',
             created_at TEXT DEFAULT(datetime('now','localtime'))
         );
+        CREATE TABLE IF NOT EXISTS industry_solutions(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            industry TEXT NOT NULL UNIQUE,
+            icon TEXT DEFAULT '🏭', color TEXT DEFAULT 'blue',
+            summary TEXT DEFAULT '',
+            regulations TEXT DEFAULT '',
+            pain_points TEXT DEFAULT '',
+            products TEXT DEFAULT '',
+            features TEXT DEFAULT '[]',
+            cases TEXT DEFAULT '[]',
+            sort_order INTEGER DEFAULT 0,
+            published INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT(datetime('now','localtime')),
+            updated_at TEXT DEFAULT(datetime('now','localtime'))
+        );
+        CREATE TABLE IF NOT EXISTS scenario_solutions(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL UNIQUE,
+            icon TEXT DEFAULT '🎯', color TEXT DEFAULT 'blue',
+            summary TEXT DEFAULT '',
+            regulations TEXT DEFAULT '',
+            pain_points TEXT DEFAULT '',
+            products TEXT DEFAULT '',
+            features TEXT DEFAULT '[]',
+            cases TEXT DEFAULT '[]',
+            content TEXT DEFAULT '',
+            sort_order INTEGER DEFAULT 0,
+            published INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT(datetime('now','localtime')),
+            updated_at TEXT DEFAULT(datetime('now','localtime'))
+        );
     """)
     # Run migrations
     try: await db.execute("ALTER TABLE product_pages ADD COLUMN product_name TEXT DEFAULT ''")
@@ -449,11 +480,15 @@ async def seed_data(db):
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     await _seed_training(db, now)
     await _seed_kb(db, now)
+    await _seed_solutions(db)
+    await _seed_scenarios(db)
 
 async def _seed_training(db, now):
     """Seed 7 product training modules + 28 questions"""
     try:
-        c = (await db.execute("SELECT COUNT(*) FROM training_modules")).fetchone()[0]
+        cursor = await db.execute("SELECT COUNT(*) FROM training_modules")
+        row = await cursor.fetchone()
+        c = row[0]
     except: c = 0
     if c > 0: return
 
@@ -563,7 +598,9 @@ async def _seed_training(db, now):
 async def _seed_kb(db, now):
     """Seed default KB articles if table is empty"""
     try:
-        c = (await db.execute("SELECT COUNT(*) FROM kb_articles")).fetchone()[0]
+        cursor = await db.execute("SELECT COUNT(*) FROM kb_articles")
+        row = await cursor.fetchone()
+        c = row[0]
     except: c = 0
     if c > 0: return
 
@@ -789,6 +826,290 @@ async def delete_article(aid: int, request: Request):
     await log_action(user["username"], "DELETE", "article", aid)
     await db.close()
     return {"ok": True}
+
+
+# ═══ 行业解决方案（后台可管理）═══
+_SOLUTION_SEED = [
+    {"industry":"汽车","icon":"🚗","color":"purple","summary":"满足全球汽车网络安全法规体系","regulations":"UN R155 · ISO 21434 · GB 44495 · ASPICE","pain_points":"OEM严格审计Tier1/2供应商，单车代码超1亿行。R155合规+OTA安全+ASPICE多重压力。","products":"SAST · SCA · BAT · FUZZ · CodingHawk · GuardFox","features":["OEM准入审计通过率100%","CAN/CANFD车载以太网Fuzz","ECU固件批量审计+SBOM交付","AUTOSAR安全扫描","OTA升级包签名验证","ISO 26262功能安全代码验证"],"cases":[{"title":"头部新能源车企Tier1准入","desc":"3个月完成全ECU检测+SBOM，审计通过率100%","video":True},{"title":"合资车企OTA安全合规","desc":"为12款车型建立OTA升级安全检测体系","video":False}],"sort_order":1},
+    {"industry":"芯片半导体","icon":"🔲","color":"blue","summary":"流片前最后一道安全防线","regulations":"FIPS 140 · GB/T 18336 · 商用密码 · NIST","pain_points":"流片后BootROM漏洞无法修复。GPU/CUDA安全审计需求激增。RISC-V生态工具不成熟。","products":"BAT · SAST · SCA · FUZZ","features":["100+芯片平台解包","BootROM安全启动链审计","GPU/CUDA驱动完整性验证","FIPS 140/国密密评","x86/ARM/RISC-V全架构","流片前固件漏洞挖掘"],"cases":[{"title":"GPU芯片厂商流片前审计","desc":"发现并修复3个BootROM高危漏洞","video":True},{"title":"车载SoC功能安全验证","desc":"ISO 26262 ASIL-D代码验证，助力车规认证","video":False}],"sort_order":2},
+    {"industry":"金融","icon":"🏦","color":"gold","summary":"金融监管合规+开源治理+AI安全","regulations":"等保2.0 · 关基保护条例 · PCI DSS","pain_points":"监管持续收紧。Log4j级漏洞需72h应急响应。大模型安全成为新监管重点。","products":"SAST · SCA · MST · CodingHawk · GuardFox","features":["72h开源组件应急响应","外包开发源码安全审计","金融AI大模型安全评估","等保三级合规支撑","PCI DSS卡支付数据保护","监管标准化报告输出"],"cases":[{"title":"大型银行Log4j应急响应","desc":"48h完成3000+系统排查","video":True},{"title":"证券公司信创安全评估","desc":"300+系统的信创环境安全检测","video":False}],"sort_order":3},
+    {"industry":"军工","icon":"🛡","color":"purple","summary":"涉密离线全栈部署+遗留代码AI治理","regulations":"GJB 8114 · GJB 5369 · 三员分立","pain_points":"必须离线。大量C/C++/汇编遗留代码缺乏文档。国产化需全自主可控。","products":"SAST · BAT · CodingHawk · GuardFox · MST","features":["涉密环境物理隔离离线部署","三员分立安全管理","C/C++汇编遗留代码AI审计","GJB 8114/5369双合规","国密算法替代验证","离线规则包定期更新"],"cases":[{"title":"JF单位涉密离线部署","desc":"物理隔离环境完整工具链","video":False},{"title":"遗留代码批量审计","desc":"AI驱动审计20年+老代码","video":False}],"sort_order":4},
+    {"industry":"政府","icon":"🏛","color":"blue","summary":"信创适配+供应链安全+大模型备案","regulations":"等保2.0 · 关基 · 密码法 · 数据安全法","pain_points":"信创环境工具匮乏。政务外包开发需源码审计。AI应用需安全评估备案。","products":"SAST · SCA · BAT · MST · GuardFox","features":["国产CPU+OS全适配","政务外包源码安全审计","大模型备案安全评估","数据安全法合规","信创SBOM生成","电子政务云安全基线"],"cases":[{"title":"省级政务平台审计","desc":"60+系统信创环境安全检测","video":False},{"title":"AI政务应用安全评估","desc":"大模型备案安全评估和合规审查","video":False}],"sort_order":5},
+    {"industry":"智能设备","icon":"📱","color":"teal","summary":"IoT固件+SDK供应链+CRA合规","regulations":"EU CRA · 个人信息保护法 · GDPR","pain_points":"迭代快(2-4周)，安全测试被压缩。SDK和开源组件泛滥。CRA要求SBOM。","products":"SAST · SCA · BAT · FUZZ · CodingHawk · GuardFox","features":["快速迭代(2-4周)安全检测","第三方SDK成分审查","IoT固件批量审计","EU CRA SBOM+安全声明","DevSecOps流水线集成","设备指纹与默认密码检测"],"cases":[{"title":"手机厂商CRA合规","desc":"出口欧盟SBOM一次性通过","video":False},{"title":"安防摄像头批量审计","desc":"50+款摄像头固件安全审计","video":False}],"sort_order":6},
+    {"industry":"能源","icon":"⚡","color":"gold","summary":"关基保护+工控安全+SCADA审计","regulations":"等保2.0 · 关基 · 电力16号令 · NERC CIP","pain_points":"关基面临高级威胁。SCADA/ICS漏洞频发。新能源供应链缺安全标准。","products":"SAST · SCA · BAT · FUZZ · MST · GuardFox","features":["电力16号令代码合规","SCADA/PLC/RTU固件审计","工控协议(Modbus/IEC104)Fuzz","NERC CIP供应链审查","新能源储能BMS安全评估","OT/IT跨网安全检测"],"cases":[{"title":"电力集团关基合规审计","desc":"全量代码安全审查，满足16号令","video":False}],"sort_order":7},
+    {"industry":"国央企","icon":"🏭","color":"purple","summary":"多业态覆盖+信创替代+集团治理","regulations":"关基 · 等保2.0 · 密码法 · 信创目录","pain_points":"业务多元层级复杂。信创替代需大量安全评估。统一采购需多业态覆盖。","products":"SAST · SCA · BAT · MST · GuardFox","features":["多业态(能源/制造/金融)统一平台","信创代码安全评估","集团级SBOM资产治理","国产化全栈适配","关基统一审查标准","多层级分布式部署"],"cases":[{"title":"央企集团供应链治理","desc":"统一平台覆盖能源/制造/金融","video":False}],"sort_order":8},
+    {"industry":"互联网","icon":"🌐","color":"teal","summary":"出海合规+云原生+SDK治理","regulations":"EU CRA · GDPR · 个人信息保护法","pain_points":"代码迭代极快、SDK众多。出海面临CRA/GDPR合规。云原生架构治理复杂度高。","products":"SAST · SCA · CodingHawk · GuardFox","features":["快速迭代(天级)安全检测","出海CRA/GDPR SBOM生成","第三方SDK隐私合规审查","云原生容器/K8s安全","游戏引擎(Unity/UE)审计","大促/上线安全保障"],"cases":[{"title":"头部游戏出海合规","desc":"欧盟CRA SBOM一次性通过","video":False}],"sort_order":9},
+]
+
+
+async def _seed_solutions(db):
+    """首次启动时把 9 大行业方案写入数据库（仅当表为空时）。"""
+    existing = await db_fetchone(db, "SELECT COUNT(*) as c FROM industry_solutions")
+    if existing and existing["c"] > 0:
+        return
+    import json as _json
+    for s in _SOLUTION_SEED:
+        await db.execute(
+            "INSERT INTO industry_solutions(industry,icon,color,summary,regulations,pain_points,products,features,cases,sort_order,published) "
+            "VALUES(?,?,?,?,?,?,?,?,?,?,1)",
+            (s["industry"], s["icon"], s["color"], s["summary"], s["regulations"],
+             s["pain_points"], s["products"],
+             _json.dumps(s["features"], ensure_ascii=False),
+             _json.dumps(s["cases"], ensure_ascii=False), s["sort_order"]))
+    await db.commit()
+
+
+def _row_to_solution(row):
+    """把数据库行转为前端需要的方案对象。"""
+    import json as _json
+    d = dict(row)
+    try:
+        d["features"] = _json.loads(d.get("features") or "[]")
+    except Exception:
+        d["features"] = []
+    try:
+        d["cases"] = _json.loads(d.get("cases") or "[]")
+    except Exception:
+        d["cases"] = []
+    return d
+
+
+@app.get("/api/solutions")
+async def list_solutions():
+    """公开接口：返回所有已发布的行业方案（按 sort_order 排序）。"""
+    db = await get_db()
+    try:
+        rows = await db_fetchall(db,
+            "SELECT * FROM industry_solutions WHERE published=1 ORDER BY sort_order, id")
+        return [_row_to_solution(r) for r in rows]
+    finally:
+        await db.close()
+
+
+@app.get("/api/solutions/{sid}")
+async def get_solution(sid: int):
+    db = await get_db()
+    try:
+        row = await db_fetchone(db, "SELECT * FROM industry_solutions WHERE id=?", (sid,))
+        if not row:
+            raise HTTPException(404, "方案不存在")
+        return _row_to_solution(row)
+    finally:
+        await db.close()
+
+
+@app.post("/api/admin/solutions")
+async def create_solution(request: Request):
+    user = await require_admin(request)
+    body = await request.json()
+    industry = safe_str(body.get("industry", ""), 50)
+    if not industry:
+        raise HTTPException(400, "行业名称不能为空")
+    db = await get_db()
+    try:
+        import json as _json
+        await db.execute(
+            "INSERT INTO industry_solutions(industry,icon,color,summary,regulations,pain_points,products,features,cases,sort_order) "
+            "VALUES(?,?,?,?,?,?,?,?,?,?)",
+            (industry, safe_str(body.get("icon","🏭"),10), safe_str(body.get("color","blue"),20),
+             safe_str(body.get("summary",""),200), safe_str(body.get("regulations",""),300),
+             safe_str(body.get("pain_points",""),500), safe_str(body.get("products",""),200),
+             _json.dumps(body.get("features",[]), ensure_ascii=False),
+             _json.dumps(body.get("cases",[]), ensure_ascii=False),
+             int(body.get("sort_order",0))))
+        await db.commit()
+        sid = (await db_fetchone(db, "SELECT last_insert_rowid() as id"))["id"]
+        await log_action(user["username"], "CREATE", "solution", sid, industry)
+        return {"ok": True, "id": sid}
+    finally:
+        await db.close()
+
+
+@app.put("/api/admin/solutions/{sid}")
+async def update_solution(sid: int, request: Request):
+    user = await require_admin(request)
+    body = await request.json()
+    db = await get_db()
+    try:
+        row = await db_fetchone(db, "SELECT * FROM industry_solutions WHERE id=?", (sid,))
+        if not row:
+            raise HTTPException(404, "方案不存在")
+        import json as _json
+        updates, params = [], []
+        for col, caster in [("industry",lambda v:safe_str(v,50)),("icon",lambda v:safe_str(v,10)),
+                            ("color",lambda v:safe_str(v,20)),("summary",lambda v:safe_str(v,200)),
+                            ("regulations",lambda v:safe_str(v,300)),("pain_points",lambda v:safe_str(v,500)),
+                            ("products",lambda v:safe_str(v,200)),("sort_order",lambda v:int(v or 0)),
+                            ("published",lambda v:int(v))]:
+            if col in body:
+                updates.append(f"{col}=?"); params.append(caster(body[col]))
+        for col in ("features","cases"):
+            if col in body:
+                updates.append(f"{col}=?"); params.append(_json.dumps(body[col], ensure_ascii=False))
+        if updates:
+            params.append(sid)
+            await db.execute(f"UPDATE industry_solutions SET {','.join(updates)} WHERE id=?", params)
+            await db.commit()
+            await log_action(user["username"], "UPDATE", "solution", sid)
+        return {"ok": True}
+    finally:
+        await db.close()
+
+
+@app.delete("/api/admin/solutions/{sid}")
+async def delete_solution(sid: int, request: Request):
+    user = await require_admin(request)
+    db = await get_db()
+    try:
+        row = await db_fetchone(db, "SELECT industry FROM industry_solutions WHERE id=?", (sid,))
+        if not row:
+            raise HTTPException(404, "方案不存在")
+        await db.execute("DELETE FROM industry_solutions WHERE id=?", (sid,))
+        await db.commit()
+        await log_action(user["username"], "DELETE", "solution", sid, row["industry"])
+        return {"ok": True}
+    finally:
+        await db.close()
+
+
+# ═══ 场景解决方案（CRA合规、软件首版次认证等）═══
+_SCENARIO_SEED = [
+    {"name":"CRA合规解决方案","icon":"🇪🇺","color":"blue","summary":"欧盟网络弹性法案(CRA)全流程合规方案","regulations":"EU 2024/2847 · EN 18031 · IEC 62443-4-1 · ISO/IEC 29147","pain_points":"CRA 2027年12月全面适用，不合规产品禁止在欧盟销售，最高罚款1500万欧元或营业额2.5%。企业需满足27项安全要求、漏洞24h/72h/14d通报、SBOM生成、CE标志等多重义务。","products":"SAST · SCA · BAT · FUZZ · CodingHawk · GuardFox · CRA合规平台","features":["CRA 27项控制项自评与差距分析","SAMM v2成熟度桥接映射","漏洞24h/72h/14d通报时限引擎","SBOM自动生成(CycloneDX/SPDX)","10类合规文档一键生成(DoC/技术文档)","CE标志合格评定(Module A/B+C/H)支持","供应商门户协同漏洞披露","多法规框架(CRA/ISO21434/GB44495)"],"cases":[{"title":"智能设备厂商CRA合规","desc":"3个月完成27项控制项评估+SBOM，CE标志一次性通过","video":False},{"title":"车载终端CRA Class II评定","desc":"通过第三方评定Module B+C，产品成功上市欧盟","video":False}],"content":"CRA合规解决方案覆盖「评估→检测→整改→通报→合规声明」全流程。基于软安CRA合规管理平台，内置27项控制项评估库(映射EN 18031)，支持SAMM v2成熟度桥接。集成SAST/SCA/BAT/FUZZ四大检测工具，自动生成SBOM。漏洞看板内置24h/72h/14d通报时限引擎，对接ENISA/CSIRT。平台提供10类合规文档模板，一键生成EU符合性声明(DoC)与技术文档，支持CE标志合格评定。","sort_order":1},
+    {"name":"软件首版次认证解决方案","icon":"🏅","color":"gold","summary":"软件首版次质量安全认证全流程支撑方案","regulations":"工信部首版次软件评定办法 · GB/T 25000.51 · 软件测评规范","pain_points":"首版次软件认定需通过功能、性能、安全、可靠性等多维度测评，企业自测能力不足。认定材料准备繁琐，测评周期长(3-6个月)。安全合规要求逐年提高。","products":"SAST · SCA · BAT · CodingHawk · GuardFox","features":["软件功能符合性测试支撑","代码安全质量测评(SAST 1000+规则)","开源组件合规审查(SCA SBOM)","性能与可靠性测试辅助","测评报告自动生成(符合GB/T 25000.51)","首版次认定材料模板","知识产权与原创性检测","持续安全监测(认定后)"],"cases":[{"title":"工业软件首版次认定","desc":"助力企业6周完成安全测评，成功获评首版次软件","video":False},{"title":"信创软件首版次认证","desc":"信创环境下全量代码安全审查，通过省级首版次认定","video":False}],"content":"软件首版次认证解决方案为申报首版次软件认定的企业提供全流程安全质量测评支撑。基于SAST静态分析(1000+规则覆盖OWASP/CWE)、SCA成分分析(SBOM生成+漏洞匹配)、CodingHawk AI审计三大工具，生成符合GB/T 25000.51标准的测评报告。平台提供首版次认定材料模板，自动汇总检测结果，缩短认定周期。认定后提供持续安全监测，保障软件版本迭代安全。","sort_order":2},
+]
+
+
+async def _seed_scenarios(db):
+    """首次启动时写入场景解决方案种子数据。"""
+    existing = await db_fetchone(db, "SELECT COUNT(*) as c FROM scenario_solutions")
+    if existing and existing["c"] > 0:
+        return
+    import json as _json
+    for s in _SCENARIO_SEED:
+        await db.execute(
+            "INSERT INTO scenario_solutions(name,icon,color,summary,regulations,pain_points,products,features,cases,content,sort_order,published) "
+            "VALUES(?,?,?,?,?,?,?,?,?,?,?,1)",
+            (s["name"], s["icon"], s["color"], s["summary"], s["regulations"],
+             s["pain_points"], s["products"],
+             _json.dumps(s["features"], ensure_ascii=False),
+             _json.dumps(s["cases"], ensure_ascii=False),
+             s["content"], s["sort_order"]))
+    await db.commit()
+
+
+def _row_to_scenario(row):
+    """把数据库行转为前端需要的场景方案对象。"""
+    import json as _json
+    d = dict(row)
+    try:
+        d["features"] = _json.loads(d.get("features") or "[]")
+    except Exception:
+        d["features"] = []
+    try:
+        d["cases"] = _json.loads(d.get("cases") or "[]")
+    except Exception:
+        d["cases"] = []
+    return d
+
+
+@app.get("/api/scenarios")
+async def list_scenarios():
+    """公开接口：返回所有已发布的场景解决方案。"""
+    db = await get_db()
+    try:
+        rows = await db_fetchall(db,
+            "SELECT * FROM scenario_solutions WHERE published=1 ORDER BY sort_order, id")
+        return [_row_to_scenario(r) for r in rows]
+    finally:
+        await db.close()
+
+
+@app.get("/api/scenarios/{sid}")
+async def get_scenario(sid: int):
+    db = await get_db()
+    try:
+        row = await db_fetchone(db, "SELECT * FROM scenario_solutions WHERE id=?", (sid,))
+        if not row:
+            raise HTTPException(404, "方案不存在")
+        return _row_to_scenario(row)
+    finally:
+        await db.close()
+
+
+@app.post("/api/admin/scenarios")
+async def create_scenario(request: Request):
+    user = await require_admin(request)
+    body = await request.json()
+    name = safe_str(body.get("name", ""), 80)
+    if not name:
+        raise HTTPException(400, "方案名称不能为空")
+    db = await get_db()
+    try:
+        import json as _json
+        await db.execute(
+            "INSERT INTO scenario_solutions(name,icon,color,summary,regulations,pain_points,products,features,cases,content,sort_order) "
+            "VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+            (name, safe_str(body.get("icon","🎯"),10), safe_str(body.get("color","blue"),20),
+             safe_str(body.get("summary",""),300), safe_str(body.get("regulations",""),300),
+             safe_str(body.get("pain_points",""),800), safe_str(body.get("products",""),300),
+             _json.dumps(body.get("features",[]), ensure_ascii=False),
+             _json.dumps(body.get("cases",[]), ensure_ascii=False),
+             safe_str(body.get("content",""),5000),
+             int(body.get("sort_order",0))))
+        await db.commit()
+        sid = (await db_fetchone(db, "SELECT last_insert_rowid() as id"))["id"]
+        await log_action(user["username"], "CREATE", "scenario", sid, name)
+        return {"ok": True, "id": sid}
+    finally:
+        await db.close()
+
+
+@app.put("/api/admin/scenarios/{sid}")
+async def update_scenario(sid: int, request: Request):
+    user = await require_admin(request)
+    body = await request.json()
+    db = await get_db()
+    try:
+        row = await db_fetchone(db, "SELECT * FROM scenario_solutions WHERE id=?", (sid,))
+        if not row:
+            raise HTTPException(404, "方案不存在")
+        import json as _json
+        updates, params = [], []
+        for col, caster in [("name",lambda v:safe_str(v,80)),("icon",lambda v:safe_str(v,10)),
+                            ("color",lambda v:safe_str(v,20)),("summary",lambda v:safe_str(v,300)),
+                            ("regulations",lambda v:safe_str(v,300)),("pain_points",lambda v:safe_str(v,800)),
+                            ("products",lambda v:safe_str(v,300)),("content",lambda v:safe_str(v,5000)),
+                            ("sort_order",lambda v:int(v or 0)),("published",lambda v:int(v))]:
+            if col in body:
+                updates.append(f"{col}=?"); params.append(caster(body[col]))
+        for col in ("features","cases"):
+            if col in body:
+                updates.append(f"{col}=?"); params.append(_json.dumps(body[col], ensure_ascii=False))
+        if updates:
+            params.append(sid)
+            await db.execute(f"UPDATE scenario_solutions SET {','.join(updates)} WHERE id=?", params)
+            await db.commit()
+            await log_action(user["username"], "UPDATE", "scenario", sid)
+        return {"ok": True}
+    finally:
+        await db.close()
+
+
+@app.delete("/api/admin/scenarios/{sid}")
+async def delete_scenario(sid: int, request: Request):
+    user = await require_admin(request)
+    db = await get_db()
+    try:
+        row = await db_fetchone(db, "SELECT name FROM scenario_solutions WHERE id=?", (sid,))
+        if not row:
+            raise HTTPException(404, "方案不存在")
+        await db.execute("DELETE FROM scenario_solutions WHERE id=?", (sid,))
+        await db.commit()
+        await log_action(user["username"], "DELETE", "scenario", sid, row["name"])
+        return {"ok": True}
+    finally:
+        await db.close()
+
 
 # ═══════════════════════════════════════════════════
 # CASES (public read, admin write)

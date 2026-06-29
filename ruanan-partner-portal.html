@@ -115,8 +115,9 @@ tr:hover td{background:var(--slate-50)}
       <p style="font-size:14px;color:var(--slate-500);margin-top:4px">合作伙伴支持门户</p>
     </div>
     <form onsubmit="login(event)">
-      <div class="form-group"><label>用户名</label><input type="text" id="loginUser" class="input" required placeholder="请输入管理员分配的用户名"></div>
-      <div class="form-group"><label>密码</label><input type="password" id="loginPwd" class="input" required placeholder="请输入密码"></div>
+      <div class="form-group"><label>用户名</label><input type="text" id="loginUser" class="input" required placeholder="请输入管理员分配的用户名" autocomplete="off"></div>
+      <div class="form-group"><label>密码</label><input type="password" id="loginPwd" class="input" required placeholder="请输入密码" autocomplete="new-password"></div>
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--slate-500);cursor:pointer;margin-bottom:12px"><input type="checkbox" id="loginRemember" style="width:auto"> 记住账号密码</label>
       <button type="submit" class="btn btn-primary w-full" style="padding:12px;justify-content:center;font-size:16px">登 录</button>
     </form>
     <p class="text-center mt-2"><a href="#" onclick="showRegister()" class="btn btn-outline btn-sm" style="color:var(--brand);font-weight:600;text-decoration:none;display:inline-block;padding:8px 24px">提交申请</a></p><p class="text-center mt-4"><a href="ruanan-marketing-platform.html" style="color:var(--slate-500);font-size:13px;text-decoration:none">← 返回平台首页</a></p>
@@ -338,6 +339,13 @@ function showLogin(){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');p.style.display='none'});
   document.getElementById('page-login').classList.add('active');document.getElementById('page-login').style.display='flex';
   document.getElementById('sidebar').classList.remove('show');document.getElementById('mainContent').classList.add('full');
+  // 回填记住的账号密码
+  if(localStorage.getItem('ra_partner_remember')==='1'){
+    var u=document.getElementById('loginUser'),p=document.getElementById('loginPwd'),r=document.getElementById('loginRemember');
+    if(u){u.value=localStorage.getItem('ra_partner_saved_user')||'';}
+    if(p){p.value=localStorage.getItem('ra_partner_saved_pwd')||'';}
+    if(r){r.checked=true;}
+  }
 }
 function showRegister(){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');p.style.display='none'});
@@ -394,6 +402,10 @@ async function login(e){
         if(lp&&lp.status==="rejected"){toast("账号已被拒绝","error");return}
         var p={username:d.username||username,role:d.role,token:d.token,company:lp?lp.company:(d.company||""),name:lp?lp.name:(d.username||username),email:lp?lp.email:"",id:lp?lp.id:uid()};
         localStorage.setItem(UK,JSON.stringify(p));
+        // 记住账号密码
+        var rem=document.getElementById("loginRemember");
+        if(rem&&rem.checked){localStorage.setItem("ra_partner_saved_user",username);localStorage.setItem("ra_partner_saved_pwd",pwd);localStorage.setItem("ra_partner_remember","1");}
+        else{localStorage.removeItem("ra_partner_saved_user");localStorage.removeItem("ra_partner_saved_pwd");localStorage.removeItem("ra_partner_remember");}
         document.getElementById("sidebar").classList.add("show");document.getElementById("mainContent").classList.remove("full");
         document.getElementById("sidebarName").textContent=p.name;document.getElementById("sidebarCompany").textContent=p.company;
         document.getElementById("sidebarAvatar").textContent=p.name.charAt(0);document.getElementById("dashName").textContent=p.name;
