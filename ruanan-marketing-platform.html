@@ -510,7 +510,7 @@ PAGES.home=function(){
   h+='<h1 style="font-size:40px;font-weight:900;color:#fff;letter-spacing:2px;margin-bottom:16px;line-height:1.25">让 AI 生态更安全<br>让软件交付更合规</h1>';
   h+='<p style="font-size:17px;color:rgba(255,255,255,0.7);line-height:1.7;margin-bottom:28px;max-width:600px">覆盖 SAST 静态分析、SCA 成分分析、固件扫描、模糊测试、AI 代码审计全链路，助力企业达成 CRA 合规与首版次认证</p>';
   h+='<div style="display:flex;gap:14px;flex-wrap:wrap">';
-  h+='<button class="btn btn-lg btn-glow" style="background:var(--grad-accent);color:#fff;font-weight:700;padding:14px 28px;border:none" onclick="nav(\'selector\')"><svg width="18" height="18" style="margin-right:6px"><use href="#i-zap"/></svg>获取方案与报价</button>';
+  h+='<button class="btn btn-lg btn-glow" style="background:var(--grad-accent);color:#fff;font-weight:700;padding:14px 28px;border:none" onclick="nav(\'selector\')"><svg width="18" height="18" style="margin-right:6px"><use href="#i-zap"/></svg>场景需求自助描述与获取方案</button>';
   h+='<button class="btn btn-lg" style="background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:14px 28px" onclick="nav(\'products\')">了解产品 →</button>';
   h+='</div></div></div>';
 
@@ -524,7 +524,7 @@ PAGES.home=function(){
 
   // ── 快捷入口（SVG 图标替代 emoji）──
   h+='<div class="qaction-grid stagger" style="margin-bottom:32px">';
-  h+='<div class="qaction-card card-hover" onclick="nav(\'selector\')"><div class="qa-icon" style="background:var(--accent-bg);color:var(--accent)"><svg width="22" height="22"><use href="#i-zap"/></svg></div><div class="qa-body"><div class="qa-title">快速获取方案与报价</div><div class="qa-desc">8步引导式需求描述，30分钟出方案</div></div></div>';
+  h+='<div class="qaction-card card-hover" onclick="nav(\'selector\')"><div class="qa-icon" style="background:var(--accent-bg);color:var(--accent)"><svg width="22" height="22"><use href="#i-zap"/></svg></div><div class="qa-body"><div class="qa-title">场景需求自助描述与获取方案</div><div class="qa-desc">8步引导式需求描述，30分钟出方案</div></div></div>';
   h+='<div class="qaction-card card-hover" onclick="nav(\'products\')"><div class="qa-icon" style="background:var(--gold-bg);color:var(--gold)"><svg width="22" height="22"><use href="#i-box"/></svg></div><div class="qa-body"><div class="qa-title">产品中心</div><div class="qa-desc">7款核心安全检测产品</div></div></div>';
   h+='<div class="qaction-card card-hover" onclick="nav(\'solutions\')"><div class="qa-icon" style="background:var(--success-bg);color:var(--success)"><svg width="22" height="22"><use href="#i-build"/></svg></div><div class="qa-body"><div class="qa-title">行业方案</div><div class="qa-desc">9大行业深度解决方案</div></div></div>';
   h+='<div class="qaction-card card-hover" onclick="nav(\'scenarios\')"><div class="qa-icon" style="background:var(--info-bg);color:var(--info)"><svg width="22" height="22"><use href="#i-target"/></svg></div><div class="qa-body"><div class="qa-title">场景方案</div><div class="qa-desc">CRA合规 · 首版次认证</div></div></div>';
@@ -654,7 +654,7 @@ function switchSol(key){
   h+='<p style="font-size:13px;opacity:0.85;margin-bottom:16px">软安安全专家将在30分钟内联系您，提供量身定制的解决方案与报价</p>';
   h+='<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">';
   h+='<button class="btn btn-lg" style="background:#fff;color:var(--brand);font-weight:700" onclick="nav(\'contact\')">📞 联系销售</button>';
-  h+='<button class="btn btn-lg" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3)" onclick="nav(\'selector\')">🔬 获取方案与报价</button>';
+  h+='<button class="btn btn-lg" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3)" onclick="nav(\'selector\')">🔬 场景需求自助描述与获取方案</button>';
   h+='</div></div>';
   document.getElementById('solDetail').innerHTML=h;
   document.getElementById('solDetail').scrollIntoView({behavior:'smooth'});
@@ -731,7 +731,7 @@ function switchScenario(name){
   h+='<p style="font-size:13px;opacity:0.85;margin-bottom:16px">软安安全专家将在30分钟内联系您，提供量身定制的解决方案</p>';
   h+='<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">';
   h+='<button class="btn btn-lg" style="background:#fff;color:var(--brand);font-weight:700" onclick="nav(\'contact\')">📞 联系销售</button>';
-  h+='<button class="btn btn-lg" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3)" onclick="nav(\'selector\')">🔬 获取方案与报价</button>';
+  h+='<button class="btn btn-lg" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3)" onclick="nav(\'selector\')">🔬 场景需求自助描述与获取方案</button>';
   h+='</div></div>';
   document.getElementById('scDetail').innerHTML=h;
   document.getElementById('scDetail').scrollIntoView({behavior:'smooth'});
