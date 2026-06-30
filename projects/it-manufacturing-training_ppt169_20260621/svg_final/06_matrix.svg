@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF" />
+  <rect x="0" y="0" width="1280" height="4" fill="#6096E6" />
+  <path fill="#6096E6" fill-opacity="0.1" d="M74,30 H176 A14,14 0 0 1 190,44 V48 A14,14 0 0 1 176,62 H74 A14,14 0 0 1 60,48 V44 A14,14 0 0 1 74,30 Z" />
+  <text x="125" y="52" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#6096E6" font-weight="bold" text-anchor="middle">网络安防设备</text>
+  <text x="210" y="54" font-family="'Microsoft YaHei', sans-serif" font-size="32" font-weight="bold" fill="#2D2D2D">关键部门痛点与软安解决方案</text>
+  <line x1="80" y1="78" x2="1200" y2="78" stroke="#E0E0E0" stroke-width="0.5" />
+  
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M74,105 H1206 A14,14 0 0 1 1220,119 V211 A14,14 0 0 1 1206,225 H74 A14,14 0 0 1 60,211 V119 A14,14 0 0 1 74,105 Z" />
+  <path fill="#6096E6" fill-opacity="0.08" d="M74,105 H246 A14,14 0 0 1 260,119 V211 A14,14 0 0 1 246,225 H74 A14,14 0 0 1 60,211 V119 A14,14 0 0 1 74,105 Z" />
+  <text x="160" y="155" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#6096E6" text-anchor="middle">嵌入式研发部门</text>
+  <text x="160" y="180" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580" text-anchor="middle">固件 / 驱动 / 协议栈</text>
+  <line x1="270" y1="125" x2="270" y2="205" stroke="#E0E0E0" stroke-width="0.5" />
+  <text x="295" y="145" font-family="'Microsoft YaHei', sans-serif" font-size="14" font-weight="bold" fill="#2D2D2D">痛点</text>
+  <text x="295" y="170" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">固件成分不透明 · 供应商提供的二进制 BSP 无法审查 · 协议栈实现缺乏安全验证</text>
+  <text x="295" y="198" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">解决方案：</text>
+  <path fill="#6096E6" fill-opacity="0.1" d="M410,185 H480 A10,10 0 0 1 490,195 V197 A10,10 0 0 1 480,207 H410 A10,10 0 0 1 400,197 V195 A10,10 0 0 1 410,185 Z" />
+  <text x="445" y="201" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#6096E6" text-anchor="middle">BAT 固兮</text>
+  <path fill="#20A675" fill-opacity="0.1" d="M508,185 H578 A10,10 0 0 1 588,195 V197 A10,10 0 0 1 578,207 H508 A10,10 0 0 1 498,197 V195 A10,10 0 0 1 508,185 Z" />
+  <text x="543" y="201" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#20A675" text-anchor="middle">SCA 源兮</text>
+  <path fill="#FFC000" fill-opacity="0.1" d="M606,185 H676 A10,10 0 0 1 686,195 V197 A10,10 0 0 1 676,207 H606 A10,10 0 0 1 596,197 V195 A10,10 0 0 1 606,185 Z" />
+  <text x="641" y="201" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#FFC000" text-anchor="middle">SAST 静兮</text>
+  
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M74,240 H1206 A14,14 0 0 1 1220,254 V346 A14,14 0 0 1 1206,360 H74 A14,14 0 0 1 60,346 V254 A14,14 0 0 1 74,240 Z" />
+  <path fill="#20A675" fill-opacity="0.08" d="M74,240 H246 A14,14 0 0 1 260,254 V346 A14,14 0 0 1 246,360 H74 A14,14 0 0 1 60,346 V254 A14,14 0 0 1 74,240 Z" />
+  <text x="160" y="290" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#20A675" text-anchor="middle">测试 / 验收部门</text>
+  <text x="160" y="315" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580" text-anchor="middle">入网检测 · 质量把关</text>
+  <line x1="270" y1="260" x2="270" y2="340" stroke="#E0E0E0" stroke-width="0.5" />
+  <text x="295" y="280" font-family="'Microsoft YaHei', sans-serif" font-size="14" font-weight="bold" fill="#2D2D2D">痛点</text>
+  <text x="295" y="305" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">需出具第三方检测报告 · 无自动化协议测试能力 · 批量设备检测效率低</text>
+  <text x="295" y="333" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">解决方案：</text>
+  <path fill="#20A675" fill-opacity="0.1" d="M410,320 H480 A10,10 0 0 1 490,330 V332 A10,10 0 0 1 480,342 H410 A10,10 0 0 1 400,332 V330 A10,10 0 0 1 410,320 Z" />
+  <text x="445" y="336" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#20A675" text-anchor="middle">FUZZ 侦兮</text>
+  <path fill="#6096E6" fill-opacity="0.1" d="M508,320 H608 A10,10 0 0 1 618,330 V332 A10,10 0 0 1 608,342 H508 A10,10 0 0 1 498,332 V330 A10,10 0 0 1 508,320 Z" />
+  <text x="558" y="336" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#6096E6" text-anchor="middle">BAT-SER</text>
+  <path fill="#FFC000" fill-opacity="0.1" d="M636,320 H736 A10,10 0 0 1 746,330 V332 A10,10 0 0 1 736,342 H636 A10,10 0 0 1 626,332 V330 A10,10 0 0 1 636,320 Z" />
+  <text x="686" y="336" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#FFC000" text-anchor="middle">PENTEST</text>
+  
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M74,375 H1206 A14,14 0 0 1 1220,389 V481 A14,14 0 0 1 1206,495 H74 A14,14 0 0 1 60,481 V389 A14,14 0 0 1 74,375 Z" />
+  <path fill="#FFC000" fill-opacity="0.08" d="M74,375 H246 A14,14 0 0 1 260,389 V481 A14,14 0 0 1 246,495 H74 A14,14 0 0 1 60,481 V389 A14,14 0 0 1 74,375 Z" />
+  <text x="160" y="425" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#FFC000" text-anchor="middle">采购 / 供应链部门</text>
+  <text x="160" y="450" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580" text-anchor="middle">供应商准入 · 交付验收</text>
+  <line x1="270" y1="395" x2="270" y2="475" stroke="#E0E0E0" stroke-width="0.5" />
+  <text x="295" y="415" font-family="'Microsoft YaHei', sans-serif" font-size="14" font-weight="bold" fill="#2D2D2D">痛点</text>
+  <text x="295" y="440" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">供应商交付物缺少安全基线 · OEM/ODM 模式下无可视性 · 无安全准入机制</text>
+  <text x="295" y="468" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">解决方案：</text>
+  <path fill="#6096E6" fill-opacity="0.1" d="M410,455 H480 A10,10 0 0 1 490,465 V467 A10,10 0 0 1 480,477 H410 A10,10 0 0 1 400,467 V465 A10,10 0 0 1 410,455 Z" />
+  <text x="445" y="471" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#6096E6" text-anchor="middle">BAT 固兮</text>
+  <path fill="#20A675" fill-opacity="0.1" d="M508,455 H608 A10,10 0 0 1 618,465 V467 A10,10 0 0 1 608,477 H508 A10,10 0 0 1 498,467 V465 A10,10 0 0 1 508,455 Z" />
+  <text x="558" y="471" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#20A675" text-anchor="middle">SBOM-SER</text>
+  <path fill="#FFC000" fill-opacity="0.1" d="M636,455 H726 A10,10 0 0 1 736,465 V467 A10,10 0 0 1 726,477 H636 A10,10 0 0 1 626,467 V465 A10,10 0 0 1 636,455 Z" />
+  <text x="681" y="471" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#FFC000" text-anchor="middle">OSS-SER</text>
+  
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M74,510 H1206 A14,14 0 0 1 1220,524 V591 A14,14 0 0 1 1206,605 H74 A14,14 0 0 1 60,591 V524 A14,14 0 0 1 74,510 Z" />
+  <path fill="#51BA94" fill-opacity="0.08" d="M74,510 H246 A14,14 0 0 1 260,524 V591 A14,14 0 0 1 246,605 H74 A14,14 0 0 1 60,591 V524 A14,14 0 0 1 74,510 Z" />
+  <text x="160" y="550" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#51BA94" text-anchor="middle">售前 / 安全团队</text>
+  <text x="160" y="575" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580" text-anchor="middle">投标支撑 · 安全能力展示</text>
+  <line x1="270" y1="530" x2="270" y2="585" stroke="#E0E0E0" stroke-width="0.5" />
+  <text x="295" y="545" font-family="'Microsoft YaHei', sans-serif" font-size="14" font-weight="bold" fill="#2D2D2D">痛点</text>
+  <text x="295" y="570" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">投标需要权威安全资质 · 客户要求展示安全体系 · 竞品安全能力难以差异化</text>
+  <text x="295" y="595" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">解决方案：</text>
+  <path fill="#6096E6" fill-opacity="0.1" d="M410,582 H500 A10,10 0 0 1 510,592 V594 A10,10 0 0 1 500,604 H410 A10,10 0 0 1 400,594 V592 A10,10 0 0 1 410,582 Z" />
+  <text x="455" y="598" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#6096E6" text-anchor="middle">FUZZ-SER</text>
+  <path fill="#20A675" fill-opacity="0.1" d="M528,582 H618 A10,10 0 0 1 628,592 V594 A10,10 0 0 1 618,604 H528 A10,10 0 0 1 518,594 V592 A10,10 0 0 1 528,582 Z" />
+  <text x="573" y="598" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#20A675" text-anchor="middle">PENTEST</text>
+  <path fill="#FFC000" fill-opacity="0.1" d="M646,582 H736 A10,10 0 0 1 746,592 V594 A10,10 0 0 1 736,604 H646 A10,10 0 0 1 636,594 V592 A10,10 0 0 1 646,582 Z" />
+  <text x="691" y="598" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#FFC000" text-anchor="middle">SDLC-SER</text>
+  <line x1="60" y1="650" x2="1200" y2="650" stroke="#E0E0E0" stroke-width="0.5" />
+  <text x="60" y="690" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580">软安科技 · IT制造培训</text>
+  <text x="1200" y="690" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580" text-anchor="end">06 / 14</text>
+</svg>

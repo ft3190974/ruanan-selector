@@ -567,18 +567,30 @@ PAGES.home=function(){
 
 // ═══ PRODUCTS ═══
 function _viewProductDetail(pid){
-  var prods=[{id:'SAST',name:'软安SAST',sub:'静兮 · 静态代码质量与安全检测',price:'50万/年',desc:'编译型检测引擎，18+语言支持',features:['18+语言','C/C++误报<10%','跨文件跨函数','AI智能修复','增量扫描','MISRA/CERT/GJB','CI/CD集成','中文合规报告'],color:'purple',icon:'🔍'},{id:'SCA',name:'软安SCA',sub:'源兮 · 源代码软件成分分析',price:'50万/年',desc:'20+语言，100T+顶级组件数据库',features:['20+语言','Java 0%误报','100T+数据库','AI智能助手','SBOM自动生成','许可证合规','投毒检测','SPDX/CycloneDX'],color:'gold',icon:'📦'},{id:'BAT',name:'软安BAT',sub:'固兮 · 二进制安全检测',price:'50万/年',desc:'100+格式解包引擎，无需源码即可深度安全分析',features:['100+格式','通信安全','IAC安全','敏感数据','加密算法','AI助手','成分分析','漏洞挖掘'],color:'blue',icon:'🔐'},{id:'FUZZ',name:'软安Fuzz',sub:'侦兮 · 黑盒协议模糊测试',price:'50万/年',desc:'50+协议覆盖，国外顶级安全团队研发',features:['50+协议','CAN/CANFD','汽车以太网','蓝牙/5G','Modbus/MQTT','文件Fuzz','ISO 21434','GB 44495'],color:'teal',icon:'🎯'},{id:'MST',name:'软安MST',sub:'智兮 · 大模型安全检测',price:'50万/年',desc:'大模型全生命周期安全',features:['基座溯源','漏洞检测','知识产权','Skill安全','智能体安全','权限控制','内容安全','合规评估'],color:'purple',icon:'🤖'},{id:'CodingHawk',name:'Coding Review',sub:'Hawk · 代码审计智能体',price:'0.8万/用户/月',desc:'SAST底座+大模型引擎',features:['SAST+大模型','智能审计','自动修复','C/C++突出','自然语言','跨文件检测','安全助手','私有化'],color:'gold',icon:'✨'},{id:'GuardFox',name:'GuardFox',sub:'洞兮 · AI漏洞分析验证',price:'另议',desc:'CVE自动化验证+POC生成',features:['CVE验证','POC生成','POC验证','优先级评估','漏洞复现','提效','工单集成','报告导出'],color:'teal',icon:'🦊'}];
+  var prods=[{id:'SAST',name:'软安SAST',sub:'静兮 · 静态代码质量与安全检测',desc:'编译型检测引擎，18+语言支持',features:['18+语言','C/C++误报<10%','跨文件跨函数','AI智能修复','增量扫描','MISRA/CERT/GJB','CI/CD集成','中文合规报告'],color:'purple',icon:'🔍'},{id:'SCA',name:'软安SCA',sub:'源兮 · 源代码软件成分分析',desc:'20+语言，100T+顶级组件数据库',features:['20+语言','Java 0%误报','100T+数据库','AI智能助手','SBOM自动生成','许可证合规','投毒检测','SPDX/CycloneDX'],color:'gold',icon:'📦'},{id:'BAT',name:'软安BAT',sub:'固兮 · 二进制安全检测',desc:'100+格式解包引擎，无需源码即可深度安全分析',features:['100+格式','通信安全','IAC安全','敏感数据','加密算法','AI助手','成分分析','漏洞挖掘'],color:'blue',icon:'🔐'},{id:'FUZZ',name:'软安Fuzz',sub:'侦兮 · 黑盒协议模糊测试',desc:'50+协议覆盖，国外顶级安全团队研发',features:['50+协议','CAN/CANFD','汽车以太网','蓝牙/5G','Modbus/MQTT','文件Fuzz','ISO 21434','GB 44495'],color:'teal',icon:'🎯'},{id:'MST',name:'软安MST',sub:'智兮 · 大模型安全检测',desc:'大模型全生命周期安全',features:['基座溯源','漏洞检测','知识产权','Skill安全','智能体安全','权限控制','内容安全','合规评估'],color:'purple',icon:'🤖'},{id:'CodingHawk',name:'Coding Review',sub:'Hawk · 代码审计智能体',desc:'SAST底座+大模型引擎',features:['SAST+大模型','智能审计','自动修复','C/C++突出','自然语言','跨文件检测','安全助手','私有化'],color:'gold',icon:'✨'},{id:'GuardFox',name:'GuardFox',sub:'洞兮 · AI漏洞分析验证',desc:'CVE自动化验证+POC生成',features:['CVE验证','POC生成','POC验证','优先级评估','漏洞复现','提效','工单集成','报告导出'],color:'teal',icon:'🦊'}];
   api('GET','/api/product-pages/'+pid).then(function(page){
     var p=prods.find(function(x){return x.id===pid})||{};
     var h='';
     h+='<button class="btn btn-ghost btn-sm" onclick="nav(\'products\')" style="margin-bottom:12px">← 返回产品简介</button>';
-    h+='<div class="prod-item" style="cursor:default"><div class="pi-visual '+p.color+'"><div class="pi-icon">'+p.icon+'</div><div class="pi-name">'+p.name+'</div><div class="pi-sub">'+p.sub+'</div><div class="pi-price">'+p.price+'</div></div><div class="pi-body">';
+    h+='<div class="prod-item" style="cursor:default"><div class="pi-visual '+p.color+'"><div class="pi-icon">'+p.icon+'</div><div class="pi-name">'+p.name+'</div><div class="pi-sub">'+p.sub+'</div></div><div class="pi-body">';
     if(page.intro){h+='<div class="pi-desc">'+page.intro+'</div>';}
     if(page.detail){h+='<div style="font-size:14px;line-height:1.9;color:var(--text2);margin-top:12px">'+page.detail+'</div>';}
-    if(!page.intro&&!page.detail){h+='<div class="pi-desc">'+p.desc+'</div><div class="pi-section-title">核心能力</div><div class="pi-tags">'+p.features.map(function(f){return '<span class="pi-tag">'+f+'</span>';}).join('')+'</div><p style="font-size:12px;color:var(--text3);margin-top:12px">管理员可在 管理后台→产品内容 中自定义此产品详情</p>';}
+    if(!page.intro&&!page.detail){
+      h+='<div class="pi-desc">'+p.desc+'</div><div class="pi-section-title">核心能力</div><div class="pi-tags">'+p.features.map(function(f){return '<span class="pi-tag">'+f+'</span>';}).join('')+'</div>';
+      // Demo rich content: image + video + table
+      h+='<div style="margin-top:24px;background:#fff;border-radius:12px;padding:20px;border:1px solid #e8ecf1">';
+      h+='<div class="pi-section-title">📷 产品截图与演示</div>';
+      h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px">';
+      h+='<div style="background:#f8fafc;border-radius:8px;padding:40px 20px;text-align:center;border:2px dashed #cbd5e1"><div style="font-size:40px;margin-bottom:8px">🖼️</div><div style="font-size:13px;color:#64748b">产品架构图</div><div style="font-size:11px;color:#94a3b8;margin-top:4px">管理员可在后台替换为实际图片</div></div>';
+      h+='<div style="background:#f8fafc;border-radius:8px;padding:40px 20px;text-align:center;border:2px dashed #cbd5e1"><div style="font-size:40px;margin-bottom:8px">🎬</div><div style="font-size:13px;color:#64748b">产品演示视频</div><div style="font-size:11px;color:#94a3b8;margin-top:4px">管理员可在后台嵌入视频链接</div></div>';
+      h+='</div></div>';
+      // Demo spec table
+      h+='<div style="margin-top:20px;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e8ecf1"><div style="background:linear-gradient(90deg,#1a3a5c,#1a5276);color:#fff;padding:14px 20px;font-weight:700;font-size:15px">📋 技术规格表</div>';
+      h+='<table style="width:100%;border-collapse:collapse;font-size:13px"><tr style="background:#f8fafc"><td style="padding:12px 20px;font-weight:600;color:#1a5276;width:28%">支持语言</td><td style="padding:12px 20px;color:#444">18+ (C/C++/Java/Python/C#/Go/JS等)</td></tr><tr><td style="padding:12px 20px;font-weight:600;color:#1a5276">检测规则</td><td style="padding:12px 20px;color:#444">6000+ 内置规则，40+ 规则集</td></tr><tr style="background:#f8fafc"><td style="padding:12px 20px;font-weight:600;color:#1a5276">误报率</td><td style="padding:12px 20px;color:#444">C/C++ <10%，综合 <15%</td></tr><tr><td style="padding:12px 20px;font-weight:600;color:#1a5276">部署方式</td><td style="padding:12px 20px;color:#444">本地私有化 / SaaS云端</td></tr></table></div>';
+    }
     h+='</div></div>';
     document.getElementById('app').innerHTML=h;
-  });
+  }).catch(function(){document.getElementById('app').innerHTML='<div style="text-align:center;padding:60px"><div class="es-icon">❌</div><div class="es-title">加载失败</div><button class="btn btn-primary" onclick="nav(\'products\')">返回产品简介</button></div>';});
 }
 PAGES.products=function(){
   var h='';
@@ -594,7 +606,7 @@ PAGES.products=function(){
   ];
   for(var i=0;i<prods.length;i++){
     var p=prods[i];
-    h+='<div class="prod-item" style="cursor:pointer" onclick="_viewProductDetail(\''+p.id+'\')"><div class="pi-visual '+p.color+'"><div class="pi-icon">'+p.icon+'</div><div class="pi-name">'+p.name+'</div><div class="pi-sub">'+p.sub+'</div><div class="pi-price">'+p.price+'</div><div class="pi-price-label">参考价格</div></div><div class="pi-body"><div class="pi-desc">'+p.desc+'</div><div class="pi-section-title">核心能力</div><div class="pi-tags">'+p.features.map(function(f){return '<span class="pi-tag">'+f+'</span>';}).join('')+'</div></div></div>';
+    h+='<div class="prod-item" style="cursor:pointer" onclick="_viewProductDetail(\''+p.id+'\')"><div class="pi-visual '+p.color+'"><div class="pi-icon">'+p.icon+'</div><div class="pi-name">'+p.name+'</div><div class="pi-sub">'+p.sub+'</div></div><div class="pi-body"><div class="pi-desc">'+p.desc+'</div><div class="pi-section-title">核心能力</div><div class="pi-tags">'+p.features.map(function(f){return '<span class="pi-tag">'+f+'</span>';}).join('')+'</div></div></div>';
   }
   return h;
 };
@@ -1371,15 +1383,34 @@ function _renderProdContent(){
 }
 function _editProdPage(pid){
   var isNew=!pid;
+  var h='<div class="modal-box" style="max-width:700px;max-height:90vh;overflow-y:auto" onclick="event.stopPropagation()"><h3 style="margin-bottom:16px">'+(isNew?'新增产品简介':'编辑 '+pid+' 产品内容')+'</h3>';
+  if(isNew){h+='<div class="form-group"><label>产品ID *</label><input id="ppId" placeholder="如：SAST、SCA、BAT" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:14px"></div>';}
+  h+='<div class="form-group"><label>产品名称</label><input id="ppName" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:14px"></div>';
+  h+='<div class="form-group"><label>简介描述</label><textarea id="ppIntro" rows="2" placeholder="产品一句话介绍，展示在产品卡片上" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:13px;resize:vertical"></textarea></div>';
+  // Image upload
+  h+='<div class="form-group"><label>产品图片</label><div style="display:flex;gap:8px;align-items:center"><input id="ppImg" type="file" accept="image/*" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:8px;font-size:13px"><div id="ppImgPreview" style="width:60px;height:60px;border:1px dashed var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;background:#f8fafc"></div></div></div>';
+  // Video URL
+  h+='<div class="form-group"><label>演示视频链接（可选）</label><input id="ppVideo" placeholder="https://example.com/video.mp4 或 YouTube链接" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:14px"></div>';
+  // Spec table 2x8
+  h+='<div class="form-group"><label>技术规格表（2列×8行，自定义填写）</label><div style="border:1px solid var(--border);border-radius:8px;overflow:hidden"><table style="width:100%;border-collapse:collapse;font-size:13px"><tr style="background:#1a3a5c;color:#fff"><th style="padding:8px 12px;text-align:left;width:30%">参数</th><th style="padding:8px 12px;text-align:left">规格</th></tr>';
+  for(var i=1;i<=8;i++){
+    h+='<tr><td style="padding:0"><input id="ppSpecK'+i+'" placeholder="参数名" style="width:100%;padding:8px 12px;border:none;border-bottom:1px solid #e8ecf1;font-size:13px;outline:none"></td><td style="padding:0"><input id="ppSpecV'+i+'" placeholder="规格值" style="width:100%;padding:8px 12px;border:none;border-bottom:1px solid #e8ecf1;font-size:13px;outline:none"></td></tr>';
+  }
+  h+='</table></div></div>';
+  h+='<button class="btn btn-primary btn-lg" onclick="_saveProdPage(\''+(pid||'')+'\',this)" style="width:100%;justify-content:center;margin-top:12px">保存</button>';
+  h+='<button class="btn btn-ghost btn-sm" onclick="this.closest(\'.modal-overlay\').remove()" style="width:100%;margin-top:6px">取消</button></div>';
+  // Create modal (click outside does NOT close)
+  var m=document.createElement("div");m.className="modal-overlay";m.innerHTML=h;document.body.appendChild(m);
+  m.querySelector('.modal-box').parentElement.onclick=function(e){if(e.target===this)this.remove();};
   if(isNew){
-    var m=document.createElement("div");m.className="modal-overlay";m.onclick=function(e){if(e.target===m)m.remove()};
-    m.innerHTML="<div class='modal-box' style='max-width:800px'><h3 style='margin-bottom:16px'>新增产品简介</h3><div class='form-group'><label>产品ID *</label><input id='ppId' placeholder='如：SAST、SCA、BAT' style='width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit'></div><div class='form-group'><label>产品名称</label><input id='ppName' placeholder='如：软安SAST 静态代码质量与安全检测' style='width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit'></div><div class='form-group'><label>简介（卡片展示）</label><textarea id='ppIntro' rows='3' style='width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:inherit;font-size:13px;resize:vertical'></textarea></div><div class='form-group'><label>详细介绍（支持HTML）</label><textarea id='ppDetail' rows='15' style='width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:12px;resize:vertical'></textarea></div><button class='btn btn-primary btn-lg' onclick='_saveProdPage(\"\",this)' style='width:100%;justify-content:center'>创建</button></div>";
-    document.body.appendChild(m);
+    m.querySelector('#ppName').value='';m.querySelector('#ppIntro').value='';
   }else{
     api("GET","/api/product-pages/"+pid).then(function(page){
-      var m=document.createElement("div");m.className="modal-overlay";m.onclick=function(e){if(e.target===m)m.remove()};
-      m.innerHTML="<div class='modal-box' style='max-width:800px'><h3 style='margin-bottom:16px'>编辑 "+pid+" 产品内容</h3><div class='form-group'><label>产品名称</label><input id='ppName' value='"+(page?page.product_name||"":"")+"' style='width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit'></div><div class='form-group'><label>简介（卡片展示）</label><textarea id='ppIntro' rows='3' style='width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:inherit;font-size:13px;resize:vertical'>"+(page?page.intro||"":"")+"</textarea></div><div class='form-group'><label>详细介绍（支持HTML）</label><textarea id='ppDetail' rows='15' style='width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:12px;resize:vertical'>"+(page?page.detail||"":"")+"</textarea></div><button class='btn btn-primary btn-lg' onclick='_saveProdPage(\""+pid+"\",this)' style='width:100%;justify-content:center'>保存</button></div>";
-      document.body.appendChild(m);
+      if(!page)return;
+      m.querySelector('#ppName').value=page.product_name||'';
+      m.querySelector('#ppIntro').value=page.intro||'';
+      m.querySelector('#ppVideo').value=page.video_url||'';
+      if(page.specs){try{var specs=JSON.parse(page.specs);for(var k in specs){var row=parseInt(k.replace('k',''));var ke=m.querySelector('#ppSpecK'+row);var ve=m.querySelector('#ppSpecV'+row);if(ke)ke.value=k.replace('k','');if(ve)ve.value=specs[k];}}catch(e){}}
     });
   }
 }
@@ -1387,10 +1418,33 @@ async function _saveProdPage(pid,btn){
   var newId=pid||document.getElementById("ppId")?.value.trim();
   if(!newId){toast("请输入产品ID","error");return}
   var intro=document.getElementById("ppIntro")?.value||"";
-  var detail=document.getElementById("ppDetail")?.value||"";
   var pname=document.getElementById("ppName")?.value||"";
+  var video=document.getElementById("ppVideo")?.value||"";
+  var imgFile=document.getElementById("ppImg")?.files[0];
+  var imgUrl="";
+  if(imgFile){
+    var fd=new FormData();fd.append("file",imgFile);
+    try{var r=await api("POST","/api/upload",fd,true);imgUrl=r.url||"";}catch(e){}
+  }
+  // Build specs
+  var specs={};
+  for(var i=1;i<=8;i++){
+    var k=document.getElementById("ppSpecK"+i)?.value.trim();
+    var v=document.getElementById("ppSpecV"+i)?.value.trim();
+    if(k||v)specs[k||('参数'+i)]=v||'';
+  }
+  // Build detail HTML for display
+  var detail='';
+  if(imgUrl)detail+='<img src="'+imgUrl+'" style="max-width:100%;border-radius:8px;margin-bottom:16px">';
+  if(video)detail+='<div style="margin:16px 0"><video src="'+video+'" controls style="max-width:100%;border-radius:8px"></video></div>';
+  var specKeys=Object.keys(specs);
+  if(specKeys.length){
+    detail+='<div style="margin-top:16px;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e8ecf1"><div style="background:linear-gradient(90deg,#1a3a5c,#1a5276);color:#fff;padding:14px 20px;font-weight:700;font-size:15px">📋 技术规格</div><table style="width:100%;border-collapse:collapse;font-size:13px">';
+    for(var j=0;j<specKeys.length;j++){var bg=j%2?'#f8fafc':'#fff';detail+='<tr style="background:'+bg+'"><td style="padding:12px 20px;font-weight:600;color:#1a5276;width:30%">'+specKeys[j]+'</td><td style="padding:12px 20px;color:#444">'+specs[specKeys[j]]+'</td></tr>';}
+    detail+='</table></div>';
+  }
   try{
-    await api("POST","/api/product-pages",fd({product_id:newId,intro:intro,detail:detail,product_name:pname}));
+    await api("POST","/api/product-pages",fd({product_id:newId,intro:intro,detail:detail,product_name:pname,specs:JSON.stringify(specs),video_url:video}));
     toast(pid?"已更新":"已创建");btn.closest(".modal-overlay").remove();_renderProdContent();
   }catch(e){toast(e.message,"error")}
 }

@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF"/>
+  <rect x="0" y="0" width="1280" height="4" fill="#20A675"/>
+  <text x="80" y="52" font-family="'Microsoft YaHei', sans-serif" font-size="32" font-weight="bold" fill="#2D2D2D">六大产品核心卖点速记</text>
+  <text x="80" y="78" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">背下这六张卡，任何客户场景都能快速匹配</text>
+  <line x1="80" y1="92" x2="1200" y2="92" stroke="#E0E0E0" stroke-width="0.5"/>
+  <!-- Row 1: 3 cards -->
+  <rect x="60" y="115" width="370" height="220" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="60" y="115" width="370" height="50" rx="14" fill="#20A675"/>
+  <text x="245" y="148" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#FFFFFF" text-anchor="middle">SAST 静兮</text>
+  <text x="245" y="190" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#2D2D2D" text-anchor="middle">静态代码质量与安全检测</text>
+  <text x="245" y="218" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580" text-anchor="middle">18+语言 · 编译型检测 · 跨文件跨函数</text>
+  <text x="245" y="242" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580" text-anchor="middle">C/C++误报&lt;10% · AI智能修复</text>
+  <text x="245" y="266" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580" text-anchor="middle">MISRA/CERT/GJB标准全覆盖</text>
+  <rect x="60" y="305" width="120" height="22" rx="10" fill="#20A675" fill-opacity="0.1"/>
+  <text x="120" y="320" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#20A675" text-anchor="middle">一句话：让代码质量看得见</text>
+  <rect x="455" y="115" width="370" height="220" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="455" y="115" width="370" height="50" rx="14" fill="#6096E6"/>
+  <text x="640" y="148" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#FFFFFF" text-anchor="middle">SCA 源兮</text>
+  <text x="640" y="190" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#2D2D2D" text-anchor="middle">源代码软件成分分析</text>
+  <text x="640" y="218" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580" text-anchor="middle">20+语言 · 100T+知识库 · Java 0%误报</text>
+  <text x="640" y="242" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580" text-anchor="middle">AI大模型/MCP/Skill组件全覆盖</text>
+  <text x="640" y="266" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580" text-anchor="middle">二进制+源码双模 · AI智能助手</text>
+  <rect x="455" y="305" width="120" height="22" rx="10" fill="#6096E6" fill-opacity="0.1"/>
+  <text x="515" y="320" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#6096E6" text-anchor="middle">一句话：让开源风险无处藏</text>
+  <rect x="850" y="115" width="370" height="220" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="850" y="115" width="370" height="50" rx="14" fill="#FFC000"/>
+  <text x="1035" y="148" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#FFFFFF" text-anchor="middle">BAT 固兮</text>
+  <text x="1035" y="190" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#2D2D2D" text-anchor="middle">二进制安全检测</text>
+  <text x="1035" y="218" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580" text-anchor="middle">100+格式 · 固件/二进制成分分析</text>
+  <text x="1035" y="242" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580" text-anchor="middle">通信安全 · IAC安全 · 敏感数据识别</text>
+  <text x="1035" y="266" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580" text-anchor="middle">加密算法识别 · 供应链成分透明</text>
+  <rect x="850" y="305" width="120" height="22" rx="10" fill="#FFC000" fill-opacity="0.1"/>
+  <text x="910" y="320" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#FFC000" text-anchor="middle">一句话：让二进制不再是黑盒</text>
+  <!-- Row 2: 3 cards -->
+  <rect x="60" y="360" width="370" height="220" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="60" y="360" width="370" height="50" rx="14" fill="#20A675" fill-opacity="0.6"/>
+  <text x="245" y="393" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#FFFFFF" text-anchor="middle">FUZZ 侦兮</text>
+  <text x="245" y="435" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#2D2D2D" text-anchor="middle">黑盒协议模糊测试</text>
+  <text x="245" y="463" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580" text-anchor="middle">50+协议 · Can/汽车以太网</text>
+  <text x="245" y="487" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580" text-anchor="middle">国外顶级团队研发</text>
+  <text x="245" y="511" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580" text-anchor="middle">汽车行业全覆盖 · 工控协议支持</text>
+  <rect x="60" y="550" width="120" height="22" rx="10" fill="#20A675" fill-opacity="0.1"/>
+  <text x="120" y="565" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#20A675" text-anchor="middle">一句话：用模糊测试挖出隐藏漏洞</text>
+  <rect x="455" y="360" width="370" height="220" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="455" y="360" width="370" height="50" rx="14" fill="#6096E6" fill-opacity="0.6"/>
+  <text x="640" y="393" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#FFFFFF" text-anchor="middle">CodingHawk</text>
+  <text x="640" y="435" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#2D2D2D" text-anchor="middle">代码审计智能体</text>
+  <text x="640" y="463" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580" text-anchor="middle">SAST底座+大模型双引擎</text>
+  <text x="640" y="487" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580" text-anchor="middle">C/C++表现突出 · AI自动修复</text>
+  <text x="640" y="511" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580" text-anchor="middle">深度代码理解 · 智能审计报告</text>
+  <rect x="455" y="550" width="120" height="22" rx="10" fill="#6096E6" fill-opacity="0.1"/>
+  <text x="515" y="565" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#6096E6" text-anchor="middle">一句话：AI帮你审计每一行代码</text>
+  <rect x="850" y="360" width="370" height="220" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="850" y="360" width="370" height="50" rx="14" fill="#FFC000" fill-opacity="0.6"/>
+  <text x="1035" y="393" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#FFFFFF" text-anchor="middle">GuardFox 洞兮</text>
+  <text x="1035" y="435" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#2D2D2D" text-anchor="middle">AI漏洞分析验证</text>
+  <text x="1035" y="463" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580" text-anchor="middle">CVE验证 · POC自动生成</text>
+  <text x="1035" y="487" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580" text-anchor="middle">漏洞优先级评估(VPT)</text>
+  <text x="1035" y="511" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580" text-anchor="middle">安全团队提效利器</text>
+  <rect x="850" y="550" width="120" height="22" rx="10" fill="#FFC000" fill-opacity="0.1"/>
+  <text x="910" y="565" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#FFC000" text-anchor="middle">一句话：让漏洞优先级不再靠猜</text>
+  <line x1="60" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="60" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580">软安科技 · IT制造培训</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580" text-anchor="end">07 / 14</text>
+</svg>

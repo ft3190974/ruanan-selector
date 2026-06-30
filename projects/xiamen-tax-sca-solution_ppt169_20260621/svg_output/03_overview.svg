@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F5F7FA"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bgGrad)"/>
+  <!-- Header -->
+  <line x1="60" y1="0" x2="60" y2="60" stroke="#20A675" stroke-width="3"/>
+  <text x="80" y="42" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="36" font-weight="bold" fill="#2D2D2D">源兮SCA — AI时代全场景软件成分分析平台</text>
+  <text x="80" y="72" font-family="SimSun, 'Times New Roman', serif" font-size="18" fill="#445469">20+语言检测 · 100T+知识库 · 0% Java误报 · 源码+二进制双模</text>
+  <line x1="80" y1="88" x2="1200" y2="88" stroke="#E0E0E0" stroke-width="0.5"/>
+  <!-- Center: big product positioning -->
+  <text x="640" y="300" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="28" font-weight="bold" fill="#20A675" text-anchor="middle">为政务软件供应链提供全栈透明</text>
+  <text x="640" y="340" font-family="SimSun, 'Times New Roman', serif" font-size="20" fill="#445469" text-anchor="middle">从传统Java/Python到AI框架PyTorch/TensorFlow，从源码到二进制制品</text>
+  <text x="640" y="368" font-family="SimSun, 'Times New Roman', serif" font-size="20" fill="#445469" text-anchor="middle">从开源大模型到MCP/Skill组件——一个平台，全量覆盖</text>
+  <!-- Bottom: 4 data cards -->
+  <rect x="60" y="430" width="270" height="160" rx="4" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="195" y="480" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="48" font-weight="bold" fill="#20A675" text-anchor="middle">20+</text>
+  <text x="195" y="510" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#2D2D2D" text-anchor="middle">语言覆盖</text>
+  <text x="195" y="540" font-family="SimSun, 'Times New Roman', serif" font-size="13" fill="#8F8F8F" text-anchor="middle">含AI框架PyTorch/TensorFlow</text>
+  <rect x="350" y="430" width="270" height="160" rx="4" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="485" y="480" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="48" font-weight="bold" fill="#6096E6" text-anchor="middle">100T+</text>
+  <text x="485" y="510" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#2D2D2D" text-anchor="middle">知识库规模</text>
+  <text x="485" y="540" font-family="SimSun, 'Times New Roman', serif" font-size="13" fill="#8F8F8F" text-anchor="middle">全球最大开源组件知识库</text>
+  <rect x="640" y="430" width="270" height="160" rx="4" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="775" y="480" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="48" font-weight="bold" fill="#51BA94" text-anchor="middle">0%</text>
+  <text x="775" y="510" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#2D2D2D" text-anchor="middle">Java误报率</text>
+  <text x="775" y="540" font-family="SimSun, 'Times New Roman', serif" font-size="13" fill="#8F8F8F" text-anchor="middle">业界领先 C/C++ &lt;10%</text>
+  <rect x="930" y="430" width="270" height="160" rx="4" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="1065" y="480" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="48" font-weight="bold" fill="#FFC000" text-anchor="middle">双模</text>
+  <text x="1065" y="510" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#2D2D2D" text-anchor="middle">源码+二进制</text>
+  <text x="1065" y="540" font-family="SimSun, 'Times New Roman', serif" font-size="13" fill="#8F8F8F" text-anchor="middle">同时支持源码和二进制分析</text>
+  <!-- Footer -->
+  <line x1="60" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="60" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F">软安科技 · 厦门税务SCA方案</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F" text-anchor="end">03 / 12</text>
+</svg>

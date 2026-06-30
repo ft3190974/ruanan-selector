@@ -1,0 +1,1 @@
+产品是子弹，服务是枪。安全测试6项对应检测执行，审计咨询4项对应体系建设。消费电子配BAT-SER+FUZZ-SER+OSS-SER，安防配BAT-SER+FUZZ-SER+PENTEST，具身智能配MST-SER+SAST-AUDIT+OSS-SER。记住一个原则：先卖产品打开局面，再卖服务建立长期关系。

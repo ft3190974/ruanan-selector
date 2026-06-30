@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF"/>
+  <rect x="0" y="0" width="1280" height="4" fill="#6096E6"/>
+  <rect x="60" y="30" width="160" height="32" rx="14" fill="#6096E6" fill-opacity="0.1"/>
+  <text x="140" y="52" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#6096E6" font-weight="bold" text-anchor="middle">网络安防设备</text>
+  <text x="240" y="54" font-family="'Microsoft YaHei', sans-serif" font-size="32" font-weight="bold" fill="#2D2D2D">需求痛点与软安解决方案</text>
+  <line x1="80" y1="78" x2="1200" y2="78" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="80" y="120" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#6096E6">痛点分析</text>
+  <rect x="60" y="145" width="560" height="100" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="60" y="145" width="6" height="100" rx="3" fill="#6096E6"/>
+  <text x="90" y="180" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#2D2D2D">痛点1：设备固件与二进制透明性</text>
+  <text x="90" y="208" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">摄像头/DVR/NVR固件往往不含源码，设备入网前缺乏安全审查</text>
+  <text x="90" y="230" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#6096E6">→ BAT（固兮）固件解包 + SCA二进制成分 + SAST源码审计</text>
+  <rect x="60" y="260" width="560" height="100" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="60" y="260" width="6" height="100" rx="3" fill="#20A675"/>
+  <text x="90" y="295" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#2D2D2D">痛点2：网络协议攻击面</text>
+  <text x="90" y="323" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">TCP/IP栈、Modbus/RTSP等工控协议，协议实现漏洞是主要突破口</text>
+  <text x="90" y="345" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#20A675">→ FUZZ（侦兮）协议模糊测试 + GuardFox漏洞验证</text>
+  <rect x="60" y="375" width="560" height="100" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="60" y="375" width="6" height="100" rx="3" fill="#FFC000"/>
+  <text x="90" y="410" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#2D2D2D">痛点3：交付验收安全标准缺失</text>
+  <text x="90" y="438" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">交换机/路由器等网络设备采购后无安全验收检测手段</text>
+  <text x="90" y="460" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFC000">→ 安全测试组合：固件安全测试 + Fuzz测试 + 渗透测试</text>
+  <text x="680" y="120" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#6096E6">推荐方案组合</text>
+  <rect x="660" y="145" width="560" height="440" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="690" y="180" width="200" height="60" rx="14" fill="#6096E6"/>
+  <text x="790" y="218" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF" text-anchor="middle">BAT 固兮</text>
+  <text x="900" y="200" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">二进制固件安全检测</text>
+  <text x="900" y="222" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">100+格式 / 敏感数据识别</text>
+  <rect x="690" y="260" width="200" height="60" rx="14" fill="#20A675"/>
+  <text x="790" y="298" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF" text-anchor="middle">FUZZ 侦兮</text>
+  <text x="900" y="280" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">协议模糊测试</text>
+  <text x="900" y="302" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">TCP/IP · Modbus · RTSP</text>
+  <rect x="690" y="340" width="200" height="60" rx="14" fill="#FFC000"/>
+  <text x="790" y="378" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF" text-anchor="middle">SAST 静兮</text>
+  <text x="900" y="360" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">源码静态安全检测</text>
+  <text x="900" y="382" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">18+语言 / MISRA/CERT</text>
+  <rect x="690" y="420" width="200" height="60" rx="14" fill="#FFC000" fill-opacity="0.7"/>
+  <text x="790" y="458" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF" text-anchor="middle">GuardFox 洞兮</text>
+  <text x="900" y="440" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">CVE验证+POC生成</text>
+  <text x="900" y="462" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">漏洞优先级评估</text>
+  <text x="830" y="520" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">+ 渗透测试 / 固件安全测试 / Fuzz测试服务</text>
+  <line x1="60" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="60" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580">软安科技 · IT制造培训</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580" text-anchor="end">04 / 14</text>
+</svg>

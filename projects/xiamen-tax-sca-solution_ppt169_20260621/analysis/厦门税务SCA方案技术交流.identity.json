@@ -1,0 +1,117 @@
+{
+  "source": "C:\\Users\\常乐\\Desktop\\软安科技\\projects\\xiamen-tax-sca-solution_ppt169_20260621\\sources\\厦门税务SCA方案技术交流.pptx",
+  "slide_count": 34,
+  "canvas": {
+    "width_px": 1280,
+    "height_px": 720,
+    "aspect": 1.7778
+  },
+  "theme": {
+    "palette": {
+      "background": "#FFFFFF",
+      "background_alt": "#E7E6E6",
+      "text": "#000000",
+      "text_alt": "#44546A",
+      "hyperlink": "#00B0F0",
+      "accent1": "#20A675",
+      "accent2": "#30403B",
+      "accent3": "#4C5FC1",
+      "accent4": "#FFC000",
+      "accent5": "#FF0000",
+      "accent6": "#92D050",
+      "primary": "#20A675"
+    },
+    "fonts": {
+      "title": {
+        "latin": "微软雅黑",
+        "ea": "微软雅黑"
+      },
+      "body": {
+        "latin": "微软雅黑",
+        "ea": "微软雅黑"
+      }
+    }
+  },
+  "observed": {
+    "fonts": {
+      "latin": [
+        {
+          "value": "微软雅黑",
+          "count": 795
+        },
+        {
+          "value": "Calibri",
+          "count": 426
+        },
+        {
+          "value": "Arial",
+          "count": 154
+        },
+        {
+          "value": "MiSans",
+          "count": 70
+        },
+        {
+          "value": "Microsoft YaHei Bold",
+          "count": 51
+        }
+      ],
+      "ea": [
+        {
+          "value": "微软雅黑",
+          "count": 936
+        },
+        {
+          "value": "宋体",
+          "count": 423
+        },
+        {
+          "value": "MiSans",
+          "count": 70
+        },
+        {
+          "value": "Microsoft YaHei Bold",
+          "count": 51
+        },
+        {
+          "value": "Microsoft YaHei Regular",
+          "count": 21
+        }
+      ]
+    },
+    "colors": [
+      {
+        "value": "#000000",
+        "count": 606
+      },
+      {
+        "value": "#FFFFFF",
+        "count": 267
+      },
+      {
+        "value": "#6096E6",
+        "count": 129
+      },
+      {
+        "value": "#20A675",
+        "count": 76
+      },
+      {
+        "value": "#445469",
+        "count": 60
+      },
+      {
+        "value": "#51BA94",
+        "count": 26
+      },
+      {
+        "value": "#54BB96",
+        "count": 24
+      },
+      {
+        "value": "#8F8F8F",
+        "count": 24
+      }
+    ]
+  }
+}

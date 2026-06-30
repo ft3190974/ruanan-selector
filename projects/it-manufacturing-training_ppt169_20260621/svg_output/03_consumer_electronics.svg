@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF"/>
+  <rect x="0" y="0" width="1280" height="4" fill="#20A675"/>
+  <rect x="60" y="30" width="120" height="32" rx="14" fill="#20A675" fill-opacity="0.1"/>
+  <text x="120" y="52" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#20A675" font-weight="bold" text-anchor="middle">消费电子</text>
+  <text x="200" y="54" font-family="'Microsoft YaHei', sans-serif" font-size="32" font-weight="bold" fill="#2D2D2D">场景与需求描述</text>
+  <line x1="80" y1="78" x2="1200" y2="78" stroke="#E0E0E0" stroke-width="0.5"/>
+  <!-- Left: Scene -->
+  <text x="80" y="120" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#20A675">场景描述</text>
+  <rect x="60" y="140" width="1160" height="235" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <!-- Scene items -->
+  <rect x="85" y="162" width="24" height="24" rx="6" fill="#20A675"/>
+  <text x="100" y="180" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle" font-weight="bold">1</text>
+  <text x="125" y="180" font-family="'Microsoft YaHei', sans-serif" font-size="16" fill="#2D2D2D">某消费电子品牌（手机/手表/耳机等）年出货千万级，产品线覆盖蓝牙、WiFi、NFC、UWB 多种无线协议</text>
+  <rect x="85" y="204" width="24" height="24" rx="6" fill="#20A675"/>
+  <text x="100" y="222" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle" font-weight="bold">2</text>
+  <text x="125" y="222" font-family="'Microsoft YaHei', sans-serif" font-size="16" fill="#2D2D2D">固件基于开源 RTOS + Linux，集成了大量第三方开源组件（音频编解码、蓝牙协议栈、UI 框架等）</text>
+  <rect x="85" y="246" width="24" height="24" rx="6" fill="#20A675"/>
+  <text x="100" y="264" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle" font-weight="bold">3</text>
+  <text x="125" y="264" font-family="'Microsoft YaHei', sans-serif" font-size="16" fill="#2D2D2D">新产品需通过行业认证及海外市场合规审查（如 EU CRA 网络安全弹性法案），对 SBOM 与许可证合规有严格要求</text>
+  <rect x="85" y="288" width="24" height="24" rx="6" fill="#20A675"/>
+  <text x="100" y="306" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle" font-weight="bold">4</text>
+  <text x="125" y="306" font-family="'Microsoft YaHei', sans-serif" font-size="16" fill="#2D2D2D">部分第三方 SDK 仅提供二进制形态，无法进行源码级审计；产品开始集成端侧 AI 模型，引入新的供应链风险</text>
+  <!-- Right: Needs -->
+  <text x="80" y="410" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#6096E6">核心需求</text>
+  <rect x="60" y="430" width="560" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="90" y="460" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">固件成分透明化：每个固件镜像中的开源组件、版本、许可证一目了然</text>
+  <rect x="60" y="486" width="560" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="90" y="516" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">无线协议安全性：蓝牙/WiFi/NFC 协议栈漏洞检测与模糊测试</text>
+  <rect x="60" y="542" width="560" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="90" y="572" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">SBOM 交付能力：下游客户与监管机构要求的标准化软件物料清单</text>
+  <rect x="640" y="430" width="580" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="670" y="460" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">二进制成分分析：第三方 SDK 无源码场景下的组件识别与风险发现</text>
+  <rect x="640" y="486" width="580" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="670" y="516" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">AI 供应链安全：端侧大模型及云端 Skill 的组件依赖与许可证评估</text>
+  <rect x="640" y="542" width="580" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="670" y="572" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">合规出口：满足 EU CRA / 信创等国内外合规审查要求</text>
+  <line x1="60" y1="650" x2="1200" y2="650" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="60" y="690" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580">软安科技 · IT制造培训</text>
+  <text x="1200" y="690" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580" text-anchor="end">03 / 14</text>
+</svg>

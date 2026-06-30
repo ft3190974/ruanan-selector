@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF"/>
+  <rect x="0" y="0" width="1280" height="4" fill="#FFC000"/>
+  <rect x="60" y="30" width="120" height="32" rx="14" fill="#FFC000" fill-opacity="0.1"/>
+  <text x="120" y="52" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFC000" font-weight="bold" text-anchor="middle">案例三</text>
+  <text x="200" y="54" font-family="'Microsoft YaHei', sans-serif" font-size="32" font-weight="bold" fill="#2D2D2D">具身智能场景 — 某服务机器人公司</text>
+  <line x1="80" y1="78" x2="1200" y2="78" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="60" y="105" width="1160" height="200" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="100" y="145" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#FFC000">场景描述</text>
+  <text x="100" y="180" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">某服务机器人公司新产品搭载开源大模型做语音交互，通过MCP协议调用外部Skill，</text>
+  <text x="100" y="205" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">同时运行RTOS嵌入式系统。客户CTO担心：大模型供应链安全+固件安全+合规三者叠加。</text>
+  <rect x="60" y="325" width="560" height="40" rx="10" fill="#FFC000" fill-opacity="0.15"/>
+  <text x="90" y="352" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#FFC000">问：AI+嵌入式双场景下，如何构建一站式安全方案？</text>
+  <text x="90" y="400" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">（请培训学员思考并讨论 2 分钟）</text>
+  <rect x="60" y="430" width="1160" height="170" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="100" y="470" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#FFC000">答案与推演</text>
+  <text x="100" y="505" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#2D2D2D">1. AI供应链 → SCA（源兮）识别大模型+MCP+Skill依赖，100T+知识库覆盖</text>
+  <text x="100" y="530" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#2D2D2D">2. 固件安全 → BAT（固兮）嵌入式RTOS固件成分+漏洞检测</text>
+  <text x="100" y="555" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#2D2D2D">3. 代码质量 → SAST（静兮）C/C++嵌入式代码MISRA规范检测</text>
+  <text x="100" y="580" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#2D2D2D">4. 合规出口 → SBOM-SER+OSS-SER+MST-SER 提供SBOM+许可证+AI安全报告</text>
+  <line x1="60" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="60" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580">软安科技 · IT制造培训</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580" text-anchor="end">11 / 14</text>
+</svg>

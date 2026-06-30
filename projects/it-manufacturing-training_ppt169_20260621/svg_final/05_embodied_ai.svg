@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF" />
+  <rect x="0" y="0" width="1280" height="4" fill="#6096E6" />
+  <path fill="#6096E6" fill-opacity="0.1" d="M74,30 H176 A14,14 0 0 1 190,44 V48 A14,14 0 0 1 176,62 H74 A14,14 0 0 1 60,48 V44 A14,14 0 0 1 74,30 Z" />
+  <text x="125" y="52" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#6096E6" font-weight="bold" text-anchor="middle">网络安防设备</text>
+  <text x="210" y="54" font-family="'Microsoft YaHei', sans-serif" font-size="32" font-weight="bold" fill="#2D2D2D">场景与需求描述</text>
+  <line x1="80" y1="78" x2="1200" y2="78" stroke="#E0E0E0" stroke-width="0.5" />
+  
+  <text x="80" y="120" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#6096E6">场景描述</text>
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M74,140 H1206 A14,14 0 0 1 1220,154 V361 A14,14 0 0 1 1206,375 H74 A14,14 0 0 1 60,361 V154 A14,14 0 0 1 74,140 Z" />
+  <path fill="#6096E6" d="M91,162 H103 A6,6 0 0 1 109,168 V180 A6,6 0 0 1 103,186 H91 A6,6 0 0 1 85,180 V168 A6,6 0 0 1 91,162 Z" />
+  <text x="100" y="180" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle" font-weight="bold">1</text>
+  <text x="125" y="180" font-family="'Microsoft YaHei', sans-serif" font-size="16" fill="#2D2D2D">某安防设备厂商为公安/交通/园区提供 IP 摄像头、交换机、路由器、NVR 等全系列产品，年出货百万级</text>
+  <path fill="#6096E6" d="M91,204 H103 A6,6 0 0 1 109,210 V222 A6,6 0 0 1 103,228 H91 A6,6 0 0 1 85,222 V210 A6,6 0 0 1 91,204 Z" />
+  <text x="100" y="222" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle" font-weight="bold">2</text>
+  <text x="125" y="222" font-family="'Microsoft YaHei', sans-serif" font-size="16" fill="#2D2D2D">设备运行嵌入式 Linux/RTOS，集成 TCP/IP、Modbus、RTSP、ONVIF 等网络及工控协议栈，多数来自开源社区</text>
+  <path fill="#6096E6" d="M91,246 H103 A6,6 0 0 1 109,252 V264 A6,6 0 0 1 103,270 H91 A6,6 0 0 1 85,264 V252 A6,6 0 0 1 91,246 Z" />
+  <text x="100" y="264" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle" font-weight="bold">3</text>
+  <text x="125" y="264" font-family="'Microsoft YaHei', sans-serif" font-size="16" fill="#2D2D2D">采购方（政府/运营商）在招标中明确要求：设备入网前须通过第三方安全检测，提供固件成分报告与渗透测试报告</text>
+  <path fill="#6096E6" d="M91,288 H103 A6,6 0 0 1 109,294 V306 A6,6 0 0 1 103,312 H91 A6,6 0 0 1 85,306 V294 A6,6 0 0 1 91,288 Z" />
+  <text x="100" y="306" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle" font-weight="bold">4</text>
+  <text x="125" y="306" font-family="'Microsoft YaHei', sans-serif" font-size="16" fill="#2D2D2D">OEM/ODM 模式下，大量固件与二进制由供应商交付，厂商自身无源码，安全审查手段匮乏</text>
+  
+  <text x="80" y="410" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#20A675">核心需求</text>
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M70,430 H610 A10,10 0 0 1 620,440 V468 A10,10 0 0 1 610,478 H70 A10,10 0 0 1 60,468 V440 A10,10 0 0 1 70,430 Z" />
+  <text x="90" y="460" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">固件批量检测：大批量设备的固件自动化安全扫描与成分分析</text>
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M70,486 H610 A10,10 0 0 1 620,496 V524 A10,10 0 0 1 610,534 H70 A10,10 0 0 1 60,524 V496 A10,10 0 0 1 70,486 Z" />
+  <text x="90" y="516" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">通信协议模糊测试：TCP/IP、Modbus、RTSP 等协议栈健壮性验证</text>
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M70,542 H610 A10,10 0 0 1 620,552 V580 A10,10 0 0 1 610,590 H70 A10,10 0 0 1 60,580 V552 A10,10 0 0 1 70,542 Z" />
+  <text x="90" y="572" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">第三方交付物安全验收：供应商二进制制品的成分透明 + 漏洞扫描</text>
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M650,430 H1210 A10,10 0 0 1 1220,440 V468 A10,10 0 0 1 1210,478 H650 A10,10 0 0 1 640,468 V440 A10,10 0 0 1 650,430 Z" />
+  <text x="670" y="460" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">安全检测报告：满足采购方要求的标准化第三方检测报告输出</text>
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M650,486 H1210 A10,10 0 0 1 1220,496 V524 A10,10 0 0 1 1210,534 H650 A10,10 0 0 1 640,524 V496 A10,10 0 0 1 650,486 Z" />
+  <text x="670" y="516" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">持续漏洞监控：新 CVE 爆发后自动化复扫，快速定位受影响设备</text>
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M650,542 H1210 A10,10 0 0 1 1220,552 V580 A10,10 0 0 1 1210,590 H650 A10,10 0 0 1 640,580 V552 A10,10 0 0 1 650,542 Z" />
+  <text x="670" y="572" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">供应链安全体系建设：从采购→入网→运维的全生命周期安全管理</text>
+  <line x1="60" y1="650" x2="1200" y2="650" stroke="#E0E0E0" stroke-width="0.5" />
+  <text x="60" y="690" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580">软安科技 · IT制造培训</text>
+  <text x="1200" y="690" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580" text-anchor="end">05 / 14</text>
+</svg>

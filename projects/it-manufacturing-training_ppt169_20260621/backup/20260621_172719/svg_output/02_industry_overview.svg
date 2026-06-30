@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF"/>
+  <rect x="0" y="0" width="1280" height="4" fill="#20A675"/>
+  <text x="80" y="52" font-family="'Microsoft YaHei', sans-serif" font-size="32" font-weight="bold" fill="#2D2D2D">IT制造行业：三大细分领域</text>
+  <line x1="80" y1="72" x2="1200" y2="72" stroke="#E0E0E0" stroke-width="0.5"/>
+  <!-- Card 1: 消费电子 -->
+  <rect x="60" y="110" width="370" height="480" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="60" y="110" width="370" height="100" rx="14" fill="#20A675" fill-opacity="0.08"/>
+  <text x="245" y="170" font-family="'Microsoft YaHei', sans-serif" font-size="24" font-weight="bold" fill="#20A675" text-anchor="middle">消费电子</text>
+  <text x="245" y="290" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#2D2D2D">代表产品</text>
+  <text x="245" y="320" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">智能手机 / 平板 / 智能手表</text>
+  <text x="245" y="345" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">TWS耳机 / 智能家居终端</text>
+  <line x1="100" y1="370" x2="390" y2="370" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="245" y="400" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#2D2D2D">核心安全诉求</text>
+  <text x="245" y="430" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">固件安全 / 开源组件合规</text>
+  <text x="245" y="455" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">无线协议 (BT/WiFi) 安全</text>
+  <text x="245" y="480" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">供应链第三方组件透明化</text>
+  <!-- Card 2: 网络安防设备 -->
+  <rect x="455" y="110" width="370" height="480" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="455" y="110" width="370" height="100" rx="14" fill="#6096E6" fill-opacity="0.08"/>
+  <text x="640" y="170" font-family="'Microsoft YaHei', sans-serif" font-size="24" font-weight="bold" fill="#6096E6" text-anchor="middle">网络安防设备</text>
+  <text x="640" y="290" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#2D2D2D">代表产品</text>
+  <text x="640" y="320" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">安防摄像头 / 交换机 / 路由器</text>
+  <text x="640" y="345" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">防火墙 / 工业网关</text>
+  <line x1="495" y1="370" x2="785" y2="370" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="640" y="400" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#2D2D2D">核心安全诉求</text>
+  <text x="640" y="430" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">设备固件防篡改</text>
+  <text x="640" y="455" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">通信协议 (TCP/IP/Modbus) 健壮性</text>
+  <text x="640" y="480" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">二进制交付物成分透明</text>
+  <!-- Card 3: 具身智能 -->
+  <rect x="850" y="110" width="370" height="480" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="850" y="110" width="370" height="100" rx="14" fill="#FFC000" fill-opacity="0.08"/>
+  <text x="1035" y="170" font-family="'Microsoft YaHei', sans-serif" font-size="24" font-weight="bold" fill="#FFC000" text-anchor="middle">具身智能</text>
+  <text x="1035" y="290" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#2D2D2D">代表产品</text>
+  <text x="1035" y="320" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">服务机器人 / 工业机器人</text>
+  <text x="1035" y="345" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">无人系统 / 智能传感器</text>
+  <line x1="890" y1="370" x2="1180" y2="370" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="1035" y="400" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#2D2D2D">核心安全诉求</text>
+  <text x="1035" y="430" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">AI模型+固件双重安全</text>
+  <text x="1035" y="455" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">传感器数据完整性与实时OS</text>
+  <text x="1035" y="480" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">开源大模型/MCP供应链风险</text>
+  <line x1="60" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="60" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580">软安科技 · IT制造培训</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580" text-anchor="end">02 / 14</text>
+</svg>

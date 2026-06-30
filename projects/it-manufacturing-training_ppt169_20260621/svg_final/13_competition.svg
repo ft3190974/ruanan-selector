@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF" />
+  <rect x="0" y="0" width="1280" height="4" fill="#20A675" />
+  <text x="80" y="52" font-family="'Microsoft YaHei', sans-serif" font-size="32" font-weight="bold" fill="#2D2D2D">竞品对比与差异化优势</text>
+  <line x1="80" y1="72" x2="1200" y2="72" stroke="#E0E0E0" stroke-width="0.5" />
+  
+  <path fill="#20A675" d="M68,100 H252 A8,8 0 0 1 260,108 V132 A8,8 0 0 1 252,140 H68 A8,8 0 0 1 60,132 V108 A8,8 0 0 1 68,100 Z" />
+  <text x="160" y="127" font-family="'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#FFFFFF" text-anchor="middle">产品</text>
+  <path fill="#F5F7FA" d="M276,100 H600 A8,8 0 0 1 608,108 V132 A8,8 0 0 1 600,140 H276 A8,8 0 0 1 268,132 V108 A8,8 0 0 1 276,100 Z" />
+  <text x="438" y="127" font-family="'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#2D2D2D" text-anchor="middle">软安优势</text>
+  <path fill="#F5F7FA" d="M624,100 H948 A8,8 0 0 1 956,108 V132 A8,8 0 0 1 948,140 H624 A8,8 0 0 1 616,132 V108 A8,8 0 0 1 624,100 Z" />
+  <text x="786" y="127" font-family="'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#2D2D2D" text-anchor="middle">竞品短板</text>
+  <path fill="#F5F7FA" d="M972,100 H1212 A8,8 0 0 1 1220,108 V132 A8,8 0 0 1 1212,140 H972 A8,8 0 0 1 964,132 V108 A8,8 0 0 1 972,100 Z" />
+  <text x="1092" y="127" font-family="'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#2D2D2D" text-anchor="middle">话术</text>
+  
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M68,148 H252 A8,8 0 0 1 260,156 V215 A8,8 0 0 1 252,223 H68 A8,8 0 0 1 60,215 V156 A8,8 0 0 1 68,148 Z" />
+  <text x="160" y="192" font-family="'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#2D2D2D" text-anchor="middle">SAST 静兮</text>
+  <path fill="#20A675" fill-opacity="0.05" stroke="#E0E0E0" stroke-width="0.5" d="M276,148 H600 A8,8 0 0 1 608,156 V215 A8,8 0 0 1 600,223 H276 A8,8 0 0 1 268,215 V156 A8,8 0 0 1 276,148 Z" />
+  <text x="438" y="185" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#2D2D2D" text-anchor="middle">编译型检测·C/C++误报&lt;10%·跨文件跨函数</text>
+  <text x="438" y="208" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580" text-anchor="middle">MISRA/CERT/GJB三标准·AI智能修复</text>
+  <path fill="#6096E6" fill-opacity="0.05" stroke="#E0E0E0" stroke-width="0.5" d="M624,148 H948 A8,8 0 0 1 956,156 V215 A8,8 0 0 1 948,223 H624 A8,8 0 0 1 616,215 V156 A8,8 0 0 1 624,148 Z" />
+  <text x="786" y="192" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580" text-anchor="middle">多数竞品为模式匹配·误报率30%+·单文件检测</text>
+  <path fill="#FFC000" fill-opacity="0.05" stroke="#E0E0E0" stroke-width="0.5" d="M972,148 H1212 A8,8 0 0 1 1220,156 V215 A8,8 0 0 1 1212,223 H972 A8,8 0 0 1 964,215 V156 A8,8 0 0 1 972,148 Z" />
+  <text x="1092" y="192" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#FFC000" text-anchor="middle">"我们是编译型检测不是搜索匹配"</text>
+  
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M68,230 H252 A8,8 0 0 1 260,238 V297 A8,8 0 0 1 252,305 H68 A8,8 0 0 1 60,297 V238 A8,8 0 0 1 68,230 Z" />
+  <text x="160" y="274" font-family="'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#2D2D2D" text-anchor="middle">SCA 源兮</text>
+  <path fill="#20A675" fill-opacity="0.05" stroke="#E0E0E0" stroke-width="0.5" d="M276,230 H600 A8,8 0 0 1 608,238 V297 A8,8 0 0 1 600,305 H276 A8,8 0 0 1 268,297 V238 A8,8 0 0 1 276,230 Z" />
+  <text x="438" y="267" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#2D2D2D" text-anchor="middle">100T+知识库·Java 0%误报·AI大模型/MCP/Skill覆盖</text>
+  <text x="438" y="290" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580" text-anchor="middle">二进制+源码双模·MCP/API全量开放</text>
+  <path fill="#6096E6" fill-opacity="0.05" stroke="#E0E0E0" stroke-width="0.5" d="M624,230 H948 A8,8 0 0 1 956,238 V297 A8,8 0 0 1 948,305 H624 A8,8 0 0 1 616,297 V238 A8,8 0 0 1 624,230 Z" />
+  <text x="786" y="274" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580" text-anchor="middle">竞品不支持AI组件·知识库规模不足·无二进制模式</text>
+  <path fill="#FFC000" fill-opacity="0.05" stroke="#E0E0E0" stroke-width="0.5" d="M972,230 H1212 A8,8 0 0 1 1220,238 V297 A8,8 0 0 1 1212,305 H972 A8,8 0 0 1 964,297 V238 A8,8 0 0 1 972,230 Z" />
+  <text x="1092" y="274" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#FFC000" text-anchor="middle">"我们是唯一覆盖AI组件的SCA"</text>
+  
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M68,312 H252 A8,8 0 0 1 260,320 V379 A8,8 0 0 1 252,387 H68 A8,8 0 0 1 60,379 V320 A8,8 0 0 1 68,312 Z" />
+  <text x="160" y="356" font-family="'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#2D2D2D" text-anchor="middle">BAT 固兮</text>
+  <path fill="#20A675" fill-opacity="0.05" stroke="#E0E0E0" stroke-width="0.5" d="M276,312 H600 A8,8 0 0 1 608,320 V379 A8,8 0 0 1 600,387 H276 A8,8 0 0 1 268,379 V320 A8,8 0 0 1 276,312 Z" />
+  <text x="438" y="349" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#2D2D2D" text-anchor="middle">100+格式·不依赖源码·通信安全+IAC+敏感数据</text>
+  <text x="438" y="372" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580" text-anchor="middle">固件解包+成分+加密算法三合一</text>
+  <path fill="#6096E6" fill-opacity="0.05" stroke="#E0E0E0" stroke-width="0.5" d="M624,312 H948 A8,8 0 0 1 956,320 V379 A8,8 0 0 1 948,387 H624 A8,8 0 0 1 616,379 V320 A8,8 0 0 1 624,312 Z" />
+  <text x="786" y="356" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580" text-anchor="middle">传统工具仅做固件解包·无成分分析·格式覆盖有限</text>
+  <path fill="#FFC000" fill-opacity="0.05" stroke="#E0E0E0" stroke-width="0.5" d="M972,312 H1212 A8,8 0 0 1 1220,320 V379 A8,8 0 0 1 1212,387 H972 A8,8 0 0 1 964,379 V320 A8,8 0 0 1 972,312 Z" />
+  <text x="1092" y="356" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#FFC000" text-anchor="middle">"我们是固件安全的瑞士军刀"</text>
+  
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M68,394 H252 A8,8 0 0 1 260,402 V461 A8,8 0 0 1 252,469 H68 A8,8 0 0 1 60,461 V402 A8,8 0 0 1 68,394 Z" />
+  <text x="160" y="438" font-family="'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#2D2D2D" text-anchor="middle">FUZZ 侦兮</text>
+  <path fill="#20A675" fill-opacity="0.05" stroke="#E0E0E0" stroke-width="0.5" d="M276,394 H600 A8,8 0 0 1 608,402 V461 A8,8 0 0 1 600,469 H276 A8,8 0 0 1 268,461 V402 A8,8 0 0 1 276,394 Z" />
+  <text x="438" y="431" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#2D2D2D" text-anchor="middle">50+协议·国外顶级团队·汽车+工控全覆盖</text>
+  <text x="438" y="454" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580" text-anchor="middle">不只是网络协议·Can/汽车以太网独家支持</text>
+  <path fill="#6096E6" fill-opacity="0.05" stroke="#E0E0E0" stroke-width="0.5" d="M624,394 H948 A8,8 0 0 1 956,402 V461 A8,8 0 0 1 948,469 H624 A8,8 0 0 1 616,461 V402 A8,8 0 0 1 624,394 Z" />
+  <text x="786" y="438" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580" text-anchor="middle">多数开源Fuzz工具需大量定制·协议支持有限</text>
+  <path fill="#FFC000" fill-opacity="0.05" stroke="#E0E0E0" stroke-width="0.5" d="M972,394 H1212 A8,8 0 0 1 1220,402 V461 A8,8 0 0 1 1212,469 H972 A8,8 0 0 1 964,461 V402 A8,8 0 0 1 972,394 Z" />
+  <text x="1092" y="438" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#FFC000" text-anchor="middle">"50+协议开箱即用不需要自己写"</text>
+  
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M74,500 H1206 A14,14 0 0 1 1220,514 V586 A14,14 0 0 1 1206,600 H74 A14,14 0 0 1 60,586 V514 A14,14 0 0 1 74,500 Z" />
+  <text x="100" y="540" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#20A675">差异化总结</text>
+  <text x="100" y="572" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#2D2D2D">"我们的核心差异化：AI组件全覆盖 + 编译型检测非正则匹配 + 二进制/源码双模 + 顶级Fuzz引擎 + 大模型驱动的代码审计"</text>
+  <line x1="60" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5" />
+  <text x="60" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580">软安科技 · IT制造培训</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580" text-anchor="end">13 / 14</text>
+</svg>

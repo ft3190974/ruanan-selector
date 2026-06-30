@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF" />
+  <line x1="60" y1="0" x2="60" y2="60" stroke="#20A675" stroke-width="3" />
+  <text x="80" y="42" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="36" font-weight="bold" fill="#2D2D2D">从产品到服务——全方位保障厦门税务SCA落地</text>
+  <text x="80" y="72" font-family="SimSun, 'Times New Roman', serif" font-size="18" fill="#445469">不只交付产品，提供实施、培训、运维、应急全周期专业服务</text>
+  <line x1="80" y1="88" x2="1200" y2="88" stroke="#E0E0E0" stroke-width="0.5" />
+  
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M64,120 H616 A4,4 0 0 1 620,124 V336 A4,4 0 0 1 616,340 H64 A4,4 0 0 1 60,336 V124 A4,4 0 0 1 64,120 Z" />
+  <g transform="translate(90, 148)">
+    <g transform="translate(0,0) scale(1.3333333333333333,1.3333333333333333)" stroke="#20A675" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" />
+  <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></g>
+  </g>
+  <text x="140" y="172" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="22" font-weight="bold" fill="#2D2D2D">实施部署服务</text>
+  <text x="90" y="208" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">服务器环境部署与性能调优</text>
+  <text x="90" y="234" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">扫描策略初始化与基线设定</text>
+  <text x="90" y="260" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">与现有DevOps工具链对接集成</text>
+  <text x="90" y="286" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">知识库本地化部署与同步配置</text>
+  <text x="90" y="318" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#20A675">5-10个工作日完成全流程部署</text>
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M664,120 H1216 A4,4 0 0 1 1220,124 V336 A4,4 0 0 1 1216,340 H664 A4,4 0 0 1 660,336 V124 A4,4 0 0 1 664,120 Z" />
+  <g transform="translate(690, 148)">
+    <g transform="translate(0,0) scale(1.3333333333333333,1.3333333333333333)" stroke="#6096E6" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4" />
+  <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2" />
+  <path d="M9 15l2 2l4 -4" /></g>
+  </g>
+  <text x="740" y="172" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="22" font-weight="bold" fill="#2D2D2D">培训赋能服务</text>
+  <text x="690" y="208" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">系统管理员操作与运维培训</text>
+  <text x="690" y="234" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">开发人员安全编码最佳实践</text>
+  <text x="690" y="260" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">供应链安全治理理念宣贯</text>
+  <text x="690" y="286" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">操作手册与知识转移文档交付</text>
+  <text x="690" y="318" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#6096E6">培训+文档双交付，确保独立运维</text>
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M64,370 H616 A4,4 0 0 1 620,374 V586 A4,4 0 0 1 616,590 H64 A4,4 0 0 1 60,586 V374 A4,4 0 0 1 64,370 Z" />
+  <g transform="translate(90, 398)">
+    <g transform="translate(0,0) scale(1.3333333333333333,1.3333333333333333)" stroke="#FFC000" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M19 18a3.5 3.5 0 0 0 0 -7h-1c.397 -1.768 -.285 -3.593 -1.788 -4.787c-1.503 -1.193 -3.6 -1.575 -5.5 -1s-3.315 2.019 -3.712 3.787c-2.199 -.088 -4.155 1.326 -4.666 3.373c-.512 2.047 .564 4.154 2.566 5.027" />
+  <path d="M8 16a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1v3a1 1 0 0 1 -1 1h-6a1 1 0 0 1 -1 -1l0 -3" />
+  <path d="M10 15v-2a2 2 0 1 1 4 0v2" /></g>
+  </g>
+  <text x="140" y="422" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="22" font-weight="bold" fill="#2D2D2D">技术支持服务</text>
+  <text x="90" y="458" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">7×24小时热线支持与远程协助</text>
+  <text x="90" y="484" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">定期系统巡检与健康检查</text>
+  <text x="90" y="510" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">版本升级与知识库持续更新</text>
+  <text x="90" y="536" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">季度安全态势总结报告</text>
+  <text x="90" y="568" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#FFC000">SLA承诺：99.5%服务可用性</text>
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M664,370 H1216 A4,4 0 0 1 1220,374 V586 A4,4 0 0 1 1216,590 H664 A4,4 0 0 1 660,586 V374 A4,4 0 0 1 664,370 Z" />
+  <g transform="translate(690, 398)">
+    <g transform="translate(0,0) scale(1.3333333333333333,1.3333333333333333)" stroke="#51BA94" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
+  <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
+  <path d="M21 6.727a11.05 11.05 0 0 0 -2.794 -3.727" />
+  <path d="M3 6.727a11.05 11.05 0 0 1 2.792 -3.727" /></g>
+  </g>
+  <text x="740" y="422" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="22" font-weight="bold" fill="#2D2D2D">应急响应服务</text>
+  <text x="690" y="458" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">0day漏洞爆发时4小时内应急响应</text>
+  <text x="690" y="484" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">受影响资产快速定位与影响评估</text>
+  <text x="690" y="510" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">应急修复方案制定与验证</text>
+  <text x="690" y="536" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">重大安全事件驻场支持</text>
+  <text x="690" y="568" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#51BA94">4小时响应 · 24小时给出方案</text>
+  <line x1="60" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5" />
+  <text x="60" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F">软安科技 · 厦门税务SCA方案</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F" text-anchor="end">10 / 12</text>
+</svg>

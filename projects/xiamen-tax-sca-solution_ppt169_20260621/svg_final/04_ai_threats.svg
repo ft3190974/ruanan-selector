@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF" />
+  <line x1="60" y1="0" x2="60" y2="60" stroke="#20A675" stroke-width="3" />
+  <text x="80" y="42" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="36" font-weight="bold" fill="#2D2D2D">核心能力一：覆盖AI时代的全量开源风险</text>
+  <text x="80" y="72" font-family="SimSun, 'Times New Roman', serif" font-size="18" fill="#445469">业界首个将开源大模型、MCP工具链、Skill插件纳入成分分析的SCA平台</text>
+  <line x1="80" y1="88" x2="1200" y2="88" stroke="#E0E0E0" stroke-width="0.5" />
+  
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M64,110 H516 A4,4 0 0 1 520,114 V606 A4,4 0 0 1 516,610 H64 A4,4 0 0 1 60,606 V114 A4,4 0 0 1 64,110 Z" />
+  
+  <g transform="translate(290, 300)">
+    <circle cx="0" cy="0" r="80" fill="none" stroke="#20A675" stroke-width="1.5" stroke-opacity="0.3" />
+    <circle cx="0" cy="0" r="55" fill="none" stroke="#6096E6" stroke-width="1" stroke-opacity="0.3" />
+    <circle cx="0" cy="0" r="30" fill="#20A675" fill-opacity="0.08" stroke="#20A675" stroke-width="2" />
+    <text x="0" y="6" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#20A675" text-anchor="middle">AI</text>
+    
+    <circle cx="-90" cy="-60" r="12" fill="#FFFFFF" stroke="#6096E6" stroke-width="1.5" />
+    <text x="-90" y="-56" font-family="'Microsoft YaHei', sans-serif" font-size="10" fill="#6096E6" text-anchor="middle">MCP</text>
+    <line x1="-80" y1="-54" x2="-28" y2="-18" stroke="#E0E0E0" stroke-width="0.8" />
+    <circle cx="95" cy="-50" r="12" fill="#FFFFFF" stroke="#20A675" stroke-width="1.5" />
+    <text x="95" y="-46" font-family="'Microsoft YaHei', sans-serif" font-size="10" fill="#20A675" text-anchor="middle">Skill</text>
+    <line x1="85" y1="-44" x2="27" y2="-14" stroke="#E0E0E0" stroke-width="0.8" />
+    <circle cx="-80" cy="70" r="12" fill="#FFFFFF" stroke="#FFC000" stroke-width="1.5" />
+    <text x="-80" y="74" font-family="'Microsoft YaHei', sans-serif" font-size="10" fill="#FFC000" text-anchor="middle">LLM</text>
+    <line x1="-70" y1="62" x2="-20" y2="20" stroke="#E0E0E0" stroke-width="0.8" />
+    <circle cx="85" cy="60" r="12" fill="#FFFFFF" stroke="#20A675" stroke-width="1.5" />
+    <text x="85" y="64" font-family="'Microsoft YaHei', sans-serif" font-size="10" fill="#20A675" text-anchor="middle">Agent</text>
+    <line x1="75" y1="52" x2="22" y2="16" stroke="#E0E0E0" stroke-width="0.8" />
+  </g>
+  <text x="290" y="530" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#8F8F8F" text-anchor="middle">AI开源生态全景：大模型→MCP→Skill→Agent</text>
+  
+  <g transform="translate(560, 110)">
+    <path fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5" d="M4,0 H656 A4,4 0 0 1 660,4 V96 A4,4 0 0 1 656,100 H4 A4,4 0 0 1 0,96 V4 A4,4 0 0 1 4,0 Z" />
+    <g transform="translate(20, 24)">
+      <g transform="translate(0,0) scale(1.0,1.0)" stroke="#20A675" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 13a3.5 3.5 0 0 0 -3.5 3.5v1a3.5 3.5 0 0 0 7 0v-1.8" />
+  <path d="M8.5 13a3.5 3.5 0 0 1 3.5 3.5v1a3.5 3.5 0 0 1 -7 0v-1.8" />
+  <path d="M17.5 16a3.5 3.5 0 0 0 0 -7h-.5" />
+  <path d="M19 9.3v-2.8a3.5 3.5 0 0 0 -7 0" />
+  <path d="M6.5 16a3.5 3.5 0 0 1 0 -7h.5" />
+  <path d="M5 9.3v-2.8a3.5 3.5 0 0 1 7 0v10" /></g>
+    </g>
+    <text x="56" y="46" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#2D2D2D">开源大模型检测</text>
+    <text x="56" y="70" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">识别Llama/Qwen/DeepSeek等模型组件及供应链依赖</text>
+  </g>
+  <g transform="translate(560, 225)">
+    <path fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5" d="M4,0 H656 A4,4 0 0 1 660,4 V96 A4,4 0 0 1 656,100 H4 A4,4 0 0 1 0,96 V4 A4,4 0 0 1 4,0 Z" />
+    <g transform="translate(20, 24)">
+      <g transform="translate(0,0) scale(1.0,1.0)" stroke="#6096E6" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 18a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+  <path d="M5 6a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+  <path d="M15 6a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+  <path d="M7 8l0 8" />
+  <path d="M9 18h6a2 2 0 0 0 2 -2v-5" />
+  <path d="M14 14l3 -3l3 3" /></g>
+    </g>
+    <text x="56" y="46" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#2D2D2D">MCP/Skill覆盖</text>
+    <text x="56" y="70" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">MCP服务端、Skill插件的开源依赖与许可证识别</text>
+  </g>
+  <g transform="translate(560, 340)">
+    <path fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5" d="M4,0 H656 A4,4 0 0 1 660,4 V96 A4,4 0 0 1 656,100 H4 A4,4 0 0 1 0,96 V4 A4,4 0 0 1 4,0 Z" />
+    <g transform="translate(20, 24)">
+      <g transform="translate(0,0) scale(1.0,1.0)" stroke="#51BA94" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8l-4 4l4 4" />
+  <path d="M17 8l4 4l-4 4" />
+  <path d="M14 4l-4 16" /></g>
+    </g>
+    <text x="56" y="46" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#2D2D2D">AI框架深度分析</text>
+    <text x="56" y="70" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">PyTorch/TensorFlow/JAX等框架及模型权重文件成分解析</text>
+  </g>
+  <g transform="translate(560, 455)">
+    <path fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5" d="M4,0 H656 A4,4 0 0 1 660,4 V96 A4,4 0 0 1 656,100 H4 A4,4 0 0 1 0,96 V4 A4,4 0 0 1 4,0 Z" />
+    <g transform="translate(20, 24)">
+      <g transform="translate(0,0) scale(1.0,1.0)" stroke="#FFC000" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M11.46 20.846a12 12 0 0 1 -7.96 -14.846a12 12 0 0 0 8.5 -3a12 12 0 0 0 8.5 3a12 12 0 0 1 -.09 7.06" />
+  <path d="M15 19l2 2l4 -4" /></g>
+    </g>
+    <text x="56" y="46" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#2D2D2D">与传统SCA无缝融合</text>
+    <text x="56" y="70" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">AI组件与传统开源组件在同一平台统一管控</text>
+  </g>
+  <line x1="60" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5" />
+  <text x="60" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F">软安科技 · 厦门税务SCA方案</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F" text-anchor="end">04 / 12</text>
+</svg>

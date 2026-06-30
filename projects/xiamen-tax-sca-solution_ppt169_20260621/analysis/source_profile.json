@@ -1,0 +1,409 @@
+{
+  "schema": "pptx_intake_index.v1",
+  "deck_count": 1,
+  "decks": [
+    {
+      "schema": "pptx_intake_profile.v1",
+      "stem": "厦门税务SCA方案技术交流",
+      "source_pptx": "C:\\Users\\常乐\\Desktop\\软安科技\\projects\\xiamen-tax-sca-solution_ppt169_20260621\\sources\\厦门税务SCA方案技术交流.pptx",
+      "slide_count": 34,
+      "usage_contract": {
+        "standard_generation": "Use identity and slide-library fields as source facts and recommendation candidates only; do not preserve original page count, order, or coordinates unless the user selected a beautify/template-fill workflow.",
+        "beautify": "Promote source text, page order, page count, colors, and fonts into locked constraints after user confirmation.",
+        "template_fill": "Use slide slots, tables, charts, and geometry as the native PPTX fill contract."
+      },
+      "artifacts": {
+        "identity": "厦门税务SCA方案技术交流.identity.json",
+        "slide_library": "厦门税务SCA方案技术交流.slide_library.json"
+      },
+      "canvas": {
+        "width_px": 1280,
+        "height_px": 720,
+        "aspect": 1.7778
+      },
+      "identity": {
+        "theme_palette": {
+          "background": "#FFFFFF",
+          "background_alt": "#E7E6E6",
+          "text": "#000000",
+          "text_alt": "#44546A",
+          "hyperlink": "#00B0F0",
+          "accent1": "#20A675",
+          "accent2": "#30403B",
+          "accent3": "#4C5FC1",
+          "accent4": "#FFC000",
+          "accent5": "#FF0000",
+          "accent6": "#92D050",
+          "primary": "#20A675"
+        },
+        "theme_fonts": {
+          "title": {
+            "latin": "微软雅黑",
+            "ea": "微软雅黑"
+          },
+          "body": {
+            "latin": "微软雅黑",
+            "ea": "微软雅黑"
+          }
+        },
+        "observed_colors": [
+          {
+            "value": "#000000",
+            "count": 606
+          },
+          {
+            "value": "#FFFFFF",
+            "count": 267
+          },
+          {
+            "value": "#6096E6",
+            "count": 129
+          },
+          {
+            "value": "#20A675",
+            "count": 76
+          },
+          {
+            "value": "#445469",
+            "count": 60
+          },
+          {
+            "value": "#51BA94",
+            "count": 26
+          },
+          {
+            "value": "#54BB96",
+            "count": 24
+          },
+          {
+            "value": "#8F8F8F",
+            "count": 24
+          }
+        ],
+        "observed_fonts": {
+          "latin": [
+            {
+              "value": "微软雅黑",
+              "count": 795
+            },
+            {
+              "value": "Calibri",
+              "count": 426
+            },
+            {
+              "value": "Arial",
+              "count": 154
+            },
+            {
+              "value": "MiSans",
+              "count": 70
+            },
+            {
+              "value": "Microsoft YaHei Bold",
+              "count": 51
+            }
+          ],
+          "ea": [
+            {
+              "value": "微软雅黑",
+              "count": 936
+            },
+            {
+              "value": "宋体",
+              "count": 423
+            },
+            {
+              "value": "MiSans",
+              "count": 70
+            },
+            {
+              "value": "Microsoft YaHei Bold",
+              "count": 51
+            },
+            {
+              "value": "Microsoft YaHei Regular",
+              "count": 21
+            }
+          ]
+        }
+      },
+      "structure": {
+        "canvas_px": {
+          "width": 1280,
+          "height": 720
+        },
+        "page_types": [
+          {
+            "slide_index": 1,
+            "page_type": "cover_candidate",
+            "slot_count": 10
+          },
+          {
+            "slide_index": 2,
+            "page_type": "toc_candidate",
+            "slot_count": 16
+          },
+          {
+            "slide_index": 3,
+            "page_type": "content_candidate",
+            "slot_count": 5
+          },
+          {
+            "slide_index": 4,
+            "page_type": "chapter_candidate",
+            "slot_count": 67
+          },
+          {
+            "slide_index": 5,
+            "page_type": "content_candidate",
+            "slot_count": 30
+          },
+          {
+            "slide_index": 6,
+            "page_type": "content_candidate",
+            "slot_count": 22
+          },
+          {
+            "slide_index": 7,
+            "page_type": "content_candidate",
+            "slot_count": 5
+          },
+          {
+            "slide_index": 8,
+            "page_type": "toc_candidate",
+            "slot_count": 30
+          },
+          {
+            "slide_index": 9,
+            "page_type": "toc_candidate",
+            "slot_count": 50
+          },
+          {
+            "slide_index": 10,
+            "page_type": "content_candidate",
+            "slot_count": 27
+          },
+          {
+            "slide_index": 11,
+            "page_type": "content_candidate",
+            "slot_count": 22
+          },
+          {
+            "slide_index": 12,
+            "page_type": "toc_candidate",
+            "slot_count": 47
+          },
+          {
+            "slide_index": 13,
+            "page_type": "content_candidate",
+            "slot_count": 3
+          },
+          {
+            "slide_index": 14,
+            "page_type": "content_candidate",
+            "slot_count": 5
+          },
+          {
+            "slide_index": 15,
+            "page_type": "content_candidate",
+            "slot_count": 43
+          },
+          {
+            "slide_index": 16,
+            "page_type": "content_candidate",
+            "slot_count": 8
+          },
+          {
+            "slide_index": 17,
+            "page_type": "content_candidate",
+            "slot_count": 18
+          },
+          {
+            "slide_index": 18,
+            "page_type": "content_candidate",
+            "slot_count": 14
+          },
+          {
+            "slide_index": 19,
+            "page_type": "content_candidate",
+            "slot_count": 27
+          },
+          {
+            "slide_index": 20,
+            "page_type": "content_candidate",
+            "slot_count": 23
+          },
+          {
+            "slide_index": 21,
+            "page_type": "content_candidate",
+            "slot_count": 10
+          },
+          {
+            "slide_index": 22,
+            "page_type": "content_candidate",
+            "slot_count": 22
+          },
+          {
+            "slide_index": 23,
+            "page_type": "content_candidate",
+            "slot_count": 10
+          },
+          {
+            "slide_index": 24,
+            "page_type": "content_candidate",
+            "slot_count": 5
+          },
+          {
+            "slide_index": 25,
+            "page_type": "content_candidate",
+            "slot_count": 73
+          },
+          {
+            "slide_index": 26,
+            "page_type": "content_candidate",
+            "slot_count": 54
+          },
+          {
+            "slide_index": 27,
+            "page_type": "toc_candidate",
+            "slot_count": 18
+          },
+          {
+            "slide_index": 28,
+            "page_type": "toc_candidate",
+            "slot_count": 23
+          },
+          {
+            "slide_index": 29,
+            "page_type": "content_candidate",
+            "slot_count": 27
+          },
+          {
+            "slide_index": 30,
+            "page_type": "content_candidate",
+            "slot_count": 27
+          },
+          {
+            "slide_index": 31,
+            "page_type": "content_candidate",
+            "slot_count": 28
+          },
+          {
+            "slide_index": 32,
+            "page_type": "content_candidate",
+            "slot_count": 22
+          },
+          {
+            "slide_index": 33,
+            "page_type": "content_candidate",
+            "slot_count": 20
+          },
+          {
+            "slide_index": 34,
+            "page_type": "ending_candidate",
+            "slot_count": 7
+          }
+        ]
+      },
+      "tables": {
+        "table_count": 7,
+        "tables": [
+          {
+            "slide_index": 26,
+            "table_id": "s26_tbl15",
+            "row_count": 1,
+            "column_count": 4
+          },
+          {
+            "slide_index": 27,
+            "table_id": "s27_tbl32",
+            "row_count": 2,
+            "column_count": 1
+          },
+          {
+            "slide_index": 28,
+            "table_id": "s28_tbl79",
+            "row_count": 1,
+            "column_count": 7
+          },
+          {
+            "slide_index": 29,
+            "table_id": "s29_tbl79",
+            "row_count": 1,
+            "column_count": 9
+          },
+          {
+            "slide_index": 30,
+            "table_id": "s30_tbl79",
+            "row_count": 1,
+            "column_count": 9
+          },
+          {
+            "slide_index": 31,
+            "table_id": "s31_tbl59",
+            "row_count": 1,
+            "column_count": 9
+          },
+          {
+            "slide_index": 32,
+            "table_id": "s32_tbl79",
+            "row_count": 1,
+            "column_count": 7
+          }
+        ]
+      },
+      "charts": {
+        "chart_count": 3,
+        "series_count": 9,
+        "multi_plot_chart_count": 0,
+        "charts": [
+          {
+            "slide_index": 27,
+            "chart_id": "s27_ch40",
+            "chart_type": "lineChart",
+            "plot_types": [
+              "lineChart"
+            ],
+            "category_count": 6,
+            "series_count": 4,
+            "series_names": [
+              "软安",
+              "国际一流工具",
+              "国内一流工具",
+              "国内溯源工具"
+            ]
+          },
+          {
+            "slide_index": 27,
+            "chart_id": "s27_ch42",
+            "chart_type": "barChart",
+            "plot_types": [
+              "barChart"
+            ],
+            "category_count": 4,
+            "series_count": 1,
+            "series_names": [
+              "二进制格式"
+            ]
+          },
+          {
+            "slide_index": 28,
+            "chart_id": "s28_ch4",
+            "chart_type": "lineChart",
+            "plot_types": [
+              "lineChart"
+            ],
+            "category_count": 5,
+            "series_count": 4,
+            "series_names": [
+              "软安",
+              "国际一流工具",
+              "国内一流工具",
+              "国内溯源工具"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

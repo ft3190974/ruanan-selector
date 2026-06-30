@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#20A675" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#6096E6" stop-opacity="0.04"/>
+    </linearGradient>
+    <linearGradient id="titleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#20A675"/>
+      <stop offset="100%" stop-color="#6096E6"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="#FFFFFF"/>
+  <rect width="1280" height="720" fill="url(#bgGrad)"/>
+  <!-- Top bar accent -->
+  <rect x="0" y="0" width="1280" height="6" fill="url(#titleGrad)"/>
+  <!-- Brand -->
+  <text x="80" y="60" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#20A675">软安科技</text>
+  <!-- Main title -->
+  <text x="80" y="260" font-family="'Microsoft YaHei', sans-serif" font-size="56" font-weight="bold" fill="#2D2D2D">软安科技产品解决方案培训</text>
+  <rect x="80" y="295" width="80" height="4" rx="2" fill="#20A675"/>
+  <text x="80" y="350" font-family="'Microsoft YaHei', sans-serif" font-size="24" fill="#667580">IT制造行业 · 销售 &amp; 售前赋能</text>
+  <!-- Bottom info -->
+  <rect x="80" y="430" width="360" height="70" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="110" y="465" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">培训时长：60-90分钟  |  内部培训材料</text>
+  <text x="110" y="485" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">适用团队：销售经理 · 售前工程师</text>
+  <!-- Three decorative circles -->
+  <circle cx="1000" cy="250" r="120" fill="#20A675" fill-opacity="0.06"/>
+  <circle cx="1100" cy="350" r="80" fill="#6096E6" fill-opacity="0.06"/>
+  <circle cx="950" cy="450" r="60" fill="#FFC000" fill-opacity="0.08"/>
+  <line x1="60" y1="680" x2="1220" y2="680" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="60" y="700" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580">CONFIDENTIAL · 软安科技</text>
+</svg>

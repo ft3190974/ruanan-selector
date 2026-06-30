@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF" />
+  <line x1="60" y1="0" x2="60" y2="60" stroke="#20A675" stroke-width="3" />
+  <text x="80" y="42" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="36" font-weight="bold" fill="#2D2D2D">核心能力五：MCP标准接口 + 全量API + 深度定制</text>
+  <text x="80" y="72" font-family="SimSun, 'Times New Roman', serif" font-size="18" fill="#445469">让SCA安全能力无缝嵌入厦门税务现有开发与运维场景</text>
+  <line x1="80" y1="88" x2="1200" y2="88" stroke="#E0E0E0" stroke-width="0.5" />
+  
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M64,115 H426 A4,4 0 0 1 430,119 V391 A4,4 0 0 1 426,395 H64 A4,4 0 0 1 60,391 V119 A4,4 0 0 1 64,115 Z" />
+  <g transform="translate(90, 140)">
+    <g transform="translate(0,0) scale(1.5,1.5)" stroke="#20A675" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13h5" />
+  <path d="M12 16v-8h3a2 2 0 0 1 2 2v1a2 2 0 0 1 -2 2h-3" />
+  <path d="M20 8v8" />
+  <path d="M9 16v-5.5a2.5 2.5 0 0 0 -5 0v5.5" /></g>
+  </g>
+  <text x="245" y="185" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="22" font-weight="bold" fill="#2D2D2D" text-anchor="middle">MCP标准集成</text>
+  <text x="245" y="215" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469" text-anchor="middle">通过MCP协议对接税务现有</text>
+  <text x="245" y="240" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469" text-anchor="middle">DevOps工具链</text>
+  <text x="245" y="280" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#20A675" text-anchor="middle">IDE · CI/CD · 代码仓库</text>
+  <text x="245" y="310" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#8F8F8F" text-anchor="middle">开发人员无需切换工具</text>
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M459,115 H821 A4,4 0 0 1 825,119 V391 A4,4 0 0 1 821,395 H459 A4,4 0 0 1 455,391 V119 A4,4 0 0 1 459,115 Z" />
+  <g transform="translate(485, 140)">
+    <g transform="translate(0,0) scale(1.5,1.5)" stroke="#6096E6" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" />
+  <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></g>
+  </g>
+  <text x="640" y="185" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="22" font-weight="bold" fill="#2D2D2D" text-anchor="middle">全量API开放</text>
+  <text x="640" y="215" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469" text-anchor="middle">200+ RESTful API端点</text>
+  <text x="640" y="240" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469" text-anchor="middle">覆盖扫描/查询/报表</text>
+  <text x="640" y="280" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#6096E6" text-anchor="middle">策略管理 · 项目管理</text>
+  <text x="640" y="310" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#8F8F8F" text-anchor="middle">全流程可编程自动化</text>
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M854,115 H1216 A4,4 0 0 1 1220,119 V391 A4,4 0 0 1 1216,395 H854 A4,4 0 0 1 850,391 V119 A4,4 0 0 1 854,115 Z" />
+  <g transform="translate(880, 140)">
+    <g transform="translate(0,0) scale(1.5,1.5)" stroke="#FFC000" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5" />
+  <path d="M12 12l8 -4.5" />
+  <path d="M12 12l0 9" />
+  <path d="M12 12l-8 -4.5" />
+  <path d="M16 5.25l-8 4.5" /></g>
+  </g>
+  <text x="1035" y="185" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="22" font-weight="bold" fill="#2D2D2D" text-anchor="middle">深度定制能力</text>
+  <text x="1035" y="215" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469" text-anchor="middle">UI品牌化 · 扫描策略自定义</text>
+  <text x="1035" y="240" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469" text-anchor="middle">报告模板定制 · 审批流程适配</text>
+  <text x="1035" y="280" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#FFC000" text-anchor="middle">与税务现有系统深度融合</text>
+  <text x="1035" y="310" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#8F8F8F" text-anchor="middle">支持信创环境部署</text>
+  
+  <path fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5" d="M64,420 H1216 A4,4 0 0 1 1220,424 V596 A4,4 0 0 1 1216,600 H64 A4,4 0 0 1 60,596 V424 A4,4 0 0 1 64,420 Z" />
+  <text x="640" y="455" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#2D2D2D" text-anchor="middle">核心能力矩阵</text>
+  
+  <path fill="#20A675" fill-opacity="0.1" stroke="#20A675" stroke-width="0.5" d="M104,480 H316 A4,4 0 0 1 320,484 V521 A4,4 0 0 1 316,525 H104 A4,4 0 0 1 100,521 V484 A4,4 0 0 1 104,480 Z" />
+  <text x="210" y="508" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#20A675" text-anchor="middle">MCP协议集成</text>
+  <path fill="#6096E6" fill-opacity="0.1" stroke="#6096E6" stroke-width="0.5" d="M344,480 H556 A4,4 0 0 1 560,484 V521 A4,4 0 0 1 556,525 H344 A4,4 0 0 1 340,521 V484 A4,4 0 0 1 344,480 Z" />
+  <text x="450" y="508" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#6096E6" text-anchor="middle">REST API 200+</text>
+  <path fill="#FFC000" fill-opacity="0.1" stroke="#FFC000" stroke-width="0.5" d="M584,480 H796 A4,4 0 0 1 800,484 V521 A4,4 0 0 1 796,525 H584 A4,4 0 0 1 580,521 V484 A4,4 0 0 1 584,480 Z" />
+  <text x="690" y="508" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFC000" text-anchor="middle">UI/品牌定制</text>
+  <path fill="#51BA94" fill-opacity="0.1" stroke="#51BA94" stroke-width="0.5" d="M824,480 H1036 A4,4 0 0 1 1040,484 V521 A4,4 0 0 1 1036,525 H824 A4,4 0 0 1 820,521 V484 A4,4 0 0 1 824,480 Z" />
+  <text x="930" y="508" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#51BA94" text-anchor="middle">策略/报告定制</text>
+  <text x="640" y="575" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469" text-anchor="middle">安全左移——开发人员在IDE中实时获得SCA告警，将安全前移到编码阶段</text>
+  <line x1="60" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5" />
+  <text x="60" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F">软安科技 · 厦门税务SCA方案</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F" text-anchor="end">08 / 12</text>
+</svg>

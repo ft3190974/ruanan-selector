@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <linearGradient id="scrimTop" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.5"/>
+    </linearGradient>
+  </defs>
+  <!-- Background image -->
+  <image x="0" y="0" width="1280" height="720" href="../images/summary_bg.png" preserveAspectRatio="xMidYMid slice"/>
+  <!-- Top scrim -->
+  <rect x="0" y="0" width="1280" height="400" fill="url(#scrimTop)"/>
+  <rect x="0" y="0" width="1280" height="4" fill="#20A675"/>
+  <text x="80" y="70" font-family="'Microsoft YaHei', sans-serif" font-size="32" font-weight="bold" fill="#2D2D2D">带走这三句话</text>
+  <line x1="80" y1="90" x2="1200" y2="90" stroke="#E0E0E0" stroke-width="0.5"/>
+  <!-- Three big cards -->
+  <rect x="60" y="130" width="370" height="320" rx="14" fill="#FFFFFF" fill-opacity="0.92" stroke="#E0E0E0" stroke-width="0.5"/>
+  <circle cx="245" cy="200" r="45" fill="#20A675"/>
+  <text x="245" y="212" font-family="'Microsoft YaHei', sans-serif" font-size="32" font-weight="bold" fill="#FFFFFF" text-anchor="middle">1</text>
+  <text x="245" y="275" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#2D2D2D" text-anchor="middle">看行业，选组合</text>
+  <text x="245" y="310" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580" text-anchor="middle">消费电子 → BAT+SCA+FUZZ</text>
+  <text x="245" y="335" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580" text-anchor="middle">网络安防 → BAT+FUZZ+GuardFox</text>
+  <text x="245" y="360" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580" text-anchor="middle">具身智能 → SCA+SAST+BAT+GuardFox</text>
+  <rect x="455" y="130" width="370" height="320" rx="14" fill="#FFFFFF" fill-opacity="0.92" stroke="#E0E0E0" stroke-width="0.5"/>
+  <circle cx="640" cy="200" r="45" fill="#6096E6"/>
+  <text x="640" y="212" font-family="'Microsoft YaHei', sans-serif" font-size="32" font-weight="bold" fill="#FFFFFF" text-anchor="middle">2</text>
+  <text x="640" y="275" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#2D2D2D" text-anchor="middle">记卖点，讲差异</text>
+  <text x="640" y="310" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580" text-anchor="middle">编译型不是匹配型</text>
+  <text x="640" y="335" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580" text-anchor="middle">AI组件唯一覆盖者</text>
+  <text x="640" y="360" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580" text-anchor="middle">二进制+源码双模</text>
+  <rect x="850" y="130" width="370" height="320" rx="14" fill="#FFFFFF" fill-opacity="0.92" stroke="#E0E0E0" stroke-width="0.5"/>
+  <circle cx="1035" cy="200" r="45" fill="#FFC000"/>
+  <text x="1035" y="212" font-family="'Microsoft YaHei', sans-serif" font-size="32" font-weight="bold" fill="#FFFFFF" text-anchor="middle">3</text>
+  <text x="1035" y="275" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#2D2D2D" text-anchor="middle">卖方案，不卖工具</text>
+  <text x="1035" y="310" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580" text-anchor="middle">产品+服务组合拳</text>
+  <text x="1035" y="335" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580" text-anchor="middle">嵌入客户DevSecOps流程</text>
+  <text x="1035" y="360" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580" text-anchor="middle">全生命周期安全体系</text>
+  <!-- Bottom bar -->
+  <rect x="60" y="500" width="1160" height="70" rx="14" fill="#20A675" fill-opacity="0.95"/>
+  <text x="640" y="535" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF" text-anchor="middle">IT制造行业 = 软安产品最完整的落地场景。用组合拳，打价值战！</text>
+  <text x="640" y="558" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#FFFFFF" fill-opacity="0.8" text-anchor="middle">软安科技 · 销售&amp;售前赋能培训</text>
+</svg>

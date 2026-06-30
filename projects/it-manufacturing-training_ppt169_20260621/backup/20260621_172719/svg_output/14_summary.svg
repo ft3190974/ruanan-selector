@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF"/>
+  <rect x="0" y="0" width="1280" height="4" fill="#20A675"/>
+  <text x="80" y="52" font-family="'Microsoft YaHei', sans-serif" font-size="32" font-weight="bold" fill="#2D2D2D">带走这三句话</text>
+  <line x1="80" y1="72" x2="1200" y2="72" stroke="#E0E0E0" stroke-width="0.5"/>
+  <!-- Three big cards -->
+  <rect x="60" y="120" width="370" height="350" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <circle cx="245" cy="200" r="50" fill="#20A675"/>
+  <text x="245" y="212" font-family="'Microsoft YaHei', sans-serif" font-size="36" font-weight="bold" fill="#FFFFFF" text-anchor="middle">1</text>
+  <text x="245" y="290" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#2D2D2D" text-anchor="middle">看行业，选组合</text>
+  <text x="245" y="325" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580" text-anchor="middle">消费电子 → BAT+SCA+FUZZ</text>
+  <text x="245" y="350" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580" text-anchor="middle">网络安防 → BAT+FUZZ+GuardFox</text>
+  <text x="245" y="375" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580" text-anchor="middle">具身智能 → SCA+SAST+BAT+GuardFox</text>
+  <rect x="455" y="120" width="370" height="350" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <circle cx="640" cy="200" r="50" fill="#6096E6"/>
+  <text x="640" y="212" font-family="'Microsoft YaHei', sans-serif" font-size="36" font-weight="bold" fill="#FFFFFF" text-anchor="middle">2</text>
+  <text x="640" y="290" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#2D2D2D" text-anchor="middle">记卖点，讲差异</text>
+  <text x="640" y="325" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580" text-anchor="middle">编译型不是匹配型</text>
+  <text x="640" y="350" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580" text-anchor="middle">AI组件唯一覆盖者</text>
+  <text x="640" y="375" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580" text-anchor="middle">二进制+源码双模</text>
+  <rect x="850" y="120" width="370" height="350" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <circle cx="1035" cy="200" r="50" fill="#FFC000"/>
+  <text x="1035" y="212" font-family="'Microsoft YaHei', sans-serif" font-size="36" font-weight="bold" fill="#FFFFFF" text-anchor="middle">3</text>
+  <text x="1035" y="290" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#2D2D2D" text-anchor="middle">卖方案，不卖工具</text>
+  <text x="1035" y="325" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580" text-anchor="middle">产品+服务组合拳</text>
+  <text x="1035" y="350" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580" text-anchor="middle">嵌入客户DevSecOps流程</text>
+  <text x="1035" y="375" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580" text-anchor="middle">全生命周期安全体系</text>
+  <!-- Bottom bar -->
+  <rect x="60" y="520" width="1160" height="80" rx="14" fill="#20A675"/>
+  <text x="640" y="560" font-family="'Microsoft YaHei', sans-serif" font-size="22" font-weight="bold" fill="#FFFFFF" text-anchor="middle">IT制造行业 = 软安产品最完整的落地场景。用组合拳，打价值战！</text>
+  <text x="640" y="585" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFFFFF" fill-opacity="0.8" text-anchor="middle">软安科技 · 销售&amp;售前赋能培训</text>
+</svg>

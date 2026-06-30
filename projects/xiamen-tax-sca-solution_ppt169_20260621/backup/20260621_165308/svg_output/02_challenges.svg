@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <linearGradient id="threatGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#20A675" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#20A675" stop-opacity="0.08"/>
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F5F7FA"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bgGrad)"/>
+  <!-- Header: pyramid title = conclusion -->
+  <line x1="60" y1="0" x2="60" y2="70" stroke="#20A675" stroke-width="3"/>
+  <text x="80" y="48" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="36" font-weight="bold" fill="#2D2D2D">AI开源浪潮下，政务软件供应链面临全新安全威胁</text>
+  <text x="80" y="82" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#8F8F8F" letter-spacing="1">三大挑战：AI开源项目激增 · 二进制成分盲区 · 合规监管升级</text>
+  <line x1="80" y1="95" x2="1200" y2="95" stroke="#E0E0E0" stroke-width="0.5"/>
+  <!-- ===== LEFT: Threat Radar Chart ===== -->
+  <g transform="translate(350, 420)">
+    <!-- Concentric grid -->
+    <polygon points="0,-160 138.6,-80 138.6,80 0,160 -138.6,80 -138.6,-80" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="1"/>
+    <polygon points="0,-120 103.9,-60 103.9,60 0,120 -103.9,60 -103.9,-60" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1"/>
+    <polygon points="0,-80 69.3,-40 69.3,40 0,80 -69.3,40 -69.3,-40" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.8"/>
+    <polygon points="0,-40 34.6,-20 34.6,20 0,40 -34.6,20 -34.6,-20" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.8"/>
+    <!-- Axes -->
+    <line x1="0" y1="0" x2="0" y2="-160" stroke="#E0E0E0" stroke-width="1"/>
+    <line x1="0" y1="0" x2="138.6" y2="-80" stroke="#E0E0E0" stroke-width="1"/>
+    <line x1="0" y1="0" x2="138.6" y2="80" stroke="#E0E0E0" stroke-width="1"/>
+    <line x1="0" y1="0" x2="0" y2="160" stroke="#E0E0E0" stroke-width="1"/>
+    <!-- Threat area (high on all 4 axes) -->
+    <polygon points="0,-145 124.7,-72 124.7,72 0,145" fill="url(#threatGrad)" stroke="#20A675" stroke-width="2.5"/>
+    <circle cx="0" cy="-145" r="4" fill="#FFFFFF" stroke="#20A675" stroke-width="2"/>
+    <circle cx="124.7" cy="-72" r="4" fill="#FFFFFF" stroke="#20A675" stroke-width="2"/>
+    <circle cx="124.7" cy="72" r="4" fill="#FFFFFF" stroke="#20A675" stroke-width="2"/>
+    <circle cx="0" cy="145" r="4" fill="#FFFFFF" stroke="#20A675" stroke-width="2"/>
+    <!-- Axis labels -->
+    <text x="0" y="-178" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#2D2D2D" text-anchor="middle">开源形态</text>
+    <text x="0" y="-164" font-family="'Microsoft YaHei', sans-serif" font-size="10" fill="#8F8F8F" text-anchor="middle">多样性</text>
+    <text x="156" y="-85" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#2D2D2D" text-anchor="start">二进制</text>
+    <text x="156" y="-71" font-family="'Microsoft YaHei', sans-serif" font-size="10" fill="#8F8F8F" text-anchor="start">不可见性</text>
+    <text x="156" y="85" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#2D2D2D" text-anchor="start">合规</text>
+    <text x="156" y="99" font-family="'Microsoft YaHei', sans-serif" font-size="10" fill="#8F8F8F" text-anchor="start">紧迫度</text>
+    <text x="0" y="185" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#2D2D2D" text-anchor="middle">攻击面</text>
+    <text x="0" y="199" font-family="'Microsoft YaHei', sans-serif" font-size="10" fill="#8F8F8F" text-anchor="middle">广度</text>
+  </g>
+  <text x="60" y="220" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F">威胁雷达：四维评估</text>
+  <!-- ===== RIGHT: 3 Challenge Cards ===== -->
+  <!-- Card 1 -->
+  <rect x="780" y="130" width="440" height="130" rx="4" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="780" y="130" width="4" height="130" fill="#20A675"/>
+  <g transform="translate(806, 150)">
+    <g transform="translate(0,0) scale(1.0,1.0)" stroke="#20A675" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2l0 -4" />
+  <path d="M12 2v2" />
+  <path d="M9 12v9" />
+  <path d="M15 12v9" />
+  <path d="M5 16l4 -2" />
+  <path d="M15 14l4 2" />
+  <path d="M9 18h6" />
+  <path d="M10 8v.01" />
+  <path d="M14 8v.01" /></g>
+  </g>
+  <text x="840" y="168" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#2D2D2D">挑战一：AI开源项目激增</text>
+  <text x="806" y="198" font-family="SimSun, 'Times New Roman', serif" font-size="16" fill="#445469">大模型/MCP/Skill等新型开源形态</text>
+  <text x="806" y="220" font-family="SimSun, 'Times New Roman', serif" font-size="16" fill="#445469">快速进入税务信息化场景，缺乏安全管控手段</text>
+  <!-- Card 2 -->
+  <rect x="780" y="280" width="440" height="130" rx="4" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="780" y="280" width="4" height="130" fill="#6096E6"/>
+  <g transform="translate(806, 300)">
+    <g transform="translate(0,0) scale(1.0,1.0)" stroke="#6096E6" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20a2 2 0 1 0 -4 0a2 2 0 0 0 4 0" />
+  <path d="M16 4a2 2 0 1 0 -4 0a2 2 0 0 0 4 0" />
+  <path d="M16 20a2 2 0 1 0 -4 0a2 2 0 0 0 4 0" />
+  <path d="M11 12a2 2 0 1 0 -4 0a2 2 0 0 0 4 0" />
+  <path d="M21 12a2 2 0 1 0 -4 0a2 2 0 0 0 4 0" />
+  <path d="M5.058 18.306l2.88 -4.606" />
+  <path d="M10.061 10.303l2.877 -4.604" />
+  <path d="M10.065 13.705l2.876 4.6" />
+  <path d="M15.063 5.7l2.881 4.61" /></g>
+  </g>
+  <text x="840" y="318" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#2D2D2D">挑战二：二进制成分盲区</text>
+  <text x="806" y="348" font-family="SimSun, 'Times New Roman', serif" font-size="16" fill="#445469">开发商交付的二进制制品无源码可审</text>
+  <text x="806" y="370" font-family="SimSun, 'Times New Roman', serif" font-size="16" fill="#445469">软件成分不可见，漏洞与许可证风险不可控</text>
+  <!-- Card 3 -->
+  <rect x="780" y="430" width="440" height="130" rx="4" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="780" y="430" width="4" height="130" fill="#FFC000"/>
+  <g transform="translate(806, 450)">
+    <g transform="translate(0,0) scale(1.0,1.0)" stroke="#FFC000" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+  <path d="M13 17.5v4.5l2 -1.5l2 1.5v-4.5" />
+  <path d="M10 19h-5a2 2 0 0 1 -2 -2v-10c0 -1.1 .9 -2 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -1 1.73" />
+  <path d="M6 9l12 0" />
+  <path d="M6 12l3 0" />
+  <path d="M6 15l2 0" /></g>
+  </g>
+  <text x="840" y="468" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#2D2D2D">挑战三：合规压力升级</text>
+  <text x="806" y="498" font-family="SimSun, 'Times New Roman', serif" font-size="16" fill="#445469">软件物料清单(SBOM)与许可证合规</text>
+  <text x="806" y="520" font-family="SimSun, 'Times New Roman', serif" font-size="16" fill="#445469">成为政务信息化项目监管的硬性要求</text>
+  <!-- Footer -->
+  <line x1="60" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="60" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F">软安科技 · 厦门税务SCA方案</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F" text-anchor="end">02 / 12</text>
+</svg>

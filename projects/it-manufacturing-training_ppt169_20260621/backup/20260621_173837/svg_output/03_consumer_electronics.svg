@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF"/>
+  <rect x="0" y="0" width="1280" height="4" fill="#20A675"/>
+  <rect x="60" y="30" width="160" height="32" rx="14" fill="#20A675" fill-opacity="0.1"/>
+  <text x="140" y="52" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#20A675" font-weight="bold" text-anchor="middle">消费电子</text>
+  <text x="240" y="54" font-family="'Microsoft YaHei', sans-serif" font-size="32" font-weight="bold" fill="#2D2D2D">需求痛点与软安解决方案</text>
+  <line x1="80" y1="78" x2="1200" y2="78" stroke="#E0E0E0" stroke-width="0.5"/>
+  <!-- Left: 3 Pain Points -->
+  <text x="80" y="120" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#20A675">痛点分析</text>
+  <rect x="60" y="145" width="560" height="100" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="60" y="145" width="6" height="100" rx="3" fill="#20A675"/>
+  <text x="90" y="180" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#2D2D2D">痛点1：固件安全盲区</text>
+  <text x="90" y="208" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">手机/手表固件镜像缺乏成分分析，供应链第三方组件不透明</text>
+  <text x="90" y="230" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#20A675">→ BAT（固兮）二进制成分分析 + SCA开源合规检测</text>
+  <rect x="60" y="260" width="560" height="100" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="60" y="260" width="6" height="100" rx="3" fill="#6096E6"/>
+  <text x="90" y="295" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#2D2D2D">痛点2：无线协议暴露面</text>
+  <text x="90" y="323" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">蓝牙/WiFi/NFC协议栈实现缺陷，黑盒测试手段不足</text>
+  <text x="90" y="345" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#6096E6">→ FUZZ（侦兮）协议模糊测试 + BAT通信安全分析</text>
+  <rect x="60" y="375" width="560" height="100" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="60" y="375" width="6" height="100" rx="3" fill="#FFC000"/>
+  <text x="90" y="410" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#2D2D2D">痛点3：代码质量与漏洞修复</text>
+  <text x="90" y="438" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">大规模嵌入式代码库人工审计效率低，漏洞修复缺乏AI辅助</text>
+  <text x="90" y="460" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFC000">→ SAST（静兮）静态检测 + CodingHawk AI代码审计智能体</text>
+  <!-- Right: Solution Combo -->
+  <text x="680" y="120" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#20A675">推荐方案组合</text>
+  <rect x="660" y="145" width="560" height="440" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="690" y="180" width="200" height="60" rx="14" fill="#20A675"/>
+  <text x="790" y="218" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF" text-anchor="middle">BAT 固兮</text>
+  <text x="900" y="200" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">二进制固件成分分析</text>
+  <text x="900" y="222" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">100+格式 / 通信安全检测</text>
+  <rect x="690" y="260" width="200" height="60" rx="14" fill="#6096E6"/>
+  <text x="790" y="298" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF" text-anchor="middle">SCA 源兮</text>
+  <text x="900" y="280" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">开源组件成分与许可证</text>
+  <text x="900" y="302" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">20+语言 / Java 0%误报</text>
+  <rect x="690" y="340" width="200" height="60" rx="14" fill="#FFC000"/>
+  <text x="790" y="378" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF" text-anchor="middle">FUZZ 侦兮</text>
+  <text x="900" y="360" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">无线协议模糊测试</text>
+  <text x="900" y="382" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">50+协议 / 汽车以太网</text>
+  <rect x="690" y="420" width="200" height="60" rx="14" fill="#20A675" fill-opacity="0.7"/>
+  <text x="790" y="458" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF" text-anchor="middle">CodingHawk</text>
+  <text x="900" y="440" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">AI代码审计智能体</text>
+  <text x="900" y="462" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">SAST底座+大模型驱动</text>
+  <text x="830" y="520" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">+ 全10项测试服务（固件安全测试 / Fuzz测试 / 代码审计等）</text>
+  <line x1="60" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="60" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580">软安科技 · IT制造培训</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580" text-anchor="end">03 / 14</text>
+</svg>

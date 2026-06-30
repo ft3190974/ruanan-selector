@@ -1,0 +1,14 @@
+{
+  "rendering": "flat",
+  "palette": "cool-corporate",
+  "canvas": "1280x720",
+  "items": [
+    {
+      "id": "summary_bg",
+      "filename": "summary_bg.png",
+      "status": "Generated",
+      "aspect_ratio": "16:9",
+      "prompt": "Clean abstract corporate illustration with soft gradient from white to very light gray. Three subtle ascending geometric steps in green #20A675 and blue #6096E6 with tiny gold #FFC000 accent dots. Very minimal, airy, professional. Ample white space in upper half for text overlay. Clean flat vector style, no text, no labels, no characters, no watermarks, no signatures."
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "rendering": "editorial",
+  "palette": "cool-corporate",
+  "canvas": "1280x720",
+  "items": [
+    {
+      "id": "cover_bg",
+      "filename": "cover_bg.png",
+      "page_role": "hero_page",
+      "text_policy": "none",
+      "status": "Generated",
+      "aspect_ratio": "16:9",
+      "prompt": "Abstract infographic illustration of an expanding security attack surface in the AI era. A central circular core in deep navy blue represents traditional software supply chain. From this core, multiple radiating tendrils and expanding concentric rings in green #20A675 spread outward, representing new AI-era risk vectors: open-source LLMs, MCP toolchains, AI agent plugins, model weight files. The outermost rings are fragmented and glowing in blue #6096E6 with gold #FFC000 warning dots, symbolizing the dramatically expanded attack surface. Clean geometric style, flat vector aesthetic, professional government-tech tone. White background on the left side for text placement. No text, no labels, no characters. Pure abstract data visualization style."
+    }
+  ]
+}

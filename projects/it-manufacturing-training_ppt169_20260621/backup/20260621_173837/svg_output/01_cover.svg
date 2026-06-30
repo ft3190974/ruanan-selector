@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <linearGradient id="titleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#20A675"/>
+      <stop offset="100%" stop-color="#6096E6"/>
+    </linearGradient>
+    <linearGradient id="scrimGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.0"/>
+      <stop offset="70%" stop-color="#FFFFFF" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.85"/>
+    </linearGradient>
+  </defs>
+  <!-- Background image -->
+  <image x="0" y="0" width="1280" height="720" href="../images/cover_bg.png" preserveAspectRatio="xMidYMid slice"/>
+  <!-- Right-side scrim for text legibility -->
+  <rect x="0" y="0" width="1280" height="720" fill="url(#scrimGrad)"/>
+  <!-- Brand -->
+  <text x="80" y="60" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#20A675">软安科技</text>
+  <!-- Main title -->
+  <text x="80" y="240" font-family="'Microsoft YaHei', sans-serif" font-size="56" font-weight="bold" fill="#2D2D2D">软安科技产品解决方案培训</text>
+  <rect x="80" y="280" width="80" height="4" rx="2" fill="url(#titleGrad)"/>
+  <text x="80" y="340" font-family="'Microsoft YaHei', sans-serif" font-size="24" fill="#667580">IT制造行业 · 销售 &amp; 售前赋能</text>
+  <!-- Bottom info card -->
+  <rect x="80" y="440" width="360" height="70" rx="14" fill="#FFFFFF" fill-opacity="0.9" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="110" y="475" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">培训时长：60-90分钟  |  内部培训材料</text>
+  <text x="110" y="495" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">适用团队：销售经理 · 售前工程师</text>
+  <line x1="60" y1="680" x2="1220" y2="680" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="60" y="700" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580">CONFIDENTIAL · 软安科技</text>
+</svg>

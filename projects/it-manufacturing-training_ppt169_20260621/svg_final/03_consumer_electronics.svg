@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF" />
+  <rect x="0" y="0" width="1280" height="4" fill="#20A675" />
+  <path fill="#20A675" fill-opacity="0.1" d="M74,30 H166 A14,14 0 0 1 180,44 V48 A14,14 0 0 1 166,62 H74 A14,14 0 0 1 60,48 V44 A14,14 0 0 1 74,30 Z" />
+  <text x="120" y="52" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#20A675" font-weight="bold" text-anchor="middle">消费电子</text>
+  <text x="200" y="54" font-family="'Microsoft YaHei', sans-serif" font-size="32" font-weight="bold" fill="#2D2D2D">场景与需求描述</text>
+  <line x1="80" y1="78" x2="1200" y2="78" stroke="#E0E0E0" stroke-width="0.5" />
+  
+  <text x="80" y="120" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#20A675">场景描述</text>
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M74,140 H1206 A14,14 0 0 1 1220,154 V361 A14,14 0 0 1 1206,375 H74 A14,14 0 0 1 60,361 V154 A14,14 0 0 1 74,140 Z" />
+  
+  <path fill="#20A675" d="M91,162 H103 A6,6 0 0 1 109,168 V180 A6,6 0 0 1 103,186 H91 A6,6 0 0 1 85,180 V168 A6,6 0 0 1 91,162 Z" />
+  <text x="100" y="180" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle" font-weight="bold">1</text>
+  <text x="125" y="180" font-family="'Microsoft YaHei', sans-serif" font-size="16" fill="#2D2D2D">某消费电子品牌（手机/手表/耳机等）年出货千万级，产品线覆盖蓝牙、WiFi、NFC、UWB 多种无线协议</text>
+  <path fill="#20A675" d="M91,204 H103 A6,6 0 0 1 109,210 V222 A6,6 0 0 1 103,228 H91 A6,6 0 0 1 85,222 V210 A6,6 0 0 1 91,204 Z" />
+  <text x="100" y="222" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle" font-weight="bold">2</text>
+  <text x="125" y="222" font-family="'Microsoft YaHei', sans-serif" font-size="16" fill="#2D2D2D">固件基于开源 RTOS + Linux，集成了大量第三方开源组件（音频编解码、蓝牙协议栈、UI 框架等）</text>
+  <path fill="#20A675" d="M91,246 H103 A6,6 0 0 1 109,252 V264 A6,6 0 0 1 103,270 H91 A6,6 0 0 1 85,264 V252 A6,6 0 0 1 91,246 Z" />
+  <text x="100" y="264" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle" font-weight="bold">3</text>
+  <text x="125" y="264" font-family="'Microsoft YaHei', sans-serif" font-size="16" fill="#2D2D2D">新产品需通过行业认证及海外市场合规审查（如 EU CRA 网络安全弹性法案），对 SBOM 与许可证合规有严格要求</text>
+  <path fill="#20A675" d="M91,288 H103 A6,6 0 0 1 109,294 V306 A6,6 0 0 1 103,312 H91 A6,6 0 0 1 85,306 V294 A6,6 0 0 1 91,288 Z" />
+  <text x="100" y="306" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle" font-weight="bold">4</text>
+  <text x="125" y="306" font-family="'Microsoft YaHei', sans-serif" font-size="16" fill="#2D2D2D">部分第三方 SDK 仅提供二进制形态，无法进行源码级审计；产品开始集成端侧 AI 模型，引入新的供应链风险</text>
+  
+  <text x="80" y="410" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#6096E6">核心需求</text>
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M70,430 H610 A10,10 0 0 1 620,440 V468 A10,10 0 0 1 610,478 H70 A10,10 0 0 1 60,468 V440 A10,10 0 0 1 70,430 Z" />
+  <text x="90" y="460" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">固件成分透明化：每个固件镜像中的开源组件、版本、许可证一目了然</text>
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M70,486 H610 A10,10 0 0 1 620,496 V524 A10,10 0 0 1 610,534 H70 A10,10 0 0 1 60,524 V496 A10,10 0 0 1 70,486 Z" />
+  <text x="90" y="516" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">无线协议安全性：蓝牙/WiFi/NFC 协议栈漏洞检测与模糊测试</text>
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M70,542 H610 A10,10 0 0 1 620,552 V580 A10,10 0 0 1 610,590 H70 A10,10 0 0 1 60,580 V552 A10,10 0 0 1 70,542 Z" />
+  <text x="90" y="572" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">SBOM 交付能力：下游客户与监管机构要求的标准化软件物料清单</text>
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M650,430 H1210 A10,10 0 0 1 1220,440 V468 A10,10 0 0 1 1210,478 H650 A10,10 0 0 1 640,468 V440 A10,10 0 0 1 650,430 Z" />
+  <text x="670" y="460" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">二进制成分分析：第三方 SDK 无源码场景下的组件识别与风险发现</text>
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M650,486 H1210 A10,10 0 0 1 1220,496 V524 A10,10 0 0 1 1210,534 H650 A10,10 0 0 1 640,524 V496 A10,10 0 0 1 650,486 Z" />
+  <text x="670" y="516" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">AI 供应链安全：端侧大模型及云端 Skill 的组件依赖与许可证评估</text>
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M650,542 H1210 A10,10 0 0 1 1220,552 V580 A10,10 0 0 1 1210,590 H650 A10,10 0 0 1 640,580 V552 A10,10 0 0 1 650,542 Z" />
+  <text x="670" y="572" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">合规出口：满足 EU CRA / 信创等国内外合规审查要求</text>
+  <line x1="60" y1="650" x2="1200" y2="650" stroke="#E0E0E0" stroke-width="0.5" />
+  <text x="60" y="690" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580">软安科技 · IT制造培训</text>
+  <text x="1200" y="690" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580" text-anchor="end">03 / 14</text>
+</svg>

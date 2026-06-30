@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF"/>
+  <rect x="0" y="0" width="1280" height="4" fill="#20A675"/>
+  <text x="80" y="52" font-family="'Microsoft YaHei', sans-serif" font-size="32" font-weight="bold" fill="#2D2D2D">测试服务组合拳：10项服务 × 3大行业</text>
+  <text x="80" y="78" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">安全测试（6项）+ 审计咨询（4项），按客户阶段灵活搭配</text>
+  <line x1="80" y1="92" x2="1200" y2="92" stroke="#E0E0E0" stroke-width="0.5"/>
+  <!-- Left: 6 security testing -->
+  <text x="80" y="130" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#20A675">安全测试服务（6项）</text>
+  <rect x="60" y="150" width="580" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="90" y="180" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">BAT-SER 固件安全测试</text>
+  <text x="280" y="180" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580">固件解包+成分+漏洞全链路</text>
+  <rect x="60" y="206" width="580" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="90" y="236" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">FUZZ-SER Fuzz模糊测试</text>
+  <text x="280" y="236" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580">协议健壮性+异常注入测试</text>
+  <rect x="60" y="262" width="580" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="90" y="292" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">PENTEST 渗透测试服务</text>
+  <text x="280" y="292" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580">全场景攻击模拟+漏洞利用验证</text>
+  <rect x="60" y="318" width="580" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="90" y="348" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">SAST-AUDIT 代码审计测试</text>
+  <text x="280" y="348" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580">人工+工具双引擎审计</text>
+  <rect x="60" y="374" width="580" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="90" y="404" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">OSS-AUDIT 开源许可测试</text>
+  <text x="280" y="404" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580">许可证冲突+合规风险评估</text>
+  <rect x="60" y="430" width="580" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="90" y="460" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">SBOM-SER 软件成分分析测试</text>
+  <text x="280" y="460" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580">SBOM生成+漏洞关联+合规验证</text>
+  <!-- Right: 4 Audit services -->
+  <text x="640" y="130" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#6096E6">审计咨询服务（4项）</text>
+  <rect x="640" y="150" width="580" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="670" y="180" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">OSS-SER 开源许可咨询</text>
+  <text x="860" y="180" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580">许可证策略+合规体系建设</text>
+  <rect x="640" y="206" width="580" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="670" y="236" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">SAST-SER 编码规范咨询</text>
+  <text x="860" y="236" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580">MISRA/CERT/GJB落地指导</text>
+  <rect x="640" y="262" width="580" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="670" y="292" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">SDLC-SER 研发安全生命周期</text>
+  <text x="860" y="292" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580">安全左移+流程嵌入+度量体系</text>
+  <rect x="640" y="318" width="580" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="670" y="348" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">MST-SER 大模型安全检测</text>
+  <text x="860" y="348" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580">AI模型安全+Skill/Agent评估</text>
+  <!-- Bottom: Industry matching table -->
+  <text x="80" y="520" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#2D2D2D">行业推荐组合</text>
+  <rect x="60" y="540" width="370" height="55" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="245" y="573" font-family="'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#20A675" text-anchor="middle">消费电子</text>
+  <text x="245" y="590" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580" text-anchor="middle">BAT-SER+FUZZ-SER+OSS-SER</text>
+  <rect x="455" y="540" width="370" height="55" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="640" y="573" font-family="'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#6096E6" text-anchor="middle">网络安防设备</text>
+  <text x="640" y="590" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580" text-anchor="middle">BAT-SER+FUZZ-SER+PENTEST</text>
+  <rect x="850" y="540" width="370" height="55" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="1035" y="573" font-family="'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#FFC000" text-anchor="middle">具身智能</text>
+  <text x="1035" y="590" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580" text-anchor="middle">MST-SER+SAST-AUDIT+OSS-SER</text>
+  <line x1="60" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="60" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580">软安科技 · IT制造培训</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580" text-anchor="end">08 / 14</text>
+</svg>

@@ -1,0 +1,1 @@
+这是业界首个将开源大模型、MCP工具链、Skill插件纳入成分分析范围的SCA平台。可以识别Llama、Qwen、DeepSeek等主流大模型的供应链依赖，检测MCP服务端和Skill插件的开源组件与许可证，深入分析PyTorch、TensorFlow等框架的组成。关键是，这些AI组件与传统开源组件在同一个平台统一管控，不需要额外工具。

@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF"/>
+  <rect x="0" y="0" width="1280" height="4" fill="#FFC000"/>
+  <rect x="60" y="30" width="100" height="32" rx="14" fill="#FFC000" fill-opacity="0.1"/>
+  <text x="110" y="52" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFC000" font-weight="bold" text-anchor="middle">具身智能</text>
+  <text x="190" y="54" font-family="'Microsoft YaHei', sans-serif" font-size="32" font-weight="bold" fill="#2D2D2D">关键部门痛点与软安解决方案</text>
+  <line x1="80" y1="78" x2="1200" y2="78" stroke="#E0E0E0" stroke-width="0.5"/>
+  <!-- Row 1: AI算法 -->
+  <rect x="60" y="105" width="1160" height="120" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="60" y="105" width="200" height="120" rx="14" fill="#FFC000" fill-opacity="0.08"/>
+  <text x="160" y="155" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#FFC000" text-anchor="middle">AI / 算法部门</text>
+  <text x="160" y="180" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580" text-anchor="middle">大模型 · MCP · Skill</text>
+  <line x1="270" y1="125" x2="270" y2="205" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="295" y="145" font-family="'Microsoft YaHei', sans-serif" font-size="14" font-weight="bold" fill="#2D2D2D">痛点</text>
+  <text x="295" y="170" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">大模型供应链不透明 · MCP/Skill 依赖关系复杂 · 模型权重文件缺乏安全审计手段</text>
+  <text x="295" y="198" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">解决方案：</text>
+  <rect x="400" y="185" width="90" height="22" rx="10" fill="#FFC000" fill-opacity="0.1"/>
+  <text x="445" y="201" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#FFC000" text-anchor="middle">SCA 源兮</text>
+  <rect x="498" y="185" width="90" height="22" rx="10" fill="#20A675" fill-opacity="0.1"/>
+  <text x="543" y="201" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#20A675" text-anchor="middle">MST 智兮</text>
+  <rect x="596" y="185" width="110" height="22" rx="10" fill="#6096E6" fill-opacity="0.1"/>
+  <text x="651" y="201" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#6096E6" text-anchor="middle">GuardFox</text>
+  <!-- Row 2: 嵌入式 -->
+  <rect x="60" y="240" width="1160" height="120" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="60" y="240" width="200" height="120" rx="14" fill="#20A675" fill-opacity="0.08"/>
+  <text x="160" y="290" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#20A675" text-anchor="middle">嵌入式 / 系统部门</text>
+  <text x="160" y="315" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580" text-anchor="middle">RTOS · 传感器 · 驱动</text>
+  <line x1="270" y1="260" x2="270" y2="340" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="295" y="280" font-family="'Microsoft YaHei', sans-serif" font-size="14" font-weight="bold" fill="#2D2D2D">痛点</text>
+  <text x="295" y="305" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">RTOS 固件安全 · 传感器数据链路可靠性 · 开源中间件漏洞频发 · 编码规范难落地</text>
+  <text x="295" y="333" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">解决方案：</text>
+  <rect x="400" y="320" width="90" height="22" rx="10" fill="#20A675" fill-opacity="0.1"/>
+  <text x="445" y="336" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#20A675" text-anchor="middle">BAT 固兮</text>
+  <rect x="498" y="320" width="90" height="22" rx="10" fill="#6096E6" fill-opacity="0.1"/>
+  <text x="543" y="336" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#6096E6" text-anchor="middle">SAST 静兮</text>
+  <rect x="596" y="320" width="110" height="22" rx="10" fill="#FFC000" fill-opacity="0.1"/>
+  <text x="651" y="336" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#FFC000" text-anchor="middle">CodingHawk</text>
+  <!-- Row 3: 质量/合规 -->
+  <rect x="60" y="375" width="1160" height="120" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="60" y="375" width="200" height="120" rx="14" fill="#6096E6" fill-opacity="0.08"/>
+  <text x="160" y="425" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#6096E6" text-anchor="middle">质量 / 合规部门</text>
+  <text x="160" y="450" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580" text-anchor="middle">认证 · 审计 · SBOM</text>
+  <line x1="270" y1="395" x2="270" y2="475" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="295" y="415" font-family="'Microsoft YaHei', sans-serif" font-size="14" font-weight="bold" fill="#2D2D2D">痛点</text>
+  <text x="295" y="440" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">AI+嵌入式双重合规压力 · SBOM 格式不统一 · 信创与海外法规同时满足难度大</text>
+  <text x="295" y="468" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">解决方案：</text>
+  <rect x="400" y="455" width="120" height="22" rx="10" fill="#6096E6" fill-opacity="0.1"/>
+  <text x="460" y="471" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#6096E6" text-anchor="middle">SBOM-SER</text>
+  <rect x="528" y="455" width="120" height="22" rx="10" fill="#20A675" fill-opacity="0.1"/>
+  <text x="588" y="471" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#20A675" text-anchor="middle">OSS-SER</text>
+  <rect x="656" y="455" width="120" height="22" rx="10" fill="#FFC000" fill-opacity="0.1"/>
+  <text x="716" y="471" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#FFC000" text-anchor="middle">MST-SER</text>
+  <!-- Row 4: CTO/安全 -->
+  <rect x="60" y="510" width="1160" height="95" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="60" y="510" width="200" height="95" rx="14" fill="#51BA94" fill-opacity="0.08"/>
+  <text x="160" y="550" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#51BA94" text-anchor="middle">CTO / 安全团队</text>
+  <text x="160" y="575" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#667580" text-anchor="middle">安全体系 · 整体架构</text>
+  <line x1="270" y1="530" x2="270" y2="585" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="295" y="545" font-family="'Microsoft YaHei', sans-serif" font-size="14" font-weight="bold" fill="#2D2D2D">痛点</text>
+  <text x="295" y="570" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">AI+嵌入式双领域安全人才稀缺 · 缺乏统一安全治理平台 · 安全建设从零起步</text>
+  <text x="295" y="595" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">解决方案：</text>
+  <rect x="400" y="582" width="110" height="22" rx="10" fill="#20A675" fill-opacity="0.1"/>
+  <text x="455" y="598" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#20A675" text-anchor="middle">SDLC-SER</text>
+  <rect x="518" y="582" width="110" height="22" rx="10" fill="#6096E6" fill-opacity="0.1"/>
+  <text x="573" y="598" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#6096E6" text-anchor="middle">SAST-SER</text>
+  <rect x="636" y="582" width="110" height="22" rx="10" fill="#FFC000" fill-opacity="0.1"/>
+  <text x="691" y="598" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#FFC000" text-anchor="middle">MST-SER</text>
+  <line x1="60" y1="650" x2="1200" y2="650" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="60" y="690" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580">软安科技 · IT制造培训</text>
+  <text x="1200" y="690" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580" text-anchor="end">08 / 14</text>
+</svg>

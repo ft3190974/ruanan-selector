@@ -445,6 +445,8 @@ async def init_db():
     # Run migrations
     try: await db.execute("ALTER TABLE product_pages ADD COLUMN product_name TEXT DEFAULT ''")
     except: pass
+    try: await db.execute("ALTER TABLE product_pages ADD COLUMN specs TEXT DEFAULT ''")
+    except: pass
     # Create default admin (only if not exists)
     try:
         ph = hash_password(ADMIN_PWD)
@@ -2096,15 +2098,15 @@ async def get_product_page(pid: str):
     db = await get_db()
     try:
         row = await db_fetchone(db, "SELECT * FROM product_pages WHERE product_id=?", (safe_str(pid,50),))
-        return dict(row) if row else {"product_id":pid,"intro":"","detail":""}
+        return dict(row) if row else {"product_id":pid,"intro":"","detail":"","specs":""}
     finally: await db.close()
 
 @app.post("/api/product-pages")
-async def save_product_page(request: Request, product_id: str = Form(...), intro: str = Form(""), detail: str = Form(""), product_name: str = Form("")):
+async def save_product_page(request: Request, product_id: str = Form(...), intro: str = Form(""), detail: str = Form(""), product_name: str = Form(""), specs: str = Form("")):
     await require_admin(request)
     db = await get_db()
     try:
-        await db.execute("INSERT OR REPLACE INTO product_pages(product_id,product_name,intro,detail,updated_at) VALUES(?,?,?,?,datetime('now','localtime'))",(safe_str(product_id,50),safe_str(product_name,200),safe_str(intro,5000),safe_str(detail,20000)))
+        await db.execute("INSERT OR REPLACE INTO product_pages(product_id,product_name,intro,detail,specs,updated_at) VALUES(?,?,?,?,?,datetime('now','localtime'))",(safe_str(product_id,50),safe_str(product_name,200),safe_str(intro,5000),safe_str(detail,20000),safe_str(specs,20000)))
         await db.commit()
         return {"ok":True}
     finally: await db.close()

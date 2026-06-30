@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F5F7FA"/>
+    </linearGradient>
+    <linearGradient id="titleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#20A675"/>
+      <stop offset="100%" stop-color="#6096E6"/>
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#20A675" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#6096E6" stop-opacity="0.05"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bgGrad)"/>
+  <!-- Decorative geometric shield motif (right side) -->
+  <g transform="translate(880, 200)">
+    <!-- Large hexagon shield -->
+    <path d="M 0,-180 L 156,-90 L 156,90 L 0,180 L -156,90 L -156,-90 Z" fill="url(#shieldGrad)" stroke="#20A675" stroke-width="1" stroke-opacity="0.3"/>
+    <!-- Inner hex rings -->
+    <path d="M 0,-140 L 121,-70 L 121,70 L 0,140 L -121,70 L -121,-70 Z" fill="none" stroke="#20A675" stroke-width="0.8" stroke-opacity="0.2"/>
+    <path d="M 0,-100 L 86.6,-50 L 86.6,50 L 0,100 L -86.6,50 L -86.6,-50 Z" fill="none" stroke="#6096E6" stroke-width="0.8" stroke-opacity="0.25"/>
+    <!-- Center lock icon area -->
+    <circle cx="0" cy="0" r="24" fill="none" stroke="#20A675" stroke-width="2" stroke-opacity="0.5"/>
+    <line x1="0" y1="-12" x2="0" y2="8" stroke="#20A675" stroke-width="2.5" stroke-opacity="0.6"/>
+    <path d="M 0,-8 A 6 6 0 0 1 0,4" fill="none" stroke="#20A675" stroke-width="2.5" stroke-opacity="0.6"/>
+    <!-- Golden accent nodes -->
+    <circle cx="0" cy="-180" r="3" fill="#FFC000" fill-opacity="0.6"/>
+    <circle cx="156" cy="-90" r="2.5" fill="#FFC000" fill-opacity="0.4"/>
+    <circle cx="156" cy="90" r="2.5" fill="#FFC000" fill-opacity="0.4"/>
+    <circle cx="0" cy="180" r="3" fill="#FFC000" fill-opacity="0.6"/>
+    <circle cx="-156" cy="-90" r="2.5" fill="#FFC000" fill-opacity="0.4"/>
+    <circle cx="-156" cy="90" r="2.5" fill="#FFC000" fill-opacity="0.4"/>
+    <!-- Subtle data lines -->
+    <line x1="0" y1="0" x2="0" y2="-180" stroke="#6096E6" stroke-width="0.5" stroke-opacity="0.15"/>
+    <line x1="0" y1="0" x2="156" y2="-90" stroke="#6096E6" stroke-width="0.5" stroke-opacity="0.15"/>
+    <line x1="0" y1="0" x2="156" y2="90" stroke="#6096E6" stroke-width="0.5" stroke-opacity="0.15"/>
+    <line x1="0" y1="0" x2="0" y2="180" stroke="#6096E6" stroke-width="0.5" stroke-opacity="0.15"/>
+    <line x1="0" y1="0" x2="-156" y2="90" stroke="#6096E6" stroke-width="0.5" stroke-opacity="0.15"/>
+    <line x1="0" y1="0" x2="-156" y2="-90" stroke="#6096E6" stroke-width="0.5" stroke-opacity="0.15"/>
+  </g>
+  <!-- Top-left brand marker -->
+  <rect x="60" y="40" width="4" height="28" fill="#20A675"/>
+  <text x="74" y="60" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#20A675">软安科技</text>
+  <!-- Main title (conclusion-first = pyramid) -->
+  <text x="80" y="280" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="72" font-weight="bold" fill="url(#titleGrad)">AI时代软件供应链</text>
+  <text x="80" y="370" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="72" font-weight="bold" fill="url(#titleGrad)">安全新防线</text>
+  <!-- Subtitle / deck context -->
+  <rect x="80" y="420" width="60" height="2" fill="#20A675"/>
+  <text x="80" y="460" font-family="'Microsoft YaHei', Arial, sans-serif" font-size="24" fill="#445469">厦门税务 · 软安SCA解决方案</text>
+  <text x="80" y="500" font-family="SimSun, 'Times New Roman', serif" font-size="18" fill="#8F8F8F">源兮 — 源代码软件成分分析平台  |  2026.06</text>
+  <!-- Footer rule -->
+  <line x1="80" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="80" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F">CONFIDENTIAL · 软安科技</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F" text-anchor="end">01 / 12</text>
+</svg>

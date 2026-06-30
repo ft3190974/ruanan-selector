@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#F5F7FA" />
+    </linearGradient>
+    <linearGradient id="riskGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#20A675" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#20A675" stop-opacity="0.06" />
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bgGrad)" />
+  
+  <line x1="60" y1="0" x2="60" y2="70" stroke="#20A675" stroke-width="3" />
+  <text x="80" y="48" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="36" font-weight="bold" fill="#2D2D2D">AI开源浪潮下，政务软件供应链面临全新安全威胁</text>
+  <text x="80" y="82" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#8F8F8F" letter-spacing="1">三大挑战：AI风险面扩大 · 修复闭环难度大 · SCA需融入业务系统</text>
+  <line x1="80" y1="95" x2="1200" y2="95" stroke="#E0E0E0" stroke-width="0.5" />
+  
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M64,120 H516 A4,4 0 0 1 520,124 V596 A4,4 0 0 1 516,600 H64 A4,4 0 0 1 60,596 V124 A4,4 0 0 1 64,120 Z" />
+  
+  <g transform="translate(290, 360)">
+    
+    <circle cx="0" cy="0" r="45" fill="#20A675" fill-opacity="0.12" stroke="#20A675" stroke-width="2" />
+    <text x="0" y="5" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="14" font-weight="bold" fill="#20A675" text-anchor="middle">软件</text>
+    <text x="0" y="22" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="14" font-weight="bold" fill="#20A675" text-anchor="middle">供应链</text>
+    
+    <circle cx="0" cy="0" r="90" fill="none" stroke="#6096E6" stroke-width="1.5" stroke-opacity="0.3" stroke-dasharray="6 4" />
+    
+    <circle cx="0" cy="0" r="140" fill="none" stroke="#FFC000" stroke-width="1" stroke-opacity="0.25" stroke-dasharray="8 5" />
+    
+    
+    <circle cx="-100" cy="-70" r="28" fill="#20A675" fill-opacity="0.08" stroke="#20A675" stroke-width="1.5" />
+    <text x="-100" y="-74" font-family="'Microsoft YaHei', sans-serif" font-size="11" fill="#20A675" text-anchor="middle">AI模型</text>
+    <text x="-100" y="-60" font-family="'Microsoft YaHei', sans-serif" font-size="11" fill="#20A675" text-anchor="middle">MCP</text>
+    
+    <circle cx="100" cy="-60" r="28" fill="#6096E6" fill-opacity="0.08" stroke="#6096E6" stroke-width="1.5" />
+    <text x="100" y="-64" font-family="'Microsoft YaHei', sans-serif" font-size="11" fill="#6096E6" text-anchor="middle">漏洞</text>
+    <text x="100" y="-50" font-family="'Microsoft YaHei', sans-serif" font-size="11" fill="#6096E6" text-anchor="middle">修复</text>
+    
+    <circle cx="0" cy="100" r="28" fill="#FFC000" fill-opacity="0.08" stroke="#FFC000" stroke-width="1.5" />
+    <text x="0" y="96" font-family="'Microsoft YaHei', sans-serif" font-size="11" fill="#FFC000" text-anchor="middle">业务</text>
+    <text x="0" y="110" font-family="'Microsoft YaHei', sans-serif" font-size="11" fill="#FFC000" text-anchor="middle">系统</text>
+    
+    <line x1="-20" y1="-15" x2="-80" y2="-50" stroke="#20A675" stroke-width="1" stroke-opacity="0.3" />
+    <line x1="20" y1="-15" x2="80" y2="-40" stroke="#6096E6" stroke-width="1" stroke-opacity="0.3" />
+    <line x1="0" y1="45" x2="0" y2="75" stroke="#FFC000" stroke-width="1" stroke-opacity="0.3" />
+    
+    <circle cx="-150" cy="0" r="2" fill="#FFC000" fill-opacity="0.5" />
+    <circle cx="150" cy="20" r="2" fill="#FFC000" fill-opacity="0.4" />
+    <circle cx="-50" cy="-130" r="2" fill="#FFC000" fill-opacity="0.5" />
+    <circle cx="80" cy="-110" r="2" fill="#FFC000" fill-opacity="0.4" />
+    <circle cx="-120" cy="50" r="2" fill="#FFC000" fill-opacity="0.4" />
+  </g>
+  <text x="290" y="575" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F" text-anchor="middle">AI时代软件供应链三大威胁域</text>
+  
+  
+  <path fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5" d="M564,120 H1216 A4,4 0 0 1 1220,124 V246 A4,4 0 0 1 1216,250 H564 A4,4 0 0 1 560,246 V124 A4,4 0 0 1 564,120 Z" />
+  <rect x="560" y="120" width="4" height="130" fill="#20A675" />
+  <text x="590" y="155" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#2D2D2D">挑战一：智能时代的软件成分分析风险面加大</text>
+  <text x="590" y="185" font-family="SimSun, 'Times New Roman', serif" font-size="16" fill="#445469">开源大模型、MCP工具链、Skill插件等新型开源形态快速涌现，</text>
+  <text x="590" y="210" font-family="SimSun, 'Times New Roman', serif" font-size="16" fill="#445469">传统SCA检测范围已无法覆盖AI时代扩大的风险面</text>
+  
+  <path fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5" d="M564,270 H1216 A4,4 0 0 1 1220,274 V396 A4,4 0 0 1 1216,400 H564 A4,4 0 0 1 560,396 V274 A4,4 0 0 1 564,270 Z" />
+  <rect x="560" y="270" width="4" height="130" fill="#6096E6" />
+  <text x="590" y="305" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#2D2D2D">挑战二：开源风险多，修复闭环难度大</text>
+  <text x="590" y="335" font-family="SimSun, 'Times New Roman', serif" font-size="16" fill="#445469">从漏洞发现到修复验证链条长，缺乏AI辅助的自动修复能力，</text>
+  <text x="590" y="360" font-family="SimSun, 'Times New Roman', serif" font-size="16" fill="#445469">安全团队疲于应对海量告警，无法高效完成修复闭环</text>
+  
+  <path fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5" d="M564,420 H1216 A4,4 0 0 1 1220,424 V546 A4,4 0 0 1 1216,550 H564 A4,4 0 0 1 560,546 V424 A4,4 0 0 1 564,420 Z" />
+  <rect x="560" y="420" width="4" height="130" fill="#FFC000" />
+  <text x="590" y="455" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#2D2D2D">挑战三：SCA需要融入税务的业务系统</text>
+  <text x="590" y="485" font-family="SimSun, 'Times New Roman', serif" font-size="16" fill="#445469">安全工具不能是孤岛——需要通过MCP/API深度嵌入税务现有</text>
+  <text x="590" y="510" font-family="SimSun, 'Times New Roman', serif" font-size="16" fill="#445469">DevOps工具链和业务流程，实现自动化的安全检测闭环</text>
+  
+  <line x1="60" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5" />
+  <text x="60" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F">软安科技 · 厦门税务SCA方案</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F" text-anchor="end">02 / 12</text>
+</svg>

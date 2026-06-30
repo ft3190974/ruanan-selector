@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF" />
+  <rect x="0" y="0" width="1280" height="4" fill="#20A675" />
+  <path fill="#20A675" fill-opacity="0.1" d="M74,30 H166 A14,14 0 0 1 180,44 V48 A14,14 0 0 1 166,62 H74 A14,14 0 0 1 60,48 V44 A14,14 0 0 1 74,30 Z" />
+  <text x="120" y="52" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#20A675" font-weight="bold" text-anchor="middle">案例一</text>
+  <text x="200" y="54" font-family="'Microsoft YaHei', sans-serif" font-size="32" font-weight="bold" fill="#2D2D2D">消费电子场景 — 某智能手表品牌</text>
+  <line x1="80" y1="78" x2="1200" y2="78" stroke="#E0E0E0" stroke-width="0.5" />
+  
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M74,105 H1206 A14,14 0 0 1 1220,119 V291 A14,14 0 0 1 1206,305 H74 A14,14 0 0 1 60,291 V119 A14,14 0 0 1 74,105 Z" />
+  <text x="100" y="145" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#20A675">场景描述</text>
+  <text x="100" y="180" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">某智能手表品牌即将发布新品，其固件中有30+开源组件，产品支持蓝牙5.3/WiFi6/NFC，</text>
+  <text x="100" y="205" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">供应链管理方要求提供SBOM清单，且近期Watch OS曝出高危CVE漏洞。</text>
+  
+  <path fill="#FFC000" fill-opacity="0.15" d="M70,325 H610 A10,10 0 0 1 620,335 V355 A10,10 0 0 1 610,365 H70 A10,10 0 0 1 60,355 V335 A10,10 0 0 1 70,325 Z" />
+  <text x="90" y="352" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#FFC000">问：该客户的核心安全需求有哪些？推荐哪些产品组合？</text>
+  <text x="90" y="400" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">（请培训学员思考并讨论 2 分钟，然后翻页看答案）</text>
+  
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M74,430 H1206 A14,14 0 0 1 1220,444 V586 A14,14 0 0 1 1206,600 H74 A14,14 0 0 1 60,586 V444 A14,14 0 0 1 74,430 Z" />
+  <text x="100" y="470" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#20A675">答案与推演</text>
+  <text x="100" y="505" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#2D2D2D">1. 固件成分分析 → BAT（固兮）解包+识别30+开源组件</text>
+  <text x="100" y="530" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#2D2D2D">2. SBOM生成+许可证合规 → SCA（源兮）自动生成SBOM清单，满足供应链方要求</text>
+  <text x="100" y="555" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#2D2D2D">3. 蓝牙/WiFi/NFC协议安全 → FUZZ（侦兮）协议模糊测试</text>
+  <text x="100" y="580" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#2D2D2D">4. Watch OS漏洞验证 → GuardFox（洞兮）CVE验证+POC，快速评估影响</text>
+  <line x1="60" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5" />
+  <text x="60" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580">软安科技 · IT制造培训</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580" text-anchor="end">09 / 14</text>
+</svg>

@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <marker id="arrowG" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M 0,0 L 10,5 L 0,10 Z" fill="#20A675" />
+    </marker>
+  </defs>
+  <rect width="1280" height="720" fill="#FFFFFF" />
+  <line x1="60" y1="0" x2="60" y2="60" stroke="#20A675" stroke-width="3" />
+  <text x="80" y="42" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="36" font-weight="bold" fill="#2D2D2D">厦门税务SCA全流程嵌入——从代码到运维的安全闭环</text>
+  <text x="80" y="72" font-family="SimSun, 'Times New Roman', serif" font-size="18" fill="#445469">开发 → 采购 → 测试 → 运维，四阶段全生命周期供应链安全保障</text>
+  <line x1="80" y1="88" x2="1200" y2="88" stroke="#E0E0E0" stroke-width="0.5" />
+  
+  
+  <path fill="#F5F7FA" stroke="#20A675" stroke-width="1.5" d="M64,140 H316 A4,4 0 0 1 320,144 V376 A4,4 0 0 1 316,380 H64 A4,4 0 0 1 60,376 V144 A4,4 0 0 1 64,140 Z" />
+  <path fill="#20A675" d="M64,140 H316 A4,4 0 0 1 320,144 V172 A4,4 0 0 1 316,176 H64 A4,4 0 0 1 60,172 V144 A4,4 0 0 1 64,140 Z" />
+  <text x="190" y="163" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#FFFFFF" text-anchor="middle">01 开发阶段</text>
+  <g transform="translate(90, 195)">
+    <g transform="translate(0,0) scale(1.0,1.0)" stroke="#20A675" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8l-4 4l4 4" />
+  <path d="M17 8l4 4l-4 4" />
+  <path d="M14 4l-4 16" /></g>
+  </g>
+  <text x="130" y="215" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#2D2D2D">IDE插件 + MCP集成</text>
+  <text x="80" y="248" font-family="SimSun, 'Times New Roman', serif" font-size="13" fill="#445469">编码时实时成分分析</text>
+  <text x="80" y="270" font-family="SimSun, 'Times New Roman', serif" font-size="13" fill="#445469">开源组件导入即检测</text>
+  <text x="80" y="292" font-family="SimSun, 'Times New Roman', serif" font-size="13" fill="#445469">AI大模型/MCP/Skill识别</text>
+  <text x="80" y="330" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#20A675">安全左移到编码时刻</text>
+  
+  <line x1="320" y1="260" x2="365" y2="260" stroke="#20A675" stroke-width="2.5" marker-end="url(#arrowG)" />
+  
+  <path fill="#F5F7FA" stroke="#6096E6" stroke-width="1.5" d="M379,140 H631 A4,4 0 0 1 635,144 V376 A4,4 0 0 1 631,380 H379 A4,4 0 0 1 375,376 V144 A4,4 0 0 1 379,140 Z" />
+  <path fill="#6096E6" d="M379,140 H631 A4,4 0 0 1 635,144 V172 A4,4 0 0 1 631,176 H379 A4,4 0 0 1 375,172 V144 A4,4 0 0 1 379,140 Z" />
+  <text x="505" y="163" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#FFFFFF" text-anchor="middle">02 采购阶段</text>
+  <g transform="translate(405, 195)">
+    <g transform="translate(0,0) scale(1.0,1.0)" stroke="#6096E6" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20a2 2 0 1 0 -4 0a2 2 0 0 0 4 0" />
+  <path d="M16 4a2 2 0 1 0 -4 0a2 2 0 0 0 4 0" />
+  <path d="M16 20a2 2 0 1 0 -4 0a2 2 0 0 0 4 0" />
+  <path d="M11 12a2 2 0 1 0 -4 0a2 2 0 0 0 4 0" />
+  <path d="M21 12a2 2 0 1 0 -4 0a2 2 0 0 0 4 0" />
+  <path d="M5.058 18.306l2.88 -4.606" />
+  <path d="M10.061 10.303l2.877 -4.604" />
+  <path d="M10.065 13.705l2.876 4.6" />
+  <path d="M15.063 5.7l2.881 4.61" /></g>
+  </g>
+  <text x="445" y="215" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#2D2D2D">二进制SCA扫描</text>
+  <text x="395" y="248" font-family="SimSun, 'Times New Roman', serif" font-size="13" fill="#445469">开发商交付物上架前检测</text>
+  <text x="395" y="270" font-family="SimSun, 'Times New Roman', serif" font-size="13" fill="#445469">成分+漏洞+许可证三合一</text>
+  <text x="395" y="292" font-family="SimSun, 'Times New Roman', serif" font-size="13" fill="#445469">不满足安全要求不予上线</text>
+  <text x="395" y="330" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#6096E6">采购安全前置卡口</text>
+  
+  <line x1="635" y1="260" x2="680" y2="260" stroke="#20A675" stroke-width="2.5" marker-end="url(#arrowG)" />
+  
+  <path fill="#F5F7FA" stroke="#FFC000" stroke-width="1.5" d="M694,140 H946 A4,4 0 0 1 950,144 V376 A4,4 0 0 1 946,380 H694 A4,4 0 0 1 690,376 V144 A4,4 0 0 1 694,140 Z" />
+  <path fill="#FFC000" d="M694,140 H946 A4,4 0 0 1 950,144 V172 A4,4 0 0 1 946,176 H694 A4,4 0 0 1 690,172 V144 A4,4 0 0 1 694,140 Z" />
+  <text x="820" y="163" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#FFFFFF" text-anchor="middle">03 测试阶段</text>
+  <g transform="translate(720, 195)">
+    <g transform="translate(0,0) scale(1.0,1.0)" stroke="#FFC000" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3a12 12 0 0 0 8.5 3c.539 1.832 .627 3.747 .283 5.588" />
+  <path d="M15 18a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+  <path d="M20.2 20.2l1.8 1.8" /></g>
+  </g>
+  <text x="760" y="215" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#2D2D2D">CI/CD流水线集成</text>
+  <text x="710" y="248" font-family="SimSun, 'Times New Roman', serif" font-size="13" fill="#445469">自动化安全门禁</text>
+  <text x="710" y="270" font-family="SimSun, 'Times New Roman', serif" font-size="13" fill="#445469">不通过安全检测不合并</text>
+  <text x="710" y="292" font-family="SimSun, 'Times New Roman', serif" font-size="13" fill="#445469">回归检测 + 新引入检测</text>
+  <text x="710" y="330" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#FFC000">DevSecOps安全门禁</text>
+  
+  <line x1="950" y1="260" x2="995" y2="260" stroke="#20A675" stroke-width="2.5" marker-end="url(#arrowG)" />
+  
+  <path fill="#F5F7FA" stroke="#51BA94" stroke-width="1.5" d="M1009,140 H1216 A4,4 0 0 1 1220,144 V376 A4,4 0 0 1 1216,380 H1009 A4,4 0 0 1 1005,376 V144 A4,4 0 0 1 1009,140 Z" />
+  <path fill="#51BA94" d="M1009,140 H1216 A4,4 0 0 1 1220,144 V172 A4,4 0 0 1 1216,176 H1009 A4,4 0 0 1 1005,172 V144 A4,4 0 0 1 1009,140 Z" />
+  <text x="1112" y="163" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#FFFFFF" text-anchor="middle">04 运维阶段</text>
+  <g transform="translate(1030, 195)">
+    <g transform="translate(0,0) scale(1.0,1.0)" stroke="#51BA94" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
+  <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
+  <path d="M21 6.727a11.05 11.05 0 0 0 -2.794 -3.727" />
+  <path d="M3 6.727a11.05 11.05 0 0 1 2.792 -3.727" /></g>
+  </g>
+  <text x="1112" y="235" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#2D2D2D" text-anchor="middle">持续监控</text>
+  <text x="1112" y="268" font-family="SimSun, 'Times New Roman', serif" font-size="13" fill="#445469" text-anchor="middle">资产动态盘点</text>
+  <text x="1112" y="290" font-family="SimSun, 'Times New Roman', serif" font-size="13" fill="#445469" text-anchor="middle">新漏洞实时预警</text>
+  <text x="1112" y="330" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#51BA94" text-anchor="middle">安全生产持续保障</text>
+  
+  <path fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5" d="M64,420 H1216 A4,4 0 0 1 1220,424 V596 A4,4 0 0 1 1216,600 H64 A4,4 0 0 1 60,596 V424 A4,4 0 0 1 64,420 Z" />
+  <text x="640" y="455" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#2D2D2D" text-anchor="middle">厦门税务全流程SCA落地方案价值</text>
+  <line x1="200" y1="470" x2="1080" y2="470" stroke="#E0E0E0" stroke-width="0.5" />
+  <text x="120" y="510" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">开发阶段安全左移</text>
+  <text x="340" y="510" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">采购环节卡口前置</text>
+  <text x="560" y="510" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">CI/CD流水线自动化</text>
+  <text x="780" y="510" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">运维阶段持续保障</text>
+  <text x="120" y="545" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#20A675">编码即检测</text>
+  <text x="340" y="545" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#6096E6">不入库不上线</text>
+  <text x="560" y="545" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#FFC000">不合规不发布</text>
+  <text x="780" y="545" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#51BA94">全生命周期可见</text>
+  <line x1="60" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5" />
+  <text x="60" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F">软安科技 · 厦门税务SCA方案</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F" text-anchor="end">09 / 12</text>
+</svg>

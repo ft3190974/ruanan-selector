@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF"/>
+  <rect x="0" y="0" width="1280" height="4" fill="#20A675"/>
+  <rect x="60" y="30" width="120" height="32" rx="14" fill="#20A675" fill-opacity="0.1"/>
+  <text x="120" y="52" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#20A675" font-weight="bold" text-anchor="middle">案例四</text>
+  <text x="200" y="54" font-family="'Microsoft YaHei', sans-serif" font-size="32" font-weight="bold" fill="#2D2D2D">综合型客户 — 某电子制造集团</text>
+  <line x1="80" y1="78" x2="1200" y2="78" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="60" y="105" width="1160" height="175" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="100" y="145" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#20A675">场景描述</text>
+  <text x="100" y="180" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">某电子制造集团业务横跨消费电子（TWS耳机、智能手表）+ 网络设备（企业级AP），</text>
+  <text x="100" y="205" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">年出货量超千万台，设有独立安全部门，正在建设SDL安全开发流程。</text>
+  <text x="100" y="230" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">CIO希望一次性采购覆盖全产品线的安全方案，并与现有Jenkins CI/CD流程集成。</text>
+  <rect x="60" y="300" width="560" height="40" rx="10" fill="#FFC000" fill-opacity="0.15"/>
+  <text x="90" y="327" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#FFC000">问：跨业务线+工具链集成+SDL建设，如何设计全栈方案？</text>
+  <text x="90" y="375" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">（请培训学员思考并讨论 2 分钟）</text>
+  <rect x="60" y="405" width="1160" height="195" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="100" y="440" font-family="'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#20A675">答案与推演</text>
+  <text x="100" y="470" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#2D2D2D">1. 产品层面：SAST（代码）+ SCA（成分）+ BAT（固件）+ FUZZ（协议）+ GuardFox（漏洞验证）全覆盖</text>
+  <text x="100" y="495" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#2D2D2D">2. 集成层面：SCA MCP接口 + SAST Jenkins插件，嵌入CI/CD流水线，自动化安全门禁</text>
+  <text x="100" y="520" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#2D2D2D">3. SDL建设：SDLC-SER研发安全生命周期咨询 + SAST-SER编码规范 + OSS-SER开源许可体系</text>
+  <text x="100" y="545" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#2D2D2D">4. 服务保障：年度订阅+定期巡检+应急响应 SLA，确保持续安全运营</text>
+  <text x="100" y="575" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#20A675">关键话术："我们不只是卖工具，是帮您建设一套完整的软件供应链安全体系"</text>
+  <line x1="60" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="60" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580">软安科技 · IT制造培训</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580" text-anchor="end">12 / 14</text>
+</svg>

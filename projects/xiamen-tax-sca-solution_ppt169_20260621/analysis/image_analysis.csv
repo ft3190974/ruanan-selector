@@ -1,0 +1,67 @@
+No,Filename,Width,Height,AspectRatio,PixelAspectRatio,RatioSource,UsageCount,DisplayRatioVariants,AssetKind,SvgRenderable,PptxNativeSupported,SizeKB,Category,ImageArea_SxS,TextArea_SxS
+1,image11.png,452,606,1.02,0.75,manifest,1,1.02,bitmap,True,True,358.2,Near square,612x600,528x600
+2,image12.png,122,100,1.67,1.22,manifest,1,1.67,bitmap,True,True,1.9,Wide landscape,812x486,328x600
+3,image13.png,494,526,1.28,0.94,manifest,1,1.28,bitmap,True,True,139.7,Standard landscape,769x600,371x600
+4,image14.png,978,896,1.49,1.09,manifest,1,1.49,bitmap,True,True,179.6,Standard landscape,812x544,328x600
+5,image15.png,144,84,2.35,1.71,manifest,1,2.35,bitmap,True,True,5.4,Ultra-wide,812x346,328x600
+6,image16.png,74,54,1.37,1.37,manifest,1,1.37,bitmap,True,True,2.8,Standard landscape,822x600,318x600
+7,image17.png,854,400,2.93,2.13,manifest,1,2.93,bitmap,True,True,57.5,Ultra-wide,1160x396,1160x184
+8,image18.png,502,140,4.90,3.59,manifest,1,4.90,bitmap,True,True,10.0,Ultra-wide,1160x237,1160x343
+9,image19.png,60,51,1.48,1.18,manifest,1,1.48,bitmap,True,True,3.8,Standard landscape,812x548,328x600
+10,image2.jpeg,1187,642,1.85,1.85,manifest,2,1.85,bitmap,True,True,71.5,Wide landscape,812x439,328x600
+11,image20.png,208,86,3.00,2.42,manifest,1,3.00,bitmap,True,True,5.0,Ultra-wide,1160x387,1160x193
+12,image21.png,200,155,1.59,1.29,manifest,1,1.59,bitmap,True,True,31.8,Wide landscape,812x510,328x600
+13,image22.png,1004,1282,0.99,0.78,manifest,1,0.99,bitmap,True,True,530.5,Near square,593x600,547x600
+14,image23.png,1208,382,4.00,3.16,manifest,1,4.00,bitmap,True,True,131.1,Ultra-wide,1160x290,1160x290
+15,image24.png,262,262,1.26,1.00,manifest,1,1.26,bitmap,True,True,87.6,Standard landscape,754x600,386x600
+16,image25.png,796,432,2.33,1.84,manifest,1,2.33,bitmap,True,True,239.1,Ultra-wide,812x349,328x600
+17,image27.png,161,72,2.78,2.24,manifest,1,2.78,bitmap,True,True,7.5,Ultra-wide,1160x417,1160x163
+18,image28.png,384,217,1.72,1.77,manifest,1,1.72,bitmap,True,True,17.2,Wide landscape,812x472,328x600
+19,image29.png,100,90,1.09,1.11,manifest,1,1.09,bitmap,True,True,8.8,Near square,657x600,483x600
+20,image30.png,406,152,2.60,2.67,manifest,1,2.60,bitmap,True,True,28.1,Ultra-wide,812x312,328x600
+21,image31.png,180,134,1.30,1.34,manifest,1,1.30,bitmap,True,True,25.2,Standard landscape,783x600,357x600
+22,image32.png,72,68,1.03,1.06,manifest,1,1.03,bitmap,True,True,4.2,Near square,618x600,522x600
+23,image33.png,66,66,0.97,1.00,manifest,1,0.97,bitmap,True,True,4.6,Near square,584x600,556x600
+24,image34.png,190,74,3.17,2.57,manifest,1,3.17,bitmap,True,True,9.1,Ultra-wide,1160x366,1160x214
+25,image35.png,165,93,2.20,1.77,manifest,1,2.20,bitmap,True,True,14.8,Ultra-wide,812x369,328x600
+26,image36.png,200,200,1.00,1.00,manifest,1,1.00,bitmap,True,True,2.6,Near square,600x600,540x600
+27,image47.png,7680,4320,1.69,1.78,manifest,1,1.69,bitmap,True,True,1564.8,Wide landscape,812x482,328x600
+28,image48.jpeg,363,457,0.79,0.79,manifest,1,0.79,bitmap,True,True,31.6,Portrait,477x600,663x600
+29,image49.jpeg,1010,673,1.50,1.50,manifest,1,1.50,bitmap,True,True,72.8,Wide landscape,812x541,328x600
+30,image5.jpeg,200,133,1.50,1.50,manifest,2,1.50;1.50,bitmap,True,True,5.9,Wide landscape,812x540,328x600
+31,image50.jpeg,1200,260,4.62,4.62,manifest,1,4.62,bitmap,True,True,52.7,Ultra-wide,1160x251,1160x329
+32,image51.jpeg,1129,308,3.67,3.67,manifest,1,3.67,bitmap,True,True,64.1,Ultra-wide,1160x316,1160x264
+33,image52.png,1732,789,2.19,2.20,manifest,1,2.19,bitmap,True,True,119.4,Ultra-wide,812x370,328x600
+34,image53.png,632,636,0.99,0.99,manifest,1,0.99,bitmap,True,True,58.6,Near square,596x600,544x600
+35,image54.png,623,443,1.41,1.41,manifest,1,1.41,bitmap,True,True,37.1,Standard landscape,844x600,296x600
+36,image55.png,631,362,1.74,1.74,manifest,1,1.74,bitmap,True,True,12.7,Wide landscape,812x466,328x600
+37,image56.png,806,389,2.07,2.07,manifest,1,2.07,bitmap,True,True,25.8,Ultra-wide,812x392,328x600
+38,image57.png,1696,750,2.26,2.26,manifest,1,2.26,bitmap,True,True,148.8,Ultra-wide,812x359,328x600
+39,image58.jpeg,1010,709,1.42,1.42,manifest,1,1.42,bitmap,True,True,101.5,Standard landscape,855x600,285x600
+40,image59.jpeg,1326,650,2.04,2.04,manifest,1,2.04,bitmap,True,True,152.0,Ultra-wide,812x398,328x600
+41,image6.jpeg,648,427,1.52,1.52,manifest,1,1.52,bitmap,True,True,18.0,Wide landscape,812x536,328x600
+42,image60.jpeg,1339,220,6.09,6.09,manifest,1,6.09,bitmap,True,True,26.8,Ultra-wide,1160x191,1160x389
+43,image61.jpeg,952,586,1.62,1.62,manifest,1,1.62,bitmap,True,True,91.8,Wide landscape,812x500,328x600
+44,image62.jpeg,699,244,2.86,2.86,manifest,1,2.86,bitmap,True,True,21.0,Ultra-wide,1160x405,1160x175
+45,image63.png,2452,1456,1.68,1.68,manifest,1,1.68,bitmap,True,True,314.1,Wide landscape,812x482,328x600
+46,image64.png,2514,1204,2.09,2.09,manifest,1,2.09,bitmap,True,True,339.2,Ultra-wide,812x389,328x600
+47,image65.jpeg,1283,357,3.59,3.59,manifest,1,3.59,bitmap,True,True,57.2,Ultra-wide,1160x323,1160x257
+48,image66.jpeg,575,484,1.19,1.19,manifest,1,1.19,bitmap,True,True,58.5,Near square,713x600,427x600
+49,image67.jpeg,534,392,1.36,1.36,manifest,1,1.36,bitmap,True,True,34.7,Standard landscape,817x600,323x600
+50,image68.jpeg,1222,428,2.85,2.86,manifest,1,2.85,bitmap,True,True,56.1,Ultra-wide,1160x406,1160x174
+51,image69.jpeg,594,843,0.70,0.70,manifest,1,0.70,bitmap,True,True,157.0,Portrait,423x600,717x600
+52,image70.jpeg,489,707,0.69,0.69,manifest,1,0.69,bitmap,True,True,76.8,Portrait,415x600,725x600
+53,image71.png,2368,1276,1.86,1.86,manifest,1,1.86,bitmap,True,True,394.9,Wide landscape,812x438,328x600
+54,image72.png,2816,1330,2.12,2.12,manifest,1,2.12,bitmap,True,True,531.7,Ultra-wide,812x384,328x600
+55,image73.png,2678,1150,2.17,2.33,manifest,1,2.17,bitmap,True,True,585.4,Ultra-wide,812x375,328x600
+56,image74.png,1842,552,2.28,3.34,manifest,1,2.28,bitmap,True,True,225.9,Ultra-wide,812x357,328x600
+57,image75.png,1614,1290,1.25,1.25,manifest,1,1.25,bitmap,True,True,232.9,Standard landscape,751x600,389x600
+58,image76.png,2998,1152,2.60,2.60,manifest,1,2.60,bitmap,True,True,1719.3,Ultra-wide,812x312,328x600
+59,image77.png,2308,526,2.98,4.39,manifest,1,2.98,bitmap,True,True,161.6,Ultra-wide,1160x390,1160x190
+60,image78.png,2850,1160,2.46,2.46,manifest,1,2.46,bitmap,True,True,346.7,Ultra-wide,812x331,328x600
+61,image79.png,1450,920,1.58,1.58,manifest,1,1.58,bitmap,True,True,101.0,Wide landscape,812x515,328x600
+62,image80.png,2056,1152,1.79,1.78,manifest,1,1.79,bitmap,True,True,125.1,Wide landscape,812x455,328x600
+63,image81.png,1950,1072,1.82,1.82,manifest,1,1.82,bitmap,True,True,590.1,Wide landscape,812x446,328x600
+64,image82.png,2290,724,3.55,3.16,manifest,1,3.55,bitmap,True,True,261.7,Ultra-wide,1160x327,1160x253
+65,image83.png,2158,1398,2.01,1.54,manifest,1,2.01,bitmap,True,True,449.7,Ultra-wide,812x404,328x600
+66,image84.png,1754,1640,1.07,1.07,manifest,1,1.07,bitmap,True,True,266.1,Near square,642x600,498x600

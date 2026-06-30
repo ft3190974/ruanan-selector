@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF"/>
+  <rect x="0" y="0" width="1280" height="4" fill="#FFC000"/>
+  <rect x="60" y="30" width="160" height="32" rx="14" fill="#FFC000" fill-opacity="0.1"/>
+  <text x="140" y="52" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFC000" font-weight="bold" text-anchor="middle">具身智能</text>
+  <text x="240" y="54" font-family="'Microsoft YaHei', sans-serif" font-size="32" font-weight="bold" fill="#2D2D2D">需求痛点与软安解决方案</text>
+  <line x1="80" y1="78" x2="1200" y2="78" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="80" y="120" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#FFC000">痛点分析</text>
+  <rect x="60" y="145" width="560" height="100" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="60" y="145" width="6" height="100" rx="3" fill="#FFC000"/>
+  <text x="90" y="180" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#2D2D2D">痛点1：AI模型+固件双重供应链风险</text>
+  <text x="90" y="208" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">机器人搭载开源大模型/MCP/Skill，同时依赖嵌入式固件，双重攻击面</text>
+  <text x="90" y="230" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFC000">→ SCA（源兮）AI组件成分分析 + BAT（固兮）固件二进制检测</text>
+  <rect x="60" y="260" width="560" height="100" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="60" y="260" width="6" height="100" rx="3" fill="#20A675"/>
+  <text x="90" y="295" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#2D2D2D">痛点2：传感器与实时OS安全</text>
+  <text x="90" y="323" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">激光雷达/IMU/深度相机数据完整性，RTOS内核漏洞难以检测</text>
+  <text x="90" y="345" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#20A675">→ SAST（静兮）代码质量检测 + GuardFox漏洞分析验证</text>
+  <rect x="60" y="375" width="560" height="100" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="60" y="375" width="6" height="100" rx="3" fill="#6096E6"/>
+  <text x="90" y="410" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#2D2D2D">痛点3：国产化+合规双重压力</text>
+  <text x="90" y="438" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#667580">信创环境下开源合规、SBOM交付、自主可控要求越来越高</text>
+  <text x="90" y="460" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#6096E6">→ SCA许可证合规 + SBOM服务 + 开源许可咨询服务</text>
+  <text x="680" y="120" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#FFC000">推荐方案组合</text>
+  <rect x="660" y="145" width="560" height="440" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="690" y="180" width="200" height="60" rx="14" fill="#FFC000"/>
+  <text x="790" y="218" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF" text-anchor="middle">SCA 源兮</text>
+  <text x="900" y="200" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">AI组件+开源成分分析</text>
+  <text x="900" y="222" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">大模型/MCP/Skill全覆盖</text>
+  <rect x="690" y="260" width="200" height="60" rx="14" fill="#20A675"/>
+  <text x="790" y="298" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF" text-anchor="middle">BAT 固兮</text>
+  <text x="900" y="280" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">固件二进制安全检测</text>
+  <text x="900" y="302" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">嵌入式系统 / RTOS支持</text>
+  <rect x="690" y="340" width="200" height="60" rx="14" fill="#6096E6"/>
+  <text x="790" y="378" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF" text-anchor="middle">SAST 静兮</text>
+  <text x="900" y="360" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">代码静态质量与安全检测</text>
+  <text x="900" y="382" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">18+语言 / MISRA/CERT/GJB</text>
+  <rect x="690" y="420" width="200" height="60" rx="14" fill="#FFC000" fill-opacity="0.7"/>
+  <text x="790" y="458" font-family="'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF" text-anchor="middle">GuardFox 洞兮</text>
+  <text x="900" y="440" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">CVE验证+POC生成</text>
+  <text x="900" y="462" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">漏洞优先级评估</text>
+  <text x="830" y="520" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#667580">+ 开源许可咨询 / SBOM服务 / 大模型安全检测(MST)</text>
+  <line x1="60" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="60" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580">软安科技 · IT制造培训</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580" text-anchor="end">05 / 14</text>
+</svg>

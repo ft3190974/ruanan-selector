@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF"/>
+  <line x1="60" y1="0" x2="60" y2="60" stroke="#20A675" stroke-width="3"/>
+  <text x="80" y="42" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="36" font-weight="bold" fill="#2D2D2D">核心能力四：主动预警、快速盘点——让安全团队先于攻击者行动</text>
+  <text x="80" y="72" font-family="SimSun, 'Times New Roman', serif" font-size="18" fill="#445469">实时全球漏洞情报监控 · 一键盘点全量软件资产安全状态</text>
+  <line x1="80" y1="88" x2="1200" y2="88" stroke="#E0E0E0" stroke-width="0.5"/>
+  <!-- Top: Warning timeline -->
+  <rect x="60" y="110" width="1160" height="240" rx="4" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="640" y="145" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#2D2D2D" text-anchor="middle">实时安全预警机制</text>
+  <!-- Timeline -->
+  <line x1="120" y1="210" x2="1160" y2="210" stroke="#E0E0E0" stroke-width="2"/>
+  <!-- Node 1 -->
+  <circle cx="200" cy="210" r="10" fill="#FFFFFF" stroke="#20A675" stroke-width="2.5"/>
+  <text x="200" y="245" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#2D2D2D" text-anchor="middle">情报采集</text>
+  <text x="200" y="268" font-family="SimSun, 'Times New Roman', serif" font-size="12" fill="#8F8F8F" text-anchor="middle">CVE/NVD/CNVD</text>
+  <text x="200" y="286" font-family="SimSun, 'Times New Roman', serif" font-size="12" fill="#8F8F8F" text-anchor="middle">全球实时同步</text>
+  <line x1="240" y1="210" x2="420" y2="210" stroke="#E0E0E0" stroke-width="1.5"/>
+  <polygon points="415,205 425,210 415,215" fill="#E0E0E0"/>
+  <!-- Node 2 -->
+  <circle cx="520" cy="210" r="10" fill="#FFFFFF" stroke="#6096E6" stroke-width="2.5"/>
+  <text x="520" y="245" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#2D2D2D" text-anchor="middle">智能匹配</text>
+  <text x="520" y="268" font-family="SimSun, 'Times New Roman', serif" font-size="12" fill="#8F8F8F" text-anchor="middle">组件级精准推送</text>
+  <text x="520" y="286" font-family="SimSun, 'Times New Roman', serif" font-size="12" fill="#8F8F8F" text-anchor="middle">仅推送受影响资产</text>
+  <line x1="560" y1="210" x2="740" y2="210" stroke="#E0E0E0" stroke-width="1.5"/>
+  <polygon points="735,205 745,210 735,215" fill="#E0E0E0"/>
+  <!-- Node 3 -->
+  <circle cx="840" cy="210" r="10" fill="#FFFFFF" stroke="#FFC000" stroke-width="2.5"/>
+  <text x="840" y="245" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#2D2D2D" text-anchor="middle">优先级排序</text>
+  <text x="840" y="268" font-family="SimSun, 'Times New Roman', serif" font-size="12" fill="#8F8F8F" text-anchor="middle">CVSS + 业务影响</text>
+  <text x="840" y="286" font-family="SimSun, 'Times New Roman', serif" font-size="12" fill="#8F8F8F" text-anchor="middle">双维度评分模型</text>
+  <line x1="880" y1="210" x2="1060" y2="210" stroke="#E0E0E0" stroke-width="1.5"/>
+  <polygon points="1055,205 1065,210 1055,215" fill="#E0E0E0"/>
+  <!-- Node 4 -->
+  <circle cx="1120" cy="210" r="10" fill="#FFFFFF" stroke="#20A675" stroke-width="2.5"/>
+  <text x="1120" y="245" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="15" font-weight="bold" fill="#2D2D2D" text-anchor="middle">即时响应</text>
+  <text x="1120" y="268" font-family="SimSun, 'Times New Roman', serif" font-size="12" fill="#8F8F8F" text-anchor="middle">0day爆发分钟级</text>
+  <text x="1120" y="286" font-family="SimSun, 'Times New Roman', serif" font-size="12" fill="#8F8F8F" text-anchor="middle">定位受影响资产</text>
+  <!-- Bottom: Asset dashboard -->
+  <text x="640" y="380" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#2D2D2D" text-anchor="middle">资产快速盘点能力</text>
+  <!-- 4 KPI cards -->
+  <rect x="60" y="410" width="270" height="160" rx="4" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5"/>
+  <g transform="translate(80, 430)">
+    <g transform="translate(0,0) scale(1.1666666666666667,1.1666666666666667)" stroke="#20A675" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12h-8a1 1 0 1 0 -1 1v8a9 9 0 0 0 9 -9" />
+  <path d="M16 9a5 5 0 1 0 -7 7" />
+  <path d="M20.486 9a9 9 0 1 0 -11.482 11.495" /></g>
+  </g>
+  <text x="195" y="480" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#2D2D2D" text-anchor="middle">自动发现</text>
+  <text x="195" y="512" font-family="SimSun, 'Times New Roman', serif" font-size="14" fill="#445469" text-anchor="middle">全量开源组件自动识别</text>
+  <text x="195" y="536" font-family="SimSun, 'Times New Roman', serif" font-size="14" fill="#445469" text-anchor="middle">生成完整资产清单</text>
+  <rect x="350" y="410" width="270" height="160" rx="4" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5"/>
+  <g transform="translate(370, 430)">
+    <g transform="translate(0,0) scale(1.1666666666666667,1.1666666666666667)" stroke="#6096E6" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -6" />
+  <path d="M15 9a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -10" />
+  <path d="M9 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -14" />
+  <path d="M4 20h14" /></g>
+  </g>
+  <text x="485" y="480" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#2D2D2D" text-anchor="middle">风险可视化</text>
+  <text x="485" y="512" font-family="SimSun, 'Times New Roman', serif" font-size="14" fill="#445469" text-anchor="middle">资产安全态势总览</text>
+  <text x="485" y="536" font-family="SimSun, 'Times New Roman', serif" font-size="14" fill="#445469" text-anchor="middle">多维度风险评估</text>
+  <rect x="640" y="410" width="270" height="160" rx="4" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5"/>
+  <g transform="translate(660, 430)">
+    <g transform="translate(0,0) scale(1.1666666666666667,1.1666666666666667)" stroke="#FFC000" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+  <path d="M12 7a5 5 0 1 0 5 5" />
+  <path d="M13 3.055a9 9 0 1 0 7.941 7.945" />
+  <path d="M15 6v3h3l3 -3h-3v-3l-3 3" />
+  <path d="M15 9l-3 3" /></g>
+  </g>
+  <text x="775" y="480" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#2D2D2D" text-anchor="middle">秒级定位</text>
+  <text x="775" y="512" font-family="SimSun, 'Times New Roman', serif" font-size="14" fill="#445469" text-anchor="middle">0day爆发后快速检索</text>
+  <text x="775" y="536" font-family="SimSun, 'Times New Roman', serif" font-size="14" fill="#445469" text-anchor="middle">受影响资产秒级清单</text>
+  <rect x="930" y="410" width="270" height="160" rx="4" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5"/>
+  <g transform="translate(950, 430)">
+    <g transform="translate(0,0) scale(1.1666666666666667,1.1666666666666667)" stroke="#51BA94" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
+  <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
+  <path d="M21 6.727a11.05 11.05 0 0 0 -2.794 -3.727" />
+  <path d="M3 6.727a11.05 11.05 0 0 1 2.792 -3.727" /></g>
+  </g>
+  <text x="1065" y="480" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#2D2D2D" text-anchor="middle">持续监控</text>
+  <text x="1065" y="512" font-family="SimSun, 'Times New Roman', serif" font-size="14" fill="#445469" text-anchor="middle">新漏洞自动触发</text>
+  <text x="1065" y="536" font-family="SimSun, 'Times New Roman', serif" font-size="14" fill="#445469" text-anchor="middle">资产安全持续追踪</text>
+  <line x1="60" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="60" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F">软安科技 · 厦门税务SCA方案</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F" text-anchor="end">07 / 12</text>
+</svg>

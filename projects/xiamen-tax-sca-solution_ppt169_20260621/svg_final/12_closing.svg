@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#F5F7FA" />
+    </linearGradient>
+    <linearGradient id="titleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#20A675" />
+      <stop offset="100%" stop-color="#6096E6" />
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bgGrad)" />
+  
+  <text x="640" y="260" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="64" font-weight="bold" fill="url(#titleGrad)" text-anchor="middle">谢谢</text>
+  <rect x="540" y="295" width="200" height="2" fill="#20A675" />
+  <text x="640" y="350" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="28" font-weight="bold" fill="#2D2D2D" text-anchor="middle">为厦门税务软件供应链安全保驾护航</text>
+  <text x="640" y="410" font-family="SimSun, 'Times New Roman', serif" font-size="18" fill="#445469" text-anchor="middle">软安科技 · 源兮SCA — AI时代全场景软件成分分析平台</text>
+  
+  <path fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5" d="M404,460 H876 A4,4 0 0 1 880,464 V556 A4,4 0 0 1 876,560 H404 A4,4 0 0 1 400,556 V464 A4,4 0 0 1 404,460 Z" />
+  <text x="640" y="495" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D" text-anchor="middle">www.ruanan.com  |  400-XXX-XXXX</text>
+  <text x="640" y="525" font-family="SimSun, 'Times New Roman', serif" font-size="14" fill="#8F8F8F" text-anchor="middle">期待与厦门税务携手构建软件供应链安全体系</text>
+  
+  <line x1="60" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5" />
+  <text x="60" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F">软安科技 · 厦门税务SCA方案</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F" text-anchor="end">12 / 12</text>
+</svg>

@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF" />
+  <line x1="60" y1="0" x2="60" y2="60" stroke="#20A675" stroke-width="3" />
+  <text x="80" y="42" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="36" font-weight="bold" fill="#2D2D2D">核心能力二：源码+二进制双模检测，100T+数据库驱动</text>
+  <text x="80" y="72" font-family="SimSun, 'Times New Roman', serif" font-size="18" fill="#445469">解决开发商交付二进制制品的成分盲区，全格式覆盖深入检测</text>
+  <line x1="80" y1="88" x2="1200" y2="88" stroke="#E0E0E0" stroke-width="0.5" />
+  
+  <path fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5" d="M64,115 H426 A4,4 0 0 1 430,119 V291 A4,4 0 0 1 426,295 H64 A4,4 0 0 1 60,291 V119 A4,4 0 0 1 64,115 Z" />
+  <g transform="translate(80, 135)">
+    <g transform="translate(0,0) scale(1.1666666666666667,1.1666666666666667)" stroke="#20A675" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8l-4 4l4 4" />
+  <path d="M17 8l4 4l-4 4" />
+  <path d="M14 4l-4 16" /></g>
+  </g>
+  <text x="120" y="158" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#2D2D2D">源码分析引擎</text>
+  <text x="90" y="190" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">跨文件跨函数上下文追踪</text>
+  <text x="90" y="212" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">20+语言全量覆盖</text>
+  <text x="90" y="234" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">Java 0%误报，C/C++ &lt;10%误报</text>
+  <text x="90" y="262" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#20A675">编译型检测 · 非正则匹配</text>
+
+  <path fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5" d="M459,115 H821 A4,4 0 0 1 825,119 V291 A4,4 0 0 1 821,295 H459 A4,4 0 0 1 455,291 V119 A4,4 0 0 1 459,115 Z" />
+  <g transform="translate(475, 135)">
+    <g transform="translate(0,0) scale(1.1666666666666667,1.1666666666666667)" stroke="#6096E6" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20a2 2 0 1 0 -4 0a2 2 0 0 0 4 0" />
+  <path d="M16 4a2 2 0 1 0 -4 0a2 2 0 0 0 4 0" />
+  <path d="M16 20a2 2 0 1 0 -4 0a2 2 0 0 0 4 0" />
+  <path d="M11 12a2 2 0 1 0 -4 0a2 2 0 0 0 4 0" />
+  <path d="M21 12a2 2 0 1 0 -4 0a2 2 0 0 0 4 0" />
+  <path d="M5.058 18.306l2.88 -4.606" />
+  <path d="M10.061 10.303l2.877 -4.604" />
+  <path d="M10.065 13.705l2.876 4.6" />
+  <path d="M15.063 5.7l2.881 4.61" /></g>
+  </g>
+  <text x="515" y="158" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#2D2D2D">二进制分析引擎</text>
+  <text x="485" y="190" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">100+格式全兼容</text>
+  <text x="485" y="212" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">无源码场景下提取组件指纹</text>
+  <text x="485" y="234" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">反编译→特征提取→知识库匹配</text>
+  <text x="485" y="262" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#6096E6">覆盖税务采购二进制场景</text>
+
+  <path fill="#FFFFFF" stroke="#E0E0E0" stroke-width="0.5" d="M854,115 H1216 A4,4 0 0 1 1220,119 V291 A4,4 0 0 1 1216,295 H854 A4,4 0 0 1 850,291 V119 A4,4 0 0 1 854,115 Z" />
+  <g transform="translate(870, 135)">
+    <g transform="translate(0,0) scale(1.1666666666666667,1.1666666666666667)" stroke="#FFC000" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6a8 3 0 1 0 16 0a8 3 0 1 0 -16 0" />
+  <path d="M4 6v6a8 3 0 0 0 16 0v-6" />
+  <path d="M4 12v6a8 3 0 0 0 16 0v-6" /></g>
+  </g>
+  <text x="910" y="158" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="20" font-weight="bold" fill="#2D2D2D">100T+知识库</text>
+  <text x="880" y="190" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">全球最大开源组件知识库</text>
+  <text x="880" y="212" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">3000万+组件版本</text>
+  <text x="880" y="234" font-family="SimSun, 'Times New Roman', serif" font-size="15" fill="#445469">含AI大模型/MCP/Skill组件</text>
+  <text x="880" y="262" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#FFC000">持续更新 · 实时同步</text>
+  
+  <path fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5" d="M64,320 H1216 A4,4 0 0 1 1220,324 V576 A4,4 0 0 1 1216,580 H64 A4,4 0 0 1 60,576 V324 A4,4 0 0 1 64,320 Z" />
+  <text x="640" y="355" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#2D2D2D" text-anchor="middle">开发商交付二进制制品分析流程</text>
+  
+  <path fill="#FFFFFF" stroke="#20A675" stroke-width="1.5" d="M104,390 H266 A4,4 0 0 1 270,394 V456 A4,4 0 0 1 266,460 H104 A4,4 0 0 1 100,456 V394 A4,4 0 0 1 104,390 Z" />
+  <text x="185" y="420" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#20A675" text-anchor="middle">二进制输入</text>
+  <text x="185" y="442" font-family="SimSun, 'Times New Roman', serif" font-size="12" fill="#8F8F8F" text-anchor="middle">100+格式自动识别</text>
+  
+  <line x1="270" y1="425" x2="310" y2="425" stroke="#E0E0E0" stroke-width="2" />
+  <polygon points="310,420 322,425 310,430" fill="#E0E0E0" />
+  <path fill="#FFFFFF" stroke="#6096E6" stroke-width="1.5" d="M329,390 H491 A4,4 0 0 1 495,394 V456 A4,4 0 0 1 491,460 H329 A4,4 0 0 1 325,456 V394 A4,4 0 0 1 329,390 Z" />
+  <text x="410" y="420" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#6096E6" text-anchor="middle">反编译</text>
+  <text x="410" y="442" font-family="SimSun, 'Times New Roman', serif" font-size="12" fill="#8F8F8F" text-anchor="middle">深度代码结构还原</text>
+  <line x1="495" y1="425" x2="535" y2="425" stroke="#E0E0E0" stroke-width="2" />
+  <polygon points="535,420 547,425 535,430" fill="#E0E0E0" />
+  <path fill="#FFFFFF" stroke="#20A675" stroke-width="1.5" d="M554,390 H716 A4,4 0 0 1 720,394 V456 A4,4 0 0 1 716,460 H554 A4,4 0 0 1 550,456 V394 A4,4 0 0 1 554,390 Z" />
+  <text x="635" y="420" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#20A675" text-anchor="middle">指纹提取</text>
+  <text x="635" y="442" font-family="SimSun, 'Times New Roman', serif" font-size="12" fill="#8F8F8F" text-anchor="middle">组件级数字指纹生成</text>
+  <line x1="720" y1="425" x2="760" y2="425" stroke="#E0E0E0" stroke-width="2" />
+  <polygon points="760,420 772,425 760,430" fill="#E0E0E0" />
+  <path fill="#FFFFFF" stroke="#FFC000" stroke-width="1.5" d="M779,390 H941 A4,4 0 0 1 945,394 V456 A4,4 0 0 1 941,460 H779 A4,4 0 0 1 775,456 V394 A4,4 0 0 1 779,390 Z" />
+  <text x="860" y="420" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#FFC000" text-anchor="middle">知识库匹配</text>
+  <text x="860" y="442" font-family="SimSun, 'Times New Roman', serif" font-size="12" fill="#8F8F8F" text-anchor="middle">100T+组件版本对比</text>
+  <line x1="945" y1="425" x2="985" y2="425" stroke="#E0E0E0" stroke-width="2" />
+  <polygon points="985,420 997,425 985,430" fill="#E0E0E0" />
+  <path fill="#FFFFFF" stroke="#51BA94" stroke-width="1.5" d="M1004,390 H1166 A4,4 0 0 1 1170,394 V456 A4,4 0 0 1 1166,460 H1004 A4,4 0 0 1 1000,456 V394 A4,4 0 0 1 1004,390 Z" />
+  <text x="1085" y="420" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#51BA94" text-anchor="middle">风险报告</text>
+  <text x="1085" y="442" font-family="SimSun, 'Times New Roman', serif" font-size="12" fill="#8F8F8F" text-anchor="middle">漏洞+许可证+SBOM</text>
+  
+  <text x="640" y="555" font-family="'Microsoft YaHei', sans-serif" font-size="13" fill="#8F8F8F" text-anchor="middle">适用于税务系统采购软件、ISV交付物、遗留系统的安全检测场景</text>
+  <line x1="60" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5" />
+  <text x="60" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F">软安科技 · 厦门税务SCA方案</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F" text-anchor="end">05 / 12</text>
+</svg>

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#FFFFFF"/>
+  <rect x="0" y="0" width="1280" height="4" fill="#FFC000"/>
+  <rect x="60" y="30" width="100" height="32" rx="14" fill="#FFC000" fill-opacity="0.1"/>
+  <text x="110" y="52" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFC000" font-weight="bold" text-anchor="middle">具身智能</text>
+  <text x="190" y="54" font-family="'Microsoft YaHei', sans-serif" font-size="32" font-weight="bold" fill="#2D2D2D">场景与需求描述</text>
+  <line x1="80" y1="78" x2="1200" y2="78" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="80" y="120" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#FFC000">场景描述</text>
+  <rect x="60" y="140" width="1160" height="235" rx="14" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <rect x="85" y="162" width="24" height="24" rx="6" fill="#FFC000"/>
+  <text x="100" y="180" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle" font-weight="bold">1</text>
+  <text x="125" y="180" font-family="'Microsoft YaHei', sans-serif" font-size="16" fill="#2D2D2D">某服务机器人公司新产品搭载开源大模型做语音/NLP 交互，通过 MCP 协议调用外部 Skill 插件扩展能力</text>
+  <rect x="85" y="204" width="24" height="24" rx="6" fill="#FFC000"/>
+  <text x="100" y="222" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle" font-weight="bold">2</text>
+  <text x="125" y="222" font-family="'Microsoft YaHei', sans-serif" font-size="16" fill="#2D2D2D">底层运行 RTOS/Linux 嵌入式系统，集成激光雷达、IMU、深度相机等传感器驱动，大量依赖开源中间件</text>
+  <rect x="85" y="246" width="24" height="24" rx="6" fill="#FFC000"/>
+  <text x="100" y="264" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle" font-weight="bold">3</text>
+  <text x="125" y="264" font-family="'Microsoft YaHei', sans-serif" font-size="16" fill="#2D2D2D">CTO 最关心的三个字：AI 供应链——大模型哪里来的？MCP/Skill 依赖了哪些开源组件？固件有没有已知漏洞？</text>
+  <rect x="85" y="288" width="24" height="24" rx="6" fill="#FFC000"/>
+  <text x="100" y="306" font-family="'Microsoft YaHei', sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle" font-weight="bold">4</text>
+  <text x="125" y="306" font-family="'Microsoft YaHei', sans-serif" font-size="16" fill="#2D2D2D">信创+出海双重要求：国内需满足信创合规，海外需符合 EU CRA 等法规，SBOM 与许可证清单是刚需</text>
+  <text x="80" y="410" font-family="'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#20A675">核心需求</text>
+  <rect x="60" y="430" width="560" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="90" y="460" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">AI 供应链透明化：大模型+MCP+Skill 全链路组件识别与风险评估</text>
+  <rect x="60" y="486" width="560" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="90" y="516" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">固件+传感器安全：嵌入式 RTOS 固件成分 + 传感器数据链路完整性</text>
+  <rect x="60" y="542" width="560" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="90" y="572" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">代码质量与规范：C/C++ 嵌入式代码满足 MISRA 等安全编码标准</text>
+  <rect x="640" y="430" width="580" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="670" y="460" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">漏洞验证与修复：CVE 自动关联 + AI 辅助修复建议 + POC 验证</text>
+  <rect x="640" y="486" width="580" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="670" y="516" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">SBOM + 合规出口：信创 + EU CRA 双重要求下的标准化 SBOM 与许可证报告</text>
+  <rect x="640" y="542" width="580" height="48" rx="10" fill="#F5F7FA" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="670" y="572" font-family="'Microsoft YaHei', sans-serif" font-size="15" fill="#2D2D2D">大模型安全检测：模型供应链溯源 + Skill 安全评估 + 知识产权合规</text>
+  <line x1="60" y1="650" x2="1200" y2="650" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="60" y="690" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580">软安科技 · IT制造培训</text>
+  <text x="1200" y="690" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#667580" text-anchor="end">07 / 14</text>
+</svg>

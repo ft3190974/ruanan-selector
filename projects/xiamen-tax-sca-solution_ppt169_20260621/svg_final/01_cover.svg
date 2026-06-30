@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F5F7FA"/>
+    </linearGradient>
+    <linearGradient id="titleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#20A675"/>
+      <stop offset="100%" stop-color="#6096E6"/>
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#20A675" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#6096E6" stop-opacity="0.05"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bgGrad)"/>
+  <!-- Decorative geometric shield motif (right side) -->
+  <g transform="translate(880, 230)">
+    <!-- Outer hexagon -->
+    <path d="M 0,-200 L 173,-100 L 173,100 L 0,200 L -173,100 L -173,-100 Z" fill="url(#shieldGrad)" stroke="#20A675" stroke-width="1" stroke-opacity="0.3"/>
+    <!-- Middle ring -->
+    <path d="M 0,-150 L 130,-75 L 130,75 L 0,150 L -130,75 L -130,-75 Z" fill="none" stroke="#20A675" stroke-width="0.8" stroke-opacity="0.2"/>
+    <!-- Inner ring -->
+    <path d="M 0,-100 L 86.6,-50 L 86.6,50 L 0,100 L -86.6,50 L -86.6,-50 Z" fill="none" stroke="#6096E6" stroke-width="0.8" stroke-opacity="0.25"/>
+    <!-- Center text -->
+    <text x="0" y="-18" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#20A675" text-anchor="middle">智能时代</text>
+    <text x="0" y="10" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="18" font-weight="bold" fill="#20A675" text-anchor="middle">风险面</text>
+    <!-- Center lock icon circle -->
+    <circle cx="0" cy="0" r="40" fill="none" stroke="#20A675" stroke-width="1" stroke-opacity="0.3"/>
+    <!-- Radial lines to vertices -->
+    <line x1="0" y1="0" x2="0" y2="-200" stroke="#6096E6" stroke-width="0.5" stroke-opacity="0.15"/>
+    <line x1="0" y1="0" x2="173" y2="-100" stroke="#6096E6" stroke-width="0.5" stroke-opacity="0.15"/>
+    <line x1="0" y1="0" x2="173" y2="100" stroke="#6096E6" stroke-width="0.5" stroke-opacity="0.15"/>
+    <line x1="0" y1="0" x2="0" y2="200" stroke="#6096E6" stroke-width="0.5" stroke-opacity="0.15"/>
+    <line x1="0" y1="0" x2="-173" y2="100" stroke="#6096E6" stroke-width="0.5" stroke-opacity="0.15"/>
+    <line x1="0" y1="0" x2="-173" y2="-100" stroke="#6096E6" stroke-width="0.5" stroke-opacity="0.15"/>
+    <!-- Vertex dots -->
+    <circle cx="0" cy="-200" r="4" fill="#FFC000" fill-opacity="0.7"/>
+    <circle cx="173" cy="-100" r="4" fill="#FFC000" fill-opacity="0.5"/>
+    <circle cx="173" cy="100" r="4" fill="#FFC000" fill-opacity="0.5"/>
+    <circle cx="0" cy="200" r="4" fill="#FFC000" fill-opacity="0.7"/>
+    <circle cx="-173" cy="100" r="4" fill="#FFC000" fill-opacity="0.5"/>
+    <circle cx="-173" cy="-100" r="4" fill="#FFC000" fill-opacity="0.5"/>
+    <!-- Vertex labels -->
+    <text x="0" y="-218" font-family="'Microsoft YaHei', sans-serif" font-size="13" font-weight="bold" fill="#2D2D2D" text-anchor="middle">开源项目</text>
+    <text x="192" y="-108" font-family="'Microsoft YaHei', sans-serif" font-size="13" font-weight="bold" fill="#2D2D2D" text-anchor="start">开源模型</text>
+    <text x="192" y="108" font-family="'Microsoft YaHei', sans-serif" font-size="13" font-weight="bold" fill="#2D2D2D" text-anchor="start">MCP/Skill</text>
+    <text x="0" y="232" font-family="'Microsoft YaHei', sans-serif" font-size="13" font-weight="bold" fill="#2D2D2D" text-anchor="middle">开源算法</text>
+    <text x="-192" y="108" font-family="'Microsoft YaHei', sans-serif" font-size="13" font-weight="bold" fill="#2D2D2D" text-anchor="end">开源许可</text>
+    <text x="-192" y="-108" font-family="'Microsoft YaHei', sans-serif" font-size="13" font-weight="bold" fill="#2D2D2D" text-anchor="end">开源漏洞</text>
+  </g>
+  <!-- Top-left brand marker -->
+  <rect x="60" y="40" width="4" height="28" fill="#20A675"/>
+  <text x="74" y="60" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="16" font-weight="bold" fill="#20A675">软安科技</text>
+  <!-- Main title -->
+  <text x="80" y="280" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="72" font-weight="bold" fill="url(#titleGrad)">AI时代软件供应链</text>
+  <text x="80" y="370" font-family="SimHei, 'Microsoft YaHei', sans-serif" font-size="72" font-weight="bold" fill="url(#titleGrad)">安全新防线</text>
+  <rect x="80" y="420" width="60" height="2" fill="#20A675"/>
+  <text x="80" y="460" font-family="'Microsoft YaHei', Arial, sans-serif" font-size="24" fill="#445469">厦门税务 · 软安SCA解决方案</text>
+  <text x="80" y="500" font-family="SimSun, 'Times New Roman', serif" font-size="18" fill="#8F8F8F">源兮 — 源代码软件成分分析平台  |  2026.06</text>
+  <line x1="80" y1="640" x2="1200" y2="640" stroke="#E0E0E0" stroke-width="0.5"/>
+  <text x="80" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F">CONFIDENTIAL · 软安科技</text>
+  <text x="1200" y="680" font-family="'Microsoft YaHei', sans-serif" font-size="12" fill="#8F8F8F" text-anchor="end">01 / 12</text>
+</svg>
