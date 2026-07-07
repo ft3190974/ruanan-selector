@@ -1,0 +1,56 @@
+# ============================================
+# Docker 构建排除清单（让镜像只含运行必需文件）
+# ============================================
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Git
+.git/
+.gitignore
+
+# 大文件/视频（绝不进镜像）
+*.mp4
+*.pptx
+*.pdf
+*.bak
+*.db-shm
+*.db-wal
+nul
+
+# 历史目录
+node_modules/
+temp-repo/
+projects/
+下载/
+AI安全防护产品介绍/
+ruanan-portal/
+6月12日/
+deploy/
+
+# IDE / 系统
+.DS_Store
+.vscode/
+.idea/
+Thumbs.db
+
+# 本地旧数据库（用 data/ 里的，不用本地的）
+selector.db
+selector.db-shm
+selector.db-wal
+cra.db
+
+# 临时/备份
+*.bak
+create_excel.js
+restructure_flow.js
+package.json
+package-lock.json
+
+# 本地测试日志
+_*.js
+startup_test.log

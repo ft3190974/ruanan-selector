@@ -1,0 +1,40 @@
+# ============================================
+# 软安营销平台 - 容器编排
+# 2核2G 优化：不起独立 Nginx 容器，直接宿主机 Nginx 反代
+# 这样只跑 1 个业务容器，内存占用最小
+# ============================================
+version: "3.8"
+
+services:
+  app:
+    build: .
+    container_name: ruanan-app
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8081:8081"   # 仅监听本地，公网由 Nginx 反代
+    volumes:
+      # 数据库 + 上传文件持久化（宿主机目录，容器重建不丢）
+      - ./data:/app/data
+      - ./uploads:/app/uploads
+      # 把已有的 selector.db 挂进去（首次部署时复制到 ./data/selector.db）
+      - ./selector.db:/app/selector.db
+    environment:
+      # ⚠️ 生产必须改：至少 8 位含字母数字，建议用 secrets 管理
+      - ADMIN_PWD=${ADMIN_PWD:-Ruanan@2026Secure}
+      - ALLOW_INSECURE_ADMIN_PWD=true   # 首次部署用，密码合规后改为 false
+      # CORS 白名单：未来加域名时改成 https://yourdomain.com
+      - CORS_ORIGINS=http://YOUR_SERVER_IP,http://localhost:8081,http://127.0.0.1:8081
+      - TZ=Asia/Shanghai
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    mem_limit: 1500m       # 2G 服务器留 500M 给系统/Nginx
+    cpus: "1.5"

@@ -1,0 +1,49 @@
+# ============================================
+# 软安营销平台 - GitHub Actions 自动部署
+# 触发：push 到 main 分支 → 自动 SSH 到腾讯云 → 拉代码 → 重建容器
+# ============================================
+name: Deploy to Tencent Cloud
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}          # 腾讯云公网 IP
+          username: ${{ secrets.SERVER_USER }}       # 通常 ubuntu 或 root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}        # 私钥内容
+          script: |
+            set -e
+            cd /opt/ruanan
+
+            echo "==> 拉取最新代码"
+            git fetch --all
+            git reset --hard origin/main
+
+            echo "==> 重建并重启容器"
+            docker compose down
+            docker compose build --no-cache
+            docker compose up -d
+
+            echo "==> 等待启动..."
+            sleep 8
+
+            echo "==> 健康检查"
+            if curl -sf http://localhost:8081/ > /dev/null; then
+              echo "✅ 部署成功，服务正常运行"
+              docker compose ps
+            else
+              echo "❌ 健康检查失败，查看日志："
+              docker compose logs --tail 30
+              exit 1
+            fi
+
+            echo "==> 清理旧镜像"
+            docker image prune -f
