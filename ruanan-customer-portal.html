@@ -212,10 +212,9 @@ function showLogin(tab){
     h+='<div class="login-link" onclick="showLogin(\'login\')">返回登录</div>';
   }else{
     var savedU=localStorage.getItem('ra_cust_saved_user')||'';
-    var savedP=localStorage.getItem('ra_cust_saved_pwd')||'';
     var savedR=localStorage.getItem('ra_cust_remember')==='1';
-    h+='<label>用户名</label><input id="lu" placeholder="请输入用户名" autocomplete="off" value="'+savedU+'"><label>密码</label><input id="lp" type="password" placeholder="请输入密码" autocomplete="new-password" value="'+savedP+'" onkeydown="if(event.key===\'Enter\')doLogin()">';
-    h+='<label style="display:flex;align-items:center;gap:6px;font-size:12px;opacity:0.7;cursor:pointer"><input type="checkbox" id="lremember" '+(savedR?'checked':'')+' style="width:auto"> 记住账号密码</label>';
+    h+='<label>用户名</label><input id="lu" placeholder="请输入用户名" autocomplete="off" value="'+savedU+'"><label>密码</label><input id="lp" type="password" placeholder="请输入密码" autocomplete="new-password" onkeydown="if(event.key===\'Enter\')doLogin()">';
+    h+='<label style="display:flex;align-items:center;gap:6px;font-size:12px;opacity:0.7;cursor:pointer"><input type="checkbox" id="lremember" '+(savedR?'checked':'')+' style="width:auto"> 记住账号</label>';
     h+='<button class="login-btn" onclick="doLogin()">登 录</button>';
   }
   h+='<a href="ruanan-marketing-platform.html" style="display:block;text-align:center;margin-top:16px;font-size:14px;font-weight:600;color:#fff;background:#1E2330;padding:10px;border-radius:8px;text-decoration:none">← 返回平台首页</a>';
@@ -236,10 +235,10 @@ async function doLogin(){
     var d=await api('POST','/api/customer/login','username='+encodeURIComponent(u)+'&password='+encodeURIComponent(p));
     customerToken=d.token;customerUser={username:d.username,id:d.id,role:'customer'};
     localStorage.setItem('customer_token',customerToken);
-    // 记住账号密码
+    // 记住账号（不再存密码明文，安全：只存用户名）
     var rem=document.getElementById('lremember');
-    if(rem&&rem.checked){localStorage.setItem('ra_cust_saved_user',u);localStorage.setItem('ra_cust_saved_pwd',p);localStorage.setItem('ra_cust_remember','1');}
-    else{localStorage.removeItem('ra_cust_saved_user');localStorage.removeItem('ra_cust_saved_pwd');localStorage.removeItem('ra_cust_remember');}
+    if(rem&&rem.checked){localStorage.setItem('ra_cust_saved_user',u);localStorage.setItem('ra_cust_remember','1');}
+    else{localStorage.removeItem('ra_cust_saved_user');localStorage.removeItem('ra_cust_remember');}
     document.getElementById('loginOverlay').style.display='none';
     document.getElementById('appLayout').style.display='flex';
     updateUI();nav('kb');
@@ -255,7 +254,7 @@ async function doForgot(){
 
 function _openCustChangePwd(){var m=document.createElement('div');m.className='modal-overlay';m.onclick=function(e){if(e.target===m)m.remove()};m.innerHTML='<div class=\"modal-box\" style=\"max-width:420px\"><h3 style=\"margin-bottom:16px\">修改密码</h3><p style=\"font-size:12px;color:var(--text3);margin-bottom:12px\">密码需8位以上，含字母和数字</p><div class=\"form-group\"><label>原密码</label><input id=\"cpOld\" type=\"password\"></div><div class=\"form-group\"><label>新密码</label><input id=\"cpNew\" type=\"password\"></div><div class=\"form-group\"><label>确认新密码</label><input id=\"cpNew2\" type=\"password\"></div><button class=\"btn btn-primary btn-lg\" onclick=\"_doCustChangePwd(this)\" style=\"width:100%;justify-content:center\">确认修改</button></div>';document.body.appendChild(m)}
 async function _doCustChangePwd(btn){var o=document.getElementById('cpOld')?.value,p=document.getElementById('cpNew')?.value,p2=document.getElementById('cpNew2')?.value;if(!o||!p){toast('请填写完整','error');return}if(p!==p2){toast('两次密码不一致','error');return}if(p.length<8||!/[A-Za-z]/.test(p)||!/[0-9]/.test(p)){toast('密码需8位以上，含字母和数字','error');return}try{await api('POST','/api/customer/change-password',fd({old_password:o,new_password:p}));toast('密码修改成功');btn.closest('.modal-overlay').remove()}catch(e){toast(e.message,'error')}}
-function doLogout(){customerToken='';customerUser=null;localStorage.removeItem('customer_token');localStorage.removeItem('customer_saved_user');document.getElementById('loginOverlay').style.display='flex';document.getElementById('appLayout').style.display='none';updateUI();showLogin('login');}
+function doLogout(){customerToken='';customerUser=null;localStorage.removeItem('customer_token');localStorage.removeItem('ra_cust_saved_pwd');document.getElementById('loginOverlay').style.display='flex';document.getElementById('appLayout').style.display='none';updateUI();showLogin('login');}
 
 // ═══ UI ═══
 function updateUI(){

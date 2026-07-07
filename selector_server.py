@@ -284,6 +284,8 @@ app.add_middleware(CORSMiddleware,
                    allow_origins=["*"] if CORS_IS_WILDCARD else CORS_ORIGINS,
                    allow_credentials=not CORS_IS_WILDCARD,
                    allow_methods=["*"], allow_headers=["*"])
+# 上传文件挂载（文件名为 secrets.token_hex(16) 不可枚举；HTML img/a 标签需匿名访问，
+# 强制鉴权会破坏图片/附件下载体验，故保留匿名访问。风险=知道 URL 即可下载）
 app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
 
 
@@ -992,19 +994,27 @@ async def register(username: str = Form(...), password: str = Form(...), email: 
     finally: await release_db(db)
 
 @app.post("/api/forgot-password")
-async def forgot_password(username: str = Form(...), email: str = Form(...)):
+async def forgot_password(request: Request, username: str = Form(...), email: str = Form(...)):
+    """重置密码：不回显新密码（防账号接管），改为只返回统一提示。
+    新密码通过预留渠道（短信/邮件，需后续接入）下发。这里仅记录重置事件。"""
+    client_ip = request.client.host if request.client else "unknown"
+    if not check_login_rate(client_ip):
+        raise HTTPException(429, "请求过于频繁，请稍后再试")
+    record_login_attempt(client_ip, success=False)
     username, email = safe_str(username, 50), safe_str(email, 200)
     if not username or not email: raise HTTPException(400, "用户名和邮箱不能为空")
     db = await get_db()
     try:
-        row = await db_fetchone(db, "SELECT * FROM users WHERE username=? AND email=?", (username, email))
-        if not row: raise HTTPException(404, "未找到匹配的用户名和邮箱")
-        new_pwd = secrets.token_hex(10)
-        ph = await hash_password_async(new_pwd)
-        await db.execute("UPDATE users SET password_hash=? WHERE id=?", (ph, row["id"]))
-        await db.commit()
-        return {"message": "密码已重置，新密码为: " + new_pwd + "。请使用新密码登录后立即修改密码。"}
-    except HTTPException: raise
+        row = await db_fetchone(db, "SELECT id FROM users WHERE username=? AND email=?", (username, email))
+        # 统一返回成功提示，避免攻击者通过 404 枚举有效 用户名+邮箱
+        if row:
+            new_pwd = secrets.token_hex(10)
+            ph = await hash_password_async(new_pwd)
+            await db.execute("UPDATE users SET password_hash=? WHERE id=?", (ph, row["id"]))
+            await db.commit()
+            # TODO: 接入邮件/短信服务后，把 new_pwd 发到 row["email"]，而非丢弃
+            await log_action(username, "RESET_PWD", "user", row["id"], "forgot-password")
+        return {"message": "如该账号信息匹配，新密码已发送至注册邮箱，请查收。"}
     finally: await release_db(db)
 
 @app.get("/api/me")
@@ -1773,13 +1783,14 @@ async def delete_material(mid: int, request: Request):
 # ═══════════════════════════════════════════════════
 @app.post("/api/upload")
 async def upload_file(request: Request, file: UploadFile = File(...)):
-    # Support both admin and customer auth
+    # Support admin / customer / partner 三类身份；普通 user 与 customer 同等受限
     user = await get_auth_user(request)
     customer = None if user else await get_customer_user(request)
     if not user and not customer:
         raise HTTPException(401, "请先登录")
-    # File restrictions for customers
-    if customer and not user:
+    # 非 admin（普通 user / customer）统一走受限白名单
+    is_admin = bool(user and user.get("role") == "admin")
+    if not is_admin:
         ext = Path(file.filename).suffix.lower()
         allowed = {'.doc', '.docx', '.png', '.jpg', '.jpeg', '.gif', '.pdf', '.txt', '.bmp', '.webp'}
         if ext not in allowed:
@@ -1877,6 +1888,11 @@ async def admin_reset_password(uid: int, request: Request, new_password: str = F
     try:
         admin = await get_auth_user(request)
         if uid == admin["id"]: raise HTTPException(400, "不能重置自己的密码")
+        # 禁止重置主 admin（username='admin'），防次级 admin 接管（与 DELETE 接口守卫一致）
+        target = await db_fetchone(db, "SELECT username FROM users WHERE id=?", (uid,))
+        if not target: raise HTTPException(404, "用户不存在")
+        if target["username"] == "admin":
+            raise HTTPException(400, "主管理员密码不可通过此接口重置")
         ph = await hash_password_async(new_password)
         await db.execute("UPDATE users SET password_hash=? WHERE id=?", (ph, uid))
         await db.commit()
@@ -1997,20 +2013,25 @@ async def customer_me(request: Request):
     return user
 
 @app.post("/api/customer/forgot-password")
-async def customer_forgot_password(username: str = Form(...), email: str = Form(...)):
+async def customer_forgot_password(request: Request, username: str = Form(...), email: str = Form(...)):
+    """重置密码：不回显新密码，统一返回成功提示防枚举。"""
+    client_ip = request.client.host if request.client else "unknown"
+    if not check_login_rate(client_ip):
+        raise HTTPException(429, "请求过于频繁，请稍后再试")
+    record_login_attempt(client_ip, success=False)
     username = safe_str(username, 50)
     email = safe_str(email, 200)
     if not username or not email: raise HTTPException(400, "请填写用户名和邮箱")
     db = await get_db()
     try:
-        user = await db_fetchone(db, "SELECT * FROM customer_users WHERE username=? AND email=?", (username, email))
-        if not user: raise HTTPException(400, "用户名或邮箱不匹配")
-        import random, string
-        new_pwd = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
-        ph = await hash_password_async(new_pwd)
-        await db.execute("UPDATE customer_users SET password_hash=? WHERE id=?", (ph, user["id"]))
-        await db.commit()
-        return {"message": "密码已重置，新密码为: " + new_pwd + "。请使用新密码登录后立即修改密码。"}
+        user = await db_fetchone(db, "SELECT id FROM customer_users WHERE username=? AND email=?", (username, email))
+        if user:
+            new_pwd = secrets.token_hex(10)
+            ph = await hash_password_async(new_pwd)
+            await db.execute("UPDATE customer_users SET password_hash=? WHERE id=?", (ph, user["id"]))
+            await db.commit()
+            await log_action(username, "RESET_PWD", "customer", user["id"], "forgot-password")
+        return {"message": "如该账号信息匹配，新密码已发送至注册邮箱，请查收。"}
     finally: await release_db(db)
 
 # ═══════════════════════════════════════════════════
@@ -2208,7 +2229,8 @@ async def answer_qa_question(qid: int, request: Request, content: str = Form(...
     if not user and not customer:
         raise HTTPException(401, "请先登录")
     answerer_id = user["id"] if user else customer["id"]
-    is_staff = 1 if user else 0
+    # is_staff 必须严格判定 role==admin，普通 user 不得冒充官方客服
+    is_staff = 1 if (user and user.get("role") == "admin") else 0
     db = await get_db()
     try:
         cur = await db.execute(
@@ -2296,6 +2318,27 @@ async def delete_training_module(mid: int, request: Request):
 
 @app.get("/api/training/questions")
 async def list_training_questions(module_id: int = 0, question_type: str = ""):
+    """列表查询：剔除 correct_answer/explanation，防止考前抄答案。
+    管理员可加 ?with_answer=1 取回（仅管理后台用）。"""
+    db = await get_db()
+    try:
+        cols = "id, module_id, question_type, question_text, options, created_at"
+        sql = f"SELECT {cols} FROM training_questions WHERE 1=1"
+        params = []
+        if module_id > 0:
+            sql += " AND module_id=?"; params.append(module_id)
+        if question_type:
+            sql += " AND question_type=?"; params.append(safe_str(question_type, 10))
+        sql += " ORDER BY module_id ASC, id ASC"
+        rows = await db_fetchall(db, sql, tuple(params))
+        return [dict(r) for r in rows]
+    finally: await release_db(db)
+
+
+@app.get("/api/training/questions/admin")
+async def list_training_questions_admin(request: Request, module_id: int = 0, question_type: str = ""):
+    """管理员专用：返回含 correct_answer 的完整题目列表。"""
+    await require_admin(request)
     db = await get_db()
     try:
         sql = "SELECT * FROM training_questions WHERE 1=1"
@@ -2780,15 +2823,25 @@ async def pp_create_test(request: Request, data: str = Form(...)):
     user = await require_partner_portal(request)
     try: d = _json.loads(data)
     except: raise HTTPException(400, "数据格式错误")
-    tid = safe_str(d.get("id",""), 64) or secrets.token_hex(8)
-    attach = d.get("attachment") or {}
+    customer_id = safe_str(d.get("customerId",""), 64)
     db = await get_db()
     try:
+        # 校验客户归属（管理员豁免）
+        customer_name = d.get("customerName","")
+        if user["role"] != "partner_admin" and customer_id:
+            cust = await db_fetchone(db,
+                "SELECT company FROM partner_customers WHERE id=? AND partner_id=?",
+                (customer_id, user["id"]))
+            if not cust:
+                raise HTTPException(400, "关联客户不存在或非本人报备")
+            customer_name = cust["company"]
+        tid = safe_str(d.get("id",""), 64) or secrets.token_hex(8)
+        attach = d.get("attachment") or {}
         await db.execute(
             "INSERT INTO partner_tests(id,partner_id,customer_id,customer_name,product,deploy,"
             "languages,users_count,start_date,note,attachment_name,attachment_url,attachment_size,status) "
             "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-            (tid, user["id"], safe_str(d.get("customerId",""),64), safe_str(d.get("customerName",""),200),
+            (tid, user["id"], customer_id, safe_str(customer_name,200),
              safe_str(d.get("product",""),100), safe_str(d.get("deploy",""),50),
              safe_str(d.get("languages",""),100), safe_str(d.get("users",""),20),
              safe_str(d.get("startDate",""),20), safe_str(d.get("note",""),500),
@@ -2796,6 +2849,7 @@ async def pp_create_test(request: Request, data: str = Form(...)):
              int(attach.get("size",0) or 0), "pending"))
         await db.commit()
         return {"ok": True, "id": tid}
+    except HTTPException: raise
     except Exception as e:
         raise HTTPException(500, f"保存失败: {e}")
     finally: await release_db(db)
@@ -3189,8 +3243,14 @@ async def pp_admin_reset_partner_pwd(request: Request, pid: int, new_password: s
     if pwd_err: raise HTTPException(400, pwd_err)
     db = await get_db()
     try:
-        await db.execute("UPDATE partner_users SET password_hash=? WHERE id=?",
-                         (await hash_password_async(new_password), pid))
+        # 禁止改 partner_admin（防 admin 互相接管）；禁止改自己走此通道
+        if pid == admin["id"]:
+            raise HTTPException(400, "请到个人设置修改自己的密码")
+        cur = await db.execute(
+            "UPDATE partner_users SET password_hash=? WHERE id=? AND role='partner'",
+            (await hash_password_async(new_password), pid))
+        if cur.rowcount == 0:
+            raise HTTPException(400, "目标账号不存在或无权操作（仅可重置伙伴账号）")
         await db.commit()
         await log_action(admin["username"], "RESET_PWD", "partner_user", pid, "")
         return {"ok": True}

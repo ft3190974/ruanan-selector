@@ -397,10 +397,9 @@ function showLogin(tab){
     h+='<button class="lb-btn" onclick="doForgot()">重置密码</button><div class="lb-link" onclick="showLogin(\'login\')">返回登录</div>';
   }else{
     var savedU=localStorage.getItem('ra_saved_user')||'';
-    var savedP=localStorage.getItem('ra_saved_pwd')||'';
     var savedR=localStorage.getItem('ra_remember')==='1';
     h+='<label>用户名</label><input id="lu" placeholder="请输入用户名" autocomplete="off" value="'+savedU+'">';
-    h+='<label>密码</label><input id="lp" type="password" placeholder="请输入密码" autocomplete="new-password" value="'+savedP+'" onkeydown="if(event.key==\'Enter\')doLogin()">';
+    h+='<label>密码</label><input id="lp" type="password" placeholder="请输入密码" autocomplete="new-password" onkeydown="if(event.key==\'Enter\')doLogin()">';
     h+='<label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text3);cursor:pointer"><input type="checkbox" id="lremember" '+(savedR?'checked':'')+' style="width:auto"> 记住账号密码</label>';
     h+='<button class="lb-btn" onclick="doLogin()">登录</button>';
   }
@@ -417,10 +416,10 @@ async function doLogin(){
   var u=document.getElementById('lu').value.trim(),p=document.getElementById('lp').value.trim();
   if(!u||!p){showErr('请输入用户名和密码');return;}
   try{var d=await api('POST','/api/login','username='+encodeURIComponent(u)+'&password='+encodeURIComponent(p));authToken=d.token;authUser=d;localStorage.setItem('selector_token',authToken);
-    // 记住账号密码：勾选则保存，未勾选则清除
+    // 记住账号（不再存密码明文）
     var rem=document.getElementById('lremember');
-    if(rem&&rem.checked){localStorage.setItem('ra_saved_user',u);localStorage.setItem('ra_saved_pwd',p);localStorage.setItem('ra_remember','1');}
-    else{localStorage.removeItem('ra_saved_user');localStorage.removeItem('ra_saved_pwd');localStorage.removeItem('ra_remember');}
+    if(rem&&rem.checked){localStorage.setItem('ra_saved_user',u);localStorage.setItem('ra_remember','1');}
+    else{localStorage.removeItem('ra_saved_user');localStorage.removeItem('ra_remember');}
     hideLogin();updateAll();toast('登录成功');}catch(e){showErr(e.message);}
 }
 async function doRegister(){
@@ -435,7 +434,7 @@ async function doForgot(){
   if(!u||!em){showErr('请填写用户名和邮箱');return;}
   try{var d=await api('POST','/api/forgot-password','username='+encodeURIComponent(u)+'&email='+encodeURIComponent(em));alert(d.message);showLogin('login');}catch(e){showErr(e.message);}
 }
-function doLogout(){authToken='';authUser=null;localStorage.removeItem('selector_token');localStorage.removeItem('selector_saved_user');updateAll();nav('home');toast('已退出登录');}
+function doLogout(){authToken='';authUser=null;localStorage.removeItem('selector_token');localStorage.removeItem('ra_saved_pwd');updateAll();nav('home');toast('已退出登录');}
 
 /* ── NAVIGATION ── */
 function updateAll(){updateSidebar();updateTopbar();}
@@ -917,14 +916,14 @@ function aTab(t,chip){
   }else if(t==='kb'){
     api('GET','/api/kb/articles?limit=100').then(function(a){
       var ct3=document.getElementById('aContent');
-      if(a.length){ct3.innerHTML='<button class="btn btn-primary btn-sm" onclick="_openKbForm()" style="margin-bottom:12px">+ 新增KB文章</button><table class="data-table"><tr><th>ID</th><th>标题</th><th>分类</th><th>产品</th><th>阅读</th><th>操作</th></tr>'+a.map(function(x){return '<tr><td>'+x.id+'</td><td>'+x.title+'</td><td>'+x.category+'</td><td>'+x.product_id+'</td><td>'+x.view_count+'</td><td><button class="btn btn-sm btn-outline" onclick="_openKbForm('+x.id+')">编辑</button> <button class="btn btn-sm" style="color:var(--danger)" onclick="_delKb('+x.id+')">删除</button></td></tr>';}).join('')+'</table>';}else{ct3.innerHTML='<button class="btn btn-primary btn-sm" onclick="_openKbForm()" style="margin-bottom:12px">+ 新增KB文章</button><div class="empty-state"><div class="es-icon">📰</div><div class="es-title">暂无KB文章</div></div>';}
+      if(a.length){ct3.innerHTML='<button class="btn btn-primary btn-sm" onclick="_openKbForm()" style="margin-bottom:12px">+ 新增KB文章</button><table class="data-table"><tr><th>ID</th><th>标题</th><th>分类</th><th>产品</th><th>阅读</th><th>操作</th></tr>'+a.map(function(x){return '<tr><td>'+x.id+'</td><td>'+esc(x.title)+'</td><td>'+esc(x.category)+'</td><td>'+esc(x.product_id)+'</td><td>'+x.view_count+'</td><td><button class="btn btn-sm btn-outline" onclick="_openKbForm('+x.id+')">编辑</button> <button class="btn btn-sm" style="color:var(--danger)" onclick="_delKb('+x.id+')">删除</button></td></tr>';}).join('')+'</table>';}else{ct3.innerHTML='<button class="btn btn-primary btn-sm" onclick="_openKbForm()" style="margin-bottom:12px">+ 新增KB文章</button><div class="empty-state"><div class="es-icon">📰</div><div class="es-title">暂无KB文章</div></div>';}
     }).catch(function(){});
   }else if(t==='customers'){
     api('GET','/api/customer/admin/users').then(function(a){
       var ct4=document.getElementById('aContent');
-      if(a.length){ct4.innerHTML='<table class="data-table"><tr><th>ID</th><th>用户名</th><th>邮箱</th><th>公司</th><th>产品</th><th>状态</th><th>注册时间</th><th>操作</th></tr>'+a.map(function(x){return '<tr><td>'+x.id+'</td><td>'+x.username+'</td><td>'+x.email+'</td><td>'+x.company+'</td><td>'+x.product_purchased+'</td><td><span class="badge '+(x.status==='frozen'?'badge-red':'badge-green')+'">'+(x.status==='frozen'?'已冻结':'正常')+'</span></td><td>'+(x.created_at||'').substring(0,10)+'</td><td><button class="btn btn-sm btn-outline" data-action="csResetPwd" data-param="'+x.id+'">重置密码</button> <button class="btn btn-sm" style="color:var(--warning)" data-action="csToggle" data-param="'+x.id+','+x.status+'"">'+(x.status==='frozen'?'解冻':'冻结')+'</button> <button class="btn btn-sm" style="color:var(--danger)" data-action="csDel" data-param="'+x.id+'">删除</button></td></tr>';}).join('')+'</table>';}else{ct4.innerHTML='<div class="empty-state"><div class="es-icon">👥</div><div class="es-title">暂无客户</div></div>';}
+      if(a.length){ct4.innerHTML='<table class="data-table"><tr><th>ID</th><th>用户名</th><th>邮箱</th><th>公司</th><th>产品</th><th>状态</th><th>注册时间</th><th>操作</th></tr>'+a.map(function(x){return '<tr><td>'+x.id+'</td><td>'+esc(x.username)+'</td><td>'+esc(x.email)+'</td><td>'+esc(x.company)+'</td><td>'+esc(x.product_purchased)+'</td><td><span class="badge '+(x.status==='frozen'?'badge-red':'badge-green')+'">'+(x.status==='frozen'?'已冻结':'正常')+'</span></td><td>'+(x.created_at||'').substring(0,10)+'</td><td><button class="btn btn-sm btn-outline" data-action="csResetPwd" data-param="'+x.id+'">重置密码</button> <button class="btn btn-sm" style="color:var(--warning)" data-action="csToggle" data-param="'+x.id+','+x.status+'"">'+(x.status==='frozen'?'解冻':'冻结')+'</button> <button class="btn btn-sm" style="color:var(--danger)" data-action="csDel" data-param="'+x.id+'">删除</button></td></tr>';}).join('')+'</table>';}else{ct4.innerHTML='<div class="empty-state"><div class="es-icon">👥</div><div class="es-title">暂无客户</div></div>';}
     }).catch(function(){});
-  }else if(t==='users'){api('GET','/api/admin/users').then(function(a){if(a.length){ct.innerHTML='<button class="btn btn-primary btn-sm" onclick="addUser()" style="margin-bottom:12px">+ 新增用户</button><table class="data-table"><tr><th>用户名</th><th>邮箱</th><th>公司</th><th>角色</th><th>操作</th></tr>'+a.map(function(x){return '<tr><td>'+x.username+'</td><td>'+x.email+'</td><td>'+x.company+'</td><td>'+x.role+'</td><td><button class="btn btn-sm btn-outline" onclick="resetPwd('+x.id+')">重置密码</button> <button class="btn btn-sm" style="color:var(--danger)" onclick="delUser('+x.id+')">删除</button></td></tr>';}).join('')+'</table>';}else{ct.innerHTML='<div class="empty-state"><div class="es-icon">👥</div><div class="es-title">暂无用户</div></div>';}}).catch(function(){})}
+  }else if(t==='users'){api('GET','/api/admin/users').then(function(a){if(a.length){ct.innerHTML='<button class="btn btn-primary btn-sm" onclick="addUser()" style="margin-bottom:12px">+ 新增用户</button><table class="data-table"><tr><th>用户名</th><th>邮箱</th><th>公司</th><th>角色</th><th>操作</th></tr>'+a.map(function(x){return '<tr><td>'+esc(x.username)+'</td><td>'+esc(x.email)+'</td><td>'+esc(x.company)+'</td><td>'+esc(x.role)+'</td><td><button class="btn btn-sm btn-outline" onclick="resetPwd('+x.id+')">重置密码</button> <button class="btn btn-sm" style="color:var(--danger)" onclick="delUser('+x.id+')">删除</button></td></tr>';}).join('')+'</table>';}else{ct.innerHTML='<div class="empty-state"><div class="es-icon">👥</div><div class="es-title">暂无用户</div></div>';}}).catch(function(){})}
 }
 // Admin CRUD helpers
 function openArtForm(id){var m=document.createElement('div');m.className='modal-overlay';m.onclick=function(e){if(e.target===m)m.remove()};var f='<div class="form-group"><label>标题 *</label><input id="aTitle"></div><div class="form-grid"><div class="form-group"><label>分类</label><input id="aCat" value="行业洞察"></div><div class="form-group"><label>标签</label><input id="aTags"></div></div><div class="form-group"><label>摘要</label><textarea id="aSummary"></textarea></div><div class="form-group"><label>内容</label><textarea id="aContent" style="min-height:200px"></textarea></div><button class="btn btn-primary btn-lg" onclick="saveArt('+(id||0)+',this)" style="width:100%;justify-content:center">保存</button>';if(id){api('GET','/api/articles/'+id).then(function(a){document.getElementById('aTitle').value=a.title;document.getElementById('aCat').value=a.category;document.getElementById('aTags').value=a.tags;document.getElementById('aSummary').value=a.summary||'';document.getElementById('aContent').value=a.content||'';}).catch(function(){})}m.innerHTML='<div class="modal-box"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h3>'+(id?'编辑':'新增')+'文章</h3><svg width="20" height="20" style="cursor:pointer" onclick="this.closest(\'.modal-overlay\').remove()"><use href="#i-x"/></svg></div>'+f+'</div>';document.body.appendChild(m)}
@@ -1504,7 +1503,7 @@ function _renderCustomers() {
         var expire = '-';
         if (x.valid_from && x.valid_days) { try { var vf = new Date(x.valid_from); vf.setDate(vf.getDate() + parseInt(x.valid_days)); expire = vf.toISOString().substring(0, 10); } catch(e) {} }
         var frozen = x.status === 'frozen';
-        return '<tr><td>' + x.id + '</td><td>' + x.username + '</td><td>' + (x.company||'-') + '</td><td>' + (x.contact_name||'-') + '</td><td>' + (x.email||'-') + '</td><td>' + (x.product_purchased||'-') + '</td><td>' + (x.industry||'-') + '</td><td>' + expire + '</td><td><span class="badge ' + (frozen?'badge-red':'badge-green') + '">' + (frozen?'已冻结':'正常') + '</span></td><td><button class="btn btn-sm btn-outline" onclick="_resetCustPwd(' + x.id + ')">重置密码</button> <button class="btn btn-sm" style="color:var(--warning)" onclick="_toggleCust(' + x.id + ',\'' + x.status + '\')">' + (frozen?'解冻':'冻结') + '</button> <button class="btn btn-sm" style="color:var(--danger)" onclick="_delCust(' + x.id + ')">删除</button></td></tr>';
+        return '<tr><td>' + x.id + '</td><td>' + esc(x.username) + '</td><td>' + esc(x.company||'-') + '</td><td>' + esc(x.contact_name||'-') + '</td><td>' + esc(x.email||'-') + '</td><td>' + esc(x.product_purchased||'-') + '</td><td>' + esc(x.industry||'-') + '</td><td>' + expire + '</td><td><span class="badge ' + (frozen?'badge-red':'badge-green') + '">' + (frozen?'已冻结':'正常') + '</span></td><td><button class="btn btn-sm btn-outline" onclick="_resetCustPwd(' + x.id + ')">重置密码</button> <button class="btn btn-sm" style="color:var(--warning)" onclick="_toggleCust(' + x.id + ',\'' + x.status + '\')">' + (frozen?'解冻':'冻结') + '</button> <button class="btn btn-sm" style="color:var(--danger)" onclick="_delCust(' + x.id + ')">删除</button></td></tr>';
       }).join('') + '</table>';
     } else { h += '<div class="empty-state"><div class="es-icon">👥</div><div class="es-title">暂无客户账号</div></div>'; }
     ct.innerHTML = h;
