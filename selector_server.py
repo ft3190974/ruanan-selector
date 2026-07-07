@@ -1,5 +1,5 @@
 """软安科技华南营销管理平台 — 统一后端 API v3.0"""
-import hashlib, secrets, os, json, time, re, html
+import hashlib, secrets, os, json, time, re, html, asyncio
 from datetime import datetime, timedelta
 from pathlib import Path
 import bcrypt
@@ -34,8 +34,10 @@ if ADMIN_PWD in INSECURE_PASSWORDS and not ALLOW_INSECURE_ADMIN_PWD:
         "或设 ALLOW_INSECURE_ADMIN_PWD=true 仅用于本地演示。"
     )
 
-# CORS 白名单：生产环境应指定具体域名，逗号分隔。设为 * 时强制关闭 credentials。
-CORS_ORIGINS = [o.strip() for o in os.environ.get("CORS_ORIGINS", "*").split(",") if o.strip()]
+# CORS 白名单：默认仅允许本机回环（生产必须通过 CORS_ORIGINS 指定具体域名）。
+# 设为 * 时强制关闭 credentials（防 CSRF 泄漏）。
+_DEFAULT_CORS = "http://localhost:8081,http://127.0.0.1:8081,http://localhost:3000"
+CORS_ORIGINS = [o.strip() for o in os.environ.get("CORS_ORIGINS", _DEFAULT_CORS).split(",") if o.strip()]
 CORS_IS_WILDCARD = "*" in CORS_ORIGINS
 
 
@@ -59,6 +61,14 @@ def verify_password(plain: str, hashed: str) -> bool:
     return hashlib.sha256(plain.encode()).hexdigest() == hashed
 
 
+# 异步版（bcrypt 是 CPU 密集型同步调用，在 async 路径中必须扔到线程池，否则阻塞事件循环）
+async def hash_password_async(plain: str) -> str:
+    return await asyncio.to_thread(hash_password, plain)
+
+async def verify_password_async(plain: str, hashed: str) -> bool:
+    return await asyncio.to_thread(verify_password, plain, hashed)
+
+
 def needs_rehash(hashed: str) -> bool:
     """判断是否需要重哈希（旧 SHA-256 哈希需升级为 bcrypt）。"""
     return not hashed.startswith("$2")
@@ -78,23 +88,47 @@ def sanitize_output(obj):
 # ── 安全配置 ──
 MIN_PASSWORD_LENGTH = 8
 TOKEN_EXPIRE_HOURS = 24
-LOGIN_MAX_ATTEMPTS = 100
+# 登录限流：60 秒内同 IP 最多失败 5 次后锁定（原值 100 等于没限）
+LOGIN_MAX_ATTEMPTS = 5
 LOGIN_WINDOW_SECONDS = 60
+LOGIN_LOCK_SECONDS = 120  # 触发限流后锁定 2 分钟（防爆破但不影响正常使用）
 
 _login_attempts: dict[str, list[float]] = {}
+_login_locked_until: dict[str, float] = {}  # 触发限流后的锁定截止时间
 
 def check_login_rate(ip: str) -> bool:
+    """是否允许尝试。锁定期内直接拒绝。"""
     now = time.time()
+    # 锁定检查
+    locked_until = _login_locked_until.get(ip, 0)
+    if now < locked_until:
+        return False
+    # 清理过期锁
+    if locked_until and now >= locked_until:
+        _login_locked_until.pop(ip, None)
+        _login_attempts.pop(ip, None)
     attempts = _login_attempts.get(ip, [])
     attempts = [t for t in attempts if now - t < LOGIN_WINDOW_SECONDS]
     _login_attempts[ip] = attempts
     return len(attempts) < LOGIN_MAX_ATTEMPTS
 
-def record_login_attempt(ip: str):
+def record_login_attempt(ip: str, success: bool = False):
+    """
+    记录一次登录尝试。
+    成功则清空；失败则累加，超阈值则触发锁定。
+    """
     now = time.time()
-    if ip not in _login_attempts: _login_attempts[ip] = []
+    if success:
+        _login_attempts.pop(ip, None)
+        _login_locked_until.pop(ip, None)
+        return
+    if ip not in _login_attempts:
+        _login_attempts[ip] = []
     _login_attempts[ip].append(now)
     _login_attempts[ip] = [t for t in _login_attempts[ip] if now - t < LOGIN_WINDOW_SECONDS]
+    # 超阈值触发锁定
+    if len(_login_attempts[ip]) >= LOGIN_MAX_ATTEMPTS:
+        _login_locked_until[ip] = now + LOGIN_LOCK_SECONDS
 
 def validate_password_strength(password: str) -> str | None:
     if len(password) < MIN_PASSWORD_LENGTH: return f"密码至少需要{MIN_PASSWORD_LENGTH}位字符"
@@ -112,7 +146,7 @@ async def log_login(user_type, username, ip, success, detail=""):
         await db.execute("INSERT INTO login_logs(user_type,username,ip,success,detail) VALUES(?,?,?,?,?)",(user_type,username,ip,1 if success else 0,detail))
         await db.commit()
     except: pass
-    finally: await db.close()
+    finally: await release_db(db)
 
 
 async def log_action(actor: str, action: str, target: str, target_id: int = 0, detail: str = ""):
@@ -124,7 +158,7 @@ async def log_action(actor: str, action: str, target: str, target_id: int = 0, d
             (safe_str(actor, 50), safe_str(action, 20), safe_str(target, 50), target_id, safe_str(detail, 500)))
         await db.commit()
     except: pass
-    finally: await db.close()
+    finally: await release_db(db)
 
 def safe_str(val: str, max_len: int = 500) -> str:
     if not val: return ""
@@ -142,7 +176,7 @@ async def get_auth_user(request: Request) -> dict | None:
             (token,))
         return dict(row) if row else None
     finally:
-        await db.close()
+        await release_db(db)
 
 async def require_auth(request: Request) -> dict:
     user = await get_auth_user(request)
@@ -173,11 +207,38 @@ async def get_customer_user(request: Request) -> dict | None:
             (token,))
         return dict(row) if row else None
     finally:
-        await db.close()
+        await release_db(db)
 
 async def require_customer(request: Request) -> dict:
     user = await get_customer_user(request)
     if not user: raise HTTPException(401, "请先登录客户账号")
+    return user
+
+# ── 伙伴门户鉴权 helpers（伙伴门户独立账号体系，与营销平台 partner 角色分离）──
+# partner: 普通伙伴账号；partner_admin: 伙伴管理员（仅管伙伴数据，权限小于超级 admin）
+async def get_partner_portal_user(request: Request) -> dict | None:
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token: return None
+    db = await get_db()
+    try:
+        row = await db_fetchone(db,
+            "SELECT u.* FROM partner_users u JOIN partner_tokens t ON u.id=t.partner_id "
+            "WHERE t.token=? AND t.created_at > datetime('now','localtime','-" + str(TOKEN_EXPIRE_HOURS) + " hours')",
+            (token,))
+        return dict(row) if row else None
+    finally:
+        await release_db(db)
+
+async def require_partner_portal(request: Request) -> dict:
+    user = await get_partner_portal_user(request)
+    if not user: raise HTTPException(401, "请先登录伙伴账号")
+    if user.get("status") == "frozen": raise HTTPException(403, "账号已被冻结，请联系管理员")
+    return user
+
+async def require_partner_portal_admin(request: Request) -> dict:
+    user = await get_partner_portal_user(request)
+    if not user: raise HTTPException(401, "请先登录")
+    if user["role"] != "partner_admin": raise HTTPException(403, "需要伙伴管理员权限")
     return user
 
 # ── 验证码 ──
@@ -259,10 +320,117 @@ async def xss_protection_middleware(request: Request, call_next):
 
 
 async def get_db():
-    db = await aiosqlite.connect(str(DB_PATH))
-    db.row_factory = aiosqlite.Row
-    await db.execute("PRAGMA journal_mode=WAL")
-    return db
+    """复用连接池中的连接，避免每个请求都新建+PRAGMA 的开销。"""
+    return await _db_pool.acquire()
+
+
+# ── 连接池：替代原来每次 aiosqlite.connect 的写法 ──
+# aiosqlite 没有原生池，用一个小的持有复用层。
+# WAL 模式 + 单写多读，池大小 5 足够支撑本地并发。
+class _SimpleDbPool:
+    def __init__(self, path: str, size: int = 5):
+        self._path = path
+        self._size = size
+        self._idle: list[aiosqlite.Connection] = []
+        self._started = False
+
+    async def _ensure_started(self):
+        if self._started:
+            return
+        # 启动时跑一次 PRAGMA，后续复用的连接继承这些设置
+        boot = await aiosqlite.connect(self._path)
+        boot.row_factory = aiosqlite.Row
+        await boot.execute("PRAGMA journal_mode=WAL")
+        await boot.execute("PRAGMA synchronous=NORMAL")   # WAL 下安全且更快
+        await boot.execute("PRAGMA foreign_keys=ON")
+        await boot.commit()
+        self._idle.append(boot)
+        self._started = True
+
+    async def acquire(self) -> aiosqlite.Connection:
+        await self._ensure_started()
+        if self._idle:
+            return self._idle.pop()
+        # 池空了就新建一个（已配置好的连接），不阻塞调用方
+        db = await aiosqlite.connect(self._path)
+        db.row_factory = aiosqlite.Row
+        await db.execute("PRAGMA journal_mode=WAL")
+        await db.execute("PRAGMA synchronous=NORMAL")
+        await db.execute("PRAGMA foreign_keys=ON")
+        await db.commit()
+        return db
+
+    async def release(self, db: aiosqlite.Connection):
+        # 池满或出错就直接关，否则回收到空闲列表
+        if len(self._idle) >= self._size:
+            await db.close()
+            return
+        try:
+            await db.rollback()  # 兜底：未提交的事务清掉，避免污染下一次复用
+        except Exception:
+            pass
+        self._idle.append(db)
+
+    async def close_all(self):
+        for db in self._idle:
+            try:
+                await db.close()
+            except Exception:
+                pass
+        self._idle.clear()
+        self._started = False
+
+
+_db_pool = _SimpleDbPool(str(DB_PATH), size=5)
+
+
+async def release_db(db: aiosqlite.Connection):
+    """归还连接到池（替代原来的 await db.close()）。"""
+    await _db_pool.release(db)
+
+
+# ── 索引：针对已知热查询补建（IF NOT EXISTS，幂等）──
+_INDEXES = [
+    # kb_articles: 列表筛选 + 全文搜索（LIKE）走 published + category/product_id 复合索引
+    "CREATE INDEX IF NOT EXISTS idx_kb_published_cat ON kb_articles(published, category)",
+    "CREATE INDEX IF NOT EXISTS idx_kb_published_pid ON kb_articles(published, product_id)",
+    "CREATE INDEX IF NOT EXISTS idx_kb_created ON kb_articles(created_at DESC)",
+    # training_modules: 列表按 product_id/group_name 过滤 + sort_order 排序
+    "CREATE INDEX IF NOT EXISTS idx_train_pid ON training_modules(product_id)",
+    "CREATE INDEX IF NOT EXISTS idx_train_group ON training_modules(group_name)",
+    "CREATE INDEX IF NOT EXISTS idx_train_sort ON training_modules(sort_order)",
+    # training_questions: 按模块查
+    "CREATE INDEX IF NOT EXISTS idx_tq_module ON training_questions(module_id)",
+    # users: 登录按用户名查（UNIQUE 已自带索引，这条是双保险）
+    "CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)",
+    # api_tokens / customer_tokens: 鉴权高频查
+    "CREATE INDEX IF NOT EXISTS idx_tokens_token ON api_tokens(token)",
+    "CREATE INDEX IF NOT EXISTS idx_ctokens_token ON customer_tokens(token)",
+    # leads / opportunities: 按用户/伙伴查
+    "CREATE INDEX IF NOT EXISTS idx_leads_user ON leads(user_id, submit_time DESC)",
+    "CREATE INDEX IF NOT EXISTS idx_opp_partner ON opportunities(partner_id, created_at DESC)",
+    # audit_logs / login_logs: 按时间倒序排查
+    "CREATE INDEX IF NOT EXISTS idx_audit_time ON audit_logs(id DESC)",
+    "CREATE INDEX IF NOT EXISTS idx_login_time ON login_logs(id DESC)",
+    # articles: 列表筛选
+    "CREATE INDEX IF NOT EXISTS idx_articles_cat ON articles(category, created_at DESC)",
+]
+
+
+async def _ensure_indexes():
+    """启动时建索引。IF NOT EXISTS 保证幂等，已存在则跳过。"""
+    db = await get_db()
+    try:
+        for sql in _INDEXES:
+            try:
+                await db.execute(sql)
+            except Exception as e:
+                # 单个索引失败不阻断启动（表可能未建）
+                print(f"[索引] 跳过 {sql}: {e}")
+        await db.commit()
+        print(f"[索引] 已确保 {len(_INDEXES)} 个索引就绪")
+    finally:
+        await release_db(db)
 
 async def db_fetchone(db, sql, params=()):
     return await (await db.execute(sql, params)).fetchone()
@@ -337,6 +505,104 @@ async def init_db():
             file_url TEXT DEFAULT '', file_type TEXT DEFAULT '',
             category TEXT DEFAULT '产品资料', download_count INTEGER DEFAULT 0,
             created_at TEXT DEFAULT(datetime('now','localtime'))
+        );
+        -- ── 伙伴门户专用表（partner_admin 后台管理）──
+        CREATE TABLE IF NOT EXISTS partner_users(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE NOT NULL,
+            password_hash TEXT NOT NULL,
+            company TEXT DEFAULT '', contact_name TEXT DEFAULT '',
+            phone TEXT DEFAULT '', email TEXT DEFAULT '',
+            role TEXT DEFAULT 'partner',   -- partner | partner_admin
+            status TEXT DEFAULT 'active',  -- active | frozen
+            created_at TEXT DEFAULT(datetime('now','localtime'))
+        );
+        CREATE TABLE IF NOT EXISTS partner_tokens(
+            token TEXT PRIMARY KEY, partner_id INTEGER NOT NULL,
+            created_at TEXT DEFAULT(datetime('now','localtime'))
+        );
+        -- 伙伴客户报备（v2：去掉金额/需求/产品，加现有安全产品/拜访时间/技术方向）
+        CREATE TABLE IF NOT EXISTS partner_customers(
+            id TEXT PRIMARY KEY,           -- 与前端 uid() 对齐，用字符串 id
+            partner_id INTEGER NOT NULL,
+            company TEXT NOT NULL, industry TEXT DEFAULT '',
+            contact_name TEXT DEFAULT '', phone TEXT DEFAULT '', email TEXT DEFAULT '',
+            existing_security TEXT DEFAULT '',   -- 客户现有软件安全产品情况
+            visit_time TEXT DEFAULT '',          -- 大致可拜访交流的时间
+            tech_direction TEXT DEFAULT '',      -- 建议技术交流方向
+            status TEXT DEFAULT 'pending',  -- pending|approved|rejected
+            reject_reason TEXT DEFAULT '',
+            created_at TEXT DEFAULT(datetime('now','localtime')),
+            updated_at TEXT DEFAULT(datetime('now','localtime'))
+        );
+        -- 伙伴商机报备（关联已报备客户）
+        CREATE TABLE IF NOT EXISTS partner_opportunities(
+            id TEXT PRIMARY KEY,
+            partner_id INTEGER NOT NULL,
+            customer_id TEXT NOT NULL,
+            customer_name TEXT DEFAULT '',
+            products TEXT DEFAULT '',          -- 多选，逗号分隔
+            users_concurrency TEXT DEFAULT '', -- 预计下单用户数与并发数
+            expected_close_month TEXT DEFAULT '',  -- 预计下单时间（年月）
+            scenario TEXT DEFAULT '',          -- 客户需求具体场景描述
+            resource_needed TEXT DEFAULT '',   -- 需要软安的资源支持描述
+            status TEXT DEFAULT 'pending',     -- pending|approved|rejected
+            reject_reason TEXT DEFAULT '',
+            created_at TEXT DEFAULT(datetime('now','localtime')),
+            updated_at TEXT DEFAULT(datetime('now','localtime'))
+        );
+        -- 伙伴测试申请
+        CREATE TABLE IF NOT EXISTS partner_tests(
+            id TEXT PRIMARY KEY,
+            partner_id INTEGER NOT NULL,
+            customer_id TEXT,
+            customer_name TEXT DEFAULT '',
+            product TEXT DEFAULT '', deploy TEXT DEFAULT '',
+            languages TEXT DEFAULT '', users_count TEXT DEFAULT '',
+            start_date TEXT DEFAULT '', note TEXT DEFAULT '',
+            attachment_name TEXT DEFAULT '', attachment_url TEXT DEFAULT '', attachment_size INTEGER DEFAULT 0,
+            status TEXT DEFAULT 'pending', reject_reason TEXT DEFAULT '',
+            created_at TEXT DEFAULT(datetime('now','localtime')),
+            updated_at TEXT DEFAULT(datetime('now','localtime'))
+        );
+        -- 伙伴特价申请
+        CREATE TABLE IF NOT EXISTS partner_special_prices(
+            id TEXT PRIMARY KEY,
+            partner_id INTEGER NOT NULL,
+            customer_name TEXT DEFAULT '', product TEXT DEFAULT '',
+            list_price TEXT DEFAULT '', request_price TEXT DEFAULT '',
+            quantity TEXT DEFAULT '', reason TEXT DEFAULT '',
+            status TEXT DEFAULT 'pending', reject_reason TEXT DEFAULT '',
+            approved_price TEXT DEFAULT '',
+            created_at TEXT DEFAULT(datetime('now','localtime')),
+            updated_at TEXT DEFAULT(datetime('now','localtime'))
+        );
+        -- 伙伴门户公告（全员可见）
+        CREATE TABLE IF NOT EXISTS partner_announcements(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL, content TEXT DEFAULT '',
+            category TEXT DEFAULT '通知', priority TEXT DEFAULT 'normal',  -- normal|high
+            published INTEGER DEFAULT 1,
+            created_by INTEGER,
+            created_at TEXT DEFAULT(datetime('now','localtime'))
+        );
+        -- 测试申请模板（管理员上传）
+        CREATE TABLE IF NOT EXISTS partner_templates(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL, description TEXT DEFAULT '',
+            file_url TEXT NOT NULL, file_type TEXT DEFAULT '',
+            category TEXT DEFAULT 'test_apply',  -- test_apply | other
+            created_by INTEGER,
+            created_at TEXT DEFAULT(datetime('now','localtime'))
+        );
+        -- 伙伴门户文案配置（管理员自定义，key-value 结构）
+        CREATE TABLE IF NOT EXISTS partner_configs(
+            cfg_key TEXT PRIMARY KEY,         -- 如 test_apply_notice / special_price_notice
+            cfg_value TEXT DEFAULT '',
+            cfg_title TEXT DEFAULT '',        -- 业务页显示的粗体标题，如"提示""申请规则"
+            cfg_type TEXT DEFAULT 'notice',   -- notice(提示) | warn(警告) | info(信息)
+            updated_by INTEGER,
+            updated_at TEXT DEFAULT(datetime('now','localtime'))
         );
         CREATE TABLE IF NOT EXISTS customer_users(
             id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE NOT NULL,
@@ -459,6 +725,29 @@ async def init_db():
             if row and needs_rehash(row["password_hash"]):
                 await db.execute("UPDATE users SET password_hash=? WHERE username='admin'", (ph,))
     except: pass
+    # Seed 伙伴门户默认 partner_admin 账号（与超级 admin 同密码，仅管伙伴数据）
+    try:
+        existing_pa = await db_fetchone(db, "SELECT id FROM partner_users WHERE username='partner_admin'")
+        if not existing_pa:
+            await db.execute(
+                "INSERT INTO partner_users(username,password_hash,company,contact_name,role) VALUES(?,?,?,?,?)",
+                ('partner_admin', hash_password(ADMIN_PWD), '软安科技华南', '伙伴管理员', 'partner_admin')
+            )
+    except: pass
+    # Migrate: partner_customers v2 字段（旧库补字段，新库已含）
+    try:
+        cur = await db.execute("PRAGMA table_info(partner_customers)")
+        rows = await cur.fetchall()
+        cols = [r[1] for r in rows]
+        for col, ddl in [
+            ("existing_security", "TEXT DEFAULT ''"),
+            ("visit_time", "TEXT DEFAULT ''"),
+            ("tech_direction", "TEXT DEFAULT ''"),
+        ]:
+            if col not in cols:
+                await db.execute(f"ALTER TABLE partner_customers ADD COLUMN {col} {ddl}")
+    except: pass
+    await db.commit()
     # Migrate: add status column to customer_users if missing
     try:
         await db.execute("ALTER TABLE customer_users ADD COLUMN status TEXT DEFAULT 'active'")
@@ -475,7 +764,7 @@ async def init_db():
         await db.execute("DELETE FROM api_tokens WHERE created_at < ?", (expire_time,))
     except: pass
     await db.commit()
-    await db.close()
+    await release_db(db)
 
 async def seed_data(db):
     """Seed default articles, cases, and materials if tables are empty"""
@@ -631,7 +920,13 @@ async def _seed_kb(db, now):
 # ═══════════════════════════════════════════════════
 
 @app.get("/api/captcha")
-async def get_captcha():
+async def get_captcha(request: Request):
+    """[已废弃] 验证码接口。登录已改用 IP 限流防爆破，此接口仅保留兼容旧前端。
+    注意：本身也加限流，防 _captcha_store 内存被刷爆。"""
+    client_ip = request.client.host if request.client else "unknown"
+    if not check_login_rate(client_ip):
+        raise HTTPException(429, "请求过于频繁")
+    record_login_attempt(client_ip, success=False)
     captcha_id, question, _ = generate_captcha()
     return {"captcha_id": captcha_id, "question": question}
 
@@ -643,27 +938,28 @@ async def login(request: Request, username: str = Form(...), password: str = For
     # if not verify_captcha(captcha_id, captcha_answer):
     #     raise HTTPException(400, "验证码错误或已过期，请刷新重试")
     if not check_login_rate(client_ip):
-        raise HTTPException(429, "登录尝试过于频繁，请5分钟后再试")
-    record_login_attempt(client_ip)
+        raise HTTPException(429, "登录尝试过于频繁，请2分钟后再试")
     username = safe_str(username, 50)
     if not username or not password: raise HTTPException(400, "用户名和密码不能为空")
     db = await get_db()
     try:
         row = await db_fetchone(db, "SELECT * FROM users WHERE username=?", (username,))
-        if not row or not verify_password(password, row["password_hash"]):
+        if not row or not await verify_password_async(password, row["password_hash"]):
+            record_login_attempt(client_ip, success=False)
             raise HTTPException(401, "用户名或密码错误")
         # 迁移：旧 SHA-256 哈希校验通过后升级为 bcrypt
         if needs_rehash(row["password_hash"]):
-            new_ph = hash_password(password)
+            new_ph = await hash_password_async(password)
             await db.execute("UPDATE users SET password_hash=? WHERE id=?", (new_ph, row["id"]))
             await db.commit()
         token = secrets.token_hex(32)
         await db.execute("INSERT INTO api_tokens(user_id,token) VALUES(?,?)", (row["id"], token))
         await db.commit()
+        record_login_attempt(client_ip, success=True)
         return {"token": token, "username": row["username"], "role": row["role"],
                 "email": row["email"], "phone": row["phone"], "company": row["company"]}
     except HTTPException: raise
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.post("/api/register")
 async def register(username: str = Form(...), password: str = Form(...), email: str = Form(""),
@@ -679,7 +975,7 @@ async def register(username: str = Form(...), password: str = Form(...), email: 
     try:
         existing = await db_fetchone(db, "SELECT id FROM users WHERE username=?", (username,))
         if existing: raise HTTPException(400, "用户名已存在")
-        ph = hash_password(password)
+        ph = await hash_password_async(password)
         cur = await db.execute(
             "INSERT INTO users(username,password_hash,email,phone,company,role) VALUES(?,?,?,?,?,?)",
             (username, ph, email, phone, company, r))
@@ -693,7 +989,7 @@ async def register(username: str = Form(...), password: str = Form(...), email: 
     except Exception as e:
         if "UNIQUE" in str(e): raise HTTPException(400, "用户名已存在")
         raise HTTPException(500, "注册失败")
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.post("/api/forgot-password")
 async def forgot_password(username: str = Form(...), email: str = Form(...)):
@@ -704,12 +1000,12 @@ async def forgot_password(username: str = Form(...), email: str = Form(...)):
         row = await db_fetchone(db, "SELECT * FROM users WHERE username=? AND email=?", (username, email))
         if not row: raise HTTPException(404, "未找到匹配的用户名和邮箱")
         new_pwd = secrets.token_hex(10)
-        ph = hash_password(new_pwd)
+        ph = await hash_password_async(new_pwd)
         await db.execute("UPDATE users SET password_hash=? WHERE id=?", (ph, row["id"]))
         await db.commit()
         return {"message": "密码已重置，新密码为: " + new_pwd + "。请使用新密码登录后立即修改密码。"}
     except HTTPException: raise
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.get("/api/me")
 async def me(request: Request):
@@ -728,19 +1024,29 @@ async def save_lead(request: Request, company: str = Form(""), contact: str = Fo
                     project_budget: str = Form(""), team_size: str = Form(""),
                     languages: str = Form(""), timeline: str = Form(""),
                     type: str = Form(""), note: str = Form(""), user_id: int = Form(0)):
+    # 匿名留资：不强制登录，但加 IP 限流防刷（复用登录限流窗口）
+    client_ip = request.client.host if request.client else "unknown"
+    if not check_login_rate(client_ip):
+        raise HTTPException(429, "提交过于频繁，请稍后再试")
+    record_login_attempt(client_ip, success=False)  # 占用一次配额
+    # 优先用登录态的 user_id，忽略前端传入的（防伪造）
+    auth_user = await get_auth_user(request)
+    real_uid = auth_user["id"] if auth_user else 0
     db = await get_db()
-    await db.execute(
-        "INSERT INTO leads(user_id,company,contact,title,email,phone,address,industry,scenes,budget,pains,custom_pain,project_budget,team_size,languages,timeline,type,note) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-        (user_id, company, contact, title, email, phone, address, industry, scenes, budget, pains, custom_pain, project_budget, team_size, languages, timeline, type, note))
-    await db.commit(); await db.close()
-    return {"ok": True}
+    try:
+        await db.execute(
+            "INSERT INTO leads(user_id,company,contact,title,email,phone,address,industry,scenes,budget,pains,custom_pain,project_budget,team_size,languages,timeline,type,note) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (real_uid, safe_str(company,200), safe_str(contact,50), safe_str(title,50), safe_str(email,100), safe_str(phone,30), safe_str(address,200), safe_str(industry,50), safe_str(scenes,200), safe_str(budget,50), safe_str(pains,200), safe_str(custom_pain,200), safe_str(project_budget,50), safe_str(team_size,20), safe_str(languages,100), safe_str(timeline,50), safe_str(type,20), safe_str(note,500)))
+        await db.commit()
+        return {"ok": True}
+    finally: await release_db(db)
 
 @app.get("/api/leads")
 async def list_leads(request: Request):
     await require_admin(request)
     db = await get_db()
     rows = await db_fetchall(db, "SELECT l.*, u.username FROM leads l LEFT JOIN users u ON l.user_id=u.id ORDER BY l.submit_time DESC LIMIT 200")
-    await db.close()
+    await release_db(db)
     return [dict(r) for r in rows]
 
 # ═══════════════════════════════════════════════════
@@ -769,14 +1075,14 @@ async def list_articles(category: str = "", search: str = "", limit: int = 10, o
         params.extend([f"%{search}%", f"%{search}%", f"%{search}%"])
     sql += " ORDER BY created_at DESC LIMIT ? OFFSET ?"; params.extend([limit, offset])
     rows = await db_fetchall(db, sql, params)
-    await db.close()
+    await release_db(db)
     return {"articles": [dict(r) for r in rows], "total": total, "limit": limit, "offset": offset}
 
 @app.get("/api/articles/{aid}")
 async def get_article(aid: int):
     db = await get_db()
     row = await db_fetchone(db, "SELECT * FROM articles WHERE id=? AND published=1", (aid,))
-    await db.close()
+    await release_db(db)
     if not row: raise HTTPException(404, "文章不存在")
     return dict(row)
 
@@ -791,7 +1097,7 @@ async def create_article(request: Request, title: str = Form(...), content: str 
         (safe_str(title,200), safe_str(content,50000), safe_str(summary,500), safe_str(category,50), safe_str(tags,200), safe_str(author,50), published))
     await db.commit()
     aid = cur.lastrowid
-    await db.close()
+    await release_db(db)
     return {"id": aid, "ok": True}
 
 @app.put("/api/articles/{aid}")
@@ -801,7 +1107,7 @@ async def update_article(aid: int, request: Request, title: str = Form(""), cont
     await require_admin(request)
     db = await get_db()
     existing = await db_fetchone(db, "SELECT * FROM articles WHERE id=?", (aid,))
-    if not existing: await db.close(); raise HTTPException(404, "文章不存在")
+    if not existing: await release_db(db); raise HTTPException(404, "文章不存在")
     updates = []
     params = []
     if title: updates.append("title=?"); params.append(safe_str(title, 200))
@@ -816,7 +1122,7 @@ async def update_article(aid: int, request: Request, title: str = Form(""), cont
         params.append(aid)
         await db.execute(f"UPDATE articles SET {','.join(updates)} WHERE id=?", params)
         await db.commit()
-    await db.close()
+    await release_db(db)
     return {"ok": True}
 
 @app.delete("/api/articles/{aid}")
@@ -826,7 +1132,7 @@ async def delete_article(aid: int, request: Request):
     await db.execute("DELETE FROM articles WHERE id=?", (aid,))
     await db.commit()
     await log_action(user["username"], "DELETE", "article", aid)
-    await db.close()
+    await release_db(db)
     return {"ok": True}
 
 
@@ -885,7 +1191,7 @@ async def list_solutions():
             "SELECT * FROM industry_solutions WHERE published=1 ORDER BY sort_order, id")
         return [_row_to_solution(r) for r in rows]
     finally:
-        await db.close()
+        await release_db(db)
 
 
 @app.get("/api/solutions/{sid}")
@@ -897,7 +1203,7 @@ async def get_solution(sid: int):
             raise HTTPException(404, "方案不存在")
         return _row_to_solution(row)
     finally:
-        await db.close()
+        await release_db(db)
 
 
 @app.post("/api/admin/solutions")
@@ -924,7 +1230,7 @@ async def create_solution(request: Request):
         await log_action(user["username"], "CREATE", "solution", sid, industry)
         return {"ok": True, "id": sid}
     finally:
-        await db.close()
+        await release_db(db)
 
 
 @app.put("/api/admin/solutions/{sid}")
@@ -955,7 +1261,7 @@ async def update_solution(sid: int, request: Request):
             await log_action(user["username"], "UPDATE", "solution", sid)
         return {"ok": True}
     finally:
-        await db.close()
+        await release_db(db)
 
 
 @app.delete("/api/admin/solutions/{sid}")
@@ -971,7 +1277,7 @@ async def delete_solution(sid: int, request: Request):
         await log_action(user["username"], "DELETE", "solution", sid, row["industry"])
         return {"ok": True}
     finally:
-        await db.close()
+        await release_db(db)
 
 
 # ═══ 场景解决方案（CRA合规、软件首版次认证等）═══
@@ -1023,7 +1329,7 @@ async def list_scenarios():
             "SELECT * FROM scenario_solutions WHERE published=1 ORDER BY sort_order, id")
         return [_row_to_scenario(r) for r in rows]
     finally:
-        await db.close()
+        await release_db(db)
 
 
 @app.get("/api/scenarios/{sid}")
@@ -1035,7 +1341,7 @@ async def get_scenario(sid: int):
             raise HTTPException(404, "方案不存在")
         return _row_to_scenario(row)
     finally:
-        await db.close()
+        await release_db(db)
 
 
 @app.post("/api/admin/scenarios")
@@ -1063,7 +1369,7 @@ async def create_scenario(request: Request):
         await log_action(user["username"], "CREATE", "scenario", sid, name)
         return {"ok": True, "id": sid}
     finally:
-        await db.close()
+        await release_db(db)
 
 
 @app.put("/api/admin/scenarios/{sid}")
@@ -1094,7 +1400,7 @@ async def update_scenario(sid: int, request: Request):
             await log_action(user["username"], "UPDATE", "scenario", sid)
         return {"ok": True}
     finally:
-        await db.close()
+        await release_db(db)
 
 
 @app.delete("/api/admin/scenarios/{sid}")
@@ -1110,7 +1416,7 @@ async def delete_scenario(sid: int, request: Request):
         await log_action(user["username"], "DELETE", "scenario", sid, row["name"])
         return {"ok": True}
     finally:
-        await db.close()
+        await release_db(db)
 
 
 # ═══════════════════════════════════════════════════
@@ -1125,7 +1431,7 @@ async def list_cases(industry: str = "", limit: int = 50):
         sql += " AND industry=?"; params.append(industry)
     sql += " ORDER BY created_at DESC LIMIT ?"; params.append(limit)
     rows = await db_fetchall(db, sql, params)
-    await db.close()
+    await release_db(db)
     return [dict(r) for r in rows]
 
 @app.post("/api/cases")
@@ -1140,7 +1446,7 @@ async def create_case(request: Request, title: str = Form(...), industry: str = 
         (safe_str(title,200), safe_str(industry,50), safe_str(tag,50), safe_str(description,1000),
          safe_str(metric,200), safe_str(content,10000), safe_str(video_url,500), safe_str(cover_url,500), published))
     await db.commit(); cid = cur.lastrowid
-    await db.close()
+    await release_db(db)
     return {"id": cid, "ok": True}
 
 @app.put("/api/cases/{cid}")
@@ -1151,7 +1457,7 @@ async def update_case(cid: int, request: Request, title: str = Form(""), industr
     await require_admin(request)
     db = await get_db()
     existing = await db_fetchone(db, "SELECT * FROM cases WHERE id=?", (cid,))
-    if not existing: await db.close(); raise HTTPException(404, "案例不存在")
+    if not existing: await release_db(db); raise HTTPException(404, "案例不存在")
     updates = {}
     if title: updates["title"] = safe_str(title, 200)
     if industry: updates["industry"] = safe_str(industry, 50)
@@ -1167,7 +1473,7 @@ async def update_case(cid: int, request: Request, title: str = Form(""), industr
         vals = list(updates.values()) + [cid]
         await db.execute(f"UPDATE cases SET {','.join(sets)} WHERE id=?", vals)
         await db.commit()
-    await db.close()
+    await release_db(db)
     return {"ok": True}
 
 @app.delete("/api/cases/{cid}")
@@ -1175,7 +1481,7 @@ async def delete_case(cid: int, request: Request):
     await require_admin(request)
     db = await get_db()
     await db.execute("DELETE FROM cases WHERE id=?", (cid,))
-    await db.commit(); await db.close()
+    await db.commit(); await release_db(db)
     return {"ok": True}
 
 # ═══════════════════════════════════════════════════
@@ -1199,7 +1505,7 @@ async def apply_partner(request: Request, company: str = Form(...), contact: str
         await db.execute("UPDATE users SET role='partner',company=? WHERE id=?", (safe_str(company,200), user["id"]))
         await db.commit()
     except HTTPException: raise
-    finally: await db.close()
+    finally: await release_db(db)
     return {"ok": True, "message": "申请已提交，请等待审核"}
 
 @app.get("/api/partners/status")
@@ -1209,7 +1515,7 @@ async def partner_status(request: Request):
     try:
         row = await db_fetchone(db, "SELECT * FROM partners WHERE user_id=?", (user["id"],))
         return dict(row) if row else {"status": "not_applied"}
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.get("/api/admin/partners")
 async def list_partners(request: Request):
@@ -1217,7 +1523,7 @@ async def list_partners(request: Request):
     db = await get_db()
     rows = await db_fetchall(db,
         "SELECT p.*, u.username, u.email as user_email FROM partners p LEFT JOIN users u ON p.user_id=u.id ORDER BY p.created_at DESC")
-    await db.close()
+    await release_db(db)
     return [dict(r) for r in rows]
 
 @app.put("/api/admin/partners/{pid}")
@@ -1230,7 +1536,7 @@ async def update_partner(pid: int, request: Request, status: str = Form("")):
             # Downgrade user role
             await db.execute("UPDATE users SET role='user' WHERE id=(SELECT user_id FROM partners WHERE id=?)", (pid,))
         await db.commit()
-    await db.close()
+    await release_db(db)
     return {"ok": True}
 
 # ═══════════════════════════════════════════════════
@@ -1255,7 +1561,7 @@ async def create_opportunity(request: Request, customer_name: str = Form(...),
              safe_str(products_interested,200), safe_str(stage,20), safe_str(notes,2000)))
         await db.commit(); oid = cur.lastrowid
     except HTTPException: raise
-    finally: await db.close()
+    finally: await release_db(db)
     return {"id": oid, "ok": True}
 
 @app.get("/api/opportunities")
@@ -1270,10 +1576,10 @@ async def list_opportunities(request: Request):
             partner = await db_fetchone(db, "SELECT id FROM partners WHERE user_id=?", (user["id"],))
             pid = partner["id"] if partner else 0
             rows = await db_fetchall(db, "SELECT * FROM opportunities WHERE partner_id=? ORDER BY created_at DESC", (pid,))
-        await db.close()
+        await release_db(db)
         return [dict(r) for r in rows]
     finally:
-        try: await db.close()
+        try: await release_db(db)
         except: pass
 
 @app.put("/api/opportunities/{oid}")
@@ -1282,6 +1588,13 @@ async def update_opportunity(oid: int, request: Request, stage: str = Form(""),
     user = await require_partner(request)
     db = await get_db()
     try:
+        # IDOR 防护：校验该商机归属当前 partner（admin 放行）
+        if user["role"] != "admin":
+            owner = await db_fetchone(db,
+                "SELECT 1 FROM opportunities o JOIN partners p ON o.partner_id=p.id "
+                "WHERE o.id=? AND p.user_id=?", (oid, user["id"]))
+            if not owner:
+                raise HTTPException(403, "无权操作此商机")
         updates = {}
         if stage: updates["stage"] = safe_str(stage, 20)
         if estimated_amount: updates["estimated_amount"] = safe_str(estimated_amount, 50)
@@ -1292,7 +1605,7 @@ async def update_opportunity(oid: int, request: Request, stage: str = Form(""),
             vals = list(updates.values()) + [oid]
             await db.execute(f"UPDATE opportunities SET {','.join(sets)} WHERE id=?", vals)
             await db.commit()
-    finally: await db.close()
+    finally: await release_db(db)
     return {"ok": True}
 
 # ═══════════════════════════════════════════════════
@@ -1304,6 +1617,11 @@ async def save_selection(request: Request, user_info: str = Form(""), industry: 
                          project_info: str = Form(""), advantages: str = Form(""),
                          custom_pain: str = Form(""), products: str = Form(""),
                          quote_range: str = Form("")):
+    # 匿名选型记录：加 IP 限流防刷
+    client_ip = request.client.host if request.client else "unknown"
+    if not check_login_rate(client_ip):
+        raise HTTPException(429, "提交过于频繁，请稍后再试")
+    record_login_attempt(client_ip, success=False)
     db = await get_db()
     try:
         cur = await db.execute(
@@ -1313,7 +1631,7 @@ async def save_selection(request: Request, user_info: str = Form(""), industry: 
              safe_str(custom_pain,2000), safe_str(products,2000), safe_str(quote_range,100)))
         await db.commit()
         return {"id": cur.lastrowid, "ok": True}
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.get("/api/admin/selections")
 async def list_selections(request: Request, limit: int = 50):
@@ -1323,7 +1641,7 @@ async def list_selections(request: Request, limit: int = 50):
         rows = await db_fetchall(db,
             "SELECT * FROM selection_records ORDER BY created_at DESC LIMIT ?", (min(limit, 200),))
         return [dict(r) for r in rows]
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.delete("/api/admin/selections/{sid}")
 async def delete_selection(sid: int, request: Request):
@@ -1333,7 +1651,7 @@ async def delete_selection(sid: int, request: Request):
         await db.execute("DELETE FROM selection_records WHERE id=?", (sid,))
         await db.commit()
         return {"ok": True}
-    finally: await db.close()
+    finally: await release_db(db)
 
 # ═══════════════════════════════════════════════════
 # TICKETS (技术支持工单)
@@ -1348,7 +1666,7 @@ async def create_ticket(request: Request, subject: str = Form(...), description:
             "INSERT INTO tickets(user_id,subject,description,category,priority) VALUES(?,?,?,?,?)",
             (user["id"], safe_str(subject,200), safe_str(description,5000), safe_str(category,50), safe_str(priority,20)))
         await db.commit(); tid = cur.lastrowid
-    finally: await db.close()
+    finally: await release_db(db)
     return {"id": tid, "ok": True}
 
 @app.get("/api/tickets")
@@ -1366,10 +1684,10 @@ async def list_tickets(request: Request, status: str = ""):
         else:
             rows = await db_fetchall(db,
                 "SELECT * FROM tickets WHERE user_id=? ORDER BY created_at DESC LIMIT 100", (user["id"],))
-        await db.close()
+        await release_db(db)
         return [dict(r) for r in rows]
     finally:
-        try: await db.close()
+        try: await release_db(db)
         except: pass
 
 @app.get("/api/tickets/{tid}")
@@ -1381,10 +1699,10 @@ async def get_ticket(tid: int, request: Request):
         if not row: raise HTTPException(404, "工单不存在")
         if user["role"] != "admin" and row["user_id"] != user["id"]:
             raise HTTPException(403, "无权查看此工单")
-        await db.close()
+        await release_db(db)
         return dict(row)
     finally:
-        try: await db.close()
+        try: await release_db(db)
         except: pass
 
 @app.put("/api/tickets/{tid}/reply")
@@ -1396,7 +1714,7 @@ async def reply_ticket(tid: int, request: Request, reply: str = Form(...)):
             "UPDATE tickets SET reply=?, status='replied', replied_at=datetime('now','localtime') WHERE id=?",
             (safe_str(reply, 5000), tid))
         await db.commit()
-    finally: await db.close()
+    finally: await release_db(db)
     return {"ok": True}
 
 @app.put("/api/tickets/{tid}/close")
@@ -1410,7 +1728,7 @@ async def close_ticket(tid: int, request: Request):
             raise HTTPException(403, "无权操作")
         await db.execute("UPDATE tickets SET status='closed' WHERE id=?", (tid,))
         await db.commit()
-    finally: await db.close()
+    finally: await release_db(db)
     return {"ok": True}
 
 # ═══════════════════════════════════════════════════
@@ -1425,7 +1743,7 @@ async def list_materials(category: str = ""):
         sql += " WHERE category=?"; params.append(category)
     sql += " ORDER BY created_at DESC"
     rows = await db_fetchall(db, sql, params)
-    await db.close()
+    await release_db(db)
     return [dict(r) for r in rows]
 
 @app.post("/api/materials")
@@ -1439,7 +1757,7 @@ async def create_material(request: Request, title: str = Form(...), description:
             "INSERT INTO materials(title,description,category,file_url,file_type) VALUES(?,?,?,?,?)",
             (safe_str(title,200), safe_str(description,1000), safe_str(category,50), safe_str(file_url,500), safe_str(file_type,20)))
         await db.commit(); mid = cur.lastrowid
-    finally: await db.close()
+    finally: await release_db(db)
     return {"id": mid, "ok": True}
 
 @app.delete("/api/materials/{mid}")
@@ -1447,7 +1765,7 @@ async def delete_material(mid: int, request: Request):
     await require_admin(request)
     db = await get_db()
     await db.execute("DELETE FROM materials WHERE id=?", (mid,))
-    await db.commit(); await db.close()
+    await db.commit(); await release_db(db)
     return {"ok": True}
 
 # ═══════════════════════════════════════════════════
@@ -1476,10 +1794,10 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
         return {"url": f"/uploads/{safe_name}", "filename": file.filename, "size": len(content)}
     # Admin uploads - 同样限制后缀（防可执行文件上传），但放宽大小
     allowed_admin = {'.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx',
-                     '.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp', '.svg',
-                     '.pdf', '.txt', '.csv', '.md', '.json', '.xml', '.yml', '.yaml',
+                     '.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp',  # 移除 .svg（可内嵌脚本）
+                     '.pdf', '.txt', '.csv', '.md', '.json', '.yml', '.yaml',
                      '.zip', '.tar', '.gz', '.mp4', '.mp3', '.wav',
-                     '.html', '.css', '.js', '.py'}
+                     '.css'}  # 移除 .html/.js/.py/.xml（可执行，存储型 XSS 风险）
     ext = Path(file.filename).suffix.lower() or ".bin"
     if ext not in allowed_admin:
         raise HTTPException(400, f"不支持的文件格式: {ext}")
@@ -1501,7 +1819,7 @@ async def admin_list_users(request: Request):
     try:
         users = await db_fetchall(db, "SELECT id, username, email, phone, company, role, department, region, created_at FROM users ORDER BY created_at DESC")
         return [dict(u) for u in users]
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.post("/api/admin/users")
 async def admin_create_user(request: Request, username: str = Form(...), password: str = Form(...),
@@ -1516,7 +1834,7 @@ async def admin_create_user(request: Request, username: str = Form(...), passwor
     await require_admin(request)
     db = await get_db()
     try:
-        ph = hash_password(password)
+        ph = await hash_password_async(password)
         cur = await db.execute(
             "INSERT INTO users(username,password_hash,email,phone,company,role) VALUES(?,?,?,?,?,?)",
             (username, ph, email, phone, company, role))
@@ -1525,7 +1843,7 @@ async def admin_create_user(request: Request, username: str = Form(...), passwor
     except Exception as e:
         if "UNIQUE" in str(e): raise HTTPException(400, "用户名已存在")
         raise HTTPException(500, "创建用户失败")
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.put("/api/admin/users/{uid}")
 async def admin_update_user(uid: int, request: Request, username: str = Form(""), email: str = Form(""),
@@ -1548,7 +1866,7 @@ async def admin_update_user(uid: int, request: Request, username: str = Form("")
             if r in ('user', 'admin', 'partner'): await db.execute("UPDATE users SET role=? WHERE id=?", (r, uid))
         await db.commit()
         return {"ok": True}
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.put("/api/admin/users/{uid}/reset-password")
 async def admin_reset_password(uid: int, request: Request, new_password: str = Form(...)):
@@ -1559,11 +1877,11 @@ async def admin_reset_password(uid: int, request: Request, new_password: str = F
     try:
         admin = await get_auth_user(request)
         if uid == admin["id"]: raise HTTPException(400, "不能重置自己的密码")
-        ph = hash_password(new_password)
+        ph = await hash_password_async(new_password)
         await db.execute("UPDATE users SET password_hash=? WHERE id=?", (ph, uid))
         await db.commit()
         return {"ok": True}
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.delete("/api/admin/users/{uid}")
 async def admin_delete_user(uid: int, request: Request):
@@ -1575,7 +1893,7 @@ async def admin_delete_user(uid: int, request: Request):
         await db.execute("DELETE FROM users WHERE id=? AND username!='admin'", (uid,))
         await db.commit()
         return {"ok": True}
-    finally: await db.close()
+    finally: await release_db(db)
 
 # ═══════════════════════════════════════════════════
 # ADMIN — Dashboard Stats
@@ -1597,7 +1915,7 @@ async def admin_stats(request: Request):
         return {"users": users, "leads": leads, "partners": partners, "tickets_open": tickets_open,
                 "opportunities": opportunities, "kb_articles": kb_articles, "qa_open": qa_open,
                 "training_modules": training_modules, "customer_users": customer_users}
-    finally: await db.close()
+    finally: await release_db(db)
 
 # ═══════════════════════════════════════════════════
 # CUSTOMER AUTH APIS
@@ -1616,7 +1934,7 @@ async def customer_register_admin(username: str = Form(...), password: str = For
     company = safe_str(company, 200)
     db = await get_db()
     try:
-        ph = hash_password(password)
+        ph = await hash_password_async(password)
         cur = await db.execute(
             "INSERT INTO customer_users(username,password_hash,email,phone,company,product_purchased) VALUES(?,?,?,?,?,?)",
             (username, ph, email, phone, company, safe_str(product_purchased, 200)))
@@ -1628,26 +1946,26 @@ async def customer_register_admin(username: str = Form(...), password: str = For
     except Exception as e:
         if "UNIQUE" in str(e): raise HTTPException(400, "用户名已存在")
         raise HTTPException(500, "注册失败")
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.post("/api/customer/login")
 async def customer_login(request: Request, username: str = Form(...), password: str = Form(...)):
     client_ip = request.client.host if request.client else "unknown"
     if not check_login_rate(client_ip):
-        raise HTTPException(429, "登录尝试过于频繁，请5分钟后再试")
-    record_login_attempt(client_ip)
+        raise HTTPException(429, "登录尝试过于频繁，请2分钟后再试")
     username = safe_str(username, 50)
     if not username or not password: raise HTTPException(400, "用户名和密码不能为空")
     db = await get_db()
     try:
         user = await db_fetchone(db, "SELECT * FROM customer_users WHERE username=?", (username,))
-        if not user or not verify_password(password, user["password_hash"]):
+        if not user or not await verify_password_async(password, user["password_hash"]):
+            record_login_attempt(client_ip, success=False)
             await log_login("internal", username, client_ip, False, "密码错误")
             raise HTTPException(400, "用户名或密码错误")
         user = dict(user)
         # 迁移：旧 SHA-256 哈希校验通过后升级为 bcrypt
         if needs_rehash(user["password_hash"]):
-            new_ph = hash_password(password)
+            new_ph = await hash_password_async(password)
             await db.execute("UPDATE customer_users SET password_hash=? WHERE id=?", (new_ph, user["id"]))
             await db.commit()
         # Check if frozen
@@ -1663,10 +1981,14 @@ async def customer_login(request: Request, username: str = Form(...), password: 
         token = secrets.token_hex(32)
         await db.execute("INSERT INTO customer_tokens(customer_id,token) VALUES(?,?)", (user["id"], token))
         await db.commit()
-        user["token"] = token; user["role"] = "customer"
+        record_login_attempt(client_ip, success=True)
         await log_login("customer", username, client_ip, True)
-        return user
-    finally: await db.close()
+        # 白名单返回，避免泄露 password_hash 等内部字段
+        return {"id": user["id"], "username": user["username"], "role": "customer",
+                "token": token, "email": user.get("email",""), "phone": user.get("phone",""),
+                "company": user.get("company",""), "contact_name": user.get("contact_name",""),
+                "valid_from": user.get("valid_from",""), "valid_days": user.get("valid_days","")}
+    finally: await release_db(db)
 
 @app.get("/api/customer/me")
 async def customer_me(request: Request):
@@ -1685,11 +2007,11 @@ async def customer_forgot_password(username: str = Form(...), email: str = Form(
         if not user: raise HTTPException(400, "用户名或邮箱不匹配")
         import random, string
         new_pwd = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
-        ph = hash_password(new_pwd)
+        ph = await hash_password_async(new_pwd)
         await db.execute("UPDATE customer_users SET password_hash=? WHERE id=?", (ph, user["id"]))
         await db.commit()
         return {"message": "密码已重置，新密码为: " + new_pwd + "。请使用新密码登录后立即修改密码。"}
-    finally: await db.close()
+    finally: await release_db(db)
 
 # ═══════════════════════════════════════════════════
 # CUSTOMER — Admin User Management
@@ -1703,14 +2025,14 @@ async def customer_admin_create_user(request: Request, username: str = Form(...)
     if pwd_err: raise HTTPException(400, pwd_err)
     db = await get_db()
     try:
-        ph = hash_password(password)
+        ph = await hash_password_async(password)
         cur = await db.execute("INSERT INTO customer_users(username,password_hash,email,phone,company,contact_name,position,product_purchased,industry,valid_from,valid_days) VALUES(?,?,?,?,?,?,?,?,?,?,?)",(safe_str(username,50),ph,safe_str(email,200),safe_str(phone,30),safe_str(company,200),safe_str(contact_name,100),safe_str(position,100),safe_str(product_purchased,200),safe_str(industry,100),safe_str(valid_from,20),valid_days))
         await db.commit(); uid = cur.lastrowid
         return {"id":uid,"ok":True}
     except Exception as e:
         if "UNIQUE" in str(e): raise HTTPException(400, "用户名已存在")
         raise HTTPException(500, "创建失败")
-    finally: await db.close()
+    finally: await release_db(db)
 @app.get("/api/customer/admin/users")
 async def customer_admin_list_users(request: Request):
     await require_admin(request)
@@ -1718,7 +2040,7 @@ async def customer_admin_list_users(request: Request):
     try:
         users = await db_fetchall(db, "SELECT id, username, email, phone, company, contact_name, position, product_purchased, industry, valid_from, valid_days, status, created_at FROM customer_users ORDER BY created_at DESC")
         return [dict(u) for u in users]
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.put("/api/customer/admin/users/{uid}/reset-password")
 async def customer_admin_reset_password(uid: int, request: Request, new_password: str = Form(...)):
@@ -1727,11 +2049,11 @@ async def customer_admin_reset_password(uid: int, request: Request, new_password
     await require_admin(request)
     db = await get_db()
     try:
-        ph = hash_password(new_password)
+        ph = await hash_password_async(new_password)
         await db.execute("UPDATE customer_users SET password_hash=? WHERE id=?", (ph, uid))
         await db.commit()
         return {"ok": True}
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.put("/api/customer/admin/users/{uid}/status")
 async def customer_admin_set_status(uid: int, request: Request, status: str = Form(...)):
@@ -1742,7 +2064,7 @@ async def customer_admin_set_status(uid: int, request: Request, status: str = Fo
         await db.execute("UPDATE customer_users SET status=? WHERE id=?", (status, uid))
         await db.commit()
         return {"ok": True}
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.delete("/api/customer/admin/users/{uid}")
 async def customer_admin_delete_user(uid: int, request: Request):
@@ -1750,7 +2072,7 @@ async def customer_admin_delete_user(uid: int, request: Request):
     db = await get_db()
     await db.execute("DELETE FROM customer_users WHERE id=?", (uid,))
     await db.execute("DELETE FROM customer_tokens WHERE customer_id=?", (uid,))
-    await db.commit(); await db.close()
+    await db.commit(); await release_db(db)
     return {"ok": True}
 
 # ═══════════════════════════════════════════════════
@@ -1772,7 +2094,7 @@ async def list_kb_articles(category: str = "", product_id: str = "", search: str
         sql += " ORDER BY created_at DESC LIMIT ?"; params.append(min(limit, 100))
         rows = await db_fetchall(db, sql, tuple(params))
         return [dict(r) for r in rows]
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.get("/api/kb/articles/{aid}")
 async def get_kb_article(aid: int):
@@ -1783,7 +2105,7 @@ async def get_kb_article(aid: int):
         await db.execute("UPDATE kb_articles SET view_count=view_count+1 WHERE id=?", (aid,))
         await db.commit()
         return dict(row)
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.post("/api/kb/articles")
 async def create_kb_article(request: Request, title: str = Form(...), content: str = Form(""),
@@ -1798,7 +2120,7 @@ async def create_kb_article(request: Request, title: str = Form(...), content: s
              safe_str(category, 100), safe_str(tags, 500), safe_str(product_id, 50), safe_str(author, 100)))
         await db.commit(); aid = cur.lastrowid
         return {"id": aid, "ok": True}
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.put("/api/kb/articles/{aid}")
 async def update_kb_article(aid: int, request: Request, title: str = Form(""), content: str = Form(""),
@@ -1816,14 +2138,14 @@ async def update_kb_article(aid: int, request: Request, title: str = Form(""), c
         if published: await db.execute("UPDATE kb_articles SET published=?,updated_at=datetime('now','localtime') WHERE id=?", (int(published), aid))
         await db.commit()
         return {"ok": True}
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.delete("/api/kb/articles/{aid}")
 async def delete_kb_article(aid: int, request: Request):
     await require_admin(request)
     db = await get_db()
     await db.execute("DELETE FROM kb_articles WHERE id=?", (aid,))
-    await db.commit(); await db.close()
+    await db.commit(); await release_db(db)
     return {"ok": True}
 
 # ═══════════════════════════════════════════════════
@@ -1842,12 +2164,12 @@ async def create_qa_question(request: Request, subject: str = Form(...), descrip
     db = await get_db()
     try:
         cur = await db.execute(
-            "INSERT INTO qa_questions(customer_id,subject,description,category,tags) VALUES(?,?,?,?,?)",
+            "INSERT INTO qa_questions(customer_id,subject,description,category,tags,file_urls,status) VALUES(?,?,?,?,?,?,?)",
             (customer["id"], safe_str(subject, 200), safe_str(description, 5000),
-             safe_str(category, 50), safe_str(tags, 500), safe_str(file_urls, 2000)))
+             safe_str(category, 50), safe_str(tags, 500), safe_str(file_urls, 2000), "open"))
         await db.commit(); qid = cur.lastrowid
         return {"id": qid, "ok": True}
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.get("/api/qa/questions")
 async def list_qa_questions(category: str = "", status: str = "", search: str = "", limit: int = 20):
@@ -1865,7 +2187,7 @@ async def list_qa_questions(category: str = "", status: str = "", search: str = 
         sql += " ORDER BY q.created_at DESC LIMIT ?"; params.append(min(limit, 100))
         rows = await db_fetchall(db, sql, tuple(params))
         return [dict(r) for r in rows]
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.get("/api/qa/questions/{qid}")
 async def get_qa_question(qid: int):
@@ -1877,7 +2199,7 @@ async def get_qa_question(qid: int):
         answers = await db_fetchall(db, "SELECT a.*, CASE WHEN a.is_staff=1 THEN '软安技术支持' ELSE cu.username END as answerer_name FROM qa_answers a LEFT JOIN customer_users cu ON a.answerer_id=cu.id WHERE a.question_id=? ORDER BY a.created_at ASC", (qid,))
         q["answers"] = [dict(a) for a in answers]
         return q
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.post("/api/qa/questions/{qid}/answers")
 async def answer_qa_question(qid: int, request: Request, content: str = Form(...)):
@@ -1895,7 +2217,7 @@ async def answer_qa_question(qid: int, request: Request, content: str = Form(...
         await db.execute("UPDATE qa_questions SET status='replied' WHERE id=? AND status='open'", (qid,))
         await db.commit()
         return {"id": cur.lastrowid, "ok": True}
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.put("/api/qa/questions/{qid}/resolve")
 async def resolve_qa_question(qid: int, request: Request):
@@ -1905,7 +2227,7 @@ async def resolve_qa_question(qid: int, request: Request):
         await db.execute("UPDATE qa_questions SET status='resolved' WHERE id=?", (qid,))
         await db.commit()
         return {"ok": True}
-    finally: await db.close()
+    finally: await release_db(db)
 
 # ═══════════════════════════════════════════════════
 # TRAINING APIS
@@ -1923,7 +2245,7 @@ async def list_training_modules(product_id: str = "", group_name: str = ""):
         sql += " ORDER BY sort_order ASC"
         rows = await db_fetchall(db, sql, tuple(params))
         return [dict(r) for r in rows]
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.get("/api/training/modules/{mid}")
 async def get_training_module(mid: int):
@@ -1932,7 +2254,7 @@ async def get_training_module(mid: int):
         row = await db_fetchone(db, "SELECT * FROM training_modules WHERE id=?", (mid,))
         if not row: raise HTTPException(404, "模块不存在")
         return dict(row)
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.post("/api/training/modules")
 async def create_training_module(request: Request, product_id: str = Form(...), title: str = Form(...),
@@ -1947,7 +2269,7 @@ async def create_training_module(request: Request, product_id: str = Form(...), 
              safe_str(group_name, 100), sort_order))
         await db.commit(); mid = cur.lastrowid
         return {"id": mid, "ok": True}
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.put("/api/training/modules/{mid}")
 async def update_training_module(mid: int, request: Request, title: str = Form(""),
@@ -1962,14 +2284,14 @@ async def update_training_module(mid: int, request: Request, title: str = Form("
         if sort_order: await db.execute("UPDATE training_modules SET sort_order=? WHERE id=?", (int(sort_order), mid))
         await db.commit()
         return {"ok": True}
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.delete("/api/training/modules/{mid}")
 async def delete_training_module(mid: int, request: Request):
     await require_admin(request)
     db = await get_db()
     await db.execute("DELETE FROM training_modules WHERE id=?", (mid,))
-    await db.commit(); await db.close()
+    await db.commit(); await release_db(db)
     return {"ok": True}
 
 @app.get("/api/training/questions")
@@ -1985,7 +2307,7 @@ async def list_training_questions(module_id: int = 0, question_type: str = ""):
         sql += " ORDER BY module_id ASC, id ASC"
         rows = await db_fetchall(db, sql, tuple(params))
         return [dict(r) for r in rows]
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.post("/api/training/questions")
 async def create_training_question(request: Request, module_id: int = Form(0),
@@ -2002,7 +2324,7 @@ async def create_training_question(request: Request, module_id: int = Form(0),
              safe_str(correct_answer, 500), safe_str(explanation, 2000)))
         await db.commit(); qid = cur.lastrowid
         return {"id": qid, "ok": True}
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.put("/api/training/questions/{qid}")
 async def update_training_question(qid: int, request: Request, module_id: str = Form(""),
@@ -2020,14 +2342,14 @@ async def update_training_question(qid: int, request: Request, module_id: str = 
         if explanation: await db.execute("UPDATE training_questions SET explanation=? WHERE id=?", (safe_str(explanation, 2000), qid))
         await db.commit()
         return {"ok": True}
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.delete("/api/training/questions/{qid}")
 async def delete_training_question(qid: int, request: Request):
     await require_admin(request)
     db = await get_db()
     await db.execute("DELETE FROM training_questions WHERE id=?", (qid,))
-    await db.commit(); await db.close()
+    await db.commit(); await release_db(db)
     return {"ok": True}
 
 @app.post("/api/training/submit-exam")
@@ -2051,7 +2373,7 @@ async def submit_training_exam(request: Request, answers: str = Form("{}")):
         pct = round(score * 100 / total) if total > 0 else 0
         grade = "优秀" if pct >= 80 else ("合格" if pct >= 60 else "需加强")
         return {"score": score, "total": total, "percentage": pct, "grade": grade, "id": cur.lastrowid}
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.get("/api/training/my-records")
 async def my_training_records(request: Request):
@@ -2061,7 +2383,7 @@ async def my_training_records(request: Request):
     try:
         rows = await db_fetchall(db, "SELECT * FROM training_exam_records WHERE user_id=? ORDER BY created_at DESC LIMIT 20", (user["id"],))
         return [dict(r) for r in rows]
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.get("/api/training/admin-records")
 async def admin_training_records(request: Request):
@@ -2070,7 +2392,7 @@ async def admin_training_records(request: Request):
     try:
         rows = await db_fetchall(db, "SELECT r.*, u.username FROM training_exam_records r LEFT JOIN users u ON r.user_id=u.id ORDER BY r.created_at DESC LIMIT 100")
         return [dict(r) for r in rows]
-    finally: await db.close()
+    finally: await release_db(db)
 
 # ═══════════════════════════════════════════════════
 # CUSTOMER PORTAL ROUTE
@@ -2083,7 +2405,7 @@ async def admin_audit_logs(request: Request, limit: int = 100):
     try:
         rows = await db_fetchall(db, "SELECT * FROM login_logs ORDER BY created_at DESC LIMIT ?", (min(limit, 500),))
         return [dict(r) for r in rows]
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.get("/api/product-pages")
 async def list_product_pages():
@@ -2091,7 +2413,7 @@ async def list_product_pages():
     try:
         rows = await db_fetchall(db, "SELECT * FROM product_pages ORDER BY product_id")
         return [dict(r) for r in rows]
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.get("/api/product-pages/{pid}")
 async def get_product_page(pid: str):
@@ -2099,7 +2421,7 @@ async def get_product_page(pid: str):
     try:
         row = await db_fetchone(db, "SELECT * FROM product_pages WHERE product_id=?", (safe_str(pid,50),))
         return dict(row) if row else {"product_id":pid,"intro":"","detail":"","specs":""}
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.post("/api/product-pages")
 async def save_product_page(request: Request, product_id: str = Form(...), intro: str = Form(""), detail: str = Form(""), product_name: str = Form(""), specs: str = Form("")):
@@ -2109,7 +2431,7 @@ async def save_product_page(request: Request, product_id: str = Form(...), intro
         await db.execute("INSERT OR REPLACE INTO product_pages(product_id,product_name,intro,detail,specs,updated_at) VALUES(?,?,?,?,?,datetime('now','localtime'))",(safe_str(product_id,50),safe_str(product_name,200),safe_str(intro,5000),safe_str(detail,20000),safe_str(specs,20000)))
         await db.commit()
         return {"ok":True}
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.delete("/api/product-pages/{pid}")
 async def delete_product_page(pid: str, request: Request):
@@ -2119,7 +2441,7 @@ async def delete_product_page(pid: str, request: Request):
         await db.execute("DELETE FROM product_pages WHERE product_id=?", (safe_str(pid,50),))
         await db.commit()
         return {"ok": True}
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.post("/api/change-password")
 async def change_password(request: Request, old_password: str = Form(...), new_password: str = Form(...)):
@@ -2129,14 +2451,14 @@ async def change_password(request: Request, old_password: str = Form(...), new_p
     if pwd_err: raise HTTPException(400, pwd_err)
     db = await get_db()
     try:
-        if not verify_password(old_password, user["password_hash"]):
+        if not await verify_password_async(old_password, user["password_hash"]):
             raise HTTPException(400, "原密码错误")
-        new_ph = hash_password(new_password)
+        new_ph = await hash_password_async(new_password)
         await db.execute("UPDATE users SET password_hash=? WHERE id=?", (new_ph, user["id"]))
         await db.commit()
         await log_action(user["username"], "CHANGE_PWD", "user", user["id"])
         return {"ok": True, "message": "密码修改成功"}
-    finally: await db.close()
+    finally: await release_db(db)
 
 @app.post("/api/customer/change-password")
 async def customer_change_password(request: Request, old_password: str = Form(...), new_password: str = Form(...)):
@@ -2146,14 +2468,733 @@ async def customer_change_password(request: Request, old_password: str = Form(..
     if pwd_err: raise HTTPException(400, pwd_err)
     db = await get_db()
     try:
-        if not verify_password(old_password, user["password_hash"]):
+        if not await verify_password_async(old_password, user["password_hash"]):
             raise HTTPException(400, "原密码错误")
-        new_ph = hash_password(new_password)
+        new_ph = await hash_password_async(new_password)
         await db.execute("UPDATE customer_users SET password_hash=? WHERE id=?", (new_ph, user["id"]))
         await db.commit()
         await log_action(user["username"], "CHANGE_PWD", "customer", user["id"])
         return {"ok": True, "message": "密码修改成功"}
-    finally: await db.close()
+    finally: await release_db(db)
+
+
+# ── 登出（主动失效 token）──
+# 改密/冻结时也应调用 invalidate_user_tokens 清除该用户所有 token
+async def invalidate_user_tokens(table: str, user_col: str, uid: int):
+    """清除某用户的所有 token。table: api_tokens|customer_tokens|partner_tokens"""
+    db = await get_db()
+    try:
+        await db.execute(f"DELETE FROM {table} WHERE {user_col}=?", (uid,))
+        await db.commit()
+    finally:
+        await release_db(db)
+
+
+@app.post("/api/logout")
+async def logout_admin(request: Request):
+    """内部用户登出。"""
+    user = await get_auth_user(request)
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token: return {"ok": True}
+    db = await get_db()
+    try:
+        await db.execute("DELETE FROM api_tokens WHERE token=?", (token,))
+        await db.commit()
+    finally: await release_db(db)
+    return {"ok": True}
+
+
+@app.post("/api/customer/logout")
+async def logout_customer(request: Request):
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token: return {"ok": True}
+    db = await get_db()
+    try:
+        await db.execute("DELETE FROM customer_tokens WHERE token=?", (token,))
+        await db.commit()
+    finally: await release_db(db)
+    return {"ok": True}
+
+
+@app.post("/api/partner-portal/logout")
+async def logout_partner(request: Request):
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token: return {"ok": True}
+    db = await get_db()
+    try:
+        await db.execute("DELETE FROM partner_tokens WHERE token=?", (token,))
+        await db.commit()
+    finally: await release_db(db)
+    return {"ok": True}
+
+# ═══════════════════════════════════════════════════════════════
+# 伙伴门户 API（partner_users 独立账号体系）
+# 伙伴：注册/登录 + 报备/测试/特价 CRUD（仅自己的）
+# 管理员：查全部 + 审批 + 公告 + 模板上传 + 伙伴账号管理
+# ═══════════════════════════════════════════════════════════════
+
+@app.post("/api/partner-portal/register")
+async def pp_register(request: Request, username: str = Form(...), password: str = Form(...),
+                      company: str = Form(""), contact_name: str = Form(""),
+                      phone: str = Form(""), email: str = Form("")):
+    """伙伴注册（默认 role=partner）。首个账号或管理员邀请的另有接口。"""
+    uname_err = validate_username(username)
+    if uname_err: raise HTTPException(400, uname_err)
+    pwd_err = validate_password_strength(password)
+    if pwd_err: raise HTTPException(400, pwd_err)
+    db = await get_db()
+    try:
+        ph = await hash_password_async(password)
+        await db.execute(
+            "INSERT INTO partner_users(username,password_hash,company,contact_name,phone,email,role) "
+            "VALUES(?,?,?,?,?,?, 'partner')",
+            (safe_str(username,50), ph, safe_str(company,200), safe_str(contact_name,50),
+             safe_str(phone,30), safe_str(email,200)))
+        await db.commit()
+        return {"ok": True, "message": "注册成功，请登录"}
+    except Exception as e:
+        if "UNIQUE" in str(e): raise HTTPException(400, "用户名已存在")
+        raise HTTPException(500, "注册失败")
+    finally: await release_db(db)
+
+
+@app.post("/api/partner-portal/login")
+async def pp_login(request: Request, username: str = Form(...), password: str = Form(...)):
+    client_ip = request.client.host if request.client else "unknown"
+    if not check_login_rate(client_ip):
+        raise HTTPException(429, "登录尝试过于频繁，请2分钟后再试")
+    username = safe_str(username, 50)
+    db = await get_db()
+    try:
+        row = await db_fetchone(db, "SELECT * FROM partner_users WHERE username=?", (username,))
+        if not row or not await verify_password_async(password, row["password_hash"]):
+            record_login_attempt(client_ip, success=False)
+            raise HTTPException(401, "用户名或密码错误")
+        user = dict(row)
+        if user.get("status") == "frozen":
+            raise HTTPException(403, "账号已被冻结，请联系管理员")
+        # 迁移旧哈希
+        if needs_rehash(user["password_hash"]):
+            await db.execute("UPDATE partner_users SET password_hash=? WHERE id=?",
+                             (await hash_password_async(password), user["id"]))
+            await db.commit()
+        token = secrets.token_hex(32)
+        await db.execute("INSERT INTO partner_tokens(token,partner_id) VALUES(?,?)", (token, user["id"]))
+        await db.commit()
+        record_login_attempt(client_ip, success=True)
+        return {"token": token, "id": user["id"], "username": user["username"],
+                "role": user["role"], "company": user.get("company",""),
+                "contact_name": user.get("contact_name","")}
+    finally: await release_db(db)
+
+
+@app.get("/api/partner-portal/me")
+async def pp_me(request: Request):
+    user = await require_partner_portal(request)
+    return {"id": user["id"], "username": user["username"], "role": user["role"],
+            "company": user.get("company",""), "contact_name": user.get("contact_name",""),
+            "phone": user.get("phone",""), "email": user.get("email","")}
+
+
+@app.post("/api/partner-portal/change-password")
+async def pp_change_password(request: Request, old_password: str = Form(...), new_password: str = Form(...)):
+    user = await require_partner_portal(request)
+    pwd_err = validate_password_strength(new_password)
+    if pwd_err: raise HTTPException(400, pwd_err)
+    db = await get_db()
+    try:
+        if not await verify_password_async(old_password, user["password_hash"]):
+            raise HTTPException(400, "原密码错误")
+        await db.execute("UPDATE partner_users SET password_hash=? WHERE id=?",
+                         (await hash_password_async(new_password), user["id"]))
+        await db.commit()
+        return {"ok": True, "message": "密码修改成功"}
+    finally: await release_db(db)
+
+
+# ── 伙伴：客户报备 ──
+@app.post("/api/partner-portal/customers")
+async def pp_create_customer(request: Request, data: str = Form(...)):
+    """创建客户报备（v2）。data 是 JSON 字符串。"""
+    import json as _json
+    user = await require_partner_portal(request)
+    try: d = _json.loads(data)
+    except: raise HTTPException(400, "数据格式错误")
+    cid = safe_str(d.get("id",""), 64) or secrets.token_hex(8)
+    db = await get_db()
+    try:
+        await db.execute(
+            "INSERT INTO partner_customers(id,partner_id,company,industry,contact_name,phone,email,"
+            "existing_security,visit_time,tech_direction,status) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+            (cid, user["id"], safe_str(d.get("company",""),200), safe_str(d.get("industry",""),50),
+             safe_str(d.get("contact_name",""),50), safe_str(d.get("phone",""),30),
+             safe_str(d.get("email",""),200),
+             safe_str(d.get("existing_security",""),500),   # 现有软件安全产品情况
+             safe_str(d.get("visit_time",""),100),           # 可拜访时间
+             safe_str(d.get("tech_direction",""),500),       # 技术交流方向
+             "pending"))
+        await db.commit()
+        return {"ok": True, "id": cid}
+    except Exception as e:
+        raise HTTPException(500, f"保存失败: {e}")
+    finally: await release_db(db)
+
+
+# ── 伙伴：商机报备 ──
+@app.post("/api/partner-portal/opportunities")
+async def pp_create_opportunity(request: Request, data: str = Form(...)):
+    """创建商机报备。关联已报备客户。"""
+    import json as _json
+    user = await require_partner_portal(request)
+    try: d = _json.loads(data)
+    except: raise HTTPException(400, "数据格式错误")
+    oid = safe_str(d.get("id",""), 64) or secrets.token_hex(8)
+    customer_id = safe_str(d.get("customerId",""), 64)
+    if not customer_id:
+        raise HTTPException(400, "请关联已报备客户")
+    db = await get_db()
+    try:
+        # 取客户名
+        cust = await db_fetchone(db, "SELECT company FROM partner_customers WHERE id=? AND partner_id=?",
+                                 (customer_id, user["id"]))
+        if not cust:
+            raise HTTPException(400, "关联客户不存在或非本人报备")
+        await db.execute(
+            "INSERT INTO partner_opportunities(id,partner_id,customer_id,customer_name,products,"
+            "users_concurrency,expected_close_month,scenario,resource_needed,status) "
+            "VALUES(?,?,?,?,?,?,?,?,?,?)",
+            (oid, user["id"], customer_id, cust["company"],
+             safe_str(d.get("products",""),300),
+             safe_str(d.get("usersConcurrency",""),100),
+             safe_str(d.get("expectedCloseMonth",""),20),
+             safe_str(d.get("scenario",""),1000),
+             safe_str(d.get("resourceNeeded",""),1000),
+             "pending"))
+        await db.commit()
+        return {"ok": True, "id": oid}
+    except HTTPException: raise
+    except Exception as e:
+        raise HTTPException(500, f"保存失败: {e}")
+    finally: await release_db(db)
+
+
+@app.get("/api/partner-portal/opportunities")
+async def pp_list_opportunities(request: Request):
+    """列商机。伙伴只看自己的，管理员看全部。"""
+    user = await require_partner_portal(request)
+    db = await get_db()
+    try:
+        if user["role"] == "partner_admin":
+            rows = await db_fetchall(db,
+                "SELECT o.*, u.company as partner_company, u.contact_name as partner_name "
+                "FROM partner_opportunities o LEFT JOIN partner_users u ON o.partner_id=u.id "
+                "ORDER BY o.created_at DESC")
+        else:
+            rows = await db_fetchall(db,
+                "SELECT * FROM partner_opportunities WHERE partner_id=? ORDER BY created_at DESC",
+                (user["id"],))
+        return [dict(r) for r in rows]
+    finally: await release_db(db)
+
+
+@app.put("/api/partner-portal/opportunities/{oid}/approve")
+async def pp_approve_opportunity(request: Request, oid: str, status: str = Form(...),
+                                  reject_reason: str = Form("")):
+    admin = await require_partner_portal_admin(request)
+    if status not in ("approved", "rejected"): raise HTTPException(400, "非法状态")
+    db = await get_db()
+    try:
+        await db.execute(
+            "UPDATE partner_opportunities SET status=?, reject_reason=?, "
+            "updated_at=datetime('now','localtime') WHERE id=?",
+            (status, safe_str(reject_reason,500), oid))
+        await db.commit()
+        await log_action(admin["username"], "APPROVE", "partner_opportunity", 0, f"{oid}->{status}")
+        return {"ok": True}
+    finally: await release_db(db)
+
+
+@app.delete("/api/partner-portal/admin/opportunities/{oid}")
+async def pp_admin_delete_opportunity(request: Request, oid: str):
+    admin = await require_partner_portal_admin(request)
+    db = await get_db()
+    try:
+        await db.execute("DELETE FROM partner_opportunities WHERE id=?", (oid,))
+        await db.commit()
+        await log_action(admin["username"], "DELETE", "partner_opportunity", 0, oid)
+        return {"ok": True}
+    finally: await release_db(db)
+
+
+@app.get("/api/partner-portal/customers")
+async def pp_list_customers(request: Request):
+    user = await require_partner_portal(request)
+    db = await get_db()
+    try:
+        if user["role"] == "partner_admin":
+            rows = await db_fetchall(db,
+                "SELECT c.*, u.company as partner_company, u.contact_name as partner_name "
+                "FROM partner_customers c LEFT JOIN partner_users u ON c.partner_id=u.id "
+                "ORDER BY c.created_at DESC")
+        else:
+            rows = await db_fetchall(db,
+                "SELECT * FROM partner_customers WHERE partner_id=? ORDER BY created_at DESC", (user["id"],))
+        return [dict(r) for r in rows]
+    finally: await release_db(db)
+
+
+@app.put("/api/partner-portal/customers/{cid}/approve")
+async def pp_approve_customer(request: Request, cid: str, status: str = Form(...),
+                               reject_reason: str = Form("")):
+    """管理员审批客户报备。status: approved|rejected"""
+    admin = await require_partner_portal_admin(request)
+    if status not in ("approved", "rejected"): raise HTTPException(400, "非法状态")
+    db = await get_db()
+    try:
+        await db.execute(
+            "UPDATE partner_customers SET status=?, reject_reason=?, updated_at=datetime('now','localtime') WHERE id=?",
+            (status, safe_str(reject_reason,500), cid))
+        await db.commit()
+        await log_action(admin["username"], "APPROVE", "partner_customer", 0, f"{cid}->{status}")
+        return {"ok": True}
+    finally: await release_db(db)
+
+
+@app.delete("/api/partner-portal/admin/customers/{cid}")
+async def pp_admin_delete_customer(request: Request, cid: str):
+    """管理员删除客户报备记录。"""
+    admin = await require_partner_portal_admin(request)
+    db = await get_db()
+    try:
+        await db.execute("DELETE FROM partner_customers WHERE id=?", (cid,))
+        await db.commit()
+        await log_action(admin["username"], "DELETE", "partner_customer", 0, cid)
+        return {"ok": True}
+    finally: await release_db(db)
+
+
+# ── 伙伴：测试申请 ──
+@app.post("/api/partner-portal/tests")
+async def pp_create_test(request: Request, data: str = Form(...)):
+    import json as _json
+    user = await require_partner_portal(request)
+    try: d = _json.loads(data)
+    except: raise HTTPException(400, "数据格式错误")
+    tid = safe_str(d.get("id",""), 64) or secrets.token_hex(8)
+    attach = d.get("attachment") or {}
+    db = await get_db()
+    try:
+        await db.execute(
+            "INSERT INTO partner_tests(id,partner_id,customer_id,customer_name,product,deploy,"
+            "languages,users_count,start_date,note,attachment_name,attachment_url,attachment_size,status) "
+            "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (tid, user["id"], safe_str(d.get("customerId",""),64), safe_str(d.get("customerName",""),200),
+             safe_str(d.get("product",""),100), safe_str(d.get("deploy",""),50),
+             safe_str(d.get("languages",""),100), safe_str(d.get("users",""),20),
+             safe_str(d.get("startDate",""),20), safe_str(d.get("note",""),500),
+             safe_str(attach.get("name",""),200), safe_str(attach.get("url",""),300),
+             int(attach.get("size",0) or 0), "pending"))
+        await db.commit()
+        return {"ok": True, "id": tid}
+    except Exception as e:
+        raise HTTPException(500, f"保存失败: {e}")
+    finally: await release_db(db)
+
+
+@app.get("/api/partner-portal/tests")
+async def pp_list_tests(request: Request):
+    user = await require_partner_portal(request)
+    db = await get_db()
+    try:
+        if user["role"] == "partner_admin":
+            rows = await db_fetchall(db,
+                "SELECT t.*, u.company as partner_company, u.contact_name as partner_name "
+                "FROM partner_tests t LEFT JOIN partner_users u ON t.partner_id=u.id "
+                "ORDER BY t.created_at DESC")
+        else:
+            rows = await db_fetchall(db,
+                "SELECT * FROM partner_tests WHERE partner_id=? ORDER BY created_at DESC", (user["id"],))
+        return [dict(r) for r in rows]
+    finally: await release_db(db)
+
+
+@app.put("/api/partner-portal/tests/{tid}/approve")
+async def pp_approve_test(request: Request, tid: str, status: str = Form(...),
+                           reject_reason: str = Form("")):
+    admin = await require_partner_portal_admin(request)
+    if status not in ("approved", "rejected"): raise HTTPException(400, "非法状态")
+    db = await get_db()
+    try:
+        await db.execute(
+            "UPDATE partner_tests SET status=?, reject_reason=?, updated_at=datetime('now','localtime') WHERE id=?",
+            (status, safe_str(reject_reason,500), tid))
+        await db.commit()
+        await log_action(admin["username"], "APPROVE", "partner_test", 0, f"{tid}->{status}")
+        return {"ok": True}
+    finally: await release_db(db)
+
+
+@app.delete("/api/partner-portal/admin/tests/{tid}")
+async def pp_admin_delete_test(request: Request, tid: str):
+    """管理员删除测试申请记录。"""
+    admin = await require_partner_portal_admin(request)
+    db = await get_db()
+    try:
+        await db.execute("DELETE FROM partner_tests WHERE id=?", (tid,))
+        await db.commit()
+        await log_action(admin["username"], "DELETE", "partner_test", 0, tid)
+        return {"ok": True}
+    finally: await release_db(db)
+
+
+# ── 伙伴：特价申请 ──
+@app.post("/api/partner-portal/special-prices")
+async def pp_create_sp(request: Request, data: str = Form(...)):
+    import json as _json
+    user = await require_partner_portal(request)
+    try: d = _json.loads(data)
+    except: raise HTTPException(400, "数据格式错误")
+    sid = safe_str(d.get("id",""), 64) or secrets.token_hex(8)
+    db = await get_db()
+    try:
+        await db.execute(
+            "INSERT INTO partner_special_prices(id,partner_id,customer_name,product,list_price,"
+            "request_price,quantity,reason,status) VALUES(?,?,?,?,?,?,?,?,?)",
+            (sid, user["id"], safe_str(d.get("customerName",""),200), safe_str(d.get("product",""),100),
+             safe_str(d.get("listPrice",""),50), safe_str(d.get("requestPrice",""),50),
+             safe_str(d.get("quantity",""),20), safe_str(d.get("reason",""),500), "pending"))
+        await db.commit()
+        return {"ok": True, "id": sid}
+    except Exception as e:
+        raise HTTPException(500, f"保存失败: {e}")
+    finally: await release_db(db)
+
+
+@app.get("/api/partner-portal/special-prices")
+async def pp_list_sp(request: Request):
+    user = await require_partner_portal(request)
+    db = await get_db()
+    try:
+        if user["role"] == "partner_admin":
+            rows = await db_fetchall(db,
+                "SELECT s.*, u.company as partner_company, u.contact_name as partner_name "
+                "FROM partner_special_prices s LEFT JOIN partner_users u ON s.partner_id=u.id "
+                "ORDER BY s.created_at DESC")
+        else:
+            rows = await db_fetchall(db,
+                "SELECT * FROM partner_special_prices WHERE partner_id=? ORDER BY created_at DESC", (user["id"],))
+        return [dict(r) for r in rows]
+    finally: await release_db(db)
+
+
+@app.put("/api/partner-portal/special-prices/{sid}/approve")
+async def pp_approve_sp(request: Request, sid: str, status: str = Form(...),
+                         reject_reason: str = Form(""), approved_price: str = Form("")):
+    admin = await require_partner_portal_admin(request)
+    if status not in ("approved", "rejected"): raise HTTPException(400, "非法状态")
+    db = await get_db()
+    try:
+        await db.execute(
+            "UPDATE partner_special_prices SET status=?, reject_reason=?, approved_price=?, "
+            "updated_at=datetime('now','localtime') WHERE id=?",
+            (status, safe_str(reject_reason,500), safe_str(approved_price,50), sid))
+        await db.commit()
+        await log_action(admin["username"], "APPROVE", "partner_sp", 0, f"{sid}->{status}")
+        return {"ok": True}
+    finally: await release_db(db)
+
+
+@app.delete("/api/partner-portal/admin/special-prices/{sid}")
+async def pp_admin_delete_sp(request: Request, sid: str):
+    """管理员删除特价申请记录。"""
+    admin = await require_partner_portal_admin(request)
+    db = await get_db()
+    try:
+        await db.execute("DELETE FROM partner_special_prices WHERE id=?", (sid,))
+        await db.commit()
+        await log_action(admin["username"], "DELETE", "partner_sp", 0, sid)
+        return {"ok": True}
+    finally: await release_db(db)
+
+
+# ── 管理员：统计概览 ──
+@app.get("/api/partner-portal/admin/stats")
+async def pp_admin_stats(request: Request):
+    admin = await require_partner_portal_admin(request)
+    db = await get_db()
+    try:
+        customers_total = (await db_fetchone(db, "SELECT COUNT(*) as c FROM partner_customers"))["c"]
+        customers_pending = (await db_fetchone(db, "SELECT COUNT(*) as c FROM partner_customers WHERE status='pending'"))["c"]
+        customers_approved = (await db_fetchone(db, "SELECT COUNT(*) as c FROM partner_customers WHERE status='approved'"))["c"]
+        tests_total = (await db_fetchone(db, "SELECT COUNT(*) as c FROM partner_tests"))["c"]
+        tests_pending = (await db_fetchone(db, "SELECT COUNT(*) as c FROM partner_tests WHERE status='pending'"))["c"]
+        sp_total = (await db_fetchone(db, "SELECT COUNT(*) as c FROM partner_special_prices"))["c"]
+        sp_pending = (await db_fetchone(db, "SELECT COUNT(*) as c FROM partner_special_prices WHERE status='pending'"))["c"]
+        partners_total = (await db_fetchone(db, "SELECT COUNT(*) as c FROM partner_users WHERE role='partner'"))["c"]
+        opp_total = (await db_fetchone(db, "SELECT COUNT(*) as c FROM partner_opportunities"))["c"]
+        opp_pending = (await db_fetchone(db, "SELECT COUNT(*) as c FROM partner_opportunities WHERE status='pending'"))["c"]
+        return {
+            "customers": {"total": customers_total, "pending": customers_pending, "approved": customers_approved},
+            "tests": {"total": tests_total, "pending": tests_pending},
+            "special_prices": {"total": sp_total, "pending": sp_pending},
+            "opportunities": {"total": opp_total, "pending": opp_pending},
+            "partners": partners_total,
+        }
+    finally: await release_db(db)
+
+
+# ── 管理员：公告 CRUD（全员可见）──
+@app.get("/api/partner-portal/announcements")
+async def pp_list_announcements(request: Request):
+    """伙伴和管理员都能看已发布公告。"""
+    user = await require_partner_portal(request)
+    db = await get_db()
+    try:
+        rows = await db_fetchall(db,
+            "SELECT * FROM partner_announcements WHERE published=1 ORDER BY created_at DESC LIMIT 50")
+        return [dict(r) for r in rows]
+    finally: await release_db(db)
+
+
+@app.post("/api/partner-portal/admin/announcements")
+async def pp_create_announcement(request: Request, title: str = Form(...), content: str = Form(""),
+                                  category: str = Form("通知"), priority: str = Form("normal")):
+    admin = await require_partner_portal_admin(request)
+    db = await get_db()
+    try:
+        await db.execute(
+            "INSERT INTO partner_announcements(title,content,category,priority,published,created_by) "
+            "VALUES(?,?,?,?,1,?)",
+            (safe_str(title,200), safe_str(content,2000), safe_str(category,30),
+             safe_str(priority,10), admin["id"]))
+        await db.commit()
+        await log_action(admin["username"], "CREATE", "partner_announcement", 0, title[:50])
+        return {"ok": True}
+    finally: await release_db(db)
+
+
+@app.delete("/api/partner-portal/admin/announcements/{aid}")
+async def pp_delete_announcement(request: Request, aid: int):
+    admin = await require_partner_portal_admin(request)
+    db = await get_db()
+    try:
+        await db.execute("DELETE FROM partner_announcements WHERE id=?", (aid,))
+        await db.commit()
+        await log_action(admin["username"], "DELETE", "partner_announcement", aid, "")
+        return {"ok": True}
+    finally: await release_db(db)
+
+
+# ── 伙伴门户文案配置（管理员自定义，伙伴端动态读取）──
+# 默认配置（首次启动时 seed）
+_DEFAULT_CONFIGS = {
+    "test_apply_notice": {
+        "title": "提示",
+        "value": '请先在"客户报备"中完成报备并获得审批通过后，再进行测试申请。测试License有效期1-2周。',
+        "type": "notice",
+    },
+    "special_price_notice": {
+        "title": "申请规则",
+        "value": "特价申请需关联已报备客户，审批通过后方可享受特殊折扣。折扣幅度根据项目金额、客户体量和竞争态势综合评估。",
+        "type": "warn",
+    },
+}
+
+
+@app.get("/api/partner-portal/configs")
+async def pp_get_configs(request: Request):
+    """伙伴端读取文案配置（登录伙伴即可读）。返回所有配置，缺失的用默认值兜底。"""
+    user = await require_partner_portal(request)
+    db = await get_db()
+    try:
+        rows = await db_fetchall(db, "SELECT cfg_key,cfg_value,cfg_title,cfg_type FROM partner_configs")
+        db_map = {r["cfg_key"]: dict(r) for r in rows}
+        # 合并默认值
+        result = {}
+        for k, default in _DEFAULT_CONFIGS.items():
+            if k in db_map:
+                result[k] = db_map[k]
+            else:
+                result[k] = {"cfg_key": k, "cfg_value": default["value"],
+                             "cfg_title": default["title"], "cfg_type": default["type"]}
+        return result
+    finally:
+        await release_db(db)
+
+
+@app.get("/api/partner-portal/configs/{cfg_key}")
+async def pp_get_one_config(request: Request, cfg_key: str):
+    """读单个配置。"""
+    user = await require_partner_portal(request)
+    db = await get_db()
+    try:
+        row = await db_fetchone(db, "SELECT * FROM partner_configs WHERE cfg_key=?", (cfg_key,))
+        if row:
+            return dict(row)
+        default = _DEFAULT_CONFIGS.get(cfg_key)
+        if default:
+            return {"cfg_key": cfg_key, "cfg_value": default["value"],
+                    "cfg_title": default["title"], "cfg_type": default["type"]}
+        raise HTTPException(404, "配置项不存在")
+    finally:
+        await release_db(db)
+
+
+@app.put("/api/partner-portal/admin/configs/{cfg_key}")
+async def pp_update_config(request: Request, cfg_key: str,
+                            cfg_value: str = Form(...), cfg_title: str = Form(""),
+                            cfg_type: str = Form("notice")):
+    """管理员更新文案配置。"""
+    admin = await require_partner_portal_admin(request)
+    if cfg_type not in ("notice", "warn", "info"):
+        cfg_type = "notice"
+    db = await get_db()
+    try:
+        existing = await db_fetchone(db, "SELECT cfg_key FROM partner_configs WHERE cfg_key=?", (cfg_key,))
+        if existing:
+            await db.execute(
+                "UPDATE partner_configs SET cfg_value=?, cfg_title=?, cfg_type=?, "
+                "updated_by=?, updated_at=datetime('now','localtime') WHERE cfg_key=?",
+                (safe_str(cfg_value, 1000), safe_str(cfg_title, 50), cfg_type, admin["id"], cfg_key))
+        else:
+            await db.execute(
+                "INSERT INTO partner_configs(cfg_key,cfg_value,cfg_title,cfg_type,updated_by) VALUES(?,?,?,?,?)",
+                (cfg_key, safe_str(cfg_value, 1000), safe_str(cfg_title, 50), cfg_type, admin["id"]))
+        await db.commit()
+        await log_action(admin["username"], "UPDATE", "partner_config", 0, cfg_key)
+        return {"ok": True}
+    finally:
+        await release_db(db)
+
+
+# ── 管理员：测试申请模板（上传 + 列表 + 删除）──
+@app.get("/api/partner-portal/templates")
+async def pp_list_templates(request: Request, category: str = "test_apply"):
+    """伙伴和管理员都能列模板（用于下载下拉框）。"""
+    user = await require_partner_portal(request)
+    db = await get_db()
+    try:
+        rows = await db_fetchall(db,
+            "SELECT id,name,description,file_url,file_type,category FROM partner_templates "
+            "WHERE category=? ORDER BY created_at DESC", (category,))
+        return [dict(r) for r in rows]
+    finally: await release_db(db)
+
+
+@app.post("/api/partner-portal/admin/templates")
+async def pp_upload_template(request: Request, name: str = Form(...), description: str = Form(""),
+                              category: str = Form("test_apply"), file: UploadFile = File(...)):
+    admin = await require_partner_portal_admin(request)
+    # 复用 admin 上传白名单
+    allowed = {'.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.pdf', '.txt', '.csv', '.zip'}
+    ext = Path(file.filename).suffix.lower()
+    if ext not in allowed:
+        raise HTTPException(400, f"不支持的模板格式: {ext}")
+    content = await file.read()
+    if len(content) > 20 * 1024 * 1024:
+        raise HTTPException(400, "模板大小不能超过20MB")
+    safe_name = secrets.token_hex(16) + ext
+    file_path = UPLOAD_DIR / safe_name
+    with open(file_path, "wb") as f: f.write(content)
+    db = await get_db()
+    try:
+        await db.execute(
+            "INSERT INTO partner_templates(name,description,file_url,file_type,category,created_by) "
+            "VALUES(?,?,?,?,?,?)",
+            (safe_str(name,200), safe_str(description,500), f"/uploads/{safe_name}", ext,
+             safe_str(category,30), admin["id"]))
+        await db.commit()
+        await log_action(admin["username"], "UPLOAD", "partner_template", 0, name[:50])
+        return {"ok": True, "url": f"/uploads/{safe_name}", "filename": file.filename, "size": len(content)}
+    finally: await release_db(db)
+
+
+@app.delete("/api/partner-portal/admin/templates/{tid}")
+async def pp_delete_template(request: Request, tid: int):
+    admin = await require_partner_portal_admin(request)
+    db = await get_db()
+    try:
+        row = await db_fetchone(db, "SELECT file_url FROM partner_templates WHERE id=?", (tid,))
+        if row:
+            # 删物理文件
+            try:
+                fp = BASE_DIR / row["file_url"].lstrip("/")
+                if fp.exists(): fp.unlink()
+            except: pass
+            await db.execute("DELETE FROM partner_templates WHERE id=?", (tid,))
+            await db.commit()
+            await log_action(admin["username"], "DELETE", "partner_template", tid, "")
+        return {"ok": True}
+    finally: await release_db(db)
+
+
+# ── 管理员：伙伴账号管理 ──
+@app.get("/api/partner-portal/admin/partners")
+async def pp_admin_list_partners(request: Request):
+    admin = await require_partner_portal_admin(request)
+    db = await get_db()
+    try:
+        rows = await db_fetchall(db,
+            "SELECT id,username,company,contact_name,phone,email,role,status,created_at "
+            "FROM partner_users ORDER BY created_at DESC")
+        return [dict(r) for r in rows]
+    finally: await release_db(db)
+
+
+@app.put("/api/partner-portal/admin/partners/{pid}/status")
+async def pp_admin_partner_status(request: Request, pid: int, status: str = Form(...)):
+    """冻结/解冻伙伴账号。status: active|frozen"""
+    admin = await require_partner_portal_admin(request)
+    if status not in ("active", "frozen"): raise HTTPException(400, "非法状态")
+    db = await get_db()
+    try:
+        await db.execute("UPDATE partner_users SET status=? WHERE id=? AND role='partner'", (status, pid))
+        await db.commit()
+        await log_action(admin["username"], "UPDATE", "partner_user", pid, f"->{status}")
+        return {"ok": True}
+    finally: await release_db(db)
+
+
+@app.post("/api/partner-portal/admin/partners")
+async def pp_admin_create_partner(request: Request, username: str = Form(...), password: str = Form(...),
+                                   company: str = Form(""), contact_name: str = Form(""),
+                                   phone: str = Form(""), email: str = Form(""), role: str = Form("partner")):
+    """管理员直接创建伙伴账号（可指定 partner_admin 角色）。"""
+    admin = await require_partner_portal_admin(request)
+    uname_err = validate_username(username)
+    if uname_err: raise HTTPException(400, uname_err)
+    pwd_err = validate_password_strength(password)
+    if pwd_err: raise HTTPException(400, pwd_err)
+    if role not in ("partner", "partner_admin"): role = "partner"
+    db = await get_db()
+    try:
+        await db.execute(
+            "INSERT INTO partner_users(username,password_hash,company,contact_name,phone,email,role) "
+            "VALUES(?,?,?,?,?,?,?)",
+            (safe_str(username,50), await hash_password_async(password), safe_str(company,200),
+             safe_str(contact_name,50), safe_str(phone,30), safe_str(email,200), role))
+        await db.commit()
+        await log_action(admin["username"], "CREATE", "partner_user", 0, username)
+        return {"ok": True}
+    except Exception as e:
+        if "UNIQUE" in str(e): raise HTTPException(400, "用户名已存在")
+        raise HTTPException(500, "创建失败")
+    finally: await release_db(db)
+
+
+@app.put("/api/partner-portal/admin/partners/{pid}/reset-password")
+async def pp_admin_reset_partner_pwd(request: Request, pid: int, new_password: str = Form(...)):
+    admin = await require_partner_portal_admin(request)
+    pwd_err = validate_password_strength(new_password)
+    if pwd_err: raise HTTPException(400, pwd_err)
+    db = await get_db()
+    try:
+        await db.execute("UPDATE partner_users SET password_hash=? WHERE id=?",
+                         (await hash_password_async(new_password), pid))
+        await db.commit()
+        await log_action(admin["username"], "RESET_PWD", "partner_user", pid, "")
+        return {"ok": True}
+    finally: await release_db(db)
 
 # ═══════════════════════════════════════════════════
 # ROUTES
@@ -2201,6 +3242,7 @@ async def outro_code_file(): return FileResponse(str(OUTRO_CODE_FILE))
 @app.on_event("startup")
 async def startup():
     await init_db()
+    await _ensure_indexes()
     print("=" * 60)
     print("  软安科技华南营销管理平台 API v3.0")
     print("  Address: http://localhost:8081")
@@ -2208,6 +3250,13 @@ async def startup():
         print(f"  Admin account: admin")
         print(f"  Admin password: {ADMIN_PWD}")
         print("  [!] Save this password! Set ADMIN_PWD env var to override.")
+    print("=" * 60)
+
+
+@app.on_event("shutdown")
+async def shutdown():
+    await _db_pool.close_all()
+    print("[shutdown] 数据库连接池已关闭")
     print("=" * 60)
 
 if __name__ == "__main__":

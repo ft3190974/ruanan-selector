@@ -244,8 +244,8 @@ function showLogin(tab){
     h+='<button class="btn-full" onclick="doForgot()">重置密码</button>';
     h+='<div class="link" onclick="showLogin(\'login\')">返回登录</div>';
   }else{
-    h+='<label>用户名</label><input id="loginUser" value="admin">';
-    h+='<label>密码</label><input id="loginPwd" type="password" value="ruanan2024" onkeydown="if(event.key===\'Enter\')doLogin()">';
+    h+='<label>用户名</label><input id="loginUser">';
+    h+='<label>密码</label><input id="loginPwd" type="password" onkeydown="if(event.key===\'Enter\')doLogin()">';
     h+='<button class="btn-full" onclick="doLogin()">登 录</button>';
     h+='<div class="link" onclick="showLogin(\'register\')">没有账号？立即注册</div>';
   }
